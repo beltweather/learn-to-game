@@ -1,0 +1,41 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+.DS_Store
+desktop/bin/*
+.gradle/
+
+.classpath
+.project
+core/.classpath
+core/.project
+desktop/.classpath
+desktop/.project
+.settings/org.eclipse.buildship.core.prefs
+core/.settings/org.eclipse.buildship.core.prefs
+desktop/.settings/org.eclipse.buildship.core.prefs
+/.gradle/
+core/.settings/
+core/bin/
+desktop/.settings/
+/bin/
+/build/

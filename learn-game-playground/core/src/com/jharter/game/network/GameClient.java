@@ -1,24 +1,25 @@
-package com.jharter.game.server;
+package com.jharter.game.network;
 
 import java.io.IOException;
-import java.util.Comparator;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.DelayedRemovalArray;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
-import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.server.GameNetwork.AddPlayer;
-import com.jharter.game.server.GameNetwork.AddPlayers;
-import com.jharter.game.server.GameNetwork.Login;
-import com.jharter.game.server.GameNetwork.Ping;
-import com.jharter.game.server.GameNetwork.SnapshotPacket;
+import com.jharter.game.ashley.systems.PacketSystem;
+import com.jharter.game.network.GameNetwork.AddPlayers;
+import com.jharter.game.network.GameNetwork.Login;
+import com.jharter.game.network.GameNetwork.Ping;
+import com.jharter.game.network.GameNetwork.SnapshotPacket;
+import com.jharter.game.network.packets.Packet;
+import com.jharter.game.network.packets.PacketManager;
+import com.jharter.game.network.packets.impl.SnapshotPacketManager;
 import com.jharter.game.util.IDUtil;
 
-public abstract class GameClient {
+public class GameClient {
 	
 	public static final boolean DEBUG_SHOW_PING = false;
 	
@@ -27,13 +28,15 @@ public abstract class GameClient {
 	protected long pingMS = 0;
 	protected long latencyMS = 0;
 	protected float time = 0;
-	protected DelayedRemovalArray<SnapshotPacket> snapshotPackets = new DelayedRemovalArray<SnapshotPacket>();
+	protected ObjectMap<Class, PacketManager> packetManagers = new ObjectMap();
+	
 	protected AddPlayers addPlayers = null;
 	protected String playerId = IDUtil.newID();
 	
 	public GameClient() {
 		clientId = "ID:" + System.currentTimeMillis();
 		client = new Client();
+		addPacketManagers();
 	}
 	
 	public String getPlayerId() {
@@ -46,6 +49,10 @@ public abstract class GameClient {
 			ping();
 			time = 0;
 		}
+	}
+	
+	public Client getKryoClient() {
+		return client;
 	}
 	
 	public long getPing() {
@@ -79,7 +86,13 @@ public abstract class GameClient {
 		this.clientId = clientId;
 	}
 	
-	public abstract void received(Connection connection, Object object, Client client);
+	@SuppressWarnings("unchecked")
+	public void received(GameClient client, Connection connection, Object object) {
+		if(object instanceof Package) {
+			Packet<?> packet = (Packet<?>) object;
+			getPacketManager(packet.getClass()).received(this, connection, packet);
+		}
+	}
 	
 	public void start() {
 		client.start();
@@ -94,7 +107,7 @@ public abstract class GameClient {
 				if(object instanceof Ping) {
 					setPing((Ping) object);
 				} else {
-					GameClient.this.received(connection, object, client);
+					GameClient.this.received(GameClient.this, connection, object);
 				}
 			}
 
@@ -124,25 +137,33 @@ public abstract class GameClient {
 		client.sendTCP(object);
 	}
 	
-	protected void handleSnapshotPacket(SnapshotPacket snapshotPacket) {
-		snapshotPackets.begin();
-		DelayedRemovalArray<SnapshotPacket> packets = new DelayedRemovalArray<SnapshotPacket>(snapshotPackets);
-		packets.add(snapshotPacket);
-		packets.sort(new Comparator<SnapshotPacket>() {
-
-			@Override
-			public int compare(SnapshotPacket arg0, SnapshotPacket arg1) {
-				return (int) (arg0.time - arg1.time);
-			}
-			
-		});
-		DelayedRemovalArray<SnapshotPacket> temp = snapshotPackets;
-		snapshotPackets = packets;
-		temp.end();    				
+	public <T extends Packet<T>> void addPacketManager(Class<T> packetClass, PacketManager<?> packetManager) {
+		packetManagers.put(packetClass, packetManager);
 	}
 	
-	public DelayedRemovalArray<SnapshotPacket> getSnapshotPackets() {
-		return snapshotPackets;
+	public void addPacketManagers() {
+		addPacketManager(SnapshotPacket.class, new SnapshotPacketManager());
+	}
+	
+	public <T extends Packet<T>> PacketManager<T> getPacketManager(Class<T> packetClass) {
+		if(packetManagers.containsKey(packetClass)) {
+			return (PacketManager<T>) packetManagers.get(packetClass);
+		}
+		return null;
+	}
+	
+	public <T extends Packet<T>> PacketSystem<T> buildPacketSystem(Class<T> klass) {
+		return getPacketManager(klass).buildSystem(this);
+	}
+	
+	public void addPacketSystemsToEngine(Engine engine) {
+		for(Class klass : packetManagers.keys()) {
+			engine.addSystem(buildPacketSystem(klass));
+		}
+	}
+	
+	protected void handleSnapshotPacket(SnapshotPacket snapshotPacket) {
+		getPacketManager(SnapshotPacket.class).getPackets().add(snapshotPacket);
 	}
 	
 	protected void handleAddPlayers(AddPlayers addPlayers) {

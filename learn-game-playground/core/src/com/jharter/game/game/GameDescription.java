@@ -1,7 +1,7 @@
 package com.jharter.game.game;
 
-import com.jharter.game.server.GameClient;
-import com.jharter.game.server.GameServer;
+import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameServer;
 
 public class GameDescription {
 	

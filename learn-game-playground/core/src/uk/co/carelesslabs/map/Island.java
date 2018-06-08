@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.server.GameClient;
-import com.jharter.game.server.GameNetwork.RemoveEntities;
+import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameNetwork.RemoveEntities;
 
 import uk.co.carelesslabs.Enums.TileType;
 import uk.co.carelesslabs.Media;

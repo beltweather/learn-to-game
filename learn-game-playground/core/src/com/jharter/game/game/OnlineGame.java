@@ -13,14 +13,14 @@ import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.control.GlobalInputState;
+import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameNetwork.AddPlayer;
+import com.jharter.game.network.GameNetwork.AddPlayers;
+import com.jharter.game.network.GameNetwork.RequestPlayer;
+import com.jharter.game.network.GameServer;
+import com.jharter.game.network.packets.Packet;
 import com.jharter.game.screens.StageScreen;
 import com.jharter.game.screens.TestStageScreen;
-import com.jharter.game.server.GameClient;
-import com.jharter.game.server.GameNetwork.AddPlayer;
-import com.jharter.game.server.GameNetwork.AddPlayers;
-import com.jharter.game.server.GameNetwork.RequestPlayer;
-import com.jharter.game.server.GameNetwork.SnapshotPacket;
-import com.jharter.game.server.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.IDUtil;
 
@@ -140,12 +140,13 @@ public class OnlineGame extends Game {
 		client = new GameClient() {
 
 			@Override
-			public void received(Connection connection, Object object, Client client) {
-				if(object instanceof SnapshotPacket) {
-					handleSnapshotPacket((SnapshotPacket) object);
-				} else if(object instanceof AddPlayers) {
+			public void received(GameClient gameClient, Connection connection, Object object) {
+				if(object instanceof AddPlayers) {
 					handleAddPlayers((AddPlayers) object);
+				} else {
+					super.received(gameClient, connection, object);
 				}
+			}
 				
 				/*} else if(object instanceof MoveUser) {
 					serverMoveUser = (MoveUser) object;
@@ -168,7 +169,7 @@ public class OnlineGame extends Game {
 					RemoveEntities removeEntities = (RemoveEntities) object;
 					island.markEntitiesAsRemoved(box2D, removeEntities);
 				}*/
-			}
+			//}
 			
 		};
 		description.setClient(client);

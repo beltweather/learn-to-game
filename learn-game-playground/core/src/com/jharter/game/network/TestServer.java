@@ -1,4 +1,4 @@
-package com.jharter.game.server;
+package com.jharter.game.network;
 
 import java.io.IOException;
 

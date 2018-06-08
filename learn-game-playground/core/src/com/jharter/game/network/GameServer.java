@@ -1,4 +1,4 @@
-package com.jharter.game.server;
+package com.jharter.game.network;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -7,10 +7,10 @@ import java.util.Set;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.LagListener;
-import com.jharter.game.server.GameNetwork.Login;
-import com.jharter.game.server.GameNetwork.Ping;
-import com.jharter.game.server.GameNetwork.Register;
-import com.jharter.game.server.GameNetwork.RegistrationRequired;
+import com.jharter.game.network.GameNetwork.Login;
+import com.jharter.game.network.GameNetwork.Ping;
+import com.jharter.game.network.GameNetwork.Register;
+import com.jharter.game.network.GameNetwork.RegistrationRequired;
 import com.esotericsoftware.kryonet.Server;
 
 public abstract class GameServer {

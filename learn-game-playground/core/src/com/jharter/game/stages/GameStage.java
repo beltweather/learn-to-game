@@ -12,7 +12,6 @@ import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CameraSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.ClientSendInputSystem;
-import com.jharter.game.ashley.systems.ClientUpdateFromSnapshotSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.InputMovementSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
@@ -27,6 +26,8 @@ import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.control.Input;
 import com.jharter.game.game.GameDescription;
+import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameServer;
 import com.jharter.game.util.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
@@ -120,13 +121,17 @@ public abstract class GameStage {
 		
 		if(gameDescription.isServer()) {
 			
-			engine.addSystem(new ServerSendSnapshotSystem(gameDescription.getServer()));
-			engine.addSystem(new ServerProcessInputSystem(gameDescription.getServer()));
+			GameServer server = gameDescription.getServer();
+			engine.addSystem(new ServerSendSnapshotSystem(server));
+			engine.addSystem(new ServerProcessInputSystem(server));
+			
+			//server.addPacketSystemsToEngine(engine);
 			
 		} else if(gameDescription.isClient()){
-			
-			engine.addSystem(new ClientSendInputSystem(gameDescription.getClient()));
-			engine.addSystem(new ClientUpdateFromSnapshotSystem(gameDescription.getClient()));
+
+			GameClient client = gameDescription.getClient();
+			engine.addSystem(new ClientSendInputSystem(client));
+			client.addPacketSystemsToEngine(engine);
 			
 		}
 		

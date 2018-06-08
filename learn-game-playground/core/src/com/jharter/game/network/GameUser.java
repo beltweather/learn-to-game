@@ -1,4 +1,4 @@
-package com.jharter.game.server;
+package com.jharter.game.network;
 
 public class GameUser {
 	public String id;

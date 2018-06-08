@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.control.Input;
-import com.jharter.game.server.GameNetwork.EntityData;
+import com.jharter.game.network.GameNetwork.EntityData;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;

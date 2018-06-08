@@ -1,4 +1,4 @@
-package com.jharter.game.server;
+package com.jharter.game.network;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.jharter.game.control.GlobalInputState;
+import com.jharter.game.network.packets.Packet;
 
 public class GameNetwork {
 
@@ -45,6 +46,7 @@ public class GameNetwork {
 		kryo.register(ObjectMap.class);
 		kryo.register(Object[].class);
 		kryo.register(ArrayList.class);
+		kryo.register(Packet.class);
 	}
 
 	static public class Login {
@@ -95,8 +97,7 @@ public class GameNetwork {
 		return controlMessage.up || controlMessage.down || controlMessage.left || controlMessage.right || controlMessage.interact;
 	}
 	
-	static public class SnapshotPacket {
-		public long time;
+	static public class SnapshotPacket extends Packet<SnapshotPacket> {
 		public List<EntityData> entityDatas = new ArrayList<EntityData>();
 	}
 

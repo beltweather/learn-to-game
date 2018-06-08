@@ -1,7 +1,7 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.jharter.game.server.GameServer;
+import com.jharter.game.network.GameServer;
 
 public class ServerProcessInputSystem extends EntitySystem {
 	

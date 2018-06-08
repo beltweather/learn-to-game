@@ -60,7 +60,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
         compile "com.badlogicgames.ashley:ashley:1.7.0"
-        
+        compile "com.badlogicgames.gdx:gdx-ai:1.8.1"
+      
     }
 }
 

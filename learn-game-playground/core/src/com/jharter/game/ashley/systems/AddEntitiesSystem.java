@@ -3,9 +3,9 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.server.GameClient;
-import com.jharter.game.server.GameNetwork.AddPlayer;
-import com.jharter.game.server.GameNetwork.AddPlayers;
+import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameNetwork.AddPlayer;
+import com.jharter.game.network.GameNetwork.AddPlayers;
 import com.jharter.game.stages.GameStage;
 
 public class AddEntitiesSystem extends EntitySystem {

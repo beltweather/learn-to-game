@@ -20,15 +20,15 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.control.Input;
-import com.jharter.game.server.GameClient;
-import com.jharter.game.server.GameServer;
-import com.jharter.game.server.GameNetwork.AddPlayer;
-import com.jharter.game.server.GameNetwork.AddPlayers;
-import com.jharter.game.server.GameNetwork.EntityData;
-import com.jharter.game.server.GameNetwork.MoveUser;
-import com.jharter.game.server.GameNetwork.RemoveEntities;
-import com.jharter.game.server.GameNetwork.RequestPlayer;
-import com.jharter.game.server.GameNetwork.SnapshotPacket;
+import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameServer;
+import com.jharter.game.network.GameNetwork.AddPlayer;
+import com.jharter.game.network.GameNetwork.AddPlayers;
+import com.jharter.game.network.GameNetwork.EntityData;
+import com.jharter.game.network.GameNetwork.MoveUser;
+import com.jharter.game.network.GameNetwork.RemoveEntities;
+import com.jharter.game.network.GameNetwork.RequestPlayer;
+import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.util.EntityFactory;
 import com.jharter.game.util.IDUtil;
 
@@ -206,12 +206,13 @@ public class OnlineEvoGame extends ApplicationAdapter {
     		client = new GameClient() {
 
     			@Override
-    			public void received(Connection connection, Object object, Client client) {
+    			public void received(GameClient gameClient, Connection connection, Object object) {
+    				Client client = gameClient.getKryoClient();
     				if(object instanceof MoveUser) {
     					serverMoveUser = (MoveUser) object;
     					serverMoveUserTime = System.currentTimeMillis();
     				} else if(object instanceof SnapshotPacket) {
-    					snapshotPackets.begin();
+    					/*snapshotPackets.begin();
     					DelayedRemovalArray<SnapshotPacket> packets = new DelayedRemovalArray<SnapshotPacket>(snapshotPackets);
     					packets.add((SnapshotPacket) object);
     					packets.sort(new Comparator<SnapshotPacket>() {
@@ -224,7 +225,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     					});
     					DelayedRemovalArray<SnapshotPacket> temp = snapshotPackets;
     					snapshotPackets = packets;
-    					temp.end();    				
+    					temp.end();*/    				
     				} else if(object instanceof AddPlayers) {
     					AddPlayers addHeroes = (AddPlayers) object;
     					System.out.println("Client " + client.getID() + " received " + addHeroes.players.size + " heroes from server.");

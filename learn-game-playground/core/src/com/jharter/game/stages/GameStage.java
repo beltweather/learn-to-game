@@ -3,22 +3,30 @@ package com.jharter.game.stages;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.systems.AddEntitiesSystem;
 import com.jharter.game.ashley.systems.AnimationSystem;
+import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CameraSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
+import com.jharter.game.ashley.systems.ClientSendInputSystem;
+import com.jharter.game.ashley.systems.ClientUpdateFromSnapshotSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
-import com.jharter.game.ashley.systems.ControlledMovementSystem;
+import com.jharter.game.ashley.systems.InputMovementSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
-import com.jharter.game.ashley.systems.MoveTowardTargetSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.SelectInputSystem;
+import com.jharter.game.ashley.systems.ServerProcessInputSystem;
+import com.jharter.game.ashley.systems.ServerSendSnapshotSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.control.Input;
+import com.jharter.game.game.GameDescription;
 import com.jharter.game.util.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
@@ -30,13 +38,15 @@ public abstract class GameStage {
 	protected PooledEngine engine;
     protected Box2DWorld box2D;
     protected Input stageInput;
+    protected GameDescription gameDescription;
     
-	public GameStage() {
-		this(IDUtil.newID());
+	public GameStage(GameDescription gameDescription) {
+		this(IDUtil.newID(), gameDescription);
 	}
 	
-	public GameStage(String id) {
+	public GameStage(String id, GameDescription gameDescription) {
 		this.id = id;
+		this.gameDescription = gameDescription;
 		create();
 	}
     
@@ -46,6 +56,10 @@ public abstract class GameStage {
 	
 	protected void setId(String id) {
 		this.id = id;
+	}
+	
+	public GameDescription getGameDescription() {
+		return gameDescription;
 	}
 	
 	public OrthographicCamera getCamera() {
@@ -71,7 +85,7 @@ public abstract class GameStage {
         addEntities(engine);
     }
 	
-	protected Input buildInput(boolean active) {
+	public Input buildInput(boolean active) {
 		int displayW = Gdx.graphics.getWidth();
     	int displayH = Gdx.graphics.getHeight();
     	Input input = new Input(displayW, displayH, camera);
@@ -100,25 +114,53 @@ public abstract class GameStage {
     	PooledEngine engine = new PooledEngine();
 		EntityUtil.addIdListener(engine);
 		
-		engine.addSystem(new SelectInputSystem(this));
+		if(gameDescription.isOffline()) {
+			engine.addSystem(new SelectInputSystem());
+		}
+		
+		if(gameDescription.isServer()) {
+			
+			engine.addSystem(new ServerSendSnapshotSystem(gameDescription.getServer()));
+			engine.addSystem(new ServerProcessInputSystem(gameDescription.getServer()));
+			
+		} else if(gameDescription.isClient()){
+			
+			engine.addSystem(new ClientSendInputSystem(gameDescription.getClient()));
+			engine.addSystem(new ClientUpdateFromSnapshotSystem(gameDescription.getClient()));
+			
+		}
+		
 		engine.addSystem(new UpdatePhysicsSystem(this));
 		engine.addSystem(new CollisionSystem());
-		engine.addSystem(new ControlledMovementSystem());
+		engine.addSystem(new InputMovementSystem());
 		engine.addSystem(new VelocityMovementSystem());
-		engine.addSystem(new MoveTowardTargetSystem());
+		engine.addSystem(new ApproachTargetSystem());
 		engine.addSystem(new InteractSystem());
-		engine.addSystem(new AnimationSystem());
-		engine.addSystem(new CameraSystem(getCamera()));
-		engine.addSystem(new RenderInitSystem());
-		engine.addSystem(new RenderTilesSystem(getCamera()));
-		engine.addSystem(new RenderEntitiesSystem(getCamera()));
+		
+		if(!gameDescription.isHeadless()) {
+			engine.addSystem(new AnimationSystem());
+			engine.addSystem(new CameraSystem(getCamera()));
+			engine.addSystem(new RenderInitSystem());
+			engine.addSystem(new RenderTilesSystem(getCamera()));
+			engine.addSystem(new RenderEntitiesSystem(getCamera()));
+		}
+		
 		engine.addSystem(new RemoveEntitiesSystem(engine, getBox2DWorld()));
+		
+		if(gameDescription.isClient()) {
+			engine.addSystem(new AddEntitiesSystem(this, gameDescription.getClient()));
+		}
+		
 		engine.addSystem(new CleanupInputSystem(this));
 		
 		return engine;
     }
     
     public abstract void addEntities(PooledEngine engine);
+    
+    public abstract EntityBuilder addPlayerEntity(String id, Vector3 position, boolean focus);
+    
+    public abstract Vector3 getEntryPoint();
     
     public void tick(float deltaTime) {
         engine.update(deltaTime);

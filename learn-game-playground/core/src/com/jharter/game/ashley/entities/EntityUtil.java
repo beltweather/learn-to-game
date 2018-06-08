@@ -110,8 +110,8 @@ public class EntityUtil {
 		EntityBuilder b = buildDynamicSprite(engine, id, type, position, width, height, texture, world, BodyType.DynamicBody, speed);
 		
 		b.InputComp().input = input;
-		b.FocusComp();
 		b.InteractComp();
+		b.PlayerComp();
 		
 		return b;
 	}

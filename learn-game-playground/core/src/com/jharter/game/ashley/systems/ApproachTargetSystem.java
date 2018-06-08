@@ -8,13 +8,13 @@ import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
 
-public class MoveTowardTargetSystem extends IteratingSystem {
+public class ApproachTargetSystem extends IteratingSystem {
 	
 	private static final float ALPHA = 0.01f;
 	private static final float MIN_DIFF = 1.0f;
 
 	@SuppressWarnings("unchecked")
-	public MoveTowardTargetSystem() {
+	public ApproachTargetSystem() {
 		super(Family.all(PositionComp.class, TargetPositionComp.class).get());
 	}
 	

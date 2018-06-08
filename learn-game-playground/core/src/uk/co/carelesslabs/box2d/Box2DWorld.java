@@ -55,7 +55,7 @@ public class Box2DWorld {
     }
     
     public void tick(OrthographicCamera camera, Input control) {
-        if (control.isDebug())
+        if (control != null && control.isDebug())
             debugRenderer.render(world, camera.combined);
         world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
     }
@@ -75,6 +75,10 @@ public class Box2DWorld {
     private void processCollisions(Fixture aFixture, Fixture bFixture, boolean begin) {
     	String aId = getEntityId(aFixture);
         String bId = getEntityId(bFixture);
+        
+        if(aId == null || bId == null) {
+        	return;
+        }
         
         Entity entityA = EntityUtil.findEntity(aId);
         Entity entityB = EntityUtil.findEntity(bId);

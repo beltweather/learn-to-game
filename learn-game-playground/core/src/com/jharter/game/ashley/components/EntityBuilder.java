@@ -1,7 +1,5 @@
 package com.jharter.game.ashley.components;
 
-import java.util.HashMap;
-
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -17,6 +15,7 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
+import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -77,6 +76,7 @@ public class EntityBuilder implements Component, Poolable {
 		comps.clear();
 	}
 
+	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public FocusComp FocusComp() { return get(FocusComp.class); }
 	public IDComp IDComp() { return get(IDComp.class); }
 	public PositionComp PositionComp() { return get(PositionComp.class); }

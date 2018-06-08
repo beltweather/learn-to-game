@@ -10,10 +10,10 @@ import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 
-public class ControlledMovementSystem extends IteratingSystem {
+public class InputMovementSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
-	public ControlledMovementSystem() {
+	public InputMovementSystem() {
 		super(Family.all(PositionComp.class, 
 						 VelocityComp.class, 
 						 InputComp.class,

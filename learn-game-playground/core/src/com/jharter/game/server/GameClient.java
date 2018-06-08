@@ -1,14 +1,22 @@
 package com.jharter.game.server;
 
 import java.io.IOException;
+import java.util.Comparator;
 
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
+import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.server.GameNetwork.AddPlayer;
+import com.jharter.game.server.GameNetwork.AddPlayers;
 import com.jharter.game.server.GameNetwork.Login;
 import com.jharter.game.server.GameNetwork.Ping;
+import com.jharter.game.server.GameNetwork.SnapshotPacket;
+import com.jharter.game.util.IDUtil;
 
 public abstract class GameClient {
 	
@@ -19,10 +27,17 @@ public abstract class GameClient {
 	protected long pingMS = 0;
 	protected long latencyMS = 0;
 	protected float time = 0;
+	protected DelayedRemovalArray<SnapshotPacket> snapshotPackets = new DelayedRemovalArray<SnapshotPacket>();
+	protected AddPlayers addPlayers = null;
+	protected String playerId = IDUtil.newID();
 	
 	public GameClient() {
 		clientId = "ID:" + System.currentTimeMillis();
 		client = new Client();
+	}
+	
+	public String getPlayerId() {
+		return playerId;
 	}
 	
 	public void tick(float deltaTime) {
@@ -86,6 +101,7 @@ public abstract class GameClient {
 			public void disconnected (Connection connection) {
 				
 			}
+			
 		}));
 		
 		try {
@@ -106,6 +122,40 @@ public abstract class GameClient {
 
 	public void sendTCP(Object object) {
 		client.sendTCP(object);
+	}
+	
+	protected void handleSnapshotPacket(SnapshotPacket snapshotPacket) {
+		snapshotPackets.begin();
+		DelayedRemovalArray<SnapshotPacket> packets = new DelayedRemovalArray<SnapshotPacket>(snapshotPackets);
+		packets.add(snapshotPacket);
+		packets.sort(new Comparator<SnapshotPacket>() {
+
+			@Override
+			public int compare(SnapshotPacket arg0, SnapshotPacket arg1) {
+				return (int) (arg0.time - arg1.time);
+			}
+			
+		});
+		DelayedRemovalArray<SnapshotPacket> temp = snapshotPackets;
+		snapshotPackets = packets;
+		temp.end();    				
+	}
+	
+	public DelayedRemovalArray<SnapshotPacket> getSnapshotPackets() {
+		return snapshotPackets;
+	}
+	
+	protected void handleAddPlayers(AddPlayers addPlayers) {
+		System.out.println("Client " + client.getID() + " received " + addPlayers.players.size + " players from server.");
+		this.addPlayers = addPlayers;
+	}
+	
+	public AddPlayers getAddPlayers() {
+		return addPlayers;
+	}
+	
+	public void clearAddPlayers() {
+		this.addPlayers = null;
 	}
 	
 }

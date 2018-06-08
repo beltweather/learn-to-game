@@ -7,13 +7,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
+import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
+import com.jharter.game.game.GameDescription;
 import com.jharter.game.util.IDUtil;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -26,8 +28,8 @@ public class TestStageA extends GameStage {
 	
 	private Island island;
 	
-	public TestStageA() {
-		super();
+	public TestStageA(GameDescription gameDescription) {
+		super(gameDescription);
 	}
 	
 	@Override
@@ -36,18 +38,13 @@ public class TestStageA extends GameStage {
 		for(Entity e : island.getTileEntities(engine, getBox2DWorld())) {
 			engine.addEntity(e);
 		}
-		Vector3 center = island.getCentrePosition();
-		addHero(engine, center.cpy());
-	    addBird(engine, center.cpy());
-	}
-	
-    private void addHero(PooledEngine engine, Vector3 position) {
-		float width = 8;
-		float height = 8;
-		TextureRegion texture = new TextureRegion(Media.hero);
-		float speed = 90;
-		Entity heroEntity = EntityUtil.buildPlayerSprite(engine, IDUtil.newID(), EntityType.HERO, position, width, height, texture, box2D, speed, buildInput(true)).Entity();
-		engine.addEntity(heroEntity);
+		
+		//String focusId = IDUtil.newID();
+		//addFocusEntity(focusId, center.cpy());
+	    
+		Vector3 center = getEntryPoint();
+		center.x += 10;
+		addBird(engine, center.cpy());
 	}
 	
 	private void addBird(PooledEngine engine, Vector3 position) {
@@ -83,6 +80,26 @@ public class TestStageA extends GameStage {
 		animationComp.looping = true;
 		birdEntity.add(animationComp);
 		engine.addEntity(birdEntity);
+	}
+
+	@Override
+	public EntityBuilder addPlayerEntity(String id, Vector3 position, boolean focus) {
+		float width = 8;
+		float height = 8;
+		TextureRegion texture = new TextureRegion(Media.hero);
+		float speed = 90;
+		System.out.println("Hero id: " + id);
+		EntityBuilder b = EntityUtil.buildPlayerSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, speed, buildInput(focus));
+		if(focus) {
+			b.FocusComp();
+		}
+		engine.addEntity(b.Entity());
+		return b;
+	}
+
+	@Override
+	public Vector3 getEntryPoint() {
+		return island.getCentrePosition().cpy();
 	}
 	
 }

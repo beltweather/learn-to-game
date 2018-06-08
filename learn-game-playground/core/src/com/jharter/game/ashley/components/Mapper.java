@@ -9,6 +9,7 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
+import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -21,6 +22,7 @@ import com.jharter.game.ashley.components.Components.VisualComp;
 
 public class Mapper {
 	
+	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
 	public static final ComponentMapper<IDComp> IDComp = ComponentMapper.getFor(IDComp.class);
 	public static final ComponentMapper<PositionComp> PositionComp = ComponentMapper.getFor(PositionComp.class);

@@ -1,9 +1,11 @@
 package com.jharter.game.server;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.jharter.game.control.GlobalInputState;
@@ -32,14 +34,17 @@ public class GameNetwork {
 		kryo.register(ControlMessage.class);
 		kryo.register(SnapshotPacket.class);
 		kryo.register(EntityData.class);
-		kryo.register(ArrayList.class);
 		kryo.register(Ping.class);
 		kryo.register(GlobalInputState.class);
 		kryo.register(Vector2.class);
-		kryo.register(RequestHero.class);
-		kryo.register(AddHero.class);
-		kryo.register(AddHeroes.class);
+		kryo.register(RequestPlayer.class);
+		kryo.register(AddPlayer.class);
+		kryo.register(AddPlayers.class);
 		kryo.register(RemoveEntities.class);
+		kryo.register(Array.class);
+		kryo.register(ObjectMap.class);
+		kryo.register(Object[].class);
+		kryo.register(ArrayList.class);
 	}
 
 	static public class Login {
@@ -92,7 +97,7 @@ public class GameNetwork {
 	
 	static public class SnapshotPacket {
 		public long time;
-		public Array<EntityData> entityDatas = new Array<EntityData>();
+		public List<EntityData> entityDatas = new ArrayList<EntityData>();
 	}
 
 	static public class EntityData {
@@ -105,17 +110,17 @@ public class GameNetwork {
 		public long time;
 	}
 	
-	static public class RequestHero {
+	static public class RequestPlayer {
 		public String id;
 	}
 	
-	static public class AddHero {
+	static public class AddPlayer {
 		public String id;
 		public float x, y, z;
 	}
 	
-	static public class AddHeroes {
-		public Array<AddHero> heroes = new Array<AddHero>();
+	static public class AddPlayers {
+		public Array<AddPlayer> players = new Array<AddPlayer>();
 	}
 	
 	static public class RemoveEntities {

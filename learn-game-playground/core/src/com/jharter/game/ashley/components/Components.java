@@ -18,6 +18,13 @@ public final class Components {
 
 	private Components() {}
 	
+	public static final class PlayerComp implements Component, Poolable {
+		private PlayerComp() {}
+		
+		@Override
+		public void reset() {}
+	}
+	
 	public static final class FocusComp implements Component, Poolable {
 		private FocusComp() {}
 		

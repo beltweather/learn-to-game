@@ -22,12 +22,12 @@ import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.control.Input;
 import com.jharter.game.server.GameClient;
 import com.jharter.game.server.GameServer;
-import com.jharter.game.server.GameNetwork.AddHero;
-import com.jharter.game.server.GameNetwork.AddHeroes;
+import com.jharter.game.server.GameNetwork.AddPlayer;
+import com.jharter.game.server.GameNetwork.AddPlayers;
 import com.jharter.game.server.GameNetwork.EntityData;
 import com.jharter.game.server.GameNetwork.MoveUser;
 import com.jharter.game.server.GameNetwork.RemoveEntities;
-import com.jharter.game.server.GameNetwork.RequestHero;
+import com.jharter.game.server.GameNetwork.RequestPlayer;
 import com.jharter.game.server.GameNetwork.SnapshotPacket;
 import com.jharter.game.util.EntityFactory;
 import com.jharter.game.util.IDUtil;
@@ -176,21 +176,21 @@ public class OnlineEvoGame extends ApplicationAdapter {
 						if(heroInput.containsKey(heroId)) {
 							heroInput.get(heroId).setInputState(state);
 						}
-					} else if(object instanceof RequestHero) {
-						RequestHero request = (RequestHero) object;
+					} else if(object instanceof RequestPlayer) {
+						RequestPlayer request = (RequestPlayer) object;
 						Hero hero = EntityFactory.newHero(request.id, island.centreTile.pos, box2D);
 						addHero(hero);
 				        //box2D.populateEntityMap(island.entities);
-						AddHeroes addHeroes = new AddHeroes();
+						AddPlayers addHeroes = new AddPlayers();
 						for(Hero h : heroes.values()) {
-							AddHero addHero = new AddHero();
+							AddPlayer addHero = new AddPlayer();
 							addHero.id = h.id;
 							addHero.x = h.pos.x;
 							addHero.y = h.pos.y;
 							addHero.z = h.pos.z;
-							addHeroes.heroes.add(addHero);
+							addHeroes.players.add(addHero);
 						}
-						System.out.println("Server sending " + addHeroes.heroes.size + " heroes to all clients.");
+						System.out.println("Server sending " + addHeroes.players.size + " heroes to all clients.");
 						server.sendToAllTCP(addHeroes);
 					} else if(object instanceof RemoveEntities) {
 						RemoveEntities removeEntities = (RemoveEntities) object;
@@ -225,10 +225,10 @@ public class OnlineEvoGame extends ApplicationAdapter {
     					DelayedRemovalArray<SnapshotPacket> temp = snapshotPackets;
     					snapshotPackets = packets;
     					temp.end();    				
-    				} else if(object instanceof AddHeroes) {
-    					AddHeroes addHeroes = (AddHeroes) object;
-    					System.out.println("Client " + client.getID() + " received " + addHeroes.heroes.size + " heroes from server.");
-    					for(AddHero addHero : addHeroes.heroes) {
+    				} else if(object instanceof AddPlayers) {
+    					AddPlayers addHeroes = (AddPlayers) object;
+    					System.out.println("Client " + client.getID() + " received " + addHeroes.players.size + " heroes from server.");
+    					for(AddPlayer addHero : addHeroes.players) {
     						if(heroes.containsKey(addHero.id)) {
     							System.out.println("Client " + client.getID() + " skipping hero " + addHero.id);
     							continue;
@@ -249,7 +249,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     		client.start();
     		
     		mainHeroId = IDUtil.newID();
-    		RequestHero requestHero = new RequestHero();
+    		RequestPlayer requestHero = new RequestPlayer();
     		requestHero.id = mainHeroId;
     		client.sendTCP(requestHero);
         }
@@ -346,7 +346,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         		SnapshotPacket snapshot1 = packets.get(newestIdx - 1);
         		SnapshotPacket snapshot2 = packets.get(newestIdx);
         		if(snapshot2.time - snapshot1.time > 0) {
-        			for(int i = 0; i < snapshot1.entityDatas.size; i++) {
+        			for(int i = 0; i < snapshot1.entityDatas.size(); i++) {
         				EntityData entityData1 = snapshot1.entityDatas.get(i);
         				EntityData entityData2 = snapshot2.entityDatas.get(i);
         				String heroId = entityData1.id;

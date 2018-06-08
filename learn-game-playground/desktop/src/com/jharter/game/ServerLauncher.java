@@ -2,8 +2,8 @@ package com.jharter.game;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-
-import uk.co.carelesslabs.OnlineEvoGame;
+import com.jharter.game.game.GameType;
+import com.jharter.game.game.OnlineGame;
 
 public class ServerLauncher {
 	public static void main (String[] arg) {
@@ -12,6 +12,6 @@ public class ServerLauncher {
 		config.height = 600;
 		config.foregroundFPS = 60;
 		config.backgroundFPS = 60;
-		new LwjglApplication(new OnlineEvoGame(false, true), config);
+		new LwjglApplication(new OnlineGame(GameType.SERVER, false), config);
 	}
 }

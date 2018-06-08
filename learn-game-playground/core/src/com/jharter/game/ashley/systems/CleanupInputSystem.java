@@ -13,7 +13,9 @@ public class CleanupInputSystem extends EntitySystem {
 	
 	@Override
 	public void update (float deltaTime) {
-		stage.getInput().setProcessedClick(true);
+		if(stage.getInput() != null) {
+			stage.getInput().setProcessedClick(true);
+		}
 	}
 	
 }

@@ -5,11 +5,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.jharter.game.game.GameType;
 import com.jharter.game.game.OnlineGame;
 
-public class ClientLauncher {
+public class HeadlessServerLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 800;
 		config.height = 600;
-		new LwjglApplication(new OnlineGame(GameType.CLIENT, false), config);
+		config.foregroundFPS = 60;
+		config.backgroundFPS = 60;
+		new LwjglApplication(new OnlineGame(GameType.SERVER, true), config);
 	}
 }

@@ -116,9 +116,9 @@ public class Input extends InputAdapter implements InputProcessor {
     	boolean popOldestState = stateHistory.size >= CONTROL_FRAME_DELAY || (stateHistory.size > 0 && !sentInputLastTick);
 		
     	// Debug println
-    	if(!popOldestState && stateHistory.size > 0) {
+    	/*if(!popOldestState && stateHistory.size > 0) {
 			System.out.println("Ignoring inputState (" + stateHistory.size + " / " + CONTROL_FRAME_DELAY + ")");
-		}
+		}*/
 		
     	// Either use the oldest state in our history or just use a 
     	// state that isn't inputing anything.
@@ -133,9 +133,9 @@ public class Input extends InputAdapter implements InputProcessor {
     	this.renderState = inputState;
     }
     
-    public void maybeSendInputState(GameClient client, String heroId) {
+    public void maybeSendInputState(GameClient client, String focusId) {
     	if(stateToSend != null) {
-    		stateToSend.id = heroId;
+    		stateToSend.id = focusId;
     		client.sendTCP(stateToSend);
     	}
     }

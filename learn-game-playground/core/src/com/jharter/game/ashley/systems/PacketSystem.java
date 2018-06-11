@@ -1,7 +1,6 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.jharter.game.game.GameType;
 import com.jharter.game.network.GameClient;
 import com.jharter.game.network.GameServer;
 import com.jharter.game.network.packets.Packet;

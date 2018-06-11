@@ -5,7 +5,6 @@ import com.jharter.game.ashley.systems.PacketSystem;
 import com.jharter.game.collections.SynchronizedPriorityQueue;
 import com.jharter.game.network.GameClient;
 import com.jharter.game.network.GameServer;
-import com.jharter.game.network.GameNetwork.SnapshotPacket;
 
 public abstract class PacketManager<T extends Packet<T>> {
 

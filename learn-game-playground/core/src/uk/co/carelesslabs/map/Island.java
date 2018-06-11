@@ -1,8 +1,6 @@
 package uk.co.carelesslabs.map;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Random;
 
 import com.badlogic.ashley.core.Entity;
@@ -268,17 +266,17 @@ public class Island {
     }
     
     public void markEntitiesAsRemoved(Box2DWorld box2D, RemoveEntities removeEntities) {
-    	Iterator<GameEntity> it = entities.iterator();
+    	/*Iterator<GameEntity> it = entities.iterator();
         while(it.hasNext()) {
             GameEntity e = it.next();
             if(removeEntities.ids.contains(e.getPositionId(), false)) {
             	e.remove = true;
             }
-        }
+        }*/
     }
 
     public void requestRemoveEntities(Box2DWorld box2D, GameClient client) {
-    	RemoveEntities removeEntities = null; 
+    	/*RemoveEntities removeEntities = null; 
     	Iterator<GameEntity> it = entities.iterator();
          while(it.hasNext()) {
              GameEntity e = it.next();
@@ -291,11 +289,11 @@ public class Island {
          }
          if(removeEntities != null) {
         	 client.sendUDP(removeEntities);
-         }
+         }*/
     }
     
     public void clearRemovedEntities(Box2DWorld box2D) {
-        Iterator<GameEntity> it = entities.iterator();
+        /*Iterator<GameEntity> it = entities.iterator();
         while(it.hasNext()) {
             GameEntity e = it.next();
             if(e.remove){
@@ -304,7 +302,7 @@ public class Island {
        	
                 it.remove();
             }
-        }
+        }*/
     }
 
 }

@@ -28,13 +28,14 @@ import com.jharter.game.control.Input;
 import com.jharter.game.game.GameDescription;
 import com.jharter.game.network.GameClient;
 import com.jharter.game.network.GameServer;
-import com.jharter.game.util.IDUtil;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
 public abstract class GameStage {
 
-	private String id;
+	private ID id;
 	protected OrthographicCamera camera;
 	protected PooledEngine engine;
     protected Box2DWorld box2D;
@@ -45,17 +46,17 @@ public abstract class GameStage {
 		this(IDUtil.newID(), gameDescription);
 	}
 	
-	public GameStage(String id, GameDescription gameDescription) {
+	public GameStage(ID id, GameDescription gameDescription) {
 		this.id = id;
 		this.gameDescription = gameDescription;
 		create();
 	}
     
-	public String getId() {
+	public ID getId() {
 		return id;
 	}
 	
-	protected void setId(String id) {
+	protected void setId(ID id) {
 		this.id = id;
 	}
 	
@@ -163,7 +164,7 @@ public abstract class GameStage {
     
     public abstract void addEntities(PooledEngine engine);
     
-    public abstract EntityBuilder addPlayerEntity(String id, Vector3 position, boolean focus);
+    public abstract EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus);
     
     public abstract Vector3 getEntryPoint();
     

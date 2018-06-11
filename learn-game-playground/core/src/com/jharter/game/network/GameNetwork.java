@@ -10,6 +10,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.network.packets.Packet;
+import com.jharter.game.util.id.ID;
 
 public class GameNetwork {
 
@@ -48,22 +49,24 @@ public class GameNetwork {
 		kryo.register(Object[].class);
 		kryo.register(ArrayList.class);
 		kryo.register(Packet.class);
+		kryo.register(ID.class);
 	}
 
 	static public class Login {
-		public String id;
+		public ID id;
 	}
 
 	static public class RegistrationRequired {
 	}
 
 	static public class Register {
-		public String id;
+		public ID id;
 		public String otherStuff;
 	}
 
 	static public class UpdateUser {
-		public String id, x, y;
+		public ID id;
+		public String x, y;
 	}
 
 	static public class AddUser {
@@ -71,7 +74,7 @@ public class GameNetwork {
 	}
 
 	static public class RemoveUser {
-		public String id;
+		public ID id;
 	}
 
 	static public class MoveUser {
@@ -103,7 +106,7 @@ public class GameNetwork {
 	}
 
 	static public class EntityData {
-		public String id;
+		public ID id;
 		public float x, y;
 		public GlobalInputState input;
 	}
@@ -113,11 +116,11 @@ public class GameNetwork {
 	}
 	
 	static public class RequestPlayer {
-		public String id;
+		public ID id;
 	}
 	
 	static public class AddPlayer {
-		public String id;
+		public ID id;
 		public float x, y, z;
 	}
 	
@@ -126,6 +129,6 @@ public class GameNetwork {
 	}
 	
 	static public class RemoveEntities {
-		public Array<String> ids = new Array<String>();
+		public Array<ID> ids = new Array<ID>();
 	}
 }

@@ -13,10 +13,11 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.Components.CollisionComp;
+import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.control.Input;
+import com.jharter.game.util.id.ID;
 
 public class Box2DWorld {
     public World world;
@@ -68,13 +69,13 @@ public class Box2DWorld {
         }
     }
     
-    private String getEntityId(Fixture fixture) {
-    	return (String) fixture.getBody().getUserData();
+    private ID getEntityId(Fixture fixture) {
+    	return (ID) fixture.getBody().getUserData();
     }
     
     private void processCollisions(Fixture aFixture, Fixture bFixture, boolean begin) {
-    	String aId = getEntityId(aFixture);
-        String bId = getEntityId(bFixture);
+    	ID aId = getEntityId(aFixture);
+        ID bId = getEntityId(bFixture);
         
         if(aId == null || bId == null) {
         	return;

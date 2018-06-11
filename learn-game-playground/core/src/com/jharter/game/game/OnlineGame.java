@@ -3,7 +3,6 @@ package com.jharter.game.game;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Game;
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.jharter.game.ashley.components.Components.IDComp;
@@ -18,11 +17,11 @@ import com.jharter.game.network.GameNetwork.AddPlayer;
 import com.jharter.game.network.GameNetwork.AddPlayers;
 import com.jharter.game.network.GameNetwork.RequestPlayer;
 import com.jharter.game.network.GameServer;
-import com.jharter.game.network.packets.Packet;
 import com.jharter.game.screens.StageScreen;
 import com.jharter.game.screens.TestStageScreen;
 import com.jharter.game.stages.GameStage;
-import com.jharter.game.util.IDUtil;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Media;
 
@@ -87,7 +86,7 @@ public class OnlineGame extends Game {
 			public void received(Connection c, Object object, Server server) {
 				if(object instanceof GlobalInputState) {
 					GlobalInputState state = (GlobalInputState) object;
-					String entityId = state.id;
+					ID entityId = state.id;
 					Entity entity = EntityUtil.findEntity(entityId);
 					if(entity != null) {
 						InputComp in = Mapper.InputComp.get(entity);
@@ -97,7 +96,7 @@ public class OnlineGame extends Game {
 					}
 				} else if(object instanceof RequestPlayer) {
 					RequestPlayer request = (RequestPlayer) object;
-					String id = request.id;
+					ID id = request.id;
 					if(EntityUtil.findEntity(id) != null) {
 						System.err.println("Requested new player with id " + id + " but they already exist.");
 						return;

@@ -4,12 +4,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.Components.BodyComp;
-import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.components.Mapper;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 

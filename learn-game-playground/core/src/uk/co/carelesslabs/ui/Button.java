@@ -1,10 +1,11 @@
 package uk.co.carelesslabs.ui;
 
-import uk.co.carelesslabs.Enums;
-import uk.co.carelesslabs.entity.GameEntity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+
+import uk.co.carelesslabs.Enums;
+import uk.co.carelesslabs.entity.GameEntity;
 
 public class Button extends GameEntity {
     public OnClickListener listener;

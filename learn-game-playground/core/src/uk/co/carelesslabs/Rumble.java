@@ -1,6 +1,7 @@
 package uk.co.carelesslabs;
 
 import java.util.Random;
+
 import com.badlogic.gdx.math.Vector3;
 
 public class Rumble {

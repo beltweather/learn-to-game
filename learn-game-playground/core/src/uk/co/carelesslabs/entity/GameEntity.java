@@ -1,16 +1,17 @@
 package uk.co.carelesslabs.entity;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
+
 import uk.co.carelesslabs.Enums.EnityState;
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.box2d.Box2DWorld;
 import uk.co.carelesslabs.map.Chunk;
 import uk.co.carelesslabs.map.Tile;
-
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.jharter.game.util.IDUtil;
 
 public class GameEntity implements Comparable<GameEntity> {
     
@@ -33,7 +34,7 @@ public class GameEntity implements Comparable<GameEntity> {
     public float time;
     public float coolDown;
     public Tile currentTile;
-    public String id;
+    public ID id;
     
     float dirX = 0;
     float dirY = 0;

@@ -1,5 +1,7 @@
 package com.jharter.game.control;
 
+import com.jharter.game.util.id.ID;
+
 /**
  * A simple class for storing and sending input that should be
  * communicated between the server and client. This class should
@@ -10,7 +12,7 @@ package com.jharter.game.control;
  *
  */
 public class GlobalInputState {
-	public String id;
+	public ID id;
 	public boolean up, down, left, right, interact;
 	public long time;
 }

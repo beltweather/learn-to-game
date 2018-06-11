@@ -1,13 +1,12 @@
 package uk.co.carelesslabs.entity;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.control.Input;
 import com.jharter.game.network.GameNetwork.EntityData;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
@@ -22,7 +21,7 @@ public class Hero extends GameEntity{
     
     public Vector3 targetPos;
     
-    public Hero(String id, Vector3 pos, Box2DWorld box2d){
+    public Hero(ID id, Vector3 pos, Box2DWorld box2d){
         this.id = id;
         targetPos = null;
     	type = EntityType.HERO;

@@ -10,12 +10,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.VisualComp;
+import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.Input;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.box2d.Box2DHelper;
@@ -25,7 +26,7 @@ public class EntityUtil {
 	
 	private EntityUtil() {}
 	
-	private static final ObjectMap<String, Entity> entitiesById = new ObjectMap<String, Entity>();
+	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
 	public static void addIdListener(PooledEngine engine) {
 		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
@@ -51,7 +52,7 @@ public class EntityUtil {
 		});
 	}
 	
-	public static Entity findEntity(String id) {
+	public static Entity findEntity(ID id) {
 		if(entitiesById.containsKey(id)) {
 			return entitiesById.get(id);
 		}
@@ -74,7 +75,7 @@ public class EntityUtil {
 		return b;
 	}
 	
-	public static EntityBuilder buildBasicEntity(PooledEngine engine, String id, EntityType type, Vector3 position, float width, float height, TextureRegion texture) {
+	public static EntityBuilder buildBasicEntity(PooledEngine engine, ID id, EntityType type, Vector3 position, float width, float height, TextureRegion texture) {
 		EntityBuilder b = buildBasicEntity(engine);
 		
 		b.IDComp().id = id;
@@ -87,7 +88,7 @@ public class EntityUtil {
 		return b;
 	}
 	
-	public static EntityBuilder buildStaticSprite(PooledEngine engine, String id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, BodyType bodyType) {
+	public static EntityBuilder buildStaticSprite(PooledEngine engine, ID id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, BodyType bodyType) {
 		EntityBuilder b = buildBasicEntity(engine, id, type, position, width, height, texture);
 		
 		b.BodyComp().body = buildBody(position, width, height, world, bodyType);
@@ -97,7 +98,7 @@ public class EntityUtil {
 		return b;
 	}
 	
-	public static EntityBuilder buildDynamicSprite(PooledEngine engine, String id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, BodyType bodyType, float speed) {
+	public static EntityBuilder buildDynamicSprite(PooledEngine engine, ID id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, BodyType bodyType, float speed) {
 		EntityBuilder b = buildStaticSprite(engine, id, type, position, width, height, texture, world, bodyType);
 		
 		b.VelocityComp().speed = speed;
@@ -106,7 +107,7 @@ public class EntityUtil {
 		return b;
 	}
 	
-	public static EntityBuilder buildPlayerSprite(PooledEngine engine, String id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, float speed, Input input) {
+	public static EntityBuilder buildPlayerSprite(PooledEngine engine, ID id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, float speed, Input input) {
 		EntityBuilder b = buildDynamicSprite(engine, id, type, position, width, height, texture, world, BodyType.DynamicBody, speed);
 		
 		b.InputComp().input = input;

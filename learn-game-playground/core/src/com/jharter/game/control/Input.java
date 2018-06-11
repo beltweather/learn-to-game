@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.jharter.game.network.GameClient;
 import com.jharter.game.network.GameNetwork.EntityData;
+import com.jharter.game.util.id.ID;
 
 public class Input extends InputAdapter implements InputProcessor {
 	
@@ -133,7 +134,7 @@ public class Input extends InputAdapter implements InputProcessor {
     	this.renderState = inputState;
     }
     
-    public void maybeSendInputState(GameClient client, String focusId) {
+    public void maybeSendInputState(GameClient client, ID focusId) {
     	if(stateToSend != null) {
     		stateToSend.id = focusId;
     		client.sendUDP(stateToSend);

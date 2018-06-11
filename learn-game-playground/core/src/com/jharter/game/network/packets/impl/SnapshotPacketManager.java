@@ -14,6 +14,7 @@ import com.jharter.game.network.GameNetwork.EntityData;
 import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.network.GameServer;
 import com.jharter.game.network.packets.PacketManager;
+import com.jharter.game.util.id.ID;
 
 public class SnapshotPacketManager extends PacketManager<SnapshotPacket> {
 	
@@ -54,7 +55,7 @@ public class SnapshotPacketManager extends PacketManager<SnapshotPacket> {
 		for(int i = 0; i < pastPacket.entityDatas.size(); i++) {
 			EntityData pastEntityData = pastPacket.entityDatas.get(i);
 			EntityData futureEntityData = futurePacket.entityDatas.get(i);
-			String entityId = pastEntityData.id;
+			ID entityId = pastEntityData.id;
 			
 			Entity entity = EntityUtil.findEntity(entityId);
 			if(entity != null) {

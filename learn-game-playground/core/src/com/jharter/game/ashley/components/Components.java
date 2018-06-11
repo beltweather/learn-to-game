@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.Input;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
@@ -33,7 +34,7 @@ public final class Components {
 	}
 	
 	public static final class IDComp implements Component, Poolable {
-		public String id;
+		public ID id;
 		
 		private IDComp() {}
 
@@ -172,7 +173,7 @@ public final class Components {
 	}
 	
 	public static final class CollisionComp implements Component, Poolable {
-		public String id;
+		public ID id;
 		public boolean begin;
 		
 		private CollisionComp() {}
@@ -210,7 +211,7 @@ public final class Components {
 	
 	
 	public static final class InteractComp implements Component, Poolable {
-		public Array<String> interactables = new Array<String>();
+		public Array<ID> interactables = new Array<ID>();
 		public Interaction interaction;
 
 		private InteractComp() {}

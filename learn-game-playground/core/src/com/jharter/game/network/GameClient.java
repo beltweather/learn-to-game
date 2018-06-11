@@ -17,13 +17,14 @@ import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
 import com.jharter.game.network.packets.impl.SnapshotPacketManager;
-import com.jharter.game.util.IDUtil;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 public class GameClient {
 	
 	public static final boolean DEBUG_SHOW_PING = false;
 	
-	protected String clientId;
+	protected ID clientId;
 	protected Client client;
 	protected long pingMS = 0;
 	protected long latencyMS = 0;
@@ -31,15 +32,15 @@ public class GameClient {
 	protected ObjectMap<Class, PacketManager> packetManagers = new ObjectMap();
 	
 	protected AddPlayers addPlayers = null;
-	protected String playerId = IDUtil.newID();
+	protected ID playerId = IDUtil.newID();
 	
 	public GameClient() {
-		clientId = "ID:" + System.currentTimeMillis();
+		clientId = IDUtil.newID();
 		client = new Client();
 		addPacketManagers();
 	}
 	
-	public String getPlayerId() {
+	public ID getPlayerId() {
 		return playerId;
 	}
 	
@@ -78,11 +79,11 @@ public class GameClient {
 		}
 	}
 	
-	public String getClientId() {
+	public ID getClientId() {
 		return clientId;
 	}
 	
-	public void setClientId(String clientId) {
+	public void setClientId(ID clientId) {
 		this.clientId = clientId;
 	}
 	

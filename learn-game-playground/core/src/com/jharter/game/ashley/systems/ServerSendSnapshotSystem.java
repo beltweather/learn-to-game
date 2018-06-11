@@ -10,10 +10,10 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.network.GameNetwork.EntityData;
 import com.jharter.game.network.GameNetwork.SnapshotPacket;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.network.GameServer;
 
 public class ServerSendSnapshotSystem extends IntervalSystem {
 	

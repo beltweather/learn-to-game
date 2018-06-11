@@ -1,8 +1,9 @@
 package uk.co.carelesslabs.ui;
 
-import uk.co.carelesslabs.Media;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import uk.co.carelesslabs.Media;
 
 public class BuildMenu extends Menu {
     

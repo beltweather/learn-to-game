@@ -1,8 +1,5 @@
 package uk.co.carelesslabs;
 
-import java.util.Comparator;
-import java.util.HashMap;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,7 +18,6 @@ import com.esotericsoftware.kryonet.Server;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.control.Input;
 import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameServer;
 import com.jharter.game.network.GameNetwork.AddPlayer;
 import com.jharter.game.network.GameNetwork.AddPlayers;
 import com.jharter.game.network.GameNetwork.EntityData;
@@ -29,8 +25,10 @@ import com.jharter.game.network.GameNetwork.MoveUser;
 import com.jharter.game.network.GameNetwork.RemoveEntities;
 import com.jharter.game.network.GameNetwork.RequestPlayer;
 import com.jharter.game.network.GameNetwork.SnapshotPacket;
+import com.jharter.game.network.GameServer;
 import com.jharter.game.util.EntityFactory;
-import com.jharter.game.util.IDUtil;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 import uk.co.carelesslabs.entity.Bird;
@@ -58,10 +56,10 @@ public class OnlineEvoGame extends ApplicationAdapter {
     private int displayH;
 
     // Hero
-    private String mainHeroId;
+    private ID mainHeroId;
     private Hero mainHero;
-    private ObjectMap<String, Hero> heroes = new ObjectMap<String, Hero>();
-    private ObjectMap<String, Input> heroInput = new ObjectMap<String, Input>();
+    private ObjectMap<ID, Hero> heroes = new ObjectMap<ID, Hero>();
+    private ObjectMap<ID, Input> heroInput = new ObjectMap<ID, Input>();
     
     // Island
     Island island;
@@ -172,7 +170,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
 				public void received(Connection c, Object object, Server server) {
 					if(object instanceof GlobalInputState) {
 						GlobalInputState state = (GlobalInputState) object;
-						String heroId = state.id;
+						ID heroId = state.id;
 						if(heroInput.containsKey(heroId)) {
 							heroInput.get(heroId).setInputState(state);
 						}
@@ -350,7 +348,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         			for(int i = 0; i < snapshot1.entityDatas.size(); i++) {
         				EntityData entityData1 = snapshot1.entityDatas.get(i);
         				EntityData entityData2 = snapshot2.entityDatas.get(i);
-        				String heroId = entityData1.id;
+        				ID heroId = entityData1.id;
         				if(heroes.containsKey(heroId)) {
         					Hero hero = heroes.get(heroId);
         					Input in = heroInput.get(hero.id);

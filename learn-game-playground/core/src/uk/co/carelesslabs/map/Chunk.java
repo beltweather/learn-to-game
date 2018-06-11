@@ -1,7 +1,5 @@
 package uk.co.carelesslabs.map;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 

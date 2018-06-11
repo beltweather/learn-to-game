@@ -7,11 +7,12 @@ import java.util.Set;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.LagListener;
+import com.esotericsoftware.kryonet.Server;
 import com.jharter.game.network.GameNetwork.Login;
 import com.jharter.game.network.GameNetwork.Ping;
 import com.jharter.game.network.GameNetwork.Register;
 import com.jharter.game.network.GameNetwork.RegistrationRequired;
-import com.esotericsoftware.kryonet.Server;
+import com.jharter.game.util.id.ID;
 
 public abstract class GameServer {
 	
@@ -66,7 +67,7 @@ public abstract class GameServer {
 					if (user != null) return;
 
 					// Reject if the name is invalid.
-					String id = ((Login)object).id;
+					ID id = ((Login)object).id;
 					if (!isValid(id)) {
 						c.close();
 						return;
@@ -103,10 +104,10 @@ public abstract class GameServer {
 						c.close();
 						return;
 					}
-					if (!isValid(register.otherStuff)) {
+					/*if (!isValid(register.otherStuff)) {
 						c.close();
 						return;
-					}
+					}*/
 
 					// Reject if character already exists.
 					/*if (loadUser(register.id) != null) {
@@ -130,10 +131,8 @@ public abstract class GameServer {
 				GameServer.this.received(c, object, server);
 			}
 			
-			private boolean isValid (String value) {
+			private boolean isValid (ID value) {
 				if (value == null) return false;
-				value = value.trim();
-				if (value.length() == 0) return false;
 				return true;
 			}
 

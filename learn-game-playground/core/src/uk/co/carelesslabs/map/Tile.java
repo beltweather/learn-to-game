@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.util.IDUtil;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;

@@ -17,7 +17,7 @@ import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.game.GameDescription;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
@@ -53,7 +53,7 @@ public class TestStageA extends GameStage {
 		float height = 8;
 		TextureRegion texture = new TextureRegion(Media.birdWalk, Media.birdWalk.getWidth()/3, Media.birdWalk.getHeight());
 		float speed = 5;
-		ID id = IDUtil.newID();
+		ID id = IDGenerator.newID();
 		Entity birdEntity = EntityUtil.buildDynamicSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, BodyType.StaticBody, speed).Entity();
 		
 		Body sensor = Box2DHelper.createSensor(getBox2DWorld().world, width, height*.85f, width/2, height/3, position, BodyDef.BodyType.DynamicBody);     

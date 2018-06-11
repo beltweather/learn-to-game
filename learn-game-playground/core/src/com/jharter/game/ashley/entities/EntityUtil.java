@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.VisualComp;
+import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.Input;
 import com.jharter.game.util.id.ID;
@@ -117,6 +117,6 @@ public class EntityUtil {
 		return b;
 	}
 	
-	private static final Family renderFamily = Family.all(PositionComp.class, VisualComp.class).exclude(InvisibleComp.class).get();
+	private static final Family renderFamily = Family.all(PositionComp.class, TextureComp.class).exclude(InvisibleComp.class).get();
 	
 }

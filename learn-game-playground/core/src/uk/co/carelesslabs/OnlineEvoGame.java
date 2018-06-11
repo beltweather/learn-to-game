@@ -28,7 +28,7 @@ import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.network.GameServer;
 import com.jharter.game.util.EntityFactory;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 import uk.co.carelesslabs.entity.Bird;
@@ -247,7 +247,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     		};
     		client.start();
     		
-    		mainHeroId = IDUtil.newID();
+    		mainHeroId = IDGenerator.newID();
     		RequestPlayer requestHero = new RequestPlayer();
     		requestHero.id = mainHeroId;
     		client.sendTCP(requestHero);

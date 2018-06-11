@@ -2,9 +2,9 @@ package com.jharter.game.util.id;
 
 import java.util.UUID;
 
-public class IDUtil {
+public class IDGenerator {
 
-	private IDUtil() {}
+	private IDGenerator() {}
 	
 	public static ID newID() {
 		return new ID(UUID.randomUUID());

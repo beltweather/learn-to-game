@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
@@ -70,7 +70,7 @@ public class Tile extends GameEntity {
     }
     
     public Entity toEntity(PooledEngine engine, Box2DWorld box2D) {
-    	Entity entity = EntityUtil.buildBasicEntity(engine, IDUtil.newID(), EntityType.TILE, pos, size, size, new TextureRegion(texture)).Entity();
+    	Entity entity = EntityUtil.buildBasicEntity(engine, IDGenerator.newID(), EntityType.TILE, pos, size, size, new TextureRegion(texture)).Entity();
     	
     	TileComp t = engine.createComponent(TileComp.class);
     	t.code = code;

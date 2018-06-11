@@ -24,7 +24,7 @@ import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.components.Components.VisualComp;
+import com.jharter.game.ashley.components.Components.TextureComp;
 
 public class EntityBuilder implements Component, Poolable {
 	
@@ -83,7 +83,7 @@ public class EntityBuilder implements Component, Poolable {
 	public SizeComp SizeComp() { return get(SizeComp.class); }
 	public TypeComp TypeComp() { return get(TypeComp.class); }
 	public TileComp TileComp() { return get(TileComp.class); }
-	public VisualComp VisualComp() { return get(VisualComp.class); }
+	public TextureComp VisualComp() { return get(TextureComp.class); }
 	public AnimationComp AnimationComp() { return get(AnimationComp.class); }
 	public BodyComp BodyComp() { return get(BodyComp.class); }
 	public SensorComp SensorComp() { return get(SensorComp.class); }

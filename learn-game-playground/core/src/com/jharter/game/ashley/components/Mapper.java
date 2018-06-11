@@ -18,7 +18,7 @@ import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.components.Components.VisualComp;
+import com.jharter.game.ashley.components.Components.TextureComp;
 
 public class Mapper {
 	
@@ -29,7 +29,7 @@ public class Mapper {
 	public static final ComponentMapper<SizeComp> SizeComp = ComponentMapper.getFor(SizeComp.class);
 	public static final ComponentMapper<TypeComp> TypeComp = ComponentMapper.getFor(TypeComp.class);
 	public static final ComponentMapper<TileComp> TileComp = ComponentMapper.getFor(TileComp.class);
-	public static final ComponentMapper<VisualComp> VisualComp = ComponentMapper.getFor(VisualComp.class);
+	public static final ComponentMapper<TextureComp> VisualComp = ComponentMapper.getFor(TextureComp.class);
 	public static final ComponentMapper<AnimationComp> AnimationComp = ComponentMapper.getFor(AnimationComp.class);
 	public static final ComponentMapper<BodyComp> BodyComp = ComponentMapper.getFor(BodyComp.class);
 	public static final ComponentMapper<SensorComp> SensorComp = ComponentMapper.getFor(SensorComp.class);

@@ -21,7 +21,7 @@ import com.jharter.game.screens.StageScreen;
 import com.jharter.game.screens.TestStageScreen;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Media;
 
@@ -58,7 +58,7 @@ public class OnlineGame extends Game {
     		requestHero.id = client.getPlayerId();
     		client.sendTCP(requestHero);
     	} else if(description.isOffline()) {
-    		getStage().addPlayerEntity(IDUtil.newID(), getStage().getEntryPoint(), true);
+    		getStage().addPlayerEntity(IDGenerator.newID(), getStage().getEntryPoint(), true);
     		getStage().activate();
     	}
     	

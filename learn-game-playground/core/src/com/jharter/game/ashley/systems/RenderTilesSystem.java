@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.components.Components.VisualComp;
+import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Mapper;
 
 public class RenderTilesSystem extends IteratingSystem {
@@ -18,7 +18,7 @@ public class RenderTilesSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderTilesSystem (OrthographicCamera camera) {
-		super(Family.all(TileComp.class, PositionComp.class, VisualComp.class).exclude(InvisibleComp.class).get());
+		super(Family.all(TileComp.class, PositionComp.class, TextureComp.class).exclude(InvisibleComp.class).get());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 	}
@@ -34,7 +34,7 @@ public class RenderTilesSystem extends IteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		PositionComp p = Mapper.PositionComp.get(entity);
-		VisualComp v = Mapper.VisualComp.get(entity);
+		TextureComp v = Mapper.VisualComp.get(entity);
 		TileComp t = Mapper.TileComp.get(entity);
 		
 		if(v.region != null) {

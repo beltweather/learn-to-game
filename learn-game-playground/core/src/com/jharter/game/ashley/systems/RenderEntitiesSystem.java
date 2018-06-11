@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.components.Components.VisualComp;
+import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Mapper;
 
 public class RenderEntitiesSystem extends SortedIteratingSystem {
@@ -22,7 +22,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
-		super(Family.all(PositionComp.class, VisualComp.class).exclude(InvisibleComp.class, TileComp.class).get(), new PositionSort());
+		super(Family.all(PositionComp.class, TextureComp.class).exclude(InvisibleComp.class, TileComp.class).get(), new PositionSort());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 	}
@@ -39,7 +39,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		PositionComp p = Mapper.PositionComp.get(entity);
-		VisualComp v = Mapper.VisualComp.get(entity);
+		TextureComp v = Mapper.VisualComp.get(entity);
 		if(v.region == null) {
 			v.region = v.defaultRegion;
 		}

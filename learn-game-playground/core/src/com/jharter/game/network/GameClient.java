@@ -18,7 +18,7 @@ import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
 import com.jharter.game.network.packets.impl.SnapshotPacketManager;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 public class GameClient {
 	
@@ -32,10 +32,10 @@ public class GameClient {
 	protected ObjectMap<Class, PacketManager> packetManagers = new ObjectMap();
 	
 	protected AddPlayers addPlayers = null;
-	protected ID playerId = IDUtil.newID();
+	protected ID playerId = IDGenerator.newID();
 	
 	public GameClient() {
-		clientId = IDUtil.newID();
+		clientId = IDGenerator.newID();
 		client = new Client();
 		addPacketManagers();
 	}

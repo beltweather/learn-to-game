@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Enums.EnityState;
 import uk.co.carelesslabs.Enums.EntityType;
@@ -41,7 +41,7 @@ public class GameEntity implements Comparable<GameEntity> {
     
     public GameEntity(){
         pos = new Vector3();
-        id = IDUtil.newID();
+        id = IDGenerator.newID();
     }
     
     public void draw(SpriteBatch batch){

@@ -88,13 +88,13 @@ public class Box2DWorld {
             if (aFixture.isSensor() && !bFixture.isSensor()) {
             	CollisionComp collisionCompB = Mapper.CollisionComp.get(entityB);
             	if(collisionCompB != null) {
-            		collisionCompB.id = aId;
+            		collisionCompB.collisionWithId = aId;
             		collisionCompB.begin = begin;
             	}
             } else if (bFixture.isSensor() && !aFixture.isSensor()) {
             	CollisionComp collisionCompA = Mapper.CollisionComp.get(entityA);
             	if(collisionCompA != null) {
-            		collisionCompA.id = bId;
+            		collisionCompA.collisionWithId = bId;
             		collisionCompA.begin = begin;
             	}
             }

@@ -19,19 +19,7 @@ public final class Components {
 
 	private Components() {}
 	
-	public static final class PlayerComp implements Component, Poolable {
-		private PlayerComp() {}
-		
-		@Override
-		public void reset() {}
-	}
-	
-	public static final class FocusComp implements Component, Poolable {
-		private FocusComp() {}
-		
-		@Override
-		public void reset() {}
-	}
+	// ------------------- NORMAL COMPONENTS ---------------------------
 	
 	public static final class IDComp implements Component, Poolable {
 		public ID id;
@@ -81,73 +69,6 @@ public final class Components {
 		}
 	}
 	
-	public static final class TileComp implements Component, Poolable {
-		public TileType type;
-		public int size, row, col;
-		public String code;
-		public TextureRegion secondaryTexture;
-
-		private TileComp() {}
-		
-		@Override
-		public void reset() {
-			type = null;
-			size = row = col = 0;
-			code = null;
-			secondaryTexture = null;
-		}
-	}
-	
-	public static final class VisualComp implements Component, Poolable {
-		public TextureRegion defaultRegion;
-		public TextureRegion region;
-
-		private VisualComp() {}
-		
-		@Override
-		public void reset() {
-			defaultRegion = null;
-			region = null;
-		}
-	}
-	
-	public static final class AnimationComp implements Component, Poolable {
-		public Animation animation;
-		public boolean looping = true;
-		public float time = 0;
-
-		private AnimationComp() {}
-		
-		@Override
-		public void reset() {
-			animation = null;
-			looping = true;
-			time = 0;
-		}
-	}
-	
-	public static final class BodyComp implements Component, Poolable {
-		public Body body;
-
-		private BodyComp() {}
-		
-		@Override
-		public void reset() {
-			body = null;
-		}
-	}
-	
-	public static final class SensorComp implements Component, Poolable {
-		public Body sensor;
-		
-		private SensorComp() {}
-
-		@Override
-		public void reset() {
-			sensor = null;
-		}
-	}
-	
 	public static final class TargetPositionComp implements Component, Poolable {
 		public Vector3 position;
 
@@ -173,14 +94,14 @@ public final class Components {
 	}
 	
 	public static final class CollisionComp implements Component, Poolable {
-		public ID id;
+		public ID collisionWithId;
 		public boolean begin;
 		
 		private CollisionComp() {}
 	
 		@Override
 		public void reset() {
-			id = null;
+			collisionWithId = null;
 			begin = false;
 		}
 	}
@@ -198,18 +119,6 @@ public final class Components {
 		}
 	}
 	
-	public static final class InputComp implements Component, Poolable {
-		public Input input;
-
-		private InputComp() {}
-		
-		@Override
-		public void reset() {
-			input = null;
-		}
-	}
-	
-	
 	public static final class InteractComp implements Component, Poolable {
 		public Array<ID> interactables = new Array<ID>();
 		public Interaction interaction;
@@ -223,6 +132,22 @@ public final class Components {
 		}
 	}
 	
+	// ------------------- BOOLEAN COMPONENTS -------------------------
+	
+	public static final class PlayerComp implements Component, Poolable {
+		private PlayerComp() {}
+		
+		@Override
+		public void reset() {}
+	}
+	
+	public static final class FocusComp implements Component, Poolable {
+		private FocusComp() {}
+		
+		@Override
+		public void reset() {}
+	}
+	
 	public static final class InvisibleComp implements Component, Poolable {
 
 		private InvisibleComp() {}
@@ -232,6 +157,86 @@ public final class Components {
 			
 		}
 	
+	}
+	
+	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
+	
+	public static final class InputComp implements Component, Poolable {
+		public Input input; // Can't serialize
+
+		private InputComp() {}
+		
+		@Override
+		public void reset() {
+			input = null;
+		}
+	}
+	
+	public static final class TileComp implements Component, Poolable {
+		public TileType type;
+		public int size, row, col;
+		public String code;
+		public TextureRegion secondaryTexture; // Can't serialize
+
+		private TileComp() {}
+		
+		@Override
+		public void reset() {
+			type = null;
+			size = row = col = 0;
+			code = null;
+			secondaryTexture = null;
+		}
+	}
+	
+	public static final class TextureComp implements Component, Poolable {
+		public TextureRegion defaultRegion; // Can't serialize
+		public TextureRegion region; // Can't serialize
+
+		private TextureComp() {}
+		
+		@Override
+		public void reset() {
+			defaultRegion = null;
+			region = null;
+		}
+	}
+	
+	public static final class AnimationComp implements Component, Poolable {
+		public Animation animation; // Can't serialize
+		public boolean looping = true;
+		public float time = 0;
+
+		private AnimationComp() {}
+		
+		@Override
+		public void reset() {
+			animation = null;
+			looping = true;
+			time = 0;
+		}
+	}
+	
+	public static final class BodyComp implements Component, Poolable {
+		public Body body; // Can't serialize
+
+		private BodyComp() {}
+		
+		@Override
+		public void reset() {
+			body = null;
+		}
+	}
+	
+	public static final class SensorComp implements Component, Poolable {
+		public Body sensor; // Can't serialize
+		
+		private SensorComp() {}
+
+		@Override
+		public void reset() {
+			sensor = null;
+		}
 	}
 	
 }

@@ -29,7 +29,7 @@ import com.jharter.game.game.GameDescription;
 import com.jharter.game.network.GameClient;
 import com.jharter.game.network.GameServer;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
@@ -43,7 +43,7 @@ public abstract class GameStage {
     protected GameDescription gameDescription;
     
 	public GameStage(GameDescription gameDescription) {
-		this(IDUtil.newID(), gameDescription);
+		this(IDGenerator.newID(), gameDescription);
 	}
 	
 	public GameStage(ID id, GameDescription gameDescription) {

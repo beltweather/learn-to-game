@@ -66,7 +66,7 @@ public class GameClient {
 	public void ping() {
 		Ping ping = new Ping();
 		ping.time = TimeUtils.millis();
-		client.sendTCP(ping);
+		client.sendUDP(ping);
 	}
 	
 	private void setPing(Ping ping) {
@@ -118,7 +118,7 @@ public class GameClient {
 		}));
 		
 		try {
-			client.connect(GameNetwork.TIMEOUT, GameNetwork.HOST, GameNetwork.PORT);
+			client.connect(GameNetwork.TIMEOUT, GameNetwork.HOST, GameNetwork.TCP_PORT, GameNetwork.UDP_PORT);
 			// Server communication after connection can go here, or in Listener#connected().
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -135,6 +135,10 @@ public class GameClient {
 
 	public void sendTCP(Object object) {
 		client.sendTCP(object);
+	}
+	
+	public void sendUDP(Object object) {
+		client.sendUDP(object);
 	}
 	
 	public <T extends Packet<T>> void addPacketManager(Class<T> packetClass, PacketManager<?> packetManager) {

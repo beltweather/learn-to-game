@@ -290,7 +290,7 @@ public class Island {
              }
          }
          if(removeEntities != null) {
-        	 client.sendTCP(removeEntities);
+        	 client.sendUDP(removeEntities);
          }
     }
     

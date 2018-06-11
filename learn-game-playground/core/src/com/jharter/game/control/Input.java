@@ -136,7 +136,7 @@ public class Input extends InputAdapter implements InputProcessor {
     public void maybeSendInputState(GameClient client, String focusId) {
     	if(stateToSend != null) {
     		stateToSend.id = focusId;
-    		client.sendTCP(stateToSend);
+    		client.sendUDP(stateToSend);
     	}
     }
     

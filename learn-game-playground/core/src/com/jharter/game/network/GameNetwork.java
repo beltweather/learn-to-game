@@ -15,7 +15,8 @@ public class GameNetwork {
 
 	public static final int TIMEOUT = 5000;
 	public static final String HOST = "localhost";
-	public static final int PORT = 54555;
+	public static final int TCP_PORT = 54555;
+	public static final int UDP_PORT = 54556;
 	public static final int LAG_MS = 20;
 	public static final int PING_FREQUENCY_SEC = 5;
 	

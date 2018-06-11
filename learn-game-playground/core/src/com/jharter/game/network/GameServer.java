@@ -28,8 +28,20 @@ public abstract class GameServer {
 		};
 	}
 	
+	public void sendToTCP(int connectionID, Object object) {
+		server.sendToTCP(connectionID, object);
+	}
+	
 	public void sendToAllTCP(Object object) {
 		server.sendToAllTCP(object);
+	}
+	
+	public void sendToUDP(int connectionID, Object object) {
+		server.sendToUDP(connectionID, object);
+	}
+	
+	public void sendToAllUDP(Object object) {
+		server.sendToAllUDP(object);
 	}
 	
 	public abstract void received(Connection c, Object object, Server server);
@@ -134,7 +146,7 @@ public abstract class GameServer {
 		}));
 		
 		try {
-			server.bind(GameNetwork.PORT);
+			server.bind(GameNetwork.TCP_PORT, GameNetwork.UDP_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

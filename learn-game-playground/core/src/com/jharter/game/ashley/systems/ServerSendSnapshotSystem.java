@@ -54,7 +54,7 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
         	snapshotPacket.entityDatas.add(entityData);
         	
     	}
-    	server.sendToAllTCP(snapshotPacket);
+    	server.sendToAllUDP(snapshotPacket);
 	}
 
 }

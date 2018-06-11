@@ -386,7 +386,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
             	heroInput.get(hero.id).addInputState(entityData);
             	snapshotPacket.entityDatas.add(entityData);
         	}
-        	server.sendToAllTCP(snapshotPacket);
+        	server.sendToAllUDP(snapshotPacket);
         }
         
         // Hero Position

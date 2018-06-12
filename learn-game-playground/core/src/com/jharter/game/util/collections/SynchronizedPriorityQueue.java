@@ -1,4 +1,4 @@
-package com.jharter.game.collections;
+package com.jharter.game.util.collections;
 
 import com.badlogic.gdx.ai.msg.PriorityQueue;
 

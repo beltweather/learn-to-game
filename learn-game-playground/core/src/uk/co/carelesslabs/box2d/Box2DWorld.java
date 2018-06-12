@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.control.Input;
+import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
 
 public class Box2DWorld {
@@ -55,7 +55,7 @@ public class Box2DWorld {
         });
     }
     
-    public void tick(OrthographicCamera camera, Input control) {
+    public void tick(OrthographicCamera camera, GameInput control) {
         if (control != null && control.isDebug())
             debugRenderer.render(world, camera.combined);
         world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);

@@ -9,12 +9,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.ashley.systems.packets.impl.Packets.InputPacket;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameNetwork.EntityData;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
+import com.jharter.game.network.packets.Packets.InputPacket;
 import com.jharter.game.util.id.ID;
 
-public class Input extends InputAdapter implements InputProcessor {
+public class GameInput extends InputAdapter implements InputProcessor {
 	
 	private static final int CONTROL_FRAME_DELAY = 3;
 	
@@ -64,7 +64,7 @@ public class Input extends InputAdapter implements InputProcessor {
     private int screenHeight;
     
     
-    public Input(int screenWidth, int screenHeight, OrthographicCamera camera){
+    public GameInput(int screenWidth, int screenHeight, OrthographicCamera camera){
         this.camera = camera;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -138,7 +138,7 @@ public class Input extends InputAdapter implements InputProcessor {
     public void maybeSendInputState(GameClient client, ID focusId) {
     	if(stateToSend != null) {
     		stateToSend.id = focusId;
-    		client.sendUDP(InputPacket.newInstance(stateToSend));
+    		client.send(InputPacket.newInstance(stateToSend));
     	}
     }
     

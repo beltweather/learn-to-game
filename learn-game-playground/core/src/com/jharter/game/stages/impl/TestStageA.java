@@ -1,4 +1,4 @@
-package com.jharter.game.stages;
+package com.jharter.game.stages.impl;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
@@ -15,7 +15,8 @@ import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
-import com.jharter.game.game.GameDescription;
+import com.jharter.game.network.endpoints.EndPointHelper;
+import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -29,8 +30,8 @@ public class TestStageA extends GameStage {
 	
 	private Island island;
 	
-	public TestStageA(GameDescription gameDescription) {
-		super(gameDescription);
+	public TestStageA(EndPointHelper endPointHelper) {
+		super(endPointHelper);
 	}
 	
 	@Override
@@ -54,7 +55,9 @@ public class TestStageA extends GameStage {
 		TextureRegion texture = new TextureRegion(Media.birdWalk, Media.birdWalk.getWidth()/3, Media.birdWalk.getHeight());
 		float speed = 5;
 		ID id = IDGenerator.newID();
-		Entity birdEntity = EntityUtil.buildDynamicSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, BodyType.StaticBody, speed).Entity();
+		EntityBuilder b = EntityUtil.buildDynamicSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, BodyType.StaticBody, speed);
+		Entity birdEntity = b.Entity();
+		b.free();
 		
 		Body sensor = Box2DHelper.createSensor(getBox2DWorld().world, width, height*.85f, width/2, height/3, position, BodyDef.BodyType.DynamicBody);     
 	    SensorComp sensorComp = engine.createComponent(SensorComp.class);

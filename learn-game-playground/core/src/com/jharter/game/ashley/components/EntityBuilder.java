@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -26,16 +27,15 @@ import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 
-public class EntityBuilder implements Component, Poolable {
+public class EntityBuilder implements Poolable {
 	
 	public static EntityBuilder create(PooledEngine engine) {
-		EntityBuilder builder = engine.createComponent(EntityBuilder.class);
+		EntityBuilder builder = Pools.get(EntityBuilder.class).obtain();
 		builder.init(engine);
 		return builder;
 	}
 	 
 	private ObjectMap<Class<? extends Component>, Component> comps = new ObjectMap<Class<? extends Component>, Component>();
-	
 	private PooledEngine engine;
 	private Entity entity;
 	
@@ -71,8 +71,14 @@ public class EntityBuilder implements Component, Poolable {
 		return Family.all((Class<? extends Component>[])classes.toArray()).get();
 	}
 	
+	public void free() {
+		Pools.get(EntityBuilder.class).free(this);
+	}
+	
 	@Override
 	public void reset() {
+		entity = null;
+		engine = null;
 		comps.clear();
 	}
 

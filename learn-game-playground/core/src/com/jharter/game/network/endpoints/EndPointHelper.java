@@ -1,16 +1,14 @@
-package com.jharter.game.game;
+package com.jharter.game.network.endpoints;
 
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.game.GameType;
 
-public class GameDescription {
+public class EndPointHelper {
 	
 	private GameType type;
 	private boolean headless;
-	private GameServer server;
-	private GameClient client;
+	private GameEndPoint endPoint;
 	
-	public GameDescription(GameType type, boolean headless) {
+	public EndPointHelper(GameType type, boolean headless) {
 		this.type = type;
 		this.headless = headless;
 	}
@@ -36,19 +34,21 @@ public class GameDescription {
 	}
 	
 	public GameServer getServer() {
-		return server;
+		if(isServer()) {
+			return (GameServer) endPoint;
+		}
+		return null;
 	}
 	
 	public GameClient getClient() {
-		return client;
+		if(isClient()) {
+			return (GameClient) endPoint;
+		}
+		return null;
 	}
 	
-	public void setServer(GameServer server) {
-		this.server = server;
-	}
-	
-	public void setClient(GameClient client) {
-		this.client = client;
+	public void setEndPoint(GameEndPoint endPoint) {
+		this.endPoint = endPoint;
 	}
 	
 }

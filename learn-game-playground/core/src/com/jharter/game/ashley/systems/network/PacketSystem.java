@@ -1,29 +1,28 @@
-package com.jharter.game.ashley.systems.packets;
+package com.jharter.game.ashley.systems.network;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ai.msg.PriorityQueue;
-import com.jharter.game.collections.SynchronizedPriorityQueue;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameEndPoint;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.network.endpoints.GameEndPoint;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
 import com.jharter.game.network.packets.PacketManager.PacketPair;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.collections.SynchronizedPriorityQueue;
+import com.jharter.game.util.id.ID;
 
-public abstract class PacketSystem<T extends Packet<T>> extends EntitySystem {
+public abstract class PacketSystem<E extends GameEndPoint, T extends Packet<T>> extends EntitySystem {
 
 	protected PacketManager<T> packetManager;
-	protected GameServer server;
-	protected GameClient client;
+	protected E endPoint;
 	protected GameStage stage;
 	
-	public PacketSystem(GameStage stage, GameEndPoint endPoint) {
+	public PacketSystem(GameStage stage, E endPoint) {
 		this.stage = stage;
 		this.packetManager = new PacketManager<T>();
+		this.endPoint = endPoint;
 		if(endPoint != null) {
-			this.server = endPoint instanceof GameServer ? (GameServer) endPoint : null;
-			this.client = endPoint instanceof GameClient ? (GameClient) endPoint : null;
 			endPoint.addPacketManager(getPacketClass(), packetManager);
 		}
 	}
@@ -39,15 +38,10 @@ public abstract class PacketSystem<T extends Packet<T>> extends EntitySystem {
 		if(!packetManager.hasPackets()) {
 			return;
 		}
-		if(server != null) {
-			update(server, stage, deltaTime);
-		} else if(client != null) {
-			update(client, stage, deltaTime);
-		}
+		update(endPoint, stage, deltaTime);
 	}
 	
-	public abstract void update(GameServer server, GameStage stage, float deltaTime);
-	public abstract void update(GameClient client, GameStage stage, float deltaTime);
+	public abstract void update(E endPoint, GameStage stage, float deltaTime);
 	
 	// ------------- DELEGATORS ------------------------
 	
@@ -69,6 +63,10 @@ public abstract class PacketSystem<T extends Packet<T>> extends EntitySystem {
 	
 	public PacketPair<T> getPacketsBeforeAndAfter(long time) {
 		return packetManager.getPacketsBeforeAndAfter(time);
+	}
+	
+	public Entity findEntity(ID entityId) {
+		return EntityUtil.findEntity(entityId);
 	}
 
 }

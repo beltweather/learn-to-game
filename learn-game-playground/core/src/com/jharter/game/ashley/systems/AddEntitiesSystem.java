@@ -3,9 +3,9 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.systems.packets.impl.Packets.AddPlayersPacket;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameNetwork.AddPlayer;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
+import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.stages.GameStage;
 
 @Deprecated
@@ -36,7 +36,7 @@ public class AddEntitiesSystem extends EntitySystem {
 			System.out.println("Client " + client.getId() + " adding new player " + addPlayer.id);
 			Vector3 pos = new Vector3(addPlayer.x, addPlayer.y, addPlayer.z);
 			boolean isFocus = addPlayer.id.equals(client.getPlayerId());
-			stage.addPlayerEntity(addPlayer.id, pos, isFocus);
+			stage.addPlayerEntity(addPlayer.id, pos, isFocus).free();
 			if(isFocus) {
 				addedFocus = true;
 			}

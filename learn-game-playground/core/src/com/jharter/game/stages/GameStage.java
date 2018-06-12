@@ -10,7 +10,6 @@ import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CameraSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
-import com.jharter.game.ashley.systems.ClientSendInputSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.InputMovementSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
@@ -18,19 +17,21 @@ import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
-import com.jharter.game.ashley.systems.SelectInputSystem;
-import com.jharter.game.ashley.systems.ServerSendSnapshotSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
-import com.jharter.game.ashley.systems.packets.impl.AddPlayersPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.InputPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.RegisterPlayerPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.RequestEntityPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.SnapshotPacketSystem;
-import com.jharter.game.control.Input;
-import com.jharter.game.game.GameDescription;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
+import com.jharter.game.ashley.systems.network.client.ClientSendInputSystem;
+import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
+import com.jharter.game.ashley.systems.network.client.ClientSnapshotPacketSystem;
+import com.jharter.game.ashley.systems.network.offline.OfflineSelectInputSystem;
+import com.jharter.game.ashley.systems.network.server.ServerInputPacketSystem;
+import com.jharter.game.ashley.systems.network.server.ServerRegisterPlayerPacketSystem;
+import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketSystem;
+import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
+import com.jharter.game.control.GameInput;
+import com.jharter.game.network.endpoints.EndPointHelper;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -42,16 +43,16 @@ public abstract class GameStage {
 	protected OrthographicCamera camera;
 	protected PooledEngine engine;
     protected Box2DWorld box2D;
-    protected Input stageInput;
-    protected GameDescription gameDescription;
+    protected GameInput stageInput;
+    protected EndPointHelper endPointHelper;
     
-	public GameStage(GameDescription gameDescription) {
-		this(IDGenerator.newID(), gameDescription);
+	public GameStage(EndPointHelper endPointHelper) {
+		this(IDGenerator.newID(), endPointHelper);
 	}
 	
-	public GameStage(ID id, GameDescription gameDescription) {
+	public GameStage(ID id, EndPointHelper endPointHelper) {
 		this.id = id;
-		this.gameDescription = gameDescription;
+		this.endPointHelper = endPointHelper;
 		create();
 	}
     
@@ -63,8 +64,8 @@ public abstract class GameStage {
 		this.id = id;
 	}
 	
-	public GameDescription getGameDescription() {
-		return gameDescription;
+	public EndPointHelper getEndPointHelper() {
+		return endPointHelper;
 	}
 	
 	public OrthographicCamera getCamera() {
@@ -75,7 +76,7 @@ public abstract class GameStage {
 		return box2D;
 	}
 	
-	public Input getInput() {
+	public GameInput getInput() {
 		return stageInput;
 	}
 	
@@ -90,10 +91,10 @@ public abstract class GameStage {
         addEntities(engine);
     }
 	
-	public Input buildInput(boolean active) {
+	public GameInput buildInput(boolean active) {
 		int displayW = Gdx.graphics.getWidth();
     	int displayH = Gdx.graphics.getHeight();
-    	Input input = new Input(displayW, displayH, camera);
+    	GameInput input = new GameInput(displayW, displayH, camera);
     	if(active) {
     		stageInput = input;
     	}
@@ -119,24 +120,25 @@ public abstract class GameStage {
     	PooledEngine engine = new PooledEngine();
 		EntityUtil.addIdListener(engine, getBox2DWorld());
 		
-		if(gameDescription.isOffline()) {
-			engine.addSystem(new SelectInputSystem());
+		if(endPointHelper.isOffline()) {
+			engine.addSystem(new OfflineSelectInputSystem());
 		}
 		
-		if(gameDescription.isServer()) {
+		if(endPointHelper.isServer()) {
 			
-			GameServer server = gameDescription.getServer();
+			GameServer server = endPointHelper.getServer();
 			engine.addSystem(new ServerSendSnapshotSystem(server));
-			engine.addSystem(new InputPacketSystem(this, server));
-			engine.addSystem(new RegisterPlayerPacketSystem(this, server));
-			engine.addSystem(new RequestEntityPacketSystem(this, server));
+			engine.addSystem(new ServerInputPacketSystem(this, server));
+			engine.addSystem(new ServerRegisterPlayerPacketSystem(this, server));
+			engine.addSystem(new ServerRequestEntityPacketSystem(this, server));
 			
-		} else if(gameDescription.isClient()){
+		} else if(endPointHelper.isClient()){
 
-			GameClient client = gameDescription.getClient();
+			GameClient client = endPointHelper.getClient();
 			engine.addSystem(new ClientSendInputSystem(client));
-			engine.addSystem(new SnapshotPacketSystem(this, client));
-			engine.addSystem(new AddPlayersPacketSystem(this, client));
+			engine.addSystem(new ClientSnapshotPacketSystem(this, client));
+			engine.addSystem(new ClientAddPlayersPacketSystem(this, client));
+			engine.addSystem(new ClientRemoveEntityPacketSystem(this, client));
 		
 		}
 		
@@ -147,7 +149,7 @@ public abstract class GameStage {
 		engine.addSystem(new ApproachTargetSystem());
 		engine.addSystem(new InteractSystem());
 		
-		if(!gameDescription.isHeadless()) {
+		if(!endPointHelper.isHeadless()) {
 			engine.addSystem(new AnimationSystem());
 			engine.addSystem(new CameraSystem(getCamera()));
 			engine.addSystem(new RenderInitSystem());
@@ -155,10 +157,10 @@ public abstract class GameStage {
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
 		}
 		
-		engine.addSystem(new RemoveEntitiesSystem(engine, gameDescription.getClient()));
+		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
 		
-		/*if(gameDescription.isClient()) {
-			engine.addSystem(new AddEntitiesSystem(this, gameDescription.getClient()));
+		/*if(endPointHelper.isClient()) {
+			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
 		}*/
 		
 		engine.addSystem(new CleanupInputSystem(this));

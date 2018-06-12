@@ -18,7 +18,7 @@ import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.control.Input;
+import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -118,7 +118,7 @@ public class EntityUtil {
 		return b;
 	}
 	
-	public static EntityBuilder buildPlayerSprite(PooledEngine engine, ID id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, float speed, Input input) {
+	public static EntityBuilder buildPlayerSprite(PooledEngine engine, ID id, EntityType type, Vector3 position, float width, float height, TextureRegion texture, Box2DWorld world, float speed, GameInput input) {
 		EntityBuilder b = buildDynamicSprite(engine, id, type, position, width, height, texture, world, BodyType.DynamicBody, speed);
 		
 		b.InputComp().input = input;

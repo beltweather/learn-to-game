@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.network.offline;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -6,9 +6,9 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Mapper;
 
-public class SelectInputSystem extends IteratingSystem {
+public class OfflineSelectInputSystem extends IteratingSystem {
 
-	public SelectInputSystem() {
+	public OfflineSelectInputSystem() {
 		super(Family.all(InputComp.class).get());
 	}
 	

@@ -1,11 +1,12 @@
 package com.jharter.game.game;
 
 import com.badlogic.gdx.Game;
-import com.jharter.game.ashley.systems.packets.impl.Packets.RegisterPlayerPacket;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.network.endpoints.EndPointHelper;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameServer;
+import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
 import com.jharter.game.screens.GameScreen;
-import com.jharter.game.screens.TestStageScreen;
+import com.jharter.game.screens.impl.TestStageScreen;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -13,36 +14,36 @@ import uk.co.carelesslabs.Media;
 
 public class OnlineGame extends Game {
 	
-	protected GameDescription description;
+	protected EndPointHelper endPointHelper;
 	protected GameServer server;
 	protected GameClient client;
 	
 	public OnlineGame(GameType type, boolean headless) {
-		this.description = new GameDescription(type, headless);
+		this.endPointHelper = new EndPointHelper(type, headless);
 	}
 	
-	public GameDescription getDescription() {
-		return description;
+	public EndPointHelper getEndPointHelper() {
+		return endPointHelper;
 	}
 	
     @Override
     public void create() {
-    	if(!description.isHeadless()) {
+    	if(!endPointHelper.isHeadless()) {
     		Media.load_assets();
     	}
     
-    	if(description.isServer()) {
+    	if(endPointHelper.isServer()) {
 			initServer();
-		} else if(description.isClient()) {
+		} else if(endPointHelper.isClient()) {
 			initClient();
 		}
     	
-    	setScreen(new TestStageScreen(description));
+    	setScreen(new TestStageScreen(endPointHelper));
     	
-    	if(description.isClient()) {
-    		client.sendTCP(RegisterPlayerPacket.newInstance(client.getPlayerId()));
-    	} else if(description.isOffline()) {
-    		getStage().addPlayerEntity(IDGenerator.newID(), getStage().getEntryPoint(), true);
+    	if(endPointHelper.isClient()) {
+    		client.send(RegisterPlayerPacket.newInstance(client.getPlayerId()));
+    	} else if(endPointHelper.isOffline()) {
+    		getStage().addPlayerEntity(IDGenerator.newID(), getStage().getEntryPoint(), true).free();
     		getStage().activate();
     	}
     	
@@ -63,7 +64,7 @@ public class OnlineGame extends Game {
     private void initServer() {
     	System.out.println("Starting Server");
 		server = new GameServer();
-		description.setServer(server);
+		endPointHelper.setEndPoint(server);
 		server.start();
     }
     
@@ -104,7 +105,7 @@ public class OnlineGame extends Game {
 			//}
 			
 		//};
-		description.setClient(client);
+		endPointHelper.setEndPoint(client);
 		client.start();
     }
 

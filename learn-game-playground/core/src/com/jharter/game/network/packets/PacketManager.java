@@ -2,8 +2,8 @@ package com.jharter.game.network.packets;
 
 import com.badlogic.gdx.ai.msg.PriorityQueue;
 import com.esotericsoftware.kryonet.Connection;
-import com.jharter.game.collections.SynchronizedPriorityQueue;
-import com.jharter.game.network.GameEndPoint;
+import com.jharter.game.network.endpoints.GameEndPoint;
+import com.jharter.game.util.collections.SynchronizedPriorityQueue;
 
 public class PacketManager<T extends Packet<T>> {
 

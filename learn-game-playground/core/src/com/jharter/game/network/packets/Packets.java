@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems.packets.impl;
+package com.jharter.game.network.packets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.control.GlobalInputState;
-import com.jharter.game.network.GameNetwork.AddPlayer;
-import com.jharter.game.network.GameNetwork.EntityData;
-import com.jharter.game.network.packets.Packet;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.util.id.ID;
 
 public class Packets {
@@ -109,6 +108,29 @@ public class Packets {
 		@Override
 		public void reset() {
 			entityDatas.clear();
+		}
+	}
+	
+	public static class RemoveEntityPacket extends Packet<RemoveEntityPacket> {
+		public static RemoveEntityPacket newInstance() {
+			return get(RemoveEntityPacket.class);
+		}
+		
+		public static RemoveEntityPacket newInstance(ID id) {
+			RemoveEntityPacket packet = get(RemoveEntityPacket.class);
+			packet.id = id;
+			return packet;
+		}
+		
+		public ID id; // Used for singleton ids
+		public Array<ID> ids; // Lazily initialized for multiple ids
+		
+		private RemoveEntityPacket() {}
+		
+		@Override
+		public void reset() {
+			id = null;
+			ids = null;
 		}
 	}
 

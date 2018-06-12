@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems.packets.impl;
+package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
@@ -6,29 +6,23 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.systems.packets.InterpolatingPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.Packets.RequestEntityPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.SnapshotPacket;
-import com.jharter.game.control.Input;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameEndPoint;
-import com.jharter.game.network.GameNetwork.EntityData;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.ashley.systems.network.InterpolatingPacketSystem;
+import com.jharter.game.control.GameInput;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
+import com.jharter.game.network.packets.Packets;
 import com.jharter.game.network.packets.PacketManager.PacketPair;
+import com.jharter.game.network.packets.Packets.RequestEntityPacket;
+import com.jharter.game.network.packets.Packets.SnapshotPacket;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 
-public class SnapshotPacketSystem extends InterpolatingPacketSystem<SnapshotPacket> {
+public class ClientSnapshotPacketSystem extends InterpolatingPacketSystem<SnapshotPacket> {
 	
-	public SnapshotPacketSystem(GameStage stage, GameEndPoint endPoint) {
-		super(stage, endPoint);
+	public ClientSnapshotPacketSystem(GameStage stage, GameClient client) {
+		super(stage, client);
 	}
 
-	@Override
-	public void update(GameServer server, GameStage stage, float deltaTime, PacketPair<SnapshotPacket> pair, long renderTime) {
-		
-	}
-	
 	@Override
 	public void update(GameClient client, GameStage stage, float deltaTime, PacketPair<SnapshotPacket> pair, long renderTime) {
 		SnapshotPacket pastPacket = pair.pastPacket;
@@ -52,7 +46,7 @@ public class SnapshotPacketSystem extends InterpolatingPacketSystem<SnapshotPack
 				InputComp inputComp = Mapper.InputComp.get(entity);
 				boolean focus = Mapper.FocusComp.has(entity);
 				if(inputComp != null) {
-					Input in = inputComp.input;
+					GameInput in = inputComp.input;
 					if(pastEntityData.input != null && !focus) {
 						in.setInputState(pastEntityData.input);
 					}
@@ -69,7 +63,7 @@ public class SnapshotPacketSystem extends InterpolatingPacketSystem<SnapshotPack
 				t.position.x = getInterpolatedValue(pair, pastEntityData.x, futureEntityData.x);
 				t.position.y = getInterpolatedValue(pair, pastEntityData.y, futureEntityData.y);
 			} else {
-				client.sendUDP(RequestEntityPacket.newInstance(entityId));
+				client.send(RequestEntityPacket.newInstance(entityId));
 			}
 		}
 	}

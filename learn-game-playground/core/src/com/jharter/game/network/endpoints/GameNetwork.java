@@ -1,4 +1,4 @@
-package com.jharter.game.network;
+package com.jharter.game.network.endpoints;
 
 import java.util.ArrayList;
 
@@ -7,13 +7,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.jharter.game.ashley.systems.packets.impl.Packets.AddPlayersPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.InputPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.RegisterPlayerPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.RequestEntityPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.SnapshotPacket;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.network.packets.Packet;
+import com.jharter.game.network.packets.Packets.AddPlayersPacket;
+import com.jharter.game.network.packets.Packets.InputPacket;
+import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
+import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
+import com.jharter.game.network.packets.Packets.RequestEntityPacket;
+import com.jharter.game.network.packets.Packets.SnapshotPacket;
 import com.jharter.game.util.id.ID;
 
 public class GameNetwork {
@@ -41,14 +42,13 @@ public class GameNetwork {
 		kryo.register(ID.class);
 		
 		kryo.register(AddPlayer.class);
-		kryo.register(RemoveEntities.class);
-		kryo.register(RemoveEntity.class);
 		
 		kryo.register(AddPlayersPacket.class);
 		kryo.register(SnapshotPacket.class);
 		kryo.register(RegisterPlayerPacket.class);
 		kryo.register(RequestEntityPacket.class);
 		kryo.register(InputPacket.class);
+		kryo.register(RemoveEntityPacket.class);
 	}
 	
 	public static class EntityData {
@@ -62,15 +62,4 @@ public class GameNetwork {
 		public float x, y, z;
 	}
 	
-	public static class RemoveEntities {
-		public Array<ID> ids = new Array<ID>();
-	}
-	
-	public static class RemoveEntity {
-		public ID id;
-		
-		public RemoveEntity(ID id) {
-			this.id = id;
-		}
-	}
 }

@@ -12,12 +12,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.ashley.systems.packets.impl.Packets.RegisterPlayerPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.SnapshotPacket;
-import com.jharter.game.control.Input;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameNetwork.EntityData;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.control.GameInput;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameServer;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
+import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
+import com.jharter.game.network.packets.Packets.SnapshotPacket;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -50,7 +50,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     private ID mainHeroId;
     private Hero mainHero;
     private ObjectMap<ID, Hero> heroes = new ObjectMap<ID, Hero>();
-    private ObjectMap<ID, Input> heroInput = new ObjectMap<ID, Input>();
+    private ObjectMap<ID, GameInput> heroInput = new ObjectMap<ID, GameInput>();
     
     // Island
     Island island;
@@ -70,7 +70,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     	this.serverSide = serverSide;
     }
     
-    public Input getInput() {
+    public GameInput getInput() {
     	if(!heroInput.containsKey(mainHeroId)) {
     		return null;
     	}
@@ -100,7 +100,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     		mainHeroId = hero.id;
     		mainHero = hero;
     	}
-    	Input input = new Input(displayW, displayH, camera);
+    	GameInput input = new GameInput(displayW, displayH, camera);
     	heroInput.put(hero.id, input);
     	if(isClientSide() && hero.id.equals(mainHeroId)) {
     	    Gdx.input.setInputProcessor(input);
@@ -239,7 +239,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     		client.start();
     		
     		mainHeroId = IDGenerator.newID();
-    		client.sendTCP(RegisterPlayerPacket.newInstance(mainHeroId));
+    		client.send(RegisterPlayerPacket.newInstance(mainHeroId));
         }
     }
     
@@ -267,7 +267,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         	return;
         }
     	
-    	Input input = getInput();
+    	GameInput input = getInput();
     	if(input == null) {
     		return;
     	}
@@ -307,7 +307,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         
         if(isServerSide()) {
         	for(Hero hero : heroes.values()) {
-            	Input in = heroInput.get(hero.id);
+            	GameInput in = heroInput.get(hero.id);
             	hero.update(in);
             	in.setInteract(false);
             }
@@ -339,7 +339,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         				ID heroId = entityData1.id;
         				if(heroes.containsKey(heroId)) {
         					Hero hero = heroes.get(heroId);
-        					Input in = heroInput.get(hero.id);
+        					GameInput in = heroInput.get(hero.id);
         					if(entityData1.input != null && !hero.id.equals(mainHeroId)) {
         						in.setInputState(entityData1.input);
         						hero.update(in);
@@ -372,7 +372,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
             	heroInput.get(hero.id).addInputState(entityData);
             	snapshotPacket.entityDatas.add(entityData);
         	}
-        	server.sendToAllUDP(snapshotPacket);
+        	server.sendToAll(snapshotPacket);
         }
         
         // Hero Position

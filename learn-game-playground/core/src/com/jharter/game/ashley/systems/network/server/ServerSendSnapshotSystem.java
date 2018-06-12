@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.network.server;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -11,9 +11,9 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.systems.packets.impl.Packets.SnapshotPacket;
-import com.jharter.game.network.GameNetwork.EntityData;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.network.packets.Packets.SnapshotPacket;
+import com.jharter.game.network.endpoints.GameServer;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 
 public class ServerSendSnapshotSystem extends IntervalSystem {
 	
@@ -54,7 +54,7 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
         	snapshotPacket.entityDatas.add(entityData);
         	
     	}
-    	server.sendToAllUDP(snapshotPacket);
+    	server.sendToAll(snapshotPacket);
 	}
 
 }

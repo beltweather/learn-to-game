@@ -1,32 +1,21 @@
-package com.jharter.game.ashley.systems.packets;
+package com.jharter.game.ashley.systems.network;
 
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameEndPoint;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager.PacketPair;
 import com.jharter.game.stages.GameStage;
 
-public abstract class InterpolatingPacketSystem<T extends Packet<T>> extends PacketSystem<T> {
+public abstract class InterpolatingPacketSystem<T extends Packet<T>> extends PacketSystem<GameClient, T> {
 
-	public InterpolatingPacketSystem(GameStage stage, GameEndPoint endPoint) {
-		super(stage, endPoint);
-	}
-
-	@Override
-	public void update(GameServer server, GameStage stage, float deltaTime) {
-		long renderTime = getRenderTime(client, TimeUtils.millis());
-    	PacketPair<T> pair = getPacketsBeforeAndAfter(renderTime);
-    	if(pair != null) {
-			update(server, stage, deltaTime, pair, renderTime);
-		}
+	public InterpolatingPacketSystem(GameStage stage, GameClient client) {
+		super(stage, client);
 	}
 
 	@Override
 	public void update(GameClient client, GameStage stage, float deltaTime) {
 		long renderTime = getRenderTime(client, TimeUtils.millis());
-    	PacketPair<T> pair = getPacketsBeforeAndAfter(renderTime);
+		PacketPair<T> pair = getPacketsBeforeAndAfter(renderTime);
     	if(pair != null) {
 			update(client, stage, deltaTime, pair, renderTime);
 		}
@@ -44,7 +33,6 @@ public abstract class InterpolatingPacketSystem<T extends Packet<T>> extends Pac
     	return (timeCurrent - timePast) / (timeFuture - timePast) * (valueFuture - valuePast) + valuePast;
     }
 
-	public abstract void update(GameServer server, GameStage stage, float deltaTime, PacketPair<T> packet, long renderTime);
 	public abstract void update(GameClient client, GameStage stage, float deltaTime, PacketPair<T> packet, long renderTime);
 
 }

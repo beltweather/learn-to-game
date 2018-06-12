@@ -1,4 +1,4 @@
-package com.jharter.game.network;
+package com.jharter.game.network.endpoints;
 
 import java.io.IOException;
 
@@ -86,14 +86,22 @@ public class GameClient extends GameEndPoint {
 		}
 	}
 	
-	public void sendTCP(Object object) {
+	private void sendTCP(Object object) {
 		client.sendTCP(object);
 		maybeFree(object);
 	}
 	
-	public void sendUDP(Object object) {
+	private void sendUDP(Object object) {
 		client.sendUDP(object);
 		maybeFree(object);
+	}
+	
+	public void send(Packet packet) {
+		if(packet.useTCP) {
+			sendTCP(packet);
+		} else {
+			sendUDP(packet);
+		}
 	}
 	
 }

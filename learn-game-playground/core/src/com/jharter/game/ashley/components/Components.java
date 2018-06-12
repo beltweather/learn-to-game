@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.ashley.interactions.Interaction;
-import com.jharter.game.control.Input;
+import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -162,7 +162,7 @@ public final class Components {
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
 	public static final class InputComp implements Component, Poolable {
-		public Input input; // Can't serialize
+		public GameInput input; // Can't serialize
 
 		private InputComp() {}
 		

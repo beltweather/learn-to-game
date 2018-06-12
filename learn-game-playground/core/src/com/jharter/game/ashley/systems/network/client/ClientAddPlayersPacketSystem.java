@@ -1,24 +1,18 @@
-package com.jharter.game.ashley.systems.packets.impl;
+package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.systems.packets.ConsumingPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.Packets.AddPlayersPacket;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameEndPoint;
-import com.jharter.game.network.GameNetwork.AddPlayer;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
+import com.jharter.game.network.packets.Packets;
+import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.stages.GameStage;
 
-public class AddPlayersPacketSystem extends ConsumingPacketSystem<AddPlayersPacket> {
+public class ClientAddPlayersPacketSystem extends ConsumingPacketSystem<GameClient, AddPlayersPacket> {
 	
-	public AddPlayersPacketSystem(GameStage stage, GameEndPoint endPoint) {
-		super(stage, endPoint);
-	}
-
-	@Override
-	public void update(GameServer server, GameStage stage, float deltaTime, AddPlayersPacket addPlayers) {
-		
+	public ClientAddPlayersPacketSystem(GameStage stage, GameClient client) {
+		super(stage, client);
 	}
 
 	@Override
@@ -32,7 +26,7 @@ public class AddPlayersPacketSystem extends ConsumingPacketSystem<AddPlayersPack
 			System.out.println("Client " + client.getId() + " adding new player " + addPlayer.id);
 			Vector3 pos = new Vector3(addPlayer.x, addPlayer.y, addPlayer.z);
 			boolean isFocus = addPlayer.id.equals(client.getPlayerId());
-			stage.addPlayerEntity(addPlayer.id, pos, isFocus);
+			stage.addPlayerEntity(addPlayer.id, pos, isFocus).free();
 			if(isFocus) {
 				addedFocus = true;
 			}

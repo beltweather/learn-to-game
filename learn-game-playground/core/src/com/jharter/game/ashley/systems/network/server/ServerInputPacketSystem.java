@@ -1,22 +1,21 @@
-package com.jharter.game.ashley.systems.packets.impl;
+package com.jharter.game.ashley.systems.network.server;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.systems.packets.ConsumingPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.Packets.InputPacket;
+import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.control.GlobalInputState;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameEndPoint;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.network.endpoints.GameServer;
+import com.jharter.game.network.packets.Packets;
+import com.jharter.game.network.packets.Packets.InputPacket;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 
-public class InputPacketSystem extends ConsumingPacketSystem<InputPacket> {
+public class ServerInputPacketSystem extends ConsumingPacketSystem<GameServer, InputPacket> {
 
-	public InputPacketSystem(GameStage stage, GameEndPoint endPoint) {
-		super(stage, endPoint);
+	public ServerInputPacketSystem(GameStage stage, GameServer server) {
+		super(stage, server);
 	}
 
 	@Override
@@ -30,11 +29,6 @@ public class InputPacketSystem extends ConsumingPacketSystem<InputPacket> {
 				in.input.setInputState(state);
 			}
 		}
-	}
-
-	@Override
-	public void update(GameClient client, GameStage stage, float deltaTime, InputPacket packet) {
-		
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -6,8 +6,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
+import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.network.GameClient;
 
 public class ClientSendInputSystem extends IteratingSystem {
 

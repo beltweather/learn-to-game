@@ -7,8 +7,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameNetwork.RemoveEntity;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
 
 public class RemoveEntitiesSystem extends IteratingSystem {
 
@@ -32,7 +32,7 @@ public class RemoveEntitiesSystem extends IteratingSystem {
 		} else if(client != null && r.requestRemove) {
 			IDComp id = Mapper.IDComp.get(entity);
 			if(id != null) {
-				client.sendTCP(new RemoveEntity(id.id));
+				client.send(RemoveEntityPacket.newInstance(id.id));
 			}
 		}
 	}

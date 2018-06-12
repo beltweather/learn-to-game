@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.control.Input;
-import com.jharter.game.network.GameNetwork.EntityData;
+import com.jharter.game.control.GameInput;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -74,7 +74,7 @@ public class Hero extends GameEntity{
         inventory.reset();
     }
     
-    public void update(Input input) {
+    public void update(GameInput input) {
     	dirX = 0;
         dirY = 0;
         

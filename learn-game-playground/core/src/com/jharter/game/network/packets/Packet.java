@@ -7,6 +7,7 @@ public abstract class Packet<T extends Packet<T>> implements Comparable<T>, Pool
 	public long sendTime;
 	public int sendTick;
 	public int connectionId;
+	public boolean useTCP = false;
 	
 	public void free() {
 		Pools.get((Class<T>) getClass()).free((T) this);

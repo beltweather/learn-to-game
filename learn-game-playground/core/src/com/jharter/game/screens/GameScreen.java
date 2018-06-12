@@ -2,7 +2,7 @@ package com.jharter.game.screens;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.game.GameDescription;
+import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 
@@ -10,15 +10,15 @@ public abstract class GameScreen implements Screen {
 	
 	private ObjectMap<ID, GameStage> stages = new ObjectMap<ID, GameStage>();
     private GameStage currentStage = null;
-    private GameDescription gameDescription;
+    private EndPointHelper endPointHelper;
     
-    public GameScreen(GameDescription gameDescription) {
-    	this.gameDescription = gameDescription;
-    	setStage(create(gameDescription));
+    public GameScreen(EndPointHelper endPointHelper) {
+    	this.endPointHelper = endPointHelper;
+    	setStage(create(endPointHelper));
     }
 
-    public GameDescription getGameDescription() {
-    	return gameDescription;
+    public EndPointHelper getEndPointHelper() {
+    	return endPointHelper;
     }
     
     public void addStage(GameStage stage) {
@@ -46,7 +46,7 @@ public abstract class GameScreen implements Screen {
      * 
      * @return The default stage that should be used for this screen initially.
      */
-    protected abstract GameStage create(GameDescription gameDescription);
+    protected abstract GameStage create(EndPointHelper endPointHelper);
 
 	@Override
 	public void show() {

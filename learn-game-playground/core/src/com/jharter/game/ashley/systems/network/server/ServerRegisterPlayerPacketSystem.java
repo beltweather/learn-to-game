@@ -1,22 +1,21 @@
-package com.jharter.game.ashley.systems.packets.impl;
+package com.jharter.game.ashley.systems.network.server;
 
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.systems.packets.ConsumingPacketSystem;
-import com.jharter.game.ashley.systems.packets.impl.Packets.AddPlayersPacket;
-import com.jharter.game.ashley.systems.packets.impl.Packets.RegisterPlayerPacket;
-import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameEndPoint;
-import com.jharter.game.network.GameNetwork.AddPlayer;
-import com.jharter.game.network.GameServer;
+import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
+import com.jharter.game.network.packets.Packets;
+import com.jharter.game.network.packets.Packets.AddPlayersPacket;
+import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
+import com.jharter.game.network.endpoints.GameServer;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 
-public class RegisterPlayerPacketSystem extends ConsumingPacketSystem<RegisterPlayerPacket> {
+public class ServerRegisterPlayerPacketSystem extends ConsumingPacketSystem<GameServer, RegisterPlayerPacket> {
 	
-	public RegisterPlayerPacketSystem(GameStage stage, GameEndPoint endPoint) {
-		super(stage, endPoint);
+	public ServerRegisterPlayerPacketSystem(GameStage stage, GameServer server) {
+		super(stage, server);
 	}
 
 	private boolean hasFocus = false;
@@ -46,12 +45,9 @@ public class RegisterPlayerPacketSystem extends ConsumingPacketSystem<RegisterPl
 			addPlayers.players.add(addPlayer);
 		//}
 		System.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
-		server.sendToAllTCP(addPlayers);
-	}
-
-	@Override
-	public void update(GameClient client, GameStage stage, float deltaTime, RegisterPlayerPacket request) {
+		server.sendToAll(addPlayers);
 		
+		b.free();
 	}
 
 	@Override

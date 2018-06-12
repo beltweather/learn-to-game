@@ -1,4 +1,4 @@
-package com.jharter.game.network;
+package com.jharter.game.network.endpoints;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryonet.Connection;

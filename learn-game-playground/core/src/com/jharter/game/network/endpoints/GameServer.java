@@ -1,4 +1,4 @@
-package com.jharter.game.network;
+package com.jharter.game.network.endpoints;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -8,6 +8,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Server;
+import com.jharter.game.network.GameUser;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.util.id.ID;
 
@@ -27,24 +28,40 @@ public class GameServer extends GameEndPoint {
 		};
 	}
 	
-	public void sendToTCP(int connectionID, Object object) {
+	private void sendToTCP(int connectionID, Object object) {
 		server.sendToTCP(connectionID, object);
 		maybeFree(object);
 	}
 	
-	public void sendToAllTCP(Object object) {
+	private void sendToAllTCP(Object object) {
 		server.sendToAllTCP(object);
 		maybeFree(object);
 	}
 	
-	public void sendToUDP(int connectionID, Object object) {
+	private void sendToUDP(int connectionID, Object object) {
 		server.sendToUDP(connectionID, object);
 		maybeFree(object);
 	}
 	
-	public void sendToAllUDP(Object object) {
+	private void sendToAllUDP(Object object) {
 		server.sendToAllUDP(object);
 		maybeFree(object);
+	}
+	
+	public void sendTo(int connectionID, Packet packet) {
+		if(packet.useTCP) {
+			sendToTCP(connectionID, packet);
+		} else {
+			sendToUDP(connectionID, packet);
+		}
+	}
+	
+	public void sendToAll(Packet packet) {
+		if(packet.useTCP) {
+			sendToAllTCP(packet);
+		} else {
+			sendToAllUDP(packet);
+		}
 	}
 	
 	public void start() {

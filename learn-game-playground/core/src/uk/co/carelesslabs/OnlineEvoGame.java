@@ -12,21 +12,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Server;
-import com.jharter.game.control.GlobalInputState;
+import com.jharter.game.ashley.systems.packets.impl.Packets.RegisterPlayerPacket;
+import com.jharter.game.ashley.systems.packets.impl.Packets.SnapshotPacket;
 import com.jharter.game.control.Input;
 import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameNetwork.AddPlayer;
-import com.jharter.game.network.GameNetwork.AddPlayers;
 import com.jharter.game.network.GameNetwork.EntityData;
-import com.jharter.game.network.GameNetwork.MoveUser;
-import com.jharter.game.network.GameNetwork.RemoveEntities;
-import com.jharter.game.network.GameNetwork.RequestPlayer;
-import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.network.GameServer;
-import com.jharter.game.util.EntityFactory;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -166,7 +157,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         	System.out.println("Starting Server");
 			server = new GameServer() {
 	
-				@Override
+				/*@Override
 				public void received(Connection c, Object object, Server server) {
 					if(object instanceof GlobalInputState) {
 						GlobalInputState state = (GlobalInputState) object;
@@ -174,12 +165,12 @@ public class OnlineEvoGame extends ApplicationAdapter {
 						if(heroInput.containsKey(heroId)) {
 							heroInput.get(heroId).setInputState(state);
 						}
-					} else if(object instanceof RequestPlayer) {
-						RequestPlayer request = (RequestPlayer) object;
+					} else if(object instanceof RequestPlayerPacket) {
+						RequestPlayerPacket request = (RequestPlayerPacket) object;
 						Hero hero = EntityFactory.newHero(request.id, island.centreTile.pos, box2D);
 						addHero(hero);
 				        //box2D.populateEntityMap(island.entities);
-						AddPlayers addHeroes = new AddPlayers();
+						AddPlayersPacket addHeroes = new AddPlayersPacket();
 						for(Hero h : heroes.values()) {
 							AddPlayer addHero = new AddPlayer();
 							addHero.id = h.id;
@@ -195,13 +186,13 @@ public class OnlineEvoGame extends ApplicationAdapter {
 						island.markEntitiesAsRemoved(box2D, removeEntities);
 						server.sendToAllTCP(removeEntities);
 					}
-				} 
+				}*/ 
 				
 			};
 			server.start();
         } else {
         	System.out.println("Starting Client");
-    		client = new GameClient() {
+    		client = new GameClient(); /* {
 
     			@Override
     			public void received(GameClient gameClient, Connection connection, Object object) {
@@ -224,8 +215,8 @@ public class OnlineEvoGame extends ApplicationAdapter {
     					DelayedRemovalArray<SnapshotPacket> temp = snapshotPackets;
     					snapshotPackets = packets;
     					temp.end();*/    				
-    				} else if(object instanceof AddPlayers) {
-    					AddPlayers addHeroes = (AddPlayers) object;
+    				/*} else if(object instanceof AddPlayersPacket) {
+    					AddPlayersPacket addHeroes = (AddPlayersPacket) object;
     					System.out.println("Client " + client.getID() + " received " + addHeroes.players.size + " heroes from server.");
     					for(AddPlayer addHero : addHeroes.players) {
     						if(heroes.containsKey(addHero.id)) {
@@ -244,13 +235,11 @@ public class OnlineEvoGame extends ApplicationAdapter {
 					}
     			}
     			
-    		};
+    		};*/
     		client.start();
     		
     		mainHeroId = IDGenerator.newID();
-    		RequestPlayer requestHero = new RequestPlayer();
-    		requestHero.id = mainHeroId;
-    		client.sendTCP(requestHero);
+    		client.sendTCP(RegisterPlayerPacket.newInstance(mainHeroId));
         }
     }
     
@@ -262,7 +251,6 @@ public class OnlineEvoGame extends ApplicationAdapter {
     
     float alpha = 0.01f;
     
-    private MoveUser serverMoveUser = null;
     private int frameCount = -1;
     
     private long lastServerMoveUserTime = 0;
@@ -333,7 +321,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         	long renderTime = getRenderTime(currentTime);
         	int newestIdx = -1;
         	for(int i = 0; i < packets.size; i++) {
-        		if(i > 0 && packets.get(i).time >= renderTime) {
+        		if(i > 0 && packets.get(i).sendTime >= renderTime) {
         			newestIdx = i;
         			for(int j = 0; j < newestIdx - 1; j++) {
         				packets.removeIndex(j); // Delayed removal won't happen until "end" is called
@@ -344,7 +332,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         	if(newestIdx > -1) {
         		SnapshotPacket snapshot1 = packets.get(newestIdx - 1);
         		SnapshotPacket snapshot2 = packets.get(newestIdx);
-        		if(snapshot2.time - snapshot1.time > 0) {
+        		if(snapshot2.sendTime - snapshot1.sendTime > 0) {
         			for(int i = 0; i < snapshot1.entityDatas.size(); i++) {
         				EntityData entityData1 = snapshot1.entityDatas.get(i);
         				EntityData entityData2 = snapshot2.entityDatas.get(i);
@@ -360,7 +348,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         						in.setInputState(entityData2.input);
         						hero.update(in);
         					}
-        					hero.update(snapshot1.time, entityData1, snapshot2.time, entityData2, renderTime);
+        					hero.update(snapshot1.sendTime, entityData1, snapshot2.sendTime, entityData2, renderTime);
         				}
         			}
         		}
@@ -374,8 +362,8 @@ public class OnlineEvoGame extends ApplicationAdapter {
         
         if(isServerSide() && frameCount == 3) {
         	frameCount = -1;
-        	SnapshotPacket snapshotPacket = new SnapshotPacket();
-        	snapshotPacket.time = TimeUtils.millis();
+        	SnapshotPacket snapshotPacket = SnapshotPacket.newInstance();
+        	snapshotPacket.sendTime = TimeUtils.millis();
         	for(Hero hero : heroes.values()) {
         		EntityData entityData = new EntityData();
             	entityData.id = hero.id;

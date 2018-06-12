@@ -15,10 +15,10 @@ import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
+import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.components.Components.TextureComp;
 
 public class Mapper {
 	

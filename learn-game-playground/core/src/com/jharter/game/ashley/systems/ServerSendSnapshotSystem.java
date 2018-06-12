@@ -11,8 +11,8 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.systems.packets.impl.Packets.SnapshotPacket;
 import com.jharter.game.network.GameNetwork.EntityData;
-import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.network.GameServer;
 
 public class ServerSendSnapshotSystem extends IntervalSystem {
@@ -35,8 +35,8 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
 
 	@Override
 	protected void updateInterval() {
-		SnapshotPacket snapshotPacket = new SnapshotPacket();
-    	snapshotPacket.time = TimeUtils.millis();
+		SnapshotPacket snapshotPacket = SnapshotPacket.newInstance();
+    	snapshotPacket.sendTime = TimeUtils.millis();
     	for(Entity e : entities) {
     		IDComp id = Mapper.IDComp.get(e);
     		PositionComp p = Mapper.PositionComp.get(e);

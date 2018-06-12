@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.systems.AddEntitiesSystem;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CameraSystem;
@@ -20,10 +19,14 @@ import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.SelectInputSystem;
-import com.jharter.game.ashley.systems.ServerProcessInputSystem;
 import com.jharter.game.ashley.systems.ServerSendSnapshotSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
+import com.jharter.game.ashley.systems.packets.impl.AddPlayersPacketSystem;
+import com.jharter.game.ashley.systems.packets.impl.InputPacketSystem;
+import com.jharter.game.ashley.systems.packets.impl.RegisterPlayerPacketSystem;
+import com.jharter.game.ashley.systems.packets.impl.RequestEntityPacketSystem;
+import com.jharter.game.ashley.systems.packets.impl.SnapshotPacketSystem;
 import com.jharter.game.control.Input;
 import com.jharter.game.game.GameDescription;
 import com.jharter.game.network.GameClient;
@@ -114,7 +117,7 @@ public abstract class GameStage {
     
     protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-		EntityUtil.addIdListener(engine);
+		EntityUtil.addIdListener(engine, getBox2DWorld());
 		
 		if(gameDescription.isOffline()) {
 			engine.addSystem(new SelectInputSystem());
@@ -124,16 +127,17 @@ public abstract class GameStage {
 			
 			GameServer server = gameDescription.getServer();
 			engine.addSystem(new ServerSendSnapshotSystem(server));
-			engine.addSystem(new ServerProcessInputSystem(server));
-			
-			//server.addPacketSystemsToEngine(engine);
+			engine.addSystem(new InputPacketSystem(this, server));
+			engine.addSystem(new RegisterPlayerPacketSystem(this, server));
+			engine.addSystem(new RequestEntityPacketSystem(this, server));
 			
 		} else if(gameDescription.isClient()){
 
 			GameClient client = gameDescription.getClient();
 			engine.addSystem(new ClientSendInputSystem(client));
-			client.addPacketSystemsToEngine(engine);
-			
+			engine.addSystem(new SnapshotPacketSystem(this, client));
+			engine.addSystem(new AddPlayersPacketSystem(this, client));
+		
 		}
 		
 		engine.addSystem(new UpdatePhysicsSystem(this));
@@ -151,11 +155,11 @@ public abstract class GameStage {
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
 		}
 		
-		engine.addSystem(new RemoveEntitiesSystem(engine, getBox2DWorld()));
+		engine.addSystem(new RemoveEntitiesSystem(engine, gameDescription.getClient()));
 		
-		if(gameDescription.isClient()) {
+		/*if(gameDescription.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, gameDescription.getClient()));
-		}
+		}*/
 		
 		engine.addSystem(new CleanupInputSystem(this));
 		

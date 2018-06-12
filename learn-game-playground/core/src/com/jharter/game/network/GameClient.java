@@ -2,42 +2,27 @@ package com.jharter.game.network;
 
 import java.io.IOException;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
-import com.jharter.game.ashley.systems.PacketSystem;
-import com.jharter.game.network.GameNetwork.AddPlayers;
-import com.jharter.game.network.GameNetwork.Login;
-import com.jharter.game.network.GameNetwork.Ping;
-import com.jharter.game.network.GameNetwork.SnapshotPacket;
 import com.jharter.game.network.packets.Packet;
-import com.jharter.game.network.packets.PacketManager;
-import com.jharter.game.network.packets.impl.SnapshotPacketManager;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
-public class GameClient {
+public class GameClient extends GameEndPoint {
 	
 	public static final boolean DEBUG_SHOW_PING = false;
 	
-	protected ID clientId;
 	protected Client client;
-	protected long pingMS = 0;
-	protected long latencyMS = 0;
 	protected float time = 0;
-	protected ObjectMap<Class, PacketManager> packetManagers = new ObjectMap();
 	
-	protected AddPlayers addPlayers = null;
 	protected ID playerId = IDGenerator.newID();
 	
 	public GameClient() {
-		clientId = IDGenerator.newID();
+		super();
 		client = new Client();
-		addPacketManagers();
 	}
 	
 	public ID getPlayerId() {
@@ -56,43 +41,12 @@ public class GameClient {
 		return client;
 	}
 	
-	public long getPing() {
-		return pingMS;
-	}
-	
-	public long getLatency() {
-		return latencyMS;
+	public int getPing() {
+		return client.getReturnTripTime();
 	}
 	
 	public void ping() {
-		Ping ping = new Ping();
-		ping.time = TimeUtils.millis();
-		client.sendUDP(ping);
-	}
-	
-	private void setPing(Ping ping) {
-		pingMS = TimeUtils.millis() - ping.time;
-		latencyMS = Math.round(pingMS / 2.0);
-
-		if(DEBUG_SHOW_PING) {
-			System.out.println("ping: " + getPing() + " ms, latency: " + getLatency() + " ms");
-		}
-	}
-	
-	public ID getClientId() {
-		return clientId;
-	}
-	
-	public void setClientId(ID clientId) {
-		this.clientId = clientId;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void received(GameClient client, Connection connection, Object object) {
-		if(object instanceof Package) {
-			Packet<?> packet = (Packet<?>) object;
-			getPacketManager(packet.getClass()).received(this, connection, packet);
-		}
+		client.updateReturnTripTime();
 	}
 	
 	public void start() {
@@ -101,15 +55,14 @@ public class GameClient {
 		
 		client.addListener(new ThreadedListener(new Listener() {
 			public void connected (Connection connection) {
-				
+				connection.updateReturnTripTime();
 			}
 
 			public void received (Connection connection, Object object) {
-				if(object instanceof Ping) {
-					setPing((Ping) object);
-				} else {
-					GameClient.this.received(GameClient.this, connection, object);
-				}
+				/*if(object instanceof Ping) {
+					logPing((Ping) object);
+				}*/ 
+				GameClient.this.received(GameClient.this, connection, object);
 			}
 
 			public void disconnected (Connection connection) {
@@ -125,63 +78,22 @@ public class GameClient {
 			ex.printStackTrace();
 		}
 		
-		login();
 	}
 	
-	public void login() {
-		Login login = new Login();
-		login.id = clientId;
-		client.sendTCP(login);
+	private void logPing(Ping ping) {
+		if(ping.isReply) {
+			System.out.println("Client has been pinged! (" + client.getReturnTripTime() + " ms)");
+		}
 	}
-
+	
 	public void sendTCP(Object object) {
 		client.sendTCP(object);
+		maybeFree(object);
 	}
 	
 	public void sendUDP(Object object) {
 		client.sendUDP(object);
-	}
-	
-	public <T extends Packet<T>> void addPacketManager(Class<T> packetClass, PacketManager<?> packetManager) {
-		packetManagers.put(packetClass, packetManager);
-	}
-	
-	public void addPacketManagers() {
-		addPacketManager(SnapshotPacket.class, new SnapshotPacketManager());
-	}
-	
-	public <T extends Packet<T>> PacketManager<T> getPacketManager(Class<T> packetClass) {
-		if(packetManagers.containsKey(packetClass)) {
-			return (PacketManager<T>) packetManagers.get(packetClass);
-		}
-		return null;
-	}
-	
-	public <T extends Packet<T>> PacketSystem<T> buildPacketSystem(Class<T> klass) {
-		return getPacketManager(klass).buildSystem(this);
-	}
-	
-	public void addPacketSystemsToEngine(Engine engine) {
-		for(Class klass : packetManagers.keys()) {
-			engine.addSystem(buildPacketSystem(klass));
-		}
-	}
-	
-	protected void handleSnapshotPacket(SnapshotPacket snapshotPacket) {
-		getPacketManager(SnapshotPacket.class).getPackets().add(snapshotPacket);
-	}
-	
-	protected void handleAddPlayers(AddPlayers addPlayers) {
-		System.out.println("Client " + client.getID() + " received " + addPlayers.players.size + " players from server.");
-		this.addPlayers = addPlayers;
-	}
-	
-	public AddPlayers getAddPlayers() {
-		return addPlayers;
-	}
-	
-	public void clearAddPlayers() {
-		this.addPlayers = null;
+		maybeFree(object);
 	}
 	
 }

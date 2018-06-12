@@ -6,13 +6,13 @@ import com.jharter.game.game.GameDescription;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 
-public abstract class StageScreen implements Screen {
+public abstract class GameScreen implements Screen {
 	
 	private ObjectMap<ID, GameStage> stages = new ObjectMap<ID, GameStage>();
     private GameStage currentStage = null;
     private GameDescription gameDescription;
     
-    public StageScreen(GameDescription gameDescription) {
+    public GameScreen(GameDescription gameDescription) {
     	this.gameDescription = gameDescription;
     	setStage(create(gameDescription));
     }

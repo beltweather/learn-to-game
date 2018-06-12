@@ -1,11 +1,19 @@
 package com.jharter.game.network.packets;
 
-public class Packet<T extends Packet<T>> implements Comparable<T>  {
-	public long time;
-	public int tick;
+import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.Pool.Poolable;
+
+public abstract class Packet<T extends Packet<T>> implements Comparable<T>, Poolable  {
+	public long sendTime;
+	public int sendTick;
+	public int connectionId;
+	
+	public void free() {
+		Pools.get((Class<T>) getClass()).free((T) this);
+	}
 	
 	@Override
 	public int compareTo(T packet) {
-		return (int) (packet.time % Integer.MAX_VALUE);
+		return (int) (packet.sendTime % Integer.MAX_VALUE);
 	}
 }

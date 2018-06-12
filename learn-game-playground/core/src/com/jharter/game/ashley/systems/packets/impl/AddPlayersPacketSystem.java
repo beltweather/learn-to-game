@@ -1,32 +1,28 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.packets.impl;
 
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.systems.packets.ConsumingPacketSystem;
 import com.jharter.game.ashley.systems.packets.impl.Packets.AddPlayersPacket;
 import com.jharter.game.network.GameClient;
+import com.jharter.game.network.GameEndPoint;
 import com.jharter.game.network.GameNetwork.AddPlayer;
+import com.jharter.game.network.GameServer;
 import com.jharter.game.stages.GameStage;
 
-@Deprecated
-public class AddEntitiesSystem extends EntitySystem {
-
-	private GameStage stage;
-	private GameClient client;
+public class AddPlayersPacketSystem extends ConsumingPacketSystem<AddPlayersPacket> {
 	
-	public AddEntitiesSystem(GameStage stage, GameClient client) {
-		this.stage = stage;
-		this.client = client;
+	public AddPlayersPacketSystem(GameStage stage, GameEndPoint endPoint) {
+		super(stage, endPoint);
 	}
-	
+
 	@Override
-	public void update(float deltaTime) {
-		AddPlayersPacket addPlayers = null; // client.getAddPlayers();
-		if(addPlayers == null) {
-			return;
-		}
-		//client.clearAddPlayers();
+	public void update(GameServer server, GameStage stage, float deltaTime, AddPlayersPacket addPlayers) {
 		
+	}
+
+	@Override
+	public void update(GameClient client, GameStage stage, float deltaTime, AddPlayersPacket addPlayers) {
 		boolean addedFocus = false;
 		for(AddPlayer addPlayer : addPlayers.players) {
 			if(EntityUtil.findEntity(addPlayer.id) != null) {
@@ -45,5 +41,10 @@ public class AddEntitiesSystem extends EntitySystem {
 			stage.activate();
 		}
 	}
-	
+
+	@Override
+	public Class<AddPlayersPacket> getPacketClass() {
+		return AddPlayersPacket.class;
+	}
+
 }

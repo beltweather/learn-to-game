@@ -10,11 +10,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
+import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.control.Input;
 import com.jharter.game.util.id.ID;
 
@@ -28,7 +31,7 @@ public class EntityUtil {
 	
 	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
-	public static void addIdListener(PooledEngine engine) {
+	public static void addIdListener(PooledEngine engine, final Box2DWorld box2D) {
 		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
 			
 			private ComponentMapper<IDComp> im = ComponentMapper.getFor(IDComp.class);
@@ -44,6 +47,14 @@ public class EntityUtil {
 			@Override
 			public void entityRemoved(Entity entity) {
 				IDComp idComp = im.get(entity);
+				BodyComp b = Mapper.BodyComp.get(entity);
+				SensorComp s = Mapper.SensorComp.get(entity);
+				if(b != null && b.body != null) {
+					box2D.world.destroyBody(b.body);
+				}
+				if(s != null && s.sensor != null) {
+					box2D.world.destroyBody(s.sensor);
+				}
 				if(idComp.id != null) {
 					entitiesById.remove(idComp.id);
 				}

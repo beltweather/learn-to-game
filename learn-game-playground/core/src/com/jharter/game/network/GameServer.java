@@ -8,18 +8,16 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Server;
-import com.jharter.game.network.GameNetwork.Login;
-import com.jharter.game.network.GameNetwork.Ping;
-import com.jharter.game.network.GameNetwork.Register;
-import com.jharter.game.network.GameNetwork.RegistrationRequired;
+import com.jharter.game.network.packets.Packet;
 import com.jharter.game.util.id.ID;
 
-public abstract class GameServer {
+public class GameServer extends GameEndPoint {
 	
 	protected Server server;
 	protected Set<GameUser> loggedIn = new HashSet<GameUser>();
 	
 	public GameServer() {
+		super();
 		server = new Server() {
 			protected Connection newConnection () {
 				// By providing our own connection implementation, we can store per
@@ -31,104 +29,66 @@ public abstract class GameServer {
 	
 	public void sendToTCP(int connectionID, Object object) {
 		server.sendToTCP(connectionID, object);
+		maybeFree(object);
 	}
 	
 	public void sendToAllTCP(Object object) {
 		server.sendToAllTCP(object);
+		maybeFree(object);
 	}
 	
 	public void sendToUDP(int connectionID, Object object) {
 		server.sendToUDP(connectionID, object);
+		maybeFree(object);
 	}
 	
 	public void sendToAllUDP(Object object) {
 		server.sendToAllUDP(object);
+		maybeFree(object);
 	}
-	
-	public abstract void received(Connection c, Object object, Server server);
 	
 	public void start() {
 		GameNetwork.register(server);
 		
 		server.addListener(new LagListener(GameNetwork.LAG_MS, GameNetwork.LAG_MS, new Listener() {
 			public void received (Connection c, Object object) {
+				GameServer.this.received(GameServer.this, c, object);
 				
-				if(object instanceof Ping) {
-					server.sendToTCP(c.getID(), object);
-					return;
-				}
-				
-				// We know all connections for this server are actually CharacterConnections.
-				GameConnection connection = (GameConnection)c;
-				GameUser user = connection.user;
-
-				if (object instanceof Login) {
-					// Ignore if already logged in.
-					if (user != null) return;
-
-					// Reject if the name is invalid.
-					ID id = ((Login)object).id;
-					if (!isValid(id)) {
-						c.close();
+				/*} else if(object instanceof RequestPlayer) {
+					RequestPlayer request = (RequestPlayer) object;
+					ID id = request.id;
+					if(EntityUtil.findEntity(id) != null) {
+						System.err.println("Requested new player with id " + id + " but they already exist.");
 						return;
 					}
-
-					// Reject if already logged in.
-					for (GameUser u : loggedIn) {
-						if (u.id.equals(id)) {
-							c.close();
-							return;
-						}
-					}
-
-					//user = loadUser(id);
-
-					// Reject if couldn't load character.
-					if (user == null) {
-						c.sendTCP(new RegistrationRequired());
-						return;
-					}
-
-					loggedIn(connection, user);
-					return;
-				}
-
-				if (object instanceof Register) {
-					// Ignore if already logged in.
-					if (user != null) return;
-
-					Register register = (Register)object;
-
-					// Reject if the login is invalid.
-					if (!isValid(register.id)) {
-						c.close();
-						return;
-					}
-					/*if (!isValid(register.otherStuff)) {
-						c.close();
-						return;
-					}*/
-
-					// Reject if character already exists.
-					/*if (loadUser(register.id) != null) {
-						c.close();
-						return;
-					}*/
-
-					user = new GameUser();
-					user.id = register.id;
 					
-					/*if (!saveCharacter(user)) {
-						c.close();
-						return;
-					}*/
-
-					loggedIn(connection, user);
-					return;
-				}
+					getStage().addPlayerEntity(id, getStage().getEntryPoint(), !hasFocus);
+					if(!hasFocus) {
+						getStage().activate();
+					}
+					hasFocus = true;
+					
+					AddPlayersPacket addPlayers = new AddPlayersPacket();
+					for(Entity player : getStage().getEngine().getEntitiesFor(Family.all(PlayerComp.class, IDComp.class, PositionComp.class).get())) {
+						AddPlayer addPlayer = new AddPlayer();
+						PositionComp p = Mapper.PositionComp.get(player);
+						addPlayer.id = Mapper.IDComp.get(player).id;
+						addPlayer.x = p.position.x;
+						addPlayer.y = p.position.y;
+						addPlayer.z = p.position.z;
+						addPlayers.players.add(addPlayer);
+					}
+					System.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
+					server.sendToAllTCP(addPlayers);*/
+					
 				
+				/* else if(object instanceof RemoveEntities) {
+					RemoveEntities removeEntities = (RemoveEntities) object;
+					island.markEntitiesAsRemoved(box2D, removeEntities);
+					server.sendToAllTCP(removeEntities);
+				}*/
 				
-				GameServer.this.received(c, object, server);
+				//GameServer.this.received(c, object, server);
 			}
 			
 			private boolean isValid (ID value) {

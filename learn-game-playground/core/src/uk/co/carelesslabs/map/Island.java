@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.network.GameClient;
-import com.jharter.game.network.GameNetwork.RemoveEntities;
 
 import uk.co.carelesslabs.Enums.TileType;
 import uk.co.carelesslabs.Media;
@@ -265,7 +264,7 @@ public class Island {
         }
     }
     
-    public void markEntitiesAsRemoved(Box2DWorld box2D, RemoveEntities removeEntities) {
+    //public void markEntitiesAsRemoved(Box2DWorld box2D, RemoveEntities removeEntities) {
     	/*Iterator<GameEntity> it = entities.iterator();
         while(it.hasNext()) {
             GameEntity e = it.next();
@@ -273,7 +272,7 @@ public class Island {
             	e.remove = true;
             }
         }*/
-    }
+    //}
 
     public void requestRemoveEntities(Box2DWorld box2D, GameClient client) {
     	/*RemoveEntities removeEntities = null; 

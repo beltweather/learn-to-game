@@ -22,7 +22,7 @@ public abstract class InterpolatingPacketSystem<T extends Packet<T>> extends Pac
 	}
 	
 	private long getRenderTime(GameClient client, long currentTime) {
-    	return currentTime - (client.getPing() + 50);
+    	return currentTime - (client.getPing() + 100);
     }
 	
 	protected float getInterpolatedValue(PacketPair<T> pair, float valuePast, float valueFuture) {

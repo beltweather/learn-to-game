@@ -46,7 +46,7 @@ public class TestStageA extends GameStage {
 	    
 		Vector3 center = getEntryPoint();
 		center.x += 10;
-		addBird(engine, center.cpy());
+		//addBird(engine, center.cpy());
 	}
 	
 	private void addBird(PooledEngine engine, Vector3 position) {

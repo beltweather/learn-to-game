@@ -4,7 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
+import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Mapper;
 
@@ -24,15 +28,25 @@ public class ApproachTargetSystem extends IteratingSystem {
 		
 		if(t.position != null) {
 			float alpha = ALPHA;
-	    	p.position.x = Interpolation.linear.apply(p.position.x, t.position.x, alpha);
-	    	p.position.y = Interpolation.linear.apply(p.position.y, t.position.y, alpha);
+			float newX = Interpolation.linear.apply(p.position.x, t.position.x, alpha);
+	    	float newY = Interpolation.linear.apply(p.position.y, t.position.y, alpha);
 	    	if(isCloseEnough(p.position.x, t.position.x) &&
 			   isCloseEnough(p.position.y, t.position.y)) {	
 	    		t.position = null;
 	    		// Optionally, could just remove target comp here
+			} else {
+				BodyComp b = Mapper.BodyComp.get(entity);
+				SizeComp s = Mapper.SizeComp.get(entity);
+				setPosition(b.body, newX, newY, s.width, s.height, p.position);
 			}
 		}
 	}
+	
+	public void setPosition(Body body, float x, float y, float width, float height, Vector3 pos) {
+    	body.setTransform(x+width/2, y+height/4, body.getAngle());
+    	pos.x = body.getPosition().x - width/2;
+        pos.y = body.getPosition().y - height/4;
+    }
 
 	private boolean isCloseEnough(float n0, float n1) {
 		return Math.abs(n0 - n1) < MIN_DIFF;

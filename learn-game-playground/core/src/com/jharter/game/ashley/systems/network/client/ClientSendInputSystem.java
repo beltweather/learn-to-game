@@ -6,8 +6,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.network.endpoints.GameClient;
 
 public class ClientSendInputSystem extends IteratingSystem {
 

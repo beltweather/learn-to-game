@@ -11,9 +11,9 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.network.packets.Packets.SnapshotPacket;
-import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
+import com.jharter.game.network.endpoints.GameServer;
+import com.jharter.game.network.packets.Packets.SnapshotPacket;
 
 public class ServerSendSnapshotSystem extends IntervalSystem {
 	
@@ -51,7 +51,7 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
         		in.input.addInputState(entityData);
         	}
         	
-        	snapshotPacket.entityDatas.add(entityData);
+        	snapshotPacket.entityDatas.put(entityData.id, entityData);
         	
     	}
     	server.sendToAll(snapshotPacket);

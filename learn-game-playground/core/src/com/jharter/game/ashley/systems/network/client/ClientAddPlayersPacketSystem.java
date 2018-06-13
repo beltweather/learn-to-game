@@ -5,7 +5,6 @@ import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
-import com.jharter.game.network.packets.Packets;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.stages.GameStage;
 

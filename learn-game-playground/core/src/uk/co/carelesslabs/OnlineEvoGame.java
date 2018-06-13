@@ -14,8 +14,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.GameClient;
-import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
+import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
 import com.jharter.game.network.packets.Packets.SnapshotPacket;
 import com.jharter.game.util.id.ID;
@@ -333,9 +333,14 @@ public class OnlineEvoGame extends ApplicationAdapter {
         		SnapshotPacket snapshot1 = packets.get(newestIdx - 1);
         		SnapshotPacket snapshot2 = packets.get(newestIdx);
         		if(snapshot2.sendTime - snapshot1.sendTime > 0) {
-        			for(int i = 0; i < snapshot1.entityDatas.size(); i++) {
-        				EntityData entityData1 = snapshot1.entityDatas.get(i);
-        				EntityData entityData2 = snapshot2.entityDatas.get(i);
+        			for(ID id : snapshot1.entityDatas.keys()) {
+        				EntityData entityData1 = snapshot1.entityDatas.get(id);
+        				EntityData entityData2 = snapshot2.entityDatas.get(id);
+        				
+        				if(entityData1 == null || entityData2 == null) {
+        					continue;
+        				}
+        				
         				ID heroId = entityData1.id;
         				if(heroes.containsKey(heroId)) {
         					Hero hero = heroes.get(heroId);
@@ -370,7 +375,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
             	entityData.x = hero.pos.x;
             	entityData.y = hero.pos.y;
             	heroInput.get(hero.id).addInputState(entityData);
-            	snapshotPacket.entityDatas.add(entityData);
+            	snapshotPacket.entityDatas.put(entityData.id, entityData);
         	}
         	server.sendToAll(snapshotPacket);
         }

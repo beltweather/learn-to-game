@@ -1,9 +1,9 @@
 package com.jharter.game.network.packets;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
@@ -101,7 +101,7 @@ public class Packets {
 			return get(SnapshotPacket.class);
 		}
 		
-		public List<EntityData> entityDatas = new ArrayList<EntityData>();
+		public ObjectMap<ID, EntityData> entityDatas = new ObjectMap<ID, EntityData>();
 		
 		private SnapshotPacket() {}
 

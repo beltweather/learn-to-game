@@ -20,8 +20,9 @@ import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
-import com.jharter.game.ashley.systems.network.client.ClientSendInputSystem;
+import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
+import com.jharter.game.ashley.systems.network.client.ClientSendInputSystem;
 import com.jharter.game.ashley.systems.network.client.ClientSnapshotPacketSystem;
 import com.jharter.game.ashley.systems.network.offline.OfflineSelectInputSystem;
 import com.jharter.game.ashley.systems.network.server.ServerInputPacketSystem;
@@ -29,6 +30,7 @@ import com.jharter.game.ashley.systems.network.server.ServerRegisterPlayerPacket
 import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketSystem;
 import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.control.GameInput;
+import com.jharter.game.debug.Debug;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
@@ -135,6 +137,7 @@ public abstract class GameStage {
 		} else if(endPointHelper.isClient()){
 
 			GameClient client = endPointHelper.getClient();
+			if(Debug.RANDOM_MOVEMENT) engine.addSystem(new ClientRandomMovementSystem());
 			engine.addSystem(new ClientSendInputSystem(client));
 			engine.addSystem(new ClientSnapshotPacketSystem(this, client));
 			engine.addSystem(new ClientAddPlayersPacketSystem(this, client));

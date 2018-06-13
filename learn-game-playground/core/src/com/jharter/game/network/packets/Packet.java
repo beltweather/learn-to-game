@@ -1,7 +1,7 @@
 package com.jharter.game.network.packets;
 
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.Pools;
 
 public abstract class Packet<T extends Packet<T>> implements Comparable<T>, Poolable  {
 	public long sendTime;

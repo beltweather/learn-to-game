@@ -10,7 +10,6 @@ import com.jharter.game.ashley.systems.network.InterpolatingPacketSystem;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
-import com.jharter.game.network.packets.Packets;
 import com.jharter.game.network.packets.PacketManager.PacketPair;
 import com.jharter.game.network.packets.Packets.RequestEntityPacket;
 import com.jharter.game.network.packets.Packets.SnapshotPacket;
@@ -28,17 +27,14 @@ public class ClientSnapshotPacketSystem extends InterpolatingPacketSystem<Snapsh
 		SnapshotPacket pastPacket = pair.pastPacket;
     	SnapshotPacket futurePacket = pair.futurePacket;
     	
-		// Handle case that should soon be deprecated where we've removed an entity
-		// in between these packets. In reality, these packets should store entities
-		// as maps so that we can key in to them and update accordingly. Using index
-		// is far too wonky and unpredictable
-		if(pastPacket.entityDatas.size() != futurePacket.entityDatas.size()) {
-			return;
-		}
-		
-		for(int i = 0; i < pastPacket.entityDatas.size(); i++) {
-			EntityData pastEntityData = pastPacket.entityDatas.get(i);
-			EntityData futureEntityData = futurePacket.entityDatas.get(i);
+		for(ID id : futurePacket.entityDatas.keys()) {
+			EntityData pastEntityData = pastPacket.entityDatas.get(id);
+			EntityData futureEntityData = futurePacket.entityDatas.get(id);
+			
+			if(pastEntityData == null || futureEntityData == null) {
+				continue;
+			}
+			
 			ID entityId = pastEntityData.id;
 			
 			Entity entity = EntityUtil.findEntity(entityId);

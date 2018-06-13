@@ -5,7 +5,6 @@ import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameClient;
-import com.jharter.game.network.packets.Packets;
 import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
 import com.jharter.game.stages.GameStage;
 

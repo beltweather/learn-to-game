@@ -6,11 +6,10 @@ import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
-import com.jharter.game.network.packets.Packets;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
+import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.network.packets.Packets.RequestEntityPacket;
-import com.jharter.game.network.endpoints.GameServer;
-import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 

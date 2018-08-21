@@ -33,5 +33,10 @@ public class ZoneUtil {
 		Entity zone = getZone(zp.zoneType);
 		return Mapper.ZoneComp.get(zone);
 	}
+	
+	public static ZoneComp ZoneComp(ZoneType zoneType) {
+		Entity zone = getZone(zoneType);
+		return Mapper.ZoneComp.get(zone);
+	}
 
 }

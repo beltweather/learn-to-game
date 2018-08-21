@@ -61,9 +61,9 @@ public class Media {
         
         // Characters
         ranger = new Texture("entities/character/ranger-level-3-scaled.png");
-        rogue = new Texture("entities/character/rogue-level-3.png");
-        sorcerer = new Texture("entities/character/sorcerer-level-3.png");
-        warrior = new Texture("entities/character/warrior-level-3.png");
+        rogue = new Texture("entities/character/rogue-level-3-scaled.png");
+        sorcerer = new Texture("entities/character/sorcerer-level-3-scaled.png");
+        warrior = new Texture("entities/character/warrior-level-3-scaled.png");
         
         // Enemies
         atma = new Texture("entities/enemies/atma.png");

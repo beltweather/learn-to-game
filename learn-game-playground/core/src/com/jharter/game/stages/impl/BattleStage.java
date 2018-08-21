@@ -128,8 +128,8 @@ public class BattleStage extends GameStage {
 		
 		b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.CHARACTER, 
-				  new Vector3(700,150,0), 
-				  Media.ranger);
+				  new Vector3(660,140,0), 
+				  Media.warrior);
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -137,15 +137,15 @@ public class BattleStage extends GameStage {
 		b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.CHARACTER, 
 				  new Vector3(750,15,0), 
-				  Media.ranger);
+				  Media.rogue);
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.CHARACTER, 
-				  new Vector3(700,-120,0), 
-				  Media.ranger);
+				  new Vector3(675,-120,0), 
+				  Media.sorcerer);
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();

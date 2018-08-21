@@ -88,12 +88,12 @@ public class Hero extends GameEntity{
         pos.y = body.getPosition().y - height/4;
         
         // If interact key pressed and interactEntities present interact with first in list.
-        if(input.isInteract() && interactEntities.size > 0){
+        if(input.isAccept() && interactEntities.size > 0){
         	interactEntities.get(0).interact(this);
         }
         
         // Reset interact
-        input.setInteract(false);
+        input.setAccept(false);
     }
     
     private float getInterpolatedValue(long timeSnapshot1, float valueSnapshot1, long timeSnapshot2, float valueSnapshot2, long timeCurrent) {

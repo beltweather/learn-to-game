@@ -22,11 +22,11 @@ public class InteractSystem extends IteratingSystem {
 		InputComp in = Mapper.InputComp.get(entity);
 		InteractComp interactComp = Mapper.InteractComp.get(entity);
 		
-		if(in.input.isInteract()) {
+		if(in.input.isAccept()) {
 			System.out.println("interact!");
 		}
 		
-		if(in.input.isInteract() && interactComp.interactables.size > 0) {
+		if(in.input.isAccept() && interactComp.interactables.size > 0) {
 			ID id = interactComp.interactables.get(0);
 			Entity targetEntity = EntityUtil.findEntity(id);
 			if(targetEntity != null) {
@@ -37,7 +37,7 @@ public class InteractSystem extends IteratingSystem {
 			}
 		}
 		
-		in.input.setInteract(false);
+		in.input.setAccept(false);
 	}
 	
 }

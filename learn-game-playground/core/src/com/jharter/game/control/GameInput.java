@@ -19,7 +19,7 @@ public class GameInput extends InputAdapter implements InputProcessor {
 	private static final int CONTROL_FRAME_DELAY = 3;
 	
 	private static boolean isActive(GlobalInputState inputState) {
-		return inputState.up || inputState.down || inputState.left || inputState.right || inputState.interact; 
+		return inputState.up || inputState.down || inputState.left || inputState.right || inputState.accept || inputState.cancel; 
 	}
 	
 	private static GlobalInputState copy(GlobalInputState inputState) {
@@ -29,7 +29,8 @@ public class GameInput extends InputAdapter implements InputProcessor {
 		copy.down = inputState.down;
 		copy.left = inputState.left;
 		copy.right = inputState.right;
-		copy.interact = inputState.interact;
+		copy.accept = inputState.accept;
+		copy.cancel = inputState.cancel;
 		copy.time = inputState.time;
 		return copy;
 	}
@@ -209,7 +210,10 @@ public class GameInput extends InputAdapter implements InputProcessor {
             	realtimeState.right = false;
                 break;
             case Keys.E:
-            	realtimeState.interact = true;
+            	realtimeState.accept = true;
+                break;
+            case Keys.Q:
+            	realtimeState.cancel = true;
                 break;
             case Keys.ESCAPE:
                 Gdx.app.exit();
@@ -236,7 +240,8 @@ public class GameInput extends InputAdapter implements InputProcessor {
     	realtimeState.left = false;
     	realtimeState.down = false;
     	realtimeState.right = false;
-    	realtimeState.interact = false;
+    	realtimeState.accept = false;
+    	realtimeState.cancel = false;
     	localRenderState.reset = false;
     	localRenderState.inventory = false;
     }
@@ -310,8 +315,12 @@ public class GameInput extends InputAdapter implements InputProcessor {
 		return renderState.right;
 	}
 	
-	public boolean isInteract() {
-		return renderState.interact;
+	public boolean isAccept() {
+		return renderState.accept;
+	}
+	
+	public boolean isCancel() {
+		return renderState.cancel;
 	}
 	
 	public boolean isInventory() {
@@ -370,8 +379,12 @@ public class GameInput extends InputAdapter implements InputProcessor {
 		realtimeState.right = right;
 	}
 	
-	public void setInteract(boolean interact) {
-		realtimeState.interact = interact;
+	public void setAccept(boolean accept) {
+		realtimeState.accept = accept;
+	}
+	
+	public void setCancel(boolean cancel) {
+		realtimeState.cancel = cancel;
 	}
 	
 	public void setInventory(boolean inventory) {

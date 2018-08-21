@@ -309,7 +309,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         	for(Hero hero : heroes.values()) {
             	GameInput in = heroInput.get(hero.id);
             	hero.update(in);
-            	in.setInteract(false);
+            	in.setAccept(false);
             }
         } else {
         	mainHero.update(input);

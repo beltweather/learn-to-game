@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
@@ -273,14 +274,51 @@ public final class Components {
 		public ZoneType zoneType = ZoneType.NONE;
 		public int row = -1;
 		public int col = -1;
+		private Array<ZonePositionComp> history = new Array<ZonePositionComp>();
 		
 		private ZonePositionComp() {}
+		
+		private ZonePositionComp copyForHistory() {
+			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
+			zp.zoneType = zoneType;
+			zp.row = row;
+			zp.col = col;
+			// Intentionally ignoring history for copies since we don't use it
+			return zp;
+		}
+		
+		public void checkpoint() {
+			history.add(copyForHistory());
+		}
+		
+		public void undoCheckpoint() {
+			if(history.size == 0) {
+				return;
+			}
+			history.pop();
+		}
+		
+		public boolean tryRevertToLastCheckpoint() {
+			if(history.size == 0) {
+				return false;
+			}
+			ZonePositionComp copy = history.pop();
+			zoneType = copy.zoneType;
+			row = copy.row;
+			col = copy.col;
+			return true;
+		}
+		
+		public void clearHistory() {
+			history.clear();
+		}
 		
 		@Override
 		public void reset() {
 			zoneType = ZoneType.NONE;
 			row = -1;
 			col = -1;
+			history.clear();
 		}
 		
 	}

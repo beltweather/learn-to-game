@@ -45,14 +45,15 @@ public class CursorInputSystem extends IteratingSystem {
 			ci.reset();
 		}
 		
-		if(in.input.isInteract()) {
+		if(in.input.isAccept()) {
 			ci.accept = true;
-			in.input.setInteract(false);
+			in.input.setAccept(false);
 		}
 		
-		/*if(in.input.isCancel()) {
+		if(in.input.isCancel()) {
 			ci.cancel = true;
-		}*/
+			in.input.setCancel(false);
+		}
 	}
 	
 }

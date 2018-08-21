@@ -14,8 +14,8 @@ public class TestStageScreen extends GameScreen {
 	
 	@Override
 	protected GameStage create(EndPointHelper endPointHelper) {
-		//GameStage testStageA = new TestStageA(endPointHelper);
-		GameStage testStageA = new BattleStage(endPointHelper);
+		GameStage testStageA = new TestStageA(endPointHelper);
+		//GameStage testStageA = new BattleStage(endPointHelper);
 		addStage(testStageA);
 	 	return testStageA;
 	}

@@ -19,7 +19,32 @@ import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
+import com.jharter.game.ashley.systems.AnimationSystem;
+import com.jharter.game.ashley.systems.ApproachTargetSystem;
+import com.jharter.game.ashley.systems.CameraSystem;
+import com.jharter.game.ashley.systems.CleanupInputSystem;
+import com.jharter.game.ashley.systems.InputMovementSystem;
+import com.jharter.game.ashley.systems.InteractSystem;
+import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
+import com.jharter.game.ashley.systems.RenderEntitiesSystem;
+import com.jharter.game.ashley.systems.RenderInitSystem;
+import com.jharter.game.ashley.systems.RenderTilesSystem;
+import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
+import com.jharter.game.ashley.systems.VelocityMovementSystem;
+import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
+import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
+import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
+import com.jharter.game.ashley.systems.network.client.ClientSendInputSystem;
+import com.jharter.game.ashley.systems.network.client.ClientSnapshotPacketSystem;
+import com.jharter.game.ashley.systems.network.offline.OfflineSelectInputSystem;
+import com.jharter.game.ashley.systems.network.server.ServerInputPacketSystem;
+import com.jharter.game.ashley.systems.network.server.ServerRegisterPlayerPacketSystem;
+import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketSystem;
+import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
+import com.jharter.game.debug.Debug;
 import com.jharter.game.network.endpoints.EndPointHelper;
+import com.jharter.game.network.endpoints.GameClient;
+import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
@@ -120,5 +145,62 @@ public class TestStageA extends GameStage {
 	public Vector3 getEntryPoint() {
 		return island.getCentrePosition().cpy();
 	}
+	
+	@Override
+	protected PooledEngine buildEngine() {
+    	PooledEngine engine = new PooledEngine();
+		EntityUtil.addIdListener(engine, getBox2DWorld());
+		
+		if(endPointHelper.isOffline()) {
+			engine.addSystem(new OfflineSelectInputSystem());
+		}
+		
+		if(endPointHelper.isServer()) {
+			
+			GameServer server = endPointHelper.getServer();
+			engine.addSystem(new ServerSendSnapshotSystem(server));
+			engine.addSystem(new ServerInputPacketSystem(this, server));
+			engine.addSystem(new ServerRegisterPlayerPacketSystem(this, server));
+			engine.addSystem(new ServerRequestEntityPacketSystem(this, server));
+			
+		} else if(endPointHelper.isClient()){
+
+			GameClient client = endPointHelper.getClient();
+			if(Debug.RANDOM_MOVEMENT) engine.addSystem(new ClientRandomMovementSystem());
+			engine.addSystem(new ClientSendInputSystem(client));
+			engine.addSystem(new ClientSnapshotPacketSystem(this, client));
+			engine.addSystem(new ClientAddPlayersPacketSystem(this, client));
+			engine.addSystem(new ClientRemoveEntityPacketSystem(this, client));
+		
+		}
+		
+		engine.addSystem(new UpdatePhysicsSystem(this));
+		
+		// Used in movement demo
+		engine.addSystem(new InputMovementSystem());
+		engine.addSystem(new VelocityMovementSystem());
+		engine.addSystem(new ApproachTargetSystem());
+		engine.addSystem(new InteractSystem());
+		
+		if(!endPointHelper.isHeadless()) {
+			engine.addSystem(new AnimationSystem());
+			
+			// Used in movement demo
+			engine.addSystem(new CameraSystem(getCamera()));
+			engine.addSystem(new RenderInitSystem());
+			engine.addSystem(new RenderTilesSystem(getCamera()));
+			engine.addSystem(new RenderEntitiesSystem(getCamera()));
+		}
+		
+		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+		
+		/*if(endPointHelper.isClient()) {
+			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
+		}*/
+		
+		engine.addSystem(new CleanupInputSystem(this));
+		
+		return engine;
+    }
 	
 }

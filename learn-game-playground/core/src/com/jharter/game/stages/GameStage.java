@@ -145,69 +145,7 @@ public abstract class GameStage {
     	return new Box2DWorld();
     }
     
-    protected PooledEngine buildEngine() {
-    	PooledEngine engine = new PooledEngine();
-		EntityUtil.addIdListener(engine, getBox2DWorld());
-		
-		if(endPointHelper.isOffline()) {
-			engine.addSystem(new OfflineSelectInputSystem());
-		}
-		
-		if(endPointHelper.isServer()) {
-			
-			GameServer server = endPointHelper.getServer();
-			engine.addSystem(new ServerSendSnapshotSystem(server));
-			engine.addSystem(new ServerInputPacketSystem(this, server));
-			engine.addSystem(new ServerRegisterPlayerPacketSystem(this, server));
-			engine.addSystem(new ServerRequestEntityPacketSystem(this, server));
-			
-		} else if(endPointHelper.isClient()){
-
-			GameClient client = endPointHelper.getClient();
-			if(Debug.RANDOM_MOVEMENT) engine.addSystem(new ClientRandomMovementSystem());
-			engine.addSystem(new ClientSendInputSystem(client));
-			engine.addSystem(new ClientSnapshotPacketSystem(this, client));
-			engine.addSystem(new ClientAddPlayersPacketSystem(this, client));
-			engine.addSystem(new ClientRemoveEntityPacketSystem(this, client));
-		
-		}
-		
-		engine.addSystem(new UpdatePhysicsSystem(this));
-		
-		// Used in battle demo
-		engine.addSystem(new CollisionSystem()); 
-		engine.addSystem(new CursorInputSystem());
-		engine.addSystem(new CursorZoneSystem());
-		engine.addSystem(new CursorPositionSystem());
-		
-		// Used in movement demo
-		//engine.addSystem(new InputMovementSystem());
-		
-		engine.addSystem(new VelocityMovementSystem());
-		engine.addSystem(new ApproachTargetSystem());
-		engine.addSystem(new InteractSystem());
-		
-		if(!endPointHelper.isHeadless()) {
-			engine.addSystem(new AnimationSystem());
-			
-			// Used in movement demo
-			//engine.addSystem(new CameraSystem(getCamera()));
-			
-			engine.addSystem(new RenderInitSystem());
-			engine.addSystem(new RenderTilesSystem(getCamera()));
-			engine.addSystem(new RenderEntitiesSystem(getCamera()));
-		}
-		
-		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
-		
-		/*if(endPointHelper.isClient()) {
-			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
-		}*/
-		
-		engine.addSystem(new CleanupInputSystem(this));
-		
-		return engine;
-    }
+    protected abstract PooledEngine buildEngine();
     
     public abstract void addEntities(PooledEngine engine);
     

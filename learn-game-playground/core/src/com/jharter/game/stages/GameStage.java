@@ -4,14 +4,17 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
-import com.jharter.game.ashley.systems.CameraSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
-import com.jharter.game.ashley.systems.InputMovementSystem;
+import com.jharter.game.ashley.systems.CursorInputSystem;
+import com.jharter.game.ashley.systems.CursorPositionSystem;
+import com.jharter.game.ashley.systems.CursorZoneSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
@@ -43,6 +46,7 @@ public abstract class GameStage {
 
 	private ID id;
 	protected OrthographicCamera camera;
+	protected Viewport viewport;
 	protected PooledEngine engine;
     protected Box2DWorld box2D;
     protected GameInput stageInput;
@@ -88,6 +92,10 @@ public abstract class GameStage {
 	
     protected void create() {
     	camera = buildCamera();
+    	viewport = buildViewport(camera);
+    	viewport.apply();
+    	camera.position.set(0, 0, 0);
+    	
         box2D = buildBox2DWorld();
         engine = buildEngine();
         addEntities(engine);
@@ -102,16 +110,35 @@ public abstract class GameStage {
     	}
     	return input;
 	}
-    
+	
+	protected int getHorizontalPixels() {
+		return 1920;
+	}
+	
+	protected int getVerticalPixels() {
+		return 1080;
+	}
+	
     protected OrthographicCamera buildCamera() {
-        int displayW = Gdx.graphics.getWidth();
-        int displayH = Gdx.graphics.getHeight();
-        // For 800x600 we will get 266*200
-        int h = (int) (displayH/Math.floor(displayH/160));
-        int w = (int) (displayW/(displayH/ (displayH/Math.floor(displayH/160))));
-        OrthographicCamera camera = new OrthographicCamera(w,h);
-        camera.zoom = .6f;
+    	OrthographicCamera camera = new OrthographicCamera();
+        camera.zoom = 1f;
         return camera;
+    }
+    
+    protected Viewport buildViewport(OrthographicCamera camera) {
+    	//int displayW = Gdx.graphics.getWidth();
+        //int displayH = Gdx.graphics.getHeight();
+    	//int verticalPixels = getVerticalPixels();
+        
+        //int h = 1080; //(int) (displayH/Math.floor(displayH/verticalPixels));
+        //int w = 1920; //(int) (displayW/(displayH/ (displayH/Math.floor(displayH/verticalPixels))));
+    	
+    	return new FillViewport(getHorizontalPixels(), getVerticalPixels(), camera);
+    }
+    
+    public void resize(int width, int height) {
+    	viewport.update(width, height);
+    	camera.position.set(0, 0, 0);
     }
     
     protected Box2DWorld buildBox2DWorld() {
@@ -146,15 +173,26 @@ public abstract class GameStage {
 		}
 		
 		engine.addSystem(new UpdatePhysicsSystem(this));
-		engine.addSystem(new CollisionSystem());
-		engine.addSystem(new InputMovementSystem());
+		
+		// Used in battle demo
+		engine.addSystem(new CollisionSystem()); 
+		engine.addSystem(new CursorInputSystem());
+		engine.addSystem(new CursorZoneSystem());
+		engine.addSystem(new CursorPositionSystem());
+		
+		// Used in movement demo
+		//engine.addSystem(new InputMovementSystem());
+		
 		engine.addSystem(new VelocityMovementSystem());
 		engine.addSystem(new ApproachTargetSystem());
 		engine.addSystem(new InteractSystem());
 		
 		if(!endPointHelper.isHeadless()) {
 			engine.addSystem(new AnimationSystem());
-			engine.addSystem(new CameraSystem(getCamera()));
+			
+			// Used in movement demo
+			//engine.addSystem(new CameraSystem(getCamera()));
+			
 			engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderTilesSystem(getCamera()));
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));

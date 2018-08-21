@@ -14,6 +14,7 @@ import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
+import uk.co.carelesslabs.Enums.ZoneType;
 
 public final class Components {
 
@@ -33,28 +34,46 @@ public final class Components {
 	}
 	
 	public static final class PositionComp implements Component, Poolable {
-		public Vector3 position = new Vector3();
-		public Vector2 direction = new Vector2();
-
+		public Vector3 position = new Vector3(0, 0, 0);
+		public Vector2 direction = new Vector2(0, 0);
+		public float angleDegrees = 0.0f;
+		
 		private PositionComp() {}
 		
 		@Override
 		public void reset() {
-			position = new Vector3();
-			direction = new Vector2();
+			position.set(0, 0, 0);
+			direction.set(0, 0);
+			angleDegrees = 0.0f;
 		}
 	}
 	
 	public static final class SizeComp implements Component, Poolable {
 		public float width;
 		public float height;
-
+		public Vector2 scale = new Vector2(1.0f, 1.0f);
+		
 		private SizeComp() {}
+		
+		public float scaledWidth() {
+			if(scale.x == 1) {
+				return width;
+			}
+			return scale.x * width;
+		}
+		
+		public float scaledHeight() {
+			if(scale.y == 1) {
+				return height;
+			}
+			return scale.y * height;
+		}
 		
 		@Override
 		public void reset() {
 			width = 0f;
 			height = 0f;
+			scale.set(1.0f, 1.0f);
 		}
 	}
 	
@@ -82,14 +101,14 @@ public final class Components {
 	
 	public static final class VelocityComp implements Component, Poolable {
 		public float speed = 0.0f;
-		public Vector2 velocity = new Vector2();
+		public Vector2 velocity = new Vector2(0, 0);
 
 		private VelocityComp() {}
 		
 		@Override
 		public void reset() {
 			speed = 0f;
-			velocity = new Vector2();
+			velocity.set(0, 0);
 		}
 	}
 	
@@ -149,17 +168,122 @@ public final class Components {
 	}
 	
 	public static final class InvisibleComp implements Component, Poolable {
-
 		private InvisibleComp() {}
 		
 		@Override
-		public void reset() {
-			
-		}
+		public void reset() {}
+	}
 	
+	public static final class CursorComp implements Component, Poolable {
+		private CursorComp() {}
+		
+		@Override
+		public void reset() {}
 	}
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
+	
+	public static final class CursorInputRegulatorComp implements Component, Poolable {
+		private boolean processedMove = false;
+		private float processedMoveDelta = 0;
+		private float maxProcessedMoveDelta = 0.2f;
+		
+		private CursorInputRegulatorComp() {}
+		
+		public boolean ignoreMovement(boolean moved, float deltaTime) {
+			if(!moved) {
+				processedMove = false;
+				processedMoveDelta = 0;
+				maxProcessedMoveDelta = 0.2f;
+				return true;
+			} else if(moved && processedMove) {
+				processedMoveDelta += deltaTime;
+				if(processedMoveDelta < maxProcessedMoveDelta) {
+					return true;
+				} else if(maxProcessedMoveDelta > 0.005f){
+					maxProcessedMoveDelta /= 1.5f;
+				}
+			}
+			processedMove = true;
+			processedMoveDelta = 0;
+			return false;
+		}
+		
+		@Override
+		public void reset() {
+			processedMove = false;
+			processedMoveDelta = 0;
+			maxProcessedMoveDelta = 0.2f;
+		}
+	}
+	
+	public static final class CursorInputComp implements Component, Poolable {
+		public Vector2 direction = new Vector2(0, 0);
+		public boolean accept = false;
+		public boolean cancel = false;
+		
+		private CursorInputComp() {}
+		
+		public boolean move() {
+			return direction.x != 0 || direction.y != 0;
+		}
+		
+		@Override
+		public void reset() {
+			direction.set(0, 0);
+			accept = false;
+			cancel = false;
+		}
+	}
+	
+	public static final class ZoneComp implements Component, Poolable {
+		public ZoneType zoneType = ZoneType.NONE;
+		public int rows = -1;
+		public int cols = -1;
+		public Array<ID> objects = new Array<ID>();
+		
+		public void add(EntityBuilder b) {
+			add(b.IDComp(), b.ZonePositionComp());
+		}
+		
+		public void add(IDComp id, ZonePositionComp zp) {
+			int index = objects.size;
+			objects.add(id.id);
+			int row = index / cols;
+			int col = index % cols;
+			zp.zoneType = zoneType;
+			zp.row = row;
+			zp.col = col;
+		}
+		
+		private ZoneComp() {}
+		
+		@Override
+		public void reset() {
+			zoneType = ZoneType.NONE;
+			rows = -1;
+			cols = -1;
+			objects.clear();
+		}
+		
+	}
+	
+	public static final class ZonePositionComp implements Component, Poolable {
+		
+		public ZoneType zoneType = ZoneType.NONE;
+		public int row = -1;
+		public int col = -1;
+		
+		private ZonePositionComp() {}
+		
+		@Override
+		public void reset() {
+			zoneType = ZoneType.NONE;
+			row = -1;
+			col = -1;
+		}
+		
+	}
 	
 	public static final class InputComp implements Component, Poolable {
 		public GameInput input; // Can't serialize

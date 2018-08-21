@@ -61,7 +61,9 @@ public abstract class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		if(currentStage != null) {
+			currentStage.resize(width, height);
+		}
 	}
 
 	@Override

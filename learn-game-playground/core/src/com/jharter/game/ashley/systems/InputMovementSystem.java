@@ -3,6 +3,7 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
@@ -38,6 +39,7 @@ public class InputMovementSystem extends IteratingSystem {
 	    if (in.input.isRight()) p.direction.x = 1;
 	    
 	    b.body.setLinearVelocity(p.direction.x * v.speed, p.direction.y * v.speed);
+	    b.body.setTransform(b.body.getWorldCenter(), p.angleDegrees*MathUtils.degreesToRadians);
 	    p.position.x = b.body.getPosition().x - s.width/2;
 	    p.position.y = b.body.getPosition().y - s.height/4;
 	}

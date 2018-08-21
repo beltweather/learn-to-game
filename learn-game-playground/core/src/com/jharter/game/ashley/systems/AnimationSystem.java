@@ -19,7 +19,7 @@ public class AnimationSystem extends IteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		AnimationComp a = Mapper.AnimationComp.get(entity);
-		TextureComp v = Mapper.VisualComp.get(entity);
+		TextureComp v = Mapper.TextureComp.get(entity);
 		if(!a.looping && a.animation.isAnimationFinished(a.time)) {
 			v.region = v.defaultRegion;
 			entity.remove(AnimationComp.class);

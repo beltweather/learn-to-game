@@ -11,6 +11,9 @@ import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.CursorInputComp;
+import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
@@ -26,6 +29,8 @@ import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Components.ZonePositionComp;
 
 public class EntityBuilder implements Poolable {
 	
@@ -89,7 +94,7 @@ public class EntityBuilder implements Poolable {
 	public SizeComp SizeComp() { return get(SizeComp.class); }
 	public TypeComp TypeComp() { return get(TypeComp.class); }
 	public TileComp TileComp() { return get(TileComp.class); }
-	public TextureComp VisualComp() { return get(TextureComp.class); }
+	public TextureComp TextureComp() { return get(TextureComp.class); }
 	public AnimationComp AnimationComp() { return get(AnimationComp.class); }
 	public BodyComp BodyComp() { return get(BodyComp.class); }
 	public SensorComp SensorComp() { return get(SensorComp.class); }
@@ -99,6 +104,11 @@ public class EntityBuilder implements Poolable {
 	public RemoveComp RemoveComp() { return get(RemoveComp.class); }
 	public InputComp InputComp() { return get(InputComp.class); }
 	public InteractComp InteractComp() { return get(InteractComp.class); }
-	public InvisibleComp invisibleComp() { return get(InvisibleComp.class); }
+	public InvisibleComp InvisibleComp() { return get(InvisibleComp.class); }
+	public CursorComp CursorComp() { return get(CursorComp.class); }
+	public CursorInputComp CursorInputComp() { return get(CursorInputComp.class); }
+	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
+	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
+	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
 
 }

@@ -34,7 +34,7 @@ public class RenderTilesSystem extends IteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		PositionComp p = Mapper.PositionComp.get(entity);
-		TextureComp v = Mapper.VisualComp.get(entity);
+		TextureComp v = Mapper.TextureComp.get(entity);
 		TileComp t = Mapper.TileComp.get(entity);
 		
 		if(v.region != null) {

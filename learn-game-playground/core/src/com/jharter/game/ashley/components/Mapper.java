@@ -4,6 +4,9 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.CursorInputComp;
+import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
@@ -19,6 +22,8 @@ import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Components.ZonePositionComp;
 
 public class Mapper {
 	
@@ -29,7 +34,7 @@ public class Mapper {
 	public static final ComponentMapper<SizeComp> SizeComp = ComponentMapper.getFor(SizeComp.class);
 	public static final ComponentMapper<TypeComp> TypeComp = ComponentMapper.getFor(TypeComp.class);
 	public static final ComponentMapper<TileComp> TileComp = ComponentMapper.getFor(TileComp.class);
-	public static final ComponentMapper<TextureComp> VisualComp = ComponentMapper.getFor(TextureComp.class);
+	public static final ComponentMapper<TextureComp> TextureComp = ComponentMapper.getFor(TextureComp.class);
 	public static final ComponentMapper<AnimationComp> AnimationComp = ComponentMapper.getFor(AnimationComp.class);
 	public static final ComponentMapper<BodyComp> BodyComp = ComponentMapper.getFor(BodyComp.class);
 	public static final ComponentMapper<SensorComp> SensorComp = ComponentMapper.getFor(SensorComp.class);
@@ -40,5 +45,10 @@ public class Mapper {
 	public static final ComponentMapper<InputComp> InputComp = ComponentMapper.getFor(InputComp.class);
 	public static final ComponentMapper<InvisibleComp> InvisibleComp = ComponentMapper.getFor(InvisibleComp.class);
 	public static final ComponentMapper<InteractComp> InteractComp = ComponentMapper.getFor(InteractComp.class);
+	public static final ComponentMapper<CursorComp> CursorComp = ComponentMapper.getFor(CursorComp.class);
+	public static final ComponentMapper<CursorInputComp> CursorInputComp = ComponentMapper.getFor(CursorInputComp.class);
+	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = ComponentMapper.getFor(CursorInputRegulatorComp.class);
+	public static final ComponentMapper<ZoneComp> ZoneComp = ComponentMapper.getFor(ZoneComp.class);
+	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = ComponentMapper.getFor(ZonePositionComp.class);
 	
 }

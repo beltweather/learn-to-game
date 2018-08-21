@@ -33,9 +33,49 @@ public class Media {
     public static Texture selector;
     public static Texture close_menu;
     
+    // Cards
+    public static Texture forest, plains, island, mountain, swamp;
+   
+    // Characters
+    public static Texture ranger, rogue, sorcerer, warrior;
+    
+    // Enemies
+    public static Texture atma;
+    
+    // Backgrounds
+    public static Texture background;
+    
+    // UI
+    public static TextureRegion handPointUp, handPointDown, handPointRight, handPointLeft;
+    
     public static void load_assets(){
         // HERO
         hero  = new Texture("entities/hero/hero.png");
+        
+        // Cards
+        forest = new Texture("entities/card/forest.jpg");
+        island = new Texture("entities/card/island.jpg");
+        mountain = new Texture("entities/card/mountain.jpg");
+        plains = new Texture("entities/card/plains.jpg");
+        swamp = new Texture("entities/card/swamp.jpg");
+        
+        // Characters
+        ranger = new Texture("entities/character/ranger-level-3-scaled.png");
+        rogue = new Texture("entities/character/rogue-level-3.png");
+        sorcerer = new Texture("entities/character/sorcerer-level-3.png");
+        warrior = new Texture("entities/character/warrior-level-3.png");
+        
+        // Enemies
+        atma = new Texture("entities/enemies/atma.png");
+        
+        // Background
+        background = new Texture("entities/background/background.png");
+        
+        // UI
+        handPointUp = new TextureRegion(new Texture("entities/ui/hand-point-up.png"));
+        handPointDown = new TextureRegion(new Texture("entities/ui/hand-point-down.png"));
+        handPointLeft = new TextureRegion(new Texture("entities/ui/hand-point-left.png"));
+        handPointRight = new TextureRegion(new Texture("entities/ui/hand-point-right.png"));
         
         // Source https://opengameart.org/content/micro-tileset-overworld-and-dungeon
         // Example Map: http://opengameart.org/sites/default/files/styles/watermarked/public/Render_0.png

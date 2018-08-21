@@ -2,11 +2,15 @@ package com.jharter.game.stages.impl;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
@@ -85,7 +89,18 @@ public class TestStageA extends GameStage {
 		birdEntity.add(animationComp);
 		engine.addEntity(birdEntity);
 	}
-
+	
+	@Override
+	protected Viewport buildViewport(OrthographicCamera camera) {
+    	int displayW = Gdx.graphics.getWidth();
+        int displayH = Gdx.graphics.getHeight();
+	        
+        int h = (int) (displayH/Math.floor(displayH/160));
+        int w = (int) (displayW/(displayH/ (displayH/Math.floor(displayH/160))));
+    	
+    	return new FillViewport(w, h, camera);
+    }
+	
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		float width = 8;

@@ -12,7 +12,12 @@ public class Enums {
         HERO, 
         TREE, 
         BIRD,
-        TILE
+        TILE,
+        CARD,
+        CHARACTER,
+        BACKGROUND,
+        ENEMY,
+        HAND
     }
     
     public enum EnityState {
@@ -30,6 +35,15 @@ public class Enums {
         DISABLED,
         HOVEROVER,
         CLICKED
+    }
+    
+    public enum ZoneType {
+    	HAND,
+    	ENEMY,
+    	FRIEND,
+    	DISCARD,
+    	TIME,
+    	NONE
     }
 
 }

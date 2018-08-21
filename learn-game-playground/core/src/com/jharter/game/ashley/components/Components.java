@@ -21,9 +21,13 @@ public final class Components {
 
 	private Components() {}
 	
+	public static interface Comp extends Component, Poolable {
+		
+	}
+	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
-	public static final class IDComp implements Component, Poolable {
+	public static final class IDComp implements Comp {
 		public ID id;
 		
 		private IDComp() {}
@@ -34,7 +38,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class PositionComp implements Component, Poolable {
+	public static final class PositionComp implements Comp {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
 		public float angleDegrees = 0.0f;
@@ -49,7 +53,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class SizeComp implements Component, Poolable {
+	public static final class SizeComp implements Comp {
 		public float width;
 		public float height;
 		public Vector2 scale = new Vector2(1.0f, 1.0f);
@@ -78,7 +82,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TypeComp implements Component, Poolable {
+	public static final class TypeComp implements Comp {
 		public EntityType type;
 
 		private TypeComp() {}
@@ -89,7 +93,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TargetPositionComp implements Component, Poolable {
+	public static final class TargetPositionComp implements Comp {
 		public Vector3 position;
 
 		private TargetPositionComp() {}
@@ -100,7 +104,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class VelocityComp implements Component, Poolable {
+	public static final class VelocityComp implements Comp {
 		public float speed = 0.0f;
 		public Vector2 velocity = new Vector2(0, 0);
 
@@ -113,7 +117,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class CollisionComp implements Component, Poolable {
+	public static final class CollisionComp implements Comp {
 		public ID collisionWithId;
 		public boolean begin;
 		
@@ -126,7 +130,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class RemoveComp implements Component, Poolable {
+	public static final class RemoveComp implements Comp {
 		public boolean requestRemove = false;
 		public boolean remove = false;
 		
@@ -139,7 +143,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class InteractComp implements Component, Poolable {
+	public static final class InteractComp implements Comp {
 		public Array<ID> interactables = new Array<ID>();
 		public Interaction interaction;
 
@@ -152,30 +156,39 @@ public final class Components {
 		}
 	}
 	
+	public static final class CardComp implements Comp {
+
+		@Override
+		public void reset() {
+			
+		}
+		
+	}
+	
 	// ------------------- BOOLEAN COMPONENTS -------------------------
 	
-	public static final class PlayerComp implements Component, Poolable {
+	public static final class PlayerComp implements Comp {
 		private PlayerComp() {}
 		
 		@Override
 		public void reset() {}
 	}
 	
-	public static final class FocusComp implements Component, Poolable {
+	public static final class FocusComp implements Comp {
 		private FocusComp() {}
 		
 		@Override
 		public void reset() {}
 	}
 	
-	public static final class InvisibleComp implements Component, Poolable {
+	public static final class InvisibleComp implements Comp {
 		private InvisibleComp() {}
 		
 		@Override
 		public void reset() {}
 	}
 	
-	public static final class CursorComp implements Component, Poolable {
+	public static final class CursorComp implements Comp {
 		private CursorComp() {}
 		
 		@Override
@@ -184,7 +197,7 @@ public final class Components {
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
-	public static final class CursorInputRegulatorComp implements Component, Poolable {
+	public static final class CursorInputRegulatorComp implements Comp {
 		private boolean processedMove = false;
 		private float processedMoveDelta = 0;
 		private float maxProcessedMoveDelta = 0.2f;
@@ -218,7 +231,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class CursorInputComp implements Component, Poolable {
+	public static final class CursorInputComp implements Comp {
 		public Vector2 direction = new Vector2(0, 0);
 		public boolean accept = false;
 		public boolean cancel = false;
@@ -237,7 +250,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class ZoneComp implements Component, Poolable {
+	public static final class ZoneComp implements Comp {
 		public ZoneType zoneType = ZoneType.NONE;
 		public int rows = -1;
 		public int cols = -1;
@@ -269,7 +282,7 @@ public final class Components {
 		
 	}
 	
-	public static final class ZonePositionComp implements Component, Poolable {
+	public static final class ZonePositionComp implements Comp {
 		
 		public ZoneType zoneType = ZoneType.NONE;
 		public int row = -1;
@@ -323,7 +336,7 @@ public final class Components {
 		
 	}
 	
-	public static final class InputComp implements Component, Poolable {
+	public static final class InputComp implements Comp {
 		public GameInput input; // Can't serialize
 
 		private InputComp() {}
@@ -334,7 +347,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TileComp implements Component, Poolable {
+	public static final class TileComp implements Comp {
 		public TileType type;
 		public int size, row, col;
 		public String code;
@@ -351,7 +364,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TextureComp implements Component, Poolable {
+	public static final class TextureComp implements Comp {
 		public TextureRegion defaultRegion; // Can't serialize
 		public TextureRegion region; // Can't serialize
 
@@ -364,7 +377,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class AnimationComp implements Component, Poolable {
+	public static final class AnimationComp implements Comp {
 		public Animation animation; // Can't serialize
 		public boolean looping = true;
 		public float time = 0;
@@ -379,7 +392,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class BodyComp implements Component, Poolable {
+	public static final class BodyComp implements Comp {
 		public Body body; // Can't serialize
 
 		private BodyComp() {}
@@ -390,7 +403,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class SensorComp implements Component, Poolable {
+	public static final class SensorComp implements Comp {
 		public Body sensor; // Can't serialize
 		
 		private SensorComp() {}

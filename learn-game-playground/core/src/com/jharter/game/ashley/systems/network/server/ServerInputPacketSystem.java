@@ -21,7 +21,7 @@ public class ServerInputPacketSystem extends ConsumingPacketSystem<GameServer, I
 	public void update(GameServer server, GameStage stage, float deltaTime, InputPacket packet) {
 		GlobalInputState state = packet.inputState;
 		ID entityId = state.id;
-		Entity entity = EntityUtil.findEntity(entityId);
+		Entity entity = Mapper.Entity.get(entityId);
 		if(entity != null) {
 			InputComp in = Mapper.InputComp.get(entity);
 			if(in != null) {

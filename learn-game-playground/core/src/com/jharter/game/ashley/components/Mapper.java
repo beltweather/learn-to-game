@@ -1,12 +1,23 @@
 package com.jharter.game.ashley.components;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
+import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
+import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
@@ -17,16 +28,119 @@ import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
+import com.jharter.game.ashley.components.Components.TargetingComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDGenerator;
+
+import uk.co.carelesslabs.Enums.ZoneType;
+import uk.co.carelesslabs.box2d.Box2DWorld;
 
 public class Mapper {
 	
+	private static Map<ZoneType, ID> idsByZoneType = new HashMap<ZoneType, ID>();
+	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
+	
+	public static void addIdListener(PooledEngine engine, final Box2DWorld box2D) {
+		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
+			
+			private ComponentMapper<IDComp> im = ComponentMapper.getFor(IDComp.class);
+			
+			@Override
+			public void entityAdded(Entity entity) {
+				IDComp idComp = im.get(entity);
+				if(idComp.id != null) {
+					entitiesById.put(idComp.id, entity);
+				}
+			}
+
+			@Override
+			public void entityRemoved(Entity entity) {
+				IDComp idComp = im.get(entity);
+				BodyComp b = Mapper.BodyComp.get(entity);
+				SensorComp s = Mapper.SensorComp.get(entity);
+				if(b != null && b.body != null) {
+					box2D.world.destroyBody(b.body);
+				}
+				if(s != null && s.sensor != null) {
+					box2D.world.destroyBody(s.sensor);
+				}
+				if(idComp.id != null) {
+					entitiesById.remove(idComp.id);
+				}
+			}
+			
+		});
+	}
+	
+	public static class ComponentMapperZoneComp {
+		
+		private ComponentMapperZoneComp() {}
+		
+		public ID getID(ZoneType type) {
+			if(!idsByZoneType.containsKey(type)) {
+				idsByZoneType.put(type, IDGenerator.newID());
+			}
+			return idsByZoneType.get(type);
+		}
+		
+		public ZoneComp get(Entity entity) {
+			return ComponentMapper.getFor(ZoneComp.class).get(entity);
+		}
+		
+		public ZoneComp get(ZonePositionComp zp) {
+			Entity zone = Mapper.Entity.get(zp.zoneType);
+			return Mapper.ZoneComp.get(zone);
+		}
+		
+		public ZoneComp get(ZoneType zoneType) {
+			Entity zone = Mapper.Entity.get(zoneType);
+			return Mapper.ZoneComp.get(zone);
+		}
+		
+		public boolean has(Entity entity) {
+			return ComponentMapper.getFor(ZoneComp.class).has(entity);
+		}
+		
+		public boolean has(ZonePositionComp zp) {
+			return has(Mapper.Entity.get(zp.zoneType));
+		}
+		
+		public boolean has(ZoneType zoneType) {
+			return has(Mapper.Entity.get(zoneType));
+		}
+		
+	}
+	
+	/**
+	 * Convenience class so that we can retrieve entities in the same form as components.
+	 */
+	public static class ComponentMapperEntity {
+		
+		private ComponentMapperEntity() {}
+		
+		public Entity get(ID id) {
+			if(entitiesById.containsKey(id)) {
+				return entitiesById.get(id);
+			}
+			return null;
+		}
+		
+		public Entity get(ZoneType zoneType) {
+			return get(ZoneComp.getID(zoneType));
+		}
+		
+	}
+	
+	public static final ComponentMapperEntity Entity = new ComponentMapperEntity();
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
 	public static final ComponentMapper<IDComp> IDComp = ComponentMapper.getFor(IDComp.class);
@@ -48,7 +162,13 @@ public class Mapper {
 	public static final ComponentMapper<CursorComp> CursorComp = ComponentMapper.getFor(CursorComp.class);
 	public static final ComponentMapper<CursorInputComp> CursorInputComp = ComponentMapper.getFor(CursorInputComp.class);
 	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = ComponentMapper.getFor(CursorInputRegulatorComp.class);
-	public static final ComponentMapper<ZoneComp> ZoneComp = ComponentMapper.getFor(ZoneComp.class);
+	public static final ComponentMapperZoneComp ZoneComp = new ComponentMapperZoneComp();
 	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = ComponentMapper.getFor(ZonePositionComp.class);
+	public static final ComponentMapper<CardComp> CardComp = ComponentMapper.getFor(CardComp.class);
+	public static final ComponentMapper<ActiveCardComp> ActiveCardComp = ComponentMapper.getFor(ActiveCardComp.class);
+	public static final ComponentMapper<TargetingComp> TargetingComp = ComponentMapper.getFor(TargetingComp.class);
+	public static final ComponentMapper<DescriptionComp> DescriptionComp = ComponentMapper.getFor(DescriptionComp.class);
+	public static final ComponentMapper<VitalsComp> VitalsComp = ComponentMapper.getFor(VitalsComp.class);
+	public static final ComponentMapper<StatsComp> StatsComp = ComponentMapper.getFor(StatsComp.class);
 	
 }

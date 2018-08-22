@@ -149,7 +149,7 @@ public class TestStageA extends GameStage {
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-		EntityUtil.addIdListener(engine, getBox2DWorld());
+		Mapper.addIdListener(engine, getBox2DWorld());
 		
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());

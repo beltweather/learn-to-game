@@ -1,6 +1,7 @@
 package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.subcomponents.Callback;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
@@ -156,13 +158,174 @@ public final class Components {
 		}
 	}
 	
-	public static final class CardComp implements Comp {
-
+	public static final class DescriptionComp implements Comp {
+		
+		public String name = null;
+		
+		private DescriptionComp() {}
+		
 		@Override
 		public void reset() {
-			
+			name = null;
+		}
+	}
+	
+	public static final class CardComp implements Comp {
+		
+		public ID ownerID;
+		
+		private CardComp() {}
+		
+		@Override
+		public void reset() {
+			ownerID = null;
 		}
 		
+	}
+	
+	public static final class StatsComp implements Comp {
+		
+		public int level = 0;
+		public int experience = 0;
+		public int power = 0;
+		public int mPower = 0;
+		public int defense = 0;
+		public int mDefense = 0;
+		public int evasion = 0;
+		public int mEvasion = 0;
+		public int stamina = 0;
+		
+		private StatsComp() {}
+		
+		@Override
+		public void reset() {
+			level = 0;
+			experience = 0;
+			power = 0;
+			mPower = 0;
+			defense = 0;
+			mDefense = 0;
+			evasion = 0;
+			mEvasion = 0;
+			stamina = 0;
+		}
+	}
+	
+	public static final class VitalsComp implements Comp {
+		
+		public int maxHealth = 0;
+		public int weakHealth = 0;
+		public int health = 0;
+		
+		private VitalsComp() {}
+		
+		public void heal(int hp) {
+			health += hp;
+			if(health > maxHealth) {
+				health = maxHealth;
+			}
+		}
+		
+		public void damage(int hp) {
+			health -= hp;
+			if(health < 0) {
+				health = 0;
+			}
+		}
+		
+		public boolean isDead() {
+			return health == 0;
+		}
+		
+		public boolean isNearDeath() {
+			return health <= weakHealth && !isDead();
+		}
+		
+		@Override
+		public void reset() {
+			maxHealth = 0;
+			weakHealth = 0;
+			health = 0;
+		}
+		
+	}
+	
+	public static final class TargetingComp implements Comp {
+		
+		public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
+		public boolean debugMustHaveCard = false;
+		public Array<ID> targetIDs = new Array<ID>();
+		public Callback<TargetingComp> callback = null;
+		
+		private TargetingComp() {}
+		
+		public Entity getEntity(int index) {
+			if(index < 0 || index >= targetIDs.size) {
+				return null;
+			}
+			return Mapper.Entity.get(targetIDs.get(index));
+		}
+		
+		public ZoneType getTargetZoneType() {
+			if(hasAllTargets()) {
+				return ZoneType.NONE;
+			}
+			return targetZoneTypes.get(targetIDs.size-1);
+		}
+		
+		public boolean hasAllTargets() {
+			return targetZoneTypes.size == targetIDs.size - 1;
+		}
+		
+		public void addTarget(Entity entity) {
+			targetIDs.add(Mapper.IDComp.get(entity).id);
+		}
+		
+		public boolean isValidTarget(Entity entity) {
+			if(debugMustHaveCard) {
+				ActiveCardComp ac = Mapper.ActiveCardComp.get(entity);
+				if(ac == null) {
+					return false;
+				}
+				return ac.hasCard();
+			}
+			return true;
+		}
+		
+		public void performCallback() {
+			if(callback != null) {
+				callback.call(this);
+			}
+		}	
+			
+		@Override
+		public void reset() {
+			targetZoneTypes.clear();
+			targetIDs.clear();
+			debugMustHaveCard = false;
+			callback = null;
+		}
+		
+	}
+	
+	public static final class ActiveCardComp implements Comp {
+		
+		public ID activeCardID = null;
+		
+		private ActiveCardComp() {}
+		
+		public boolean hasCard() {
+			return activeCardID != null;
+		}
+		
+		public CardComp getCardComp() {
+			return Mapper.CardComp.get(Mapper.Entity.get(activeCardID));
+		}
+		
+		@Override
+		public void reset() {
+			activeCardID = null;
+		}
 	}
 	
 	// ------------------- BOOLEAN COMPONENTS -------------------------
@@ -189,10 +352,25 @@ public final class Components {
 	}
 	
 	public static final class CursorComp implements Comp {
+		public ID targetingEntityID = null;
+		
 		private CursorComp() {}
 		
+		public boolean hasTargetingComp() {
+			return targetingEntityID != null;
+		}
+		
+		public TargetingComp getTargetingComp() {
+			if(targetingEntityID == null) {
+				return null;
+			}
+			return Mapper.TargetingComp.get(Mapper.Entity.get(targetingEntityID));
+		}
+		
 		@Override
-		public void reset() {}
+		public void reset() {
+			targetingEntityID = null;
+		}
 	}
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
@@ -270,6 +448,22 @@ public final class Components {
 			zp.col = col;
 		}
 		
+		public ID getID(ZonePositionComp zp) {
+			int index = zp.row * cols + zp.col;
+			if(index < 0 || index >= objects.size) {
+				return null;
+			}
+			return objects.get(index);
+		}
+		
+		public Entity getEntity(ZonePositionComp zp) {
+			ID id = getID(zp);
+			if(id == null) {
+				return null;
+			}
+			return Mapper.Entity.get(id);
+		}
+		
 		private ZoneComp() {}
 		
 		@Override
@@ -290,6 +484,19 @@ public final class Components {
 		private Array<ZonePositionComp> history = new Array<ZonePositionComp>();
 		
 		private ZonePositionComp() {}
+		
+		public void set(int index) {
+			ZoneComp z = getZoneComp();
+			row = index / z.cols;
+			col = index % z.cols;
+		}
+		
+		public ZoneComp getZoneComp() {
+			if(zoneType == ZoneType.NONE) {
+				return null;
+			}
+			return Mapper.ZoneComp.get(this);
+		}
 		
 		private ZonePositionComp copyForHistory() {
 			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();

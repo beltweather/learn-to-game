@@ -37,7 +37,7 @@ public class ClientSnapshotPacketSystem extends InterpolatingPacketSystem<Snapsh
 			
 			ID entityId = pastEntityData.id;
 			
-			Entity entity = EntityUtil.findEntity(entityId);
+			Entity entity = Mapper.Entity.get(entityId);
 			if(entity != null) {
 				InputComp inputComp = Mapper.InputComp.get(entity);
 				boolean focus = Mapper.FocusComp.has(entity);

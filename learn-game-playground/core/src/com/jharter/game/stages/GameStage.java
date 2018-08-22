@@ -14,7 +14,7 @@ import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorPositionSystem;
-import com.jharter.game.ashley.systems.CursorZoneSystem;
+import com.jharter.game.ashley.systems.CursorMoveSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;

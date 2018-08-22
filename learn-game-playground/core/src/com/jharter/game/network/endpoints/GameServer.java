@@ -74,7 +74,7 @@ public class GameServer extends GameEndPoint {
 				/*} else if(object instanceof RequestPlayer) {
 					RequestPlayer request = (RequestPlayer) object;
 					ID id = request.id;
-					if(EntityUtil.findEntity(id) != null) {
+					if(Mapper.Entity.get(id) != null) {
 						System.err.println("Requested new player with id " + id + " but they already exist.");
 						return;
 					}

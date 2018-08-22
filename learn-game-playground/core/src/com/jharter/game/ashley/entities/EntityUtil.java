@@ -1,8 +1,5 @@
 package com.jharter.game.ashley.entities;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,15 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Components.BodyComp;
-import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
@@ -30,47 +22,6 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 public class EntityUtil {
 	
 	private EntityUtil() {}
-	
-	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
-	
-	public static void addIdListener(PooledEngine engine, final Box2DWorld box2D) {
-		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
-			
-			private ComponentMapper<IDComp> im = ComponentMapper.getFor(IDComp.class);
-			
-			@Override
-			public void entityAdded(Entity entity) {
-				IDComp idComp = im.get(entity);
-				if(idComp.id != null) {
-					entitiesById.put(idComp.id, entity);
-				}
-			}
-
-			@Override
-			public void entityRemoved(Entity entity) {
-				IDComp idComp = im.get(entity);
-				BodyComp b = Mapper.BodyComp.get(entity);
-				SensorComp s = Mapper.SensorComp.get(entity);
-				if(b != null && b.body != null) {
-					box2D.world.destroyBody(b.body);
-				}
-				if(s != null && s.sensor != null) {
-					box2D.world.destroyBody(s.sensor);
-				}
-				if(idComp.id != null) {
-					entitiesById.remove(idComp.id);
-				}
-			}
-			
-		});
-	}
-	
-	public static Entity findEntity(ID id) {
-		if(entitiesById.containsKey(id)) {
-			return entitiesById.get(id);
-		}
-		return null;
-	}
 	
 	private static Body buildBody(Vector3 position, float width, float height, Box2DWorld world, BodyType bodyType) {
 		return Box2DHelper.createBody(world.world, width/2, height/2, width/4, 0, position, bodyType);  

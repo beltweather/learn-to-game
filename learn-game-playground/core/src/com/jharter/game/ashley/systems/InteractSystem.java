@@ -28,7 +28,7 @@ public class InteractSystem extends IteratingSystem {
 		
 		if(in.input.isAccept() && interactComp.interactables.size > 0) {
 			ID id = interactComp.interactables.get(0);
-			Entity targetEntity = EntityUtil.findEntity(id);
+			Entity targetEntity = Mapper.Entity.get(id);
 			if(targetEntity != null) {
 				InteractComp targetInteractComp = Mapper.InteractComp.get(targetEntity);
 				if(targetInteractComp != null && targetInteractComp.interaction != null) {

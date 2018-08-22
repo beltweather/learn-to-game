@@ -22,7 +22,7 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 	@Override
 	public void update(GameServer server, GameStage stage, float deltaTime, RequestEntityPacket request) {
 		ID id = request.id;
-		Entity entity = EntityUtil.findEntity(id); 
+		Entity entity = Mapper.Entity.get(id); 
 		if(entity == null) {
 			System.err.println("Requested entity with id " + id + " but none exists!");
 			return;

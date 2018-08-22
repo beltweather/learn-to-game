@@ -4,14 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.CursorComp;
-import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.components.ZoneUtil;
-import com.jharter.game.ashley.entities.EntityUtil;
 
 public class CursorPositionSystem extends IteratingSystem {
 
@@ -22,11 +19,11 @@ public class CursorPositionSystem extends IteratingSystem {
 	
 	public void processEntity(Entity entity, float deltaTime) {
 		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-		ZoneComp z = ZoneUtil.ZoneComp(zp);
+		ZoneComp z = Mapper.ZoneComp.get(zp);
 		PositionComp p = Mapper.PositionComp.get(entity);
 		SizeComp s = Mapper.SizeComp.get(entity);
 		
-		Entity target = EntityUtil.findEntity(z.objects.get(zp.row * z.cols + zp.col));
+		Entity target = Mapper.Entity.get(z.objects.get(zp.row * z.cols + zp.col));
 		
 		PositionComp tp = Mapper.PositionComp.get(target);
 		SizeComp ts = Mapper.SizeComp.get(target);
@@ -47,7 +44,6 @@ public class CursorPositionSystem extends IteratingSystem {
 			default:
 				break;
 		}
-		
 	}
 
 }

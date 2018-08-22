@@ -81,8 +81,8 @@ public class Box2DWorld {
         	return;
         }
         
-        Entity entityA = EntityUtil.findEntity(aId);
-        Entity entityB = EntityUtil.findEntity(bId);
+        Entity entityA = Mapper.Entity.get(aId);
+        Entity entityB = Mapper.Entity.get(bId);
         
         if (entityA != null && entityB != null) {
             if (aFixture.isSensor() && !bFixture.isSensor()) {

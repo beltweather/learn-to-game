@@ -8,12 +8,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
+import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
+import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
@@ -24,11 +27,14 @@ import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
+import com.jharter.game.ashley.components.Components.TargetingComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 
@@ -110,5 +116,11 @@ public class EntityBuilder implements Poolable {
 	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
-
+	public CardComp CardComp() { return get(CardComp.class); }
+	public ActiveCardComp ActiveCardComp() { return get(ActiveCardComp.class); }
+	public TargetingComp TargetingComp() { return get(TargetingComp.class); }
+	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
+	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
+	public StatsComp StatsComp() { return get(StatsComp.class); }
+	
 }

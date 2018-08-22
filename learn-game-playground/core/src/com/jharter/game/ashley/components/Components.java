@@ -256,6 +256,10 @@ public final class Components {
 		public boolean debugMustHaveCard = false;
 		public Array<ID> targetIDs = new Array<ID>();
 		public Callback<TargetingComp> callback = null;
+		public int defaultMultiplicity = 1;
+		public int multiplicity = 1;
+		public boolean defaultAll = false;
+		public boolean all = false;
 		
 		private TargetingComp() {}
 		
@@ -294,7 +298,14 @@ public final class Components {
 		
 		public void performCallback() {
 			if(callback != null) {
-				callback.call(this);
+				if(multiplicity == 1) {
+					callback.call(this);
+				} else {
+					for(int i = 0; i < multiplicity; i++) {
+						callback.call(this);
+					}
+					multiplicity = defaultMultiplicity;
+				}
 			}
 		}	
 			
@@ -304,6 +315,10 @@ public final class Components {
 			targetIDs.clear();
 			debugMustHaveCard = false;
 			callback = null;
+			multiplicity = 1;
+			all = false;
+			defaultMultiplicity = 1;
+			defaultAll = false;
 		}
 		
 	}

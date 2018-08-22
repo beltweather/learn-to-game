@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
-import com.jharter.game.ashley.components.Components.CardComp;
-import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetingComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.components.subcomponents.Callback;
+import com.jharter.game.ashley.components.subcomponents.Callback.EnemyCallback;
+import com.jharter.game.ashley.components.subcomponents.Callback.FriendCallback;
+import com.jharter.game.ashley.components.subcomponents.Callback.FriendEnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.CombatUtil;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
@@ -202,32 +202,21 @@ public class BattleStage extends GameStage {
 										Media.plains);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Plains";
-		b.TargetingComp().targetZoneTypes.add(ZoneType.FRIEND);
-		b.TargetingComp().targetZoneTypes.add(ZoneType.ENEMY);
-		b.TargetingComp().callback = new Callback<TargetingComp>() {
+		new FriendEnemyCallback(b) {
 
 			@Override
-			public void call(TargetingComp t) {
-				Entity card = t.getEntity(0);
-				Entity friend = t.getEntity(1);
-				Entity enemy = t.getEntity(2);
-				
-				CardComp cCard = Mapper.CardComp.get(card);
-				Entity owner = Mapper.Entity.get(cCard.ownerID);
-				StatsComp sOwner = Mapper.StatsComp.get(owner);
-				StatsComp sEnemy = Mapper.StatsComp.get(enemy);
+			public void call(Entity owner, Entity card, Entity friend, Entity enemy) {
+				int damage = CombatUtil.getDamage(owner, enemy, 13);
 				
 				VitalsComp vEnemy = Mapper.VitalsComp.get(enemy);
 				VitalsComp vFriend = Mapper.VitalsComp.get(friend);
-				
-				int damage = CombatUtil.getDamage(sOwner, sEnemy, 13);
-				
 				int origHealthFriend = vFriend.health;
 				int origHealthEnemy = vEnemy.health;
 				
 				vEnemy.damage(damage);
 				vFriend.heal(damage);
 				
+				// DEBUG PRINTING
 				int healed = vFriend.health - origHealthFriend;
 				int damaged = origHealthEnemy - vEnemy.health; 
 				
@@ -260,7 +249,16 @@ public class BattleStage extends GameStage {
 		ID swampId = b.IDComp().id;
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Swamp";
-		b.TargetingComp().targetZoneTypes.add(ZoneType.ENEMY);
+		new EnemyCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity enemy) {
+				int damage = CombatUtil.getDamage(owner, enemy, 20);
+				Mapper.VitalsComp.get(enemy).damage(damage);
+				System.out.println("Dealt " + damage + " damage.");
+			}
+			
+		};
 		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -273,7 +271,19 @@ public class BattleStage extends GameStage {
 				Media.island);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Island";
-		b.TargetingComp().targetZoneTypes.add(ZoneType.FRIEND);
+		new FriendCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity friend) {
+				ActiveCardComp aFriend = Mapper.ActiveCardComp.get(friend);
+				if(aFriend != null && aFriend.activeCardID != null) {
+					Entity friendCard = Mapper.Entity.get(aFriend.activeCardID);
+					TargetingComp tFriend = Mapper.TargetingComp.get(friendCard);
+					tFriend.multiplicity++;
+				}
+			}
+			
+		};
 		b.TargetingComp().debugMustHaveCard = true;
 		handZone.add(b);
 		engine.addEntity(b.Entity());
@@ -285,7 +295,18 @@ public class BattleStage extends GameStage {
 				Media.mountain);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Mountain";
-		b.TargetingComp().targetZoneTypes.add(ZoneType.ENEMY);
+		b.TargetingComp().defaultAll = true;
+		b.TargetingComp().all = true;
+		new FriendCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity friend) {
+				int hp = 50;
+				Mapper.VitalsComp.get(friend).heal(hp);
+				System.out.println("Healed " + hp + " hp to " + Mapper.DescriptionComp.get(friend).name);
+			}
+			
+		};
 		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();

@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -97,7 +98,7 @@ public class Mapper {
 		}
 		
 		public ZoneComp get(ZonePositionComp zp) {
-			Entity zone = Mapper.Entity.get(zp.zoneType);
+			Entity zone = Mapper.Entity.get(zp.zoneType());
 			return Mapper.ZoneComp.get(zone);
 		}
 		
@@ -111,7 +112,7 @@ public class Mapper {
 		}
 		
 		public boolean has(ZonePositionComp zp) {
-			return has(Mapper.Entity.get(zp.zoneType));
+			return has(Mapper.Entity.get(zp.zoneType()));
 		}
 		
 		public boolean has(ZoneType zoneType) {
@@ -128,6 +129,9 @@ public class Mapper {
 		private ComponentMapperEntity() {}
 		
 		public Entity get(ID id) {
+			if(id == null) {
+				return null;
+			}
 			if(entitiesById.containsKey(id)) {
 				return entitiesById.get(id);
 			}
@@ -140,6 +144,17 @@ public class Mapper {
 		
 	}
 	
+	public static class ComponentMapperComp {
+		
+		private ComponentMapperComp() {}
+		
+		public <T> T get(Class<T> klass) {
+			return Pools.get(klass).obtain();
+		}
+	
+	}
+	
+	public static final ComponentMapperComp NewComp = new ComponentMapperComp();
 	public static final ComponentMapperEntity Entity = new ComponentMapperEntity();
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);

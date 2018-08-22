@@ -6,26 +6,24 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
-import com.jharter.game.ashley.components.Components.TargetingComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.CombatUtil;
-import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendWithCardCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemyCallback;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendWithCardCallback;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
-import com.jharter.game.ashley.systems.CursorActionSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
-import com.jharter.game.ashley.systems.CursorPositionSystem;
-import com.jharter.game.ashley.systems.CursorTargetingSystem;
+import com.jharter.game.ashley.systems.CursorPerformActionSystem;
+import com.jharter.game.ashley.systems.CursorSelectTargetSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
@@ -33,6 +31,7 @@ import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
+import com.jharter.game.ashley.systems.ZoneTransformSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
@@ -75,27 +74,35 @@ public class BattleStage extends GameStage {
 		// Zones
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.HAND);
-		b.ZoneComp().zoneType = ZoneType.HAND;
-		b.ZoneComp().rows = 1;
-		b.ZoneComp().cols = 4;
+		b.ZoneComp().zoneType(ZoneType.HAND);
 		ZoneComp handZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
 
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.FRIEND);
-		b.ZoneComp().zoneType = ZoneType.FRIEND;
-		b.ZoneComp().rows = 4;
-		b.ZoneComp().cols = 1;
+		b.ZoneComp().zoneType(ZoneType.FRIEND);
 		ZoneComp friendZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ACTIVE_CARD);
+		b.ZoneComp().zoneType(ZoneType.ACTIVE_CARD);
+		ZoneComp activeCardZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.DISCARD);
+		b.ZoneComp().zoneType(ZoneType.DISCARD);
+		ZoneComp discardCardZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ENEMY);
-		b.ZoneComp().zoneType = ZoneType.ENEMY;
-		b.ZoneComp().rows = 1;
-		b.ZoneComp().cols = 1;
+		b.ZoneComp().zoneType(ZoneType.ENEMY);
 		ZoneComp enemyZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -103,7 +110,7 @@ public class BattleStage extends GameStage {
 		// CHARACTERS
 
 		b = EntityUtil.buildBasicEntity(engine, 
-				  EntityType.CHARACTER, 
+				  EntityType.FRIEND, 
 				  new Vector3(660,140,0), 
 				  Media.warrior);
 		ID warriorID = b.IDComp().id;
@@ -121,7 +128,7 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityUtil.buildBasicEntity(engine, 
-				  EntityType.CHARACTER, 
+				  EntityType.FRIEND, 
 				  new Vector3(750,15,0), 
 				  Media.rogue);
 		ID rogueID = b.IDComp().id;
@@ -140,7 +147,7 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityUtil.buildBasicEntity(engine, 
-				  EntityType.CHARACTER, 
+				  EntityType.FRIEND, 
 				  new Vector3(675,-120,0), 
 				  Media.sorcerer);
 		ID sorcererID = b.IDComp().id;
@@ -158,7 +165,7 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityUtil.buildBasicEntity(engine, 
-				  EntityType.CHARACTER, 
+				  EntityType.FRIEND, 
 				  new Vector3(750,-255,0), 
 				  Media.ranger);
 		ID rangerID = b.IDComp().id;
@@ -264,8 +271,6 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		rogueActiveCardComp.activeCardID = swampId;
-		
 		b = EntityUtil.buildBasicEntity(engine, 
 				EntityType.CARD, 
 				new Vector3(-200,-475,0), 
@@ -276,8 +281,7 @@ public class BattleStage extends GameStage {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity friend, Entity friendCard) {
-				TargetingComp tFriend = Mapper.TargetingComp.get(friendCard);
-				tFriend.multiplicity++;
+				Mapper.TargetingComp.get(friendCard).multiplicity++;
 			}
 			
 		};
@@ -319,16 +323,15 @@ public class BattleStage extends GameStage {
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
-				  EntityType.HAND, 
+				  EntityType.CURSOR, 
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);
 		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
 		b.InputComp().input = buildInput(focus);
-		b.ZonePositionComp().zoneType = ZoneType.HAND;
-		b.ZonePositionComp().row = 0;
-		b.ZonePositionComp().col = 0;
+		b.ZonePositionComp().zoneType(ZoneType.HAND);
+		b.ZonePositionComp().index(0);
 		if(focus) {
 			b.FocusComp();
 		}
@@ -376,9 +379,9 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CollisionSystem()); 
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorMoveSystem());
-		engine.addSystem(new CursorTargetingSystem());
-		engine.addSystem(new CursorActionSystem());
-		engine.addSystem(new CursorPositionSystem());
+		engine.addSystem(new CursorSelectTargetSystem());
+		engine.addSystem(new CursorPerformActionSystem());
+		//engine.addSystem(new CursorPositionSystem());
 		
 		// Used in movement demo
 		//engine.addSystem(new InputMovementSystem());
@@ -388,6 +391,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new InteractSystem());
 		
 		if(!endPointHelper.isHeadless()) {
+			engine.addSystem(new ZoneTransformSystem());
 			engine.addSystem(new AnimationSystem());
 			
 			// Used in movement demo

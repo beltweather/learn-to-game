@@ -23,12 +23,16 @@ public class CursorPositionSystem extends IteratingSystem {
 		PositionComp p = Mapper.PositionComp.get(entity);
 		SizeComp s = Mapper.SizeComp.get(entity);
 		
-		Entity target = Mapper.Entity.get(z.objects.get(zp.row * z.cols + zp.col));
+		if(!z.hasIndex(zp.index())) {
+			return;
+		}
+		
+		Entity target = Mapper.Entity.get(z.get(zp.index()));
 		
 		PositionComp tp = Mapper.PositionComp.get(target);
 		SizeComp ts = Mapper.SizeComp.get(target);
 		
-		switch(zp.zoneType) {
+		switch(zp.zoneType()) {
 			case HAND:
 				p.position.x = tp.position.x + (ts.scaledWidth() - s.scaledWidth()) / 2;
 				p.position.y = tp.position.y + ts.scaledHeight() - (int) (s.scaledHeight() * 0.25);

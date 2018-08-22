@@ -68,9 +68,16 @@ public abstract class VoidCallback<T> {
 			if(t.all) {
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(friend);
 				ZoneComp z = Mapper.ZoneComp.get(zp);
-				for(ID id : z.objects) {
+				ID id;
+				for(int i = 0; i < z.size(); i++) {
+					id = z.get(i);
+					Entity entity = Mapper.Entity.get(id);
+					if(Mapper.CursorComp.has(entity)) {
+						continue;
+					}
+					
 					// Maybe need to check what's valid or not here
-					call(owner, card, Mapper.Entity.get(id));
+					call(owner, card, entity);
 				}
 				t.all = t.defaultAll;
 				
@@ -123,9 +130,16 @@ public abstract class VoidCallback<T> {
 			if(t.all) {
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(enemy);
 				ZoneComp z = Mapper.ZoneComp.get(zp);
-				for(ID id : z.objects) {
+				ID id;
+				for(int i = 0; i < z.size(); i++) {
+					id = z.get(i);
+					Entity entity = Mapper.Entity.get(id);
+					if(Mapper.CursorComp.has(entity)) {
+						continue;
+					}
+					
 					// Maybe need to check what's valid or not here
-					call(owner, card, Mapper.Entity.get(id));
+					call(owner, card, entity);
 				}
 				t.all = t.defaultAll;
 				

@@ -14,10 +14,10 @@ public class Enums {
         BIRD,
         TILE,
         CARD,
-        CHARACTER,
+        FRIEND,
+        CURSOR,
         BACKGROUND,
-        ENEMY,
-        HAND
+        ENEMY
     }
     
     public enum EnityState {
@@ -41,6 +41,8 @@ public class Enums {
     	HAND,
     	ENEMY,
     	FRIEND,
+    	ACTIVE_CARD,
+    	DECK,
     	DISCARD,
     	TIME,
     	NONE

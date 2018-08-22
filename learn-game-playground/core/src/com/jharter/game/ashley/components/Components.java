@@ -442,27 +442,48 @@ public final class Components {
 	}
 	
 	public static final class ZoneComp implements Comp {
-		public ZoneType zoneType = ZoneType.NONE;
-		public int rows = -1;
-		public int cols = -1;
-		public Array<ID> objects = new Array<ID>();
+		private ZoneType zoneType = ZoneType.NONE;
+		private Array<ID> objects = new Array<ID>();
+		private boolean dirty = false;
+		
+		public void zoneType(ZoneType zoneType) {
+			this.zoneType = zoneType;
+			dirty = true;
+		}
+
+		public ZoneType zoneType() {
+			return zoneType;
+		}
+		
+		public boolean isDirty() {
+			return dirty;
+		}
+		
+		public boolean hasIndex(ZonePositionComp zp) {
+			return hasIndex(zp.index);
+		}
+		
+		public boolean hasIndex(int index) {
+			return index >= 0 && index < objects.size;
+		}
 		
 		public void add(EntityBuilder b) {
 			add(b.IDComp(), b.ZonePositionComp());
 		}
 		
 		public void add(IDComp id, ZonePositionComp zp) {
-			int index = objects.size;
-			objects.add(id.id);
-			int row = index / cols;
-			int col = index % cols;
+			add(id.id, zp);
+		}
+		
+		public void add(ID id, ZonePositionComp zp) {
+			zp.index = objects.size;
+			objects.add(id);
 			zp.zoneType = zoneType;
-			zp.row = row;
-			zp.col = col;
+			dirty = true;
 		}
 		
 		public ID getID(ZonePositionComp zp) {
-			int index = zp.row * cols + zp.col;
+			int index = zp.index;
 			if(index < 0 || index >= objects.size) {
 				return null;
 			}
@@ -477,32 +498,48 @@ public final class Components {
 			return Mapper.Entity.get(id);
 		}
 		
+		public void remove(IDComp id) {
+			remove(id.id);
+		}
+		
+		public void remove(ID id) {
+			objects.removeValue(id, false);
+			for(int i = 0; i < objects.size; i++) {
+				ID oID = objects.get(i);
+				Entity obj = Mapper.Entity.get(oID);
+				ZonePositionComp zp = Mapper.ZonePositionComp.get(obj);
+				zp.index = i;
+			}
+			dirty = true;
+		}
+		
+		public int size() {
+			return objects.size;
+		}
+		
+		public ID get(int index) {
+			return objects.get(index);
+		}
+		
 		private ZoneComp() {}
 		
 		@Override
 		public void reset() {
 			zoneType = ZoneType.NONE;
-			rows = -1;
-			cols = -1;
 			objects.clear();
+			dirty = false;
 		}
 		
 	}
 	
 	public static final class ZonePositionComp implements Comp {
 		
-		public ZoneType zoneType = ZoneType.NONE;
-		public int row = -1;
-		public int col = -1;
+		private ZoneType zoneType = ZoneType.NONE;
+		private int index = -1;
 		private Array<ZonePositionComp> history = new Array<ZonePositionComp>();
+		private boolean dirty = false;
 		
 		private ZonePositionComp() {}
-		
-		public void set(int index) {
-			ZoneComp z = getZoneComp();
-			row = index / z.cols;
-			col = index % z.cols;
-		}
 		
 		public ZoneComp getZoneComp() {
 			if(zoneType == ZoneType.NONE) {
@@ -511,11 +548,32 @@ public final class Components {
 			return Mapper.ZoneComp.get(this);
 		}
 		
+		public int index() {
+			return index;
+		}
+		
+		public void index(int index) {
+			this.index = index;
+			dirty = true;
+		}
+		
+		public ZoneType zoneType() {
+			return zoneType;
+		}
+		
+		public void zoneType(ZoneType zoneType) {
+			this.zoneType = zoneType;
+			dirty = true;
+		}
+		
+		public boolean isDirty() {
+			return dirty;
+		}
+		
 		private ZonePositionComp copyForHistory() {
 			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
 			zp.zoneType = zoneType;
-			zp.row = row;
-			zp.col = col;
+			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it
 			return zp;
 		}
@@ -537,8 +595,7 @@ public final class Components {
 			}
 			ZonePositionComp copy = history.pop();
 			zoneType = copy.zoneType;
-			row = copy.row;
-			col = copy.col;
+			index = copy.index;
 			return true;
 		}
 		
@@ -549,9 +606,9 @@ public final class Components {
 		@Override
 		public void reset() {
 			zoneType = ZoneType.NONE;
-			row = -1;
-			col = -1;
+			index = -1;
 			history.clear();
+			dirty = false;
 		}
 		
 	}

@@ -16,14 +16,10 @@ import com.jharter.game.ashley.entities.EntityUtil;
 
 public class CursorMoveSystem extends IteratingSystem {
 
-	private ObjectSet<Integer> usedIndices = new ObjectSet<Integer>();
-	private Vector2 position = new Vector2();
-	
 	@SuppressWarnings("unchecked")
 	public CursorMoveSystem() {
 		super(Family.all(CursorComp.class,
 						 CursorInputComp.class,
-						 TextureComp.class,
 						 ZonePositionComp.class).get());
 	}
 
@@ -39,73 +35,35 @@ public class CursorMoveSystem extends IteratingSystem {
 		ZoneComp z = zp.getZoneComp();
 		TargetingComp t = c.getTargetingComp();
 		
-		int index = findNextValidIndex(zp, z, t, (int) ci.direction.x, (int) ci.direction.y);
-		if(index >= 0) {
-			zp.set(index);
+		int direction = (int) (ci.direction.x != 0 ? ci.direction.x : ci.direction.y);
+		
+		int index = findNextValidIndex(zp, z, t, direction);
+		if(z.hasIndex(index)) {
+			zp.index(index);
+		} else {
+			zp.index(-1);
 		}
 	}
 	
-	protected int findNextValidIndex(ZonePositionComp zp, ZoneComp z, TargetingComp t, int colDirection, int rowDirection) {
-		position.set(zp.col, zp.row);
-		usedIndices.clear();
-		int index;
-		while(true) {
-			index = findNextIndex(position, z.cols, z.rows, colDirection, rowDirection);
-			if(t == null || t.isValidTarget(Mapper.Entity.get(z.objects.get(index)))) {
+	protected int findNextValidIndex(ZonePositionComp zp, ZoneComp z, TargetingComp t, int direction) {
+		int index = zp.index();
+		for(int i = 0; i < z.size(); i++) {
+			index = findNextIndex(index, direction, z.size());
+			if(t == null || t.isValidTarget(Mapper.Entity.get(z.get(index)))) {
 				return index;
 			}
-			if(usedIndices.contains(index)) {
-				return -1;
-			}
-			usedIndices.add(index);
-		}
+		}			
+		return -1;
 	}
 	
-	protected int findNextIndex(Vector2 position, int cols, int rows, int colDirection, int rowDirection) {
-		
-		if(colDirection != 0) {
-			position.x += colDirection;
-		
-			if(position.x >= cols) {
-				position.x = 0;
-				position.y++;
-			} else if(position.x < 0) {
-				position.x = cols - 1;
-				position.y--;
-			}
-			
-			if(position.y >= rows) {
-				position.x = 0;
-				position.y = 0;
-			} else if(position.y < 0) {
-				position.x = cols - 1;
-				position.y = rows - 1;
-			}
-		
-		} else if(rowDirection != 0) {
-			position.y += rowDirection;
-		
-			if(position.y >= rows) {
-				position.y = 0;
-				position.x++;
-			} else if(position.y < 0) {
-				position.y = rows - 1;
-				position.x--;
-			}
-			
-			if(position.x >= cols) {
-				position.y = 0;
-				position.x = 0;
-			} else if(position.x < 0) {
-				position.y = rows - 1;
-				position.x = cols - 1;
-			}
-		
+	protected int findNextIndex(int currentIndex, int direction, int size) {
+		int index = currentIndex + direction;
+		if(index < 0) {
+			index = size - 1;
+		} else if(index >= size) {
+			index = 0;
 		}
-		
-		
-		return (int) (position.y * cols + position.x);
-		
+		return index;
 	}
 	
 }

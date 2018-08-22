@@ -14,10 +14,10 @@ import com.jharter.game.ashley.components.Mapper;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
-public class CursorTargetingSystem extends CursorMoveSystem {
+public class CursorSelectTargetSystem extends CursorMoveSystem {
 
 	@SuppressWarnings("unchecked")
-	public CursorTargetingSystem() {
+	public CursorSelectTargetSystem() {
 		super();
 	}
 
@@ -27,7 +27,12 @@ public class CursorTargetingSystem extends CursorMoveSystem {
 		CursorInputComp ci = Mapper.CursorInputComp.get(entity);
 		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
-		TextureComp te = Mapper.TextureComp.get(entity);
+		
+		// A little failsafe here for when zones are empty
+		if(!z.hasIndex(zp)) {
+			ci.reset();
+			return;
+		}
 
 		if(ci.accept) {
 			TargetingComp t = c.getTargetingComp();
@@ -46,8 +51,7 @@ public class CursorTargetingSystem extends CursorMoveSystem {
 				ZoneType nextZoneType = tryGetNextZoneType(c, zp, z, t);
 				if(nextZoneType != ZoneType.NONE) {
 					if(tryChangeZone(c, ci, zp, nextZoneType, t)) {
-						te.region = getCursorForZone(zp.zoneType);
-						if(zp.zoneType == ZoneType.HAND) {
+						if(zp.zoneType() == ZoneType.HAND) {
 							zp.clearHistory();
 						}
 					}
@@ -58,7 +62,6 @@ public class CursorTargetingSystem extends CursorMoveSystem {
 
 			TargetingComp t = c.getTargetingComp();
 			if(zp.tryRevertToLastCheckpoint()) {
-				te.region = getCursorForZone(zp.zoneType);
 				entity.remove(ActiveCardComp.class);
 				if(t != null) {
 					t.targetIDs.pop();
@@ -73,56 +76,42 @@ public class CursorTargetingSystem extends CursorMoveSystem {
 	}
 	
 	private ZoneType tryGetNextZoneType(CursorComp c, ZonePositionComp zp, ZoneComp z, TargetingComp t) {
-		if(t == null || t.hasAllTargets()) {
+		if(t == null) {
+			return ZoneType.HAND;
+		} else if(t.hasAllTargets()) {
 			return ZoneType.HAND;
 		}
 		return t.getTargetZoneType();
 	}
 	
-	private TextureRegion getCursorForZone(ZoneType zoneType) {
-		switch(zoneType) {
-			case HAND:
-				return Media.handPointDown;
-			case FRIEND:
-				 return Media.handPointRight;
-			case ENEMY:
-				return Media.handPointLeft;
-			default:
-				return Media.handPointDown;
-		}
-	}
-	
 	private boolean tryChangeZone(CursorComp c, CursorInputComp ci, ZonePositionComp zp, ZoneType zoneType, TargetingComp t) {
 		zp.checkpoint();
-		if(tryChangeZone(c, ci, zp, zoneType, t, 0, 0)) {
+		if(tryChangeZone(c, ci, zp, zoneType, t, 0)) {
 			return true;
 		}
 		zp.undoCheckpoint();
 		return false;
 	}
 	
-	private boolean tryChangeZone(CursorComp c, CursorInputComp ci, ZonePositionComp zp, ZoneType zoneType, TargetingComp t, int newRow, int newCol) {
-		int origRow = zp.row;
-		int origCol = zp.col;
-		ZoneType origZoneType = zp.zoneType;
+	private boolean tryChangeZone(CursorComp c, CursorInputComp ci, ZonePositionComp zp, ZoneType zoneType, TargetingComp t, int newIndex) {
+		int origIndex = zp.index();
+		ZoneType origZoneType = zp.zoneType();
 		ZoneComp z = Mapper.ZoneComp.get(zoneType);
-		zp.zoneType = zoneType;
-		zp.row = newRow;
-		zp.col = newCol;
+		zp.zoneType(zoneType);
+		zp.index(newIndex);
 		
 		if(t == null || t.hasAllTargets() || t.isValidTarget(z.getEntity(zp))) {
 			return true;
 		}
 		
-		int index = findNextValidIndex(zp, z, t, 1, 0);
-		if(index < 0) {
-			zp.row = origRow;
-			zp.col = origCol;
-			zp.zoneType = origZoneType;
+		int index = findNextValidIndex(zp, z, t, 1);
+		if(!z.hasIndex(index)) {
+			zp.index(origIndex);
+			zp.zoneType(origZoneType);
 			return false;
 		} 
 
-		zp.set(index);
+		zp.index(index);
 		return true;
 	}
 

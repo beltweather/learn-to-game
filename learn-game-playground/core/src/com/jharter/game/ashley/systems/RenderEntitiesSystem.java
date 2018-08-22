@@ -46,7 +46,15 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 			v.region = v.defaultRegion;
 		}
 		if(v.region != null) {
-			batch.draw(v.region, p.position.x, p.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);
+			
+			if(Mapper.MultiPositionComp.has(entity)) {
+				for(Vector3 position : Mapper.MultiPositionComp.get(entity).positions) {
+					batch.draw(v.region, position.x, position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);
+				}
+			} else {
+				batch.draw(v.region, p.position.x, p.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);
+			}
+			
 		}
 	}
 	

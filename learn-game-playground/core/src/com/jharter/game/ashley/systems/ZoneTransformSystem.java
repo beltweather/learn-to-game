@@ -4,11 +4,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
+import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.TargetingComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -79,18 +83,53 @@ public class ZoneTransformSystem extends IteratingSystem {
 	}
 	
 	private void transformCursor() {
+		if(Mapper.PerformTargetActionComp.has(entity)) {
+			hide();
+			return;
+		}
+		
 		show();
-		
-		Entity target = Mapper.Entity.get(z.get(zp.index()));
-		PositionComp tp = Mapper.PositionComp.get(target);
-		SizeComp ts = Mapper.SizeComp.get(target);
-		
 		te.region = getCursorForZone(zp.zoneType());
 		
+		CursorComp c = Mapper.CursorComp.get(entity);
+		TargetingComp ta = c.getTargetingComp();
+		
+		if(ta != null && ta.all) {
+			
+			MultiPositionComp mp;
+			if(Mapper.MultiPositionComp.has(entity)) {
+				mp = Mapper.MultiPositionComp.get(entity);
+			} else {
+				mp = Mapper.NewComp.get(MultiPositionComp.class);
+				entity.add(mp);
+			}
+			for(int i = 0; i < z.size(); i++) {
+				Entity target = Mapper.Entity.get(z.get(i));
+				PositionComp tp = Mapper.PositionComp.get(target);
+				SizeComp ts = Mapper.SizeComp.get(target);
+				Vector3 position = new Vector3(0, 0, 0);
+				setCursorPositionForTarget(position, target, tp, ts);
+				mp.positions.add(position);
+			}
+			
+		} else {
+			if(Mapper.MultiPositionComp.has(entity)) {
+				entity.remove(MultiPositionComp.class);
+			}
+			
+			Entity target = Mapper.Entity.get(z.get(zp.index()));
+			PositionComp tp = Mapper.PositionComp.get(target);
+			SizeComp ts = Mapper.SizeComp.get(target);
+			setCursorPositionForTarget(p.position, target, tp, ts);
+		}
+		
+	}
+	
+	private void setCursorPositionForTarget(Vector3 position, Entity target, PositionComp tp, SizeComp ts) {
 		switch(zp.zoneType()) {
 			case HAND:
-				p.position.x = tp.position.x + (ts.scaledWidth() - s.scaledWidth()) / 2;
-				p.position.y = tp.position.y + ts.scaledHeight() - (int) (s.scaledHeight() * 0.25);
+				position.x = tp.position.x + (ts.scaledWidth() - s.scaledWidth()) / 2;
+				position.y = tp.position.y + ts.scaledHeight() - (int) (s.scaledHeight() * 0.25);
 				break;
 			case FRIEND:
 				ActiveCardComp ac = Mapper.ActiveCardComp.get(target);
@@ -102,12 +141,12 @@ public class ZoneTransformSystem extends IteratingSystem {
 					}
 				}
 				
-				p.position.x = tp.position.x - s.scaledWidth() - 20;
-				p.position.y = tp.position.y + (ts.scaledHeight() - s.scaledHeight()) / 2;
+				position.x = tp.position.x - s.scaledWidth() - 20;
+				position.y = tp.position.y + (ts.scaledHeight() - s.scaledHeight()) / 2;
 				break;
 			case ENEMY:
-				p.position.x = tp.position.x + ts.scaledWidth() + 20;  
-				p.position.y = tp.position.y + (ts.scaledHeight() - s.scaledHeight()) / 2;
+				position.x = tp.position.x + ts.scaledWidth() + 20;  
+				position.y = tp.position.y + (ts.scaledHeight() - s.scaledHeight()) / 2;
 				break;
 			default:
 				break;

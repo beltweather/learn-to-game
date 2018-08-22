@@ -22,6 +22,8 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
+import com.jharter.game.ashley.components.Components.MultiPositionComp;
+import com.jharter.game.ashley.components.Components.PerformTargetActionComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
@@ -32,6 +34,7 @@ import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TargetingComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
+import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
@@ -122,5 +125,8 @@ public class EntityBuilder implements Poolable {
 	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }
+	public MultiPositionComp MultiPositionComp() { return get(MultiPositionComp.class); }
+	public PerformTargetActionComp PerformTargetActionComp() { return get(PerformTargetActionComp.class); }
+	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
 	
 }

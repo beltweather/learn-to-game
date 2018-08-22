@@ -102,7 +102,9 @@ public abstract class VoidCallback<T> {
 		}
 		
 		public void call(Entity owner, Entity card, Entity friend) {
-			call(owner, card, friend, Mapper.Entity.get(Mapper.ActiveCardComp.get(friend).activeCardID));
+			ActiveCardComp ac = Mapper.ActiveCardComp.get(friend);
+			Entity friendCard = (ac == null || ac.activeCardID == null) ? null : Mapper.Entity.get(ac.activeCardID);
+			call(owner, card, friend, friendCard);
 		}
 		
 		public abstract void call(Entity owner, Entity card, Entity friend, Entity friendCard);
@@ -164,7 +166,9 @@ public abstract class VoidCallback<T> {
 		}
 		
 		public void call(Entity owner, Entity card, Entity enemy) {
-			call(owner, card, enemy, Mapper.Entity.get(Mapper.ActiveCardComp.get(enemy).activeCardID));
+			ActiveCardComp ac = Mapper.ActiveCardComp.get(enemy);
+			Entity enemyCard = (ac == null || ac.activeCardID == null) ? null : Mapper.Entity.get(ac.activeCardID);
+			call(owner, card, enemy, enemyCard);
 		}
 		
 		public abstract void call(Entity owner, Entity card, Entity enemy, Entity enemyCard);

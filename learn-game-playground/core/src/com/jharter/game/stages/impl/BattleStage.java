@@ -23,12 +23,14 @@ import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
 import com.jharter.game.ashley.systems.CursorPerformActionSystem;
+import com.jharter.game.ashley.systems.CursorQueueActionSystem;
 import com.jharter.game.ashley.systems.CursorSelectTargetSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
+import com.jharter.game.ashley.systems.RenderTimerSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.ashley.systems.ZoneTransformSystem;
@@ -68,6 +70,17 @@ public class BattleStage extends GameStage {
 													  EntityType.BACKGROUND, 
 													  new Vector3(-1920/2,-1080/2,-1), 
 													  Media.background);
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		// Turn timer
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.getTurnTimerID();
+		b.TurnTimerComp().turnTime = CursorPerformActionSystem.DEFAULT_INTERVAL;
+		b.PositionComp().position.x = 800;
+		b.PositionComp().position.y = -400;
+		b.SizeComp().width = 100;
+		b.SizeComp().height = 100;
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -380,6 +393,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectTargetSystem());
+		engine.addSystem(new CursorQueueActionSystem());
 		engine.addSystem(new CursorPerformActionSystem());
 		//engine.addSystem(new CursorPositionSystem());
 		
@@ -400,6 +414,7 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderTilesSystem(getCamera()));
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
+			engine.addSystem(new RenderTimerSystem(getCamera()));
 		}
 		
 		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));

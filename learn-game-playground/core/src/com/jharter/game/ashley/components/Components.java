@@ -56,6 +56,17 @@ public final class Components {
 		}
 	}
 	
+	public static final class MultiPositionComp implements Comp {
+		public Array<Vector3> positions = new Array<Vector3>();
+		
+		private MultiPositionComp() {}
+		
+		@Override
+		public void reset() {
+			positions.clear();
+		}
+	}
+	
 	public static final class SizeComp implements Comp {
 		public float width;
 		public float height;
@@ -251,10 +262,14 @@ public final class Components {
 		
 	}
 	
+	public static final class PerformTargetActionComp implements Comp {
+		private PerformTargetActionComp() {}
+		@Override public void reset() {}
+	}
+	
 	public static final class TargetingComp implements Comp {
 		
 		public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
-		public boolean debugMustHaveCard = false;
 		public Array<ID> targetIDs = new Array<ID>();
 		public VoidCallback<TargetingComp> acceptCallback = null;
 		public Callback<Entity, Boolean> validTargetCallback = null;
@@ -386,6 +401,19 @@ public final class Components {
 		}
 	}
 	
+	public static final class TurnTimerComp implements Comp {
+		public float accumulator = 0;
+		public float turnTime = 0;
+		
+		private TurnTimerComp() {}
+		
+		@Override
+		public void reset() {
+			accumulator = 0;
+			turnTime = 0;
+		}
+	}
+	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
 	public static final class CursorInputRegulatorComp implements Comp {
@@ -444,7 +472,7 @@ public final class Components {
 	public static final class ZoneComp implements Comp {
 		private ZoneType zoneType = ZoneType.NONE;
 		private Array<ID> objects = new Array<ID>();
-		private boolean dirty = false;
+		private boolean dirty = true;
 		
 		public void zoneType(ZoneType zoneType) {
 			this.zoneType = zoneType;
@@ -527,7 +555,7 @@ public final class Components {
 		public void reset() {
 			zoneType = ZoneType.NONE;
 			objects.clear();
-			dirty = false;
+			dirty = true;
 		}
 		
 	}
@@ -536,8 +564,8 @@ public final class Components {
 		
 		private ZoneType zoneType = ZoneType.NONE;
 		private int index = -1;
-		private Array<ZonePositionComp> history = new Array<ZonePositionComp>();
-		private boolean dirty = false;
+		private transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
+		private boolean dirty = true;
 		
 		private ZonePositionComp() {}
 		
@@ -608,7 +636,7 @@ public final class Components {
 			zoneType = ZoneType.NONE;
 			index = -1;
 			history.clear();
-			dirty = false;
+			dirty = true;
 		}
 		
 	}

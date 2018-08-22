@@ -24,13 +24,13 @@ public abstract class Callback<T, R> {
 		
 	}
 	
-	public static class ActiveCardCallback extends ValidTargetCallback {
+	public static class HasActiveCardCallback extends ValidTargetCallback {
 		
-		public ActiveCardCallback(EntityBuilder b) {
+		public HasActiveCardCallback(EntityBuilder b) {
 			this(b.TargetingComp());
 		}
 		
-		public ActiveCardCallback(TargetingComp t) {
+		public HasActiveCardCallback(TargetingComp t) {
 			super(t);
 		}
 

@@ -72,7 +72,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	
 	private void hide() {
 		if(!Mapper.InvisibleComp.has(entity)) {
-			entity.add(Mapper.NewComp.get(InvisibleComp.class));
+			entity.add(Mapper.Comp.get(InvisibleComp.class));
 		}
 	}
 	
@@ -83,7 +83,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	}
 	
 	private void transformCursor() {
-		if(Mapper.PerformTargetActionComp.has(entity)) {
+		if(Mapper.ActionQueuedComp.has(entity)) {
 			hide();
 			return;
 		}
@@ -100,7 +100,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 			if(Mapper.MultiPositionComp.has(entity)) {
 				mp = Mapper.MultiPositionComp.get(entity);
 			} else {
-				mp = Mapper.NewComp.get(MultiPositionComp.class);
+				mp = Mapper.Comp.get(MultiPositionComp.class);
 				entity.add(mp);
 			}
 			for(int i = 0; i < z.size(); i++) {

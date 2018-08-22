@@ -1,18 +1,16 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.TargetingComp;
-import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 
 import uk.co.carelesslabs.Enums.ZoneType;
-import uk.co.carelesslabs.Media;
 
 public class CursorSelectTargetSystem extends CursorMoveSystem {
 
@@ -51,10 +49,26 @@ public class CursorSelectTargetSystem extends CursorMoveSystem {
 				ZoneType nextZoneType = tryGetNextZoneType(c, zp, z, t);
 				if(nextZoneType != ZoneType.NONE) {
 					if(tryChangeZone(c, ci, zp, nextZoneType, t)) {
+						
+						// XXX Not sure if this should be here
 						if(zp.zoneType() == ZoneType.HAND) {
 							zp.clearHistory();
 						}
+						
+					} else {
+						
+						t.targetIDs.pop();
+						if(t.targetIDs.size == 0) {
+							c.targetingEntityID = null;
+						}
+						
 					}
+				}
+				
+				if(t.hasAllTargets() && c.targetingEntityID != null) {
+					Entity targetingEntity = Mapper.Entity.get(c.targetingEntityID);
+					targetingEntity.add(Mapper.Comp.get(ActionQueueableComp.class));
+					c.targetingEntityID = null;
 				}
 			}
 			

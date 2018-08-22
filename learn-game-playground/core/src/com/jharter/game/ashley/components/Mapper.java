@@ -10,6 +10,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Components.ActionQueuedComp;
+import com.jharter.game.ashley.components.Components.ActionReadyComp;
+import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -25,7 +28,6 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
-import com.jharter.game.ashley.components.Components.PerformTargetActionComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
@@ -169,7 +171,7 @@ public class Mapper {
 	
 	}
 	
-	public static final ComponentMapperComp NewComp = new ComponentMapperComp();
+	public static final ComponentMapperComp Comp = new ComponentMapperComp();
 	public static final ComponentMapperEntity Entity = new ComponentMapperEntity();
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
@@ -201,7 +203,9 @@ public class Mapper {
 	public static final ComponentMapper<VitalsComp> VitalsComp = ComponentMapper.getFor(VitalsComp.class);
 	public static final ComponentMapper<StatsComp> StatsComp = ComponentMapper.getFor(StatsComp.class);
 	public static final ComponentMapper<MultiPositionComp> MultiPositionComp = ComponentMapper.getFor(MultiPositionComp.class);
-	public static final ComponentMapper<PerformTargetActionComp> PerformTargetActionComp = ComponentMapper.getFor(PerformTargetActionComp.class);
+	public static final ComponentMapper<ActionReadyComp> ActionReadyComp = ComponentMapper.getFor(ActionReadyComp.class);
+	public static final ComponentMapper<ActionQueuedComp> ActionQueuedComp = ComponentMapper.getFor(ActionQueuedComp.class);
+	public static final ComponentMapper<ActionSpentComp> ActionSpentComp = ComponentMapper.getFor(ActionSpentComp.class);
 	public static final ComponentMapper<TurnTimerComp> TurnTimerComp = ComponentMapper.getFor(TurnTimerComp.class);
 	
 }

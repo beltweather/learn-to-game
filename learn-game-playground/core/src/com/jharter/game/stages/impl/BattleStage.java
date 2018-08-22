@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
@@ -18,19 +19,21 @@ import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendWithC
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
+import com.jharter.game.ashley.systems.CleanupActionsSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
-import com.jharter.game.ashley.systems.CursorPerformActionSystem;
-import com.jharter.game.ashley.systems.CursorQueueActionSystem;
 import com.jharter.game.ashley.systems.CursorSelectTargetSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
+import com.jharter.game.ashley.systems.PerformActionsSystem;
+import com.jharter.game.ashley.systems.QueueActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.RenderTimerSystem;
+import com.jharter.game.ashley.systems.TurnSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.ashley.systems.ZoneTransformSystem;
@@ -76,7 +79,7 @@ public class BattleStage extends GameStage {
 		// Turn timer
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnTimerID();
-		b.TurnTimerComp().turnTime = CursorPerformActionSystem.DEFAULT_INTERVAL;
+		b.TurnTimerComp().turnTime = TurnSystem.DEFAULT_INTERVAL;
 		b.PositionComp().position.x = 800;
 		b.PositionComp().position.y = -400;
 		b.SizeComp().width = 100;
@@ -294,6 +297,12 @@ public class BattleStage extends GameStage {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity friend, Entity friendCard) {
+				if(friendCard == null) {
+					System.err.println("Card is no longer here");
+					return;
+				}
+				DescriptionComp d = Mapper.DescriptionComp.get(friendCard);
+				System.out.println("Increasing multiplicity for: " + d.name);
 				Mapper.TargetingComp.get(friendCard).multiplicity++;
 			}
 			
@@ -393,9 +402,10 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectTargetSystem());
-		engine.addSystem(new CursorQueueActionSystem());
-		engine.addSystem(new CursorPerformActionSystem());
-		//engine.addSystem(new CursorPositionSystem());
+		engine.addSystem(new QueueActionsSystem());
+		engine.addSystem(new TurnSystem());
+		engine.addSystem(new PerformActionsSystem());
+		engine.addSystem(new CleanupActionsSystem());
 		
 		// Used in movement demo
 		//engine.addSystem(new InputMovementSystem());

@@ -261,9 +261,24 @@ public final class Components {
 		}
 		
 	}
+
+	public static final class ActionQueueableComp implements Comp {
+		private ActionQueueableComp() {}
+		@Override public void reset() {}
+	}
 	
-	public static final class PerformTargetActionComp implements Comp {
-		private PerformTargetActionComp() {}
+	public static final class ActionQueuedComp implements Comp {
+		private ActionQueuedComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class ActionReadyComp implements Comp {
+		private ActionReadyComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class ActionSpentComp implements Comp {
+		private ActionSpentComp() {}
 		@Override public void reset() {}
 	}
 	
@@ -277,6 +292,7 @@ public final class Components {
 		public int multiplicity = 1;
 		public boolean defaultAll = false;
 		public boolean all = false;
+		public int priority = 0;
 		
 		private TargetingComp() {}
 		
@@ -332,6 +348,7 @@ public final class Components {
 			all = false;
 			defaultMultiplicity = 1;
 			defaultAll = false;
+			priority = 0;
 		}
 		
 	}

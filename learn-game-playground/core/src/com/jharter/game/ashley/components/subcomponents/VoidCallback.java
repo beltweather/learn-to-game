@@ -8,7 +8,7 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.components.subcomponents.Callback.ActiveCardCallback;
+import com.jharter.game.ashley.components.subcomponents.Callback.HasActiveCardCallback;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -98,7 +98,8 @@ public abstract class VoidCallback<T> {
 		
 		public FriendWithCardCallback(TargetingComp t) {
 			super(t);
-			new ActiveCardCallback(t);
+			t.priority = 1;
+			new HasActiveCardCallback(t);
 		}
 		
 		public void call(Entity owner, Entity card, Entity friend) {
@@ -162,7 +163,8 @@ public abstract class VoidCallback<T> {
 		
 		public EnemyWithCardCallback(TargetingComp t) {
 			super(t);
-			new ActiveCardCallback(t);
+			t.priority = 1;
+			new HasActiveCardCallback(t);
 		}
 		
 		public void call(Entity owner, Entity card, Entity enemy) {

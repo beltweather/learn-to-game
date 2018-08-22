@@ -8,6 +8,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Components.ActionQueuedComp;
+import com.jharter.game.ashley.components.Components.ActionReadyComp;
+import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -23,7 +26,6 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
-import com.jharter.game.ashley.components.Components.PerformTargetActionComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
@@ -126,7 +128,9 @@ public class EntityBuilder implements Poolable {
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }
 	public MultiPositionComp MultiPositionComp() { return get(MultiPositionComp.class); }
-	public PerformTargetActionComp PerformTargetActionComp() { return get(PerformTargetActionComp.class); }
+	public ActionReadyComp ActionReadyComp() { return get(ActionReadyComp.class); }
+	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
+	public ActionSpentComp ActionSpentComp() { return get(ActionSpentComp.class); }
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
 	
 }

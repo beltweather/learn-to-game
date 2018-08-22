@@ -23,7 +23,7 @@ public class CursorActionSystem  extends IteratingSystem {
 			return;
 		}
 		
-		t.performCallback();
+		t.performAcceptCallback();
 		
 		// Clear out data related to action
 		c.targetingEntityID = null;

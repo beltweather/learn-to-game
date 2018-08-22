@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.subcomponents.Callback;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
@@ -255,7 +256,8 @@ public final class Components {
 		public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 		public boolean debugMustHaveCard = false;
 		public Array<ID> targetIDs = new Array<ID>();
-		public Callback<TargetingComp> callback = null;
+		public VoidCallback<TargetingComp> acceptCallback = null;
+		public Callback<Entity, Boolean> validTargetCallback = null;
 		public int defaultMultiplicity = 1;
 		public int multiplicity = 1;
 		public boolean defaultAll = false;
@@ -286,23 +288,19 @@ public final class Components {
 		}
 		
 		public boolean isValidTarget(Entity entity) {
-			if(debugMustHaveCard) {
-				ActiveCardComp ac = Mapper.ActiveCardComp.get(entity);
-				if(ac == null) {
-					return false;
-				}
-				return ac.hasCard();
+			if(validTargetCallback != null) {
+				return validTargetCallback.call(entity);
 			}
 			return true;
 		}
 		
-		public void performCallback() {
-			if(callback != null) {
+		public void performAcceptCallback() {
+			if(acceptCallback != null) {
 				if(multiplicity == 1) {
-					callback.call(this);
+					acceptCallback.call(this);
 				} else {
 					for(int i = 0; i < multiplicity; i++) {
-						callback.call(this);
+						acceptCallback.call(this);
 					}
 					multiplicity = defaultMultiplicity;
 				}
@@ -313,8 +311,8 @@ public final class Components {
 		public void reset() {
 			targetZoneTypes.clear();
 			targetIDs.clear();
-			debugMustHaveCard = false;
-			callback = null;
+			acceptCallback = null;
+			validTargetCallback = null;
 			multiplicity = 1;
 			all = false;
 			defaultMultiplicity = 1;

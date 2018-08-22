@@ -11,10 +11,11 @@ import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.components.subcomponents.Callback.EnemyCallback;
-import com.jharter.game.ashley.components.subcomponents.Callback.FriendCallback;
-import com.jharter.game.ashley.components.subcomponents.Callback.FriendEnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.CombatUtil;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendWithCardCallback;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendCallback;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemyCallback;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
@@ -271,20 +272,15 @@ public class BattleStage extends GameStage {
 				Media.island);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Island";
-		new FriendCallback(b) {
+		new FriendWithCardCallback(b) {
 
 			@Override
-			public void call(Entity owner, Entity card, Entity friend) {
-				ActiveCardComp aFriend = Mapper.ActiveCardComp.get(friend);
-				if(aFriend != null && aFriend.activeCardID != null) {
-					Entity friendCard = Mapper.Entity.get(aFriend.activeCardID);
-					TargetingComp tFriend = Mapper.TargetingComp.get(friendCard);
-					tFriend.multiplicity++;
-				}
+			public void call(Entity owner, Entity card, Entity friend, Entity friendCard) {
+				TargetingComp tFriend = Mapper.TargetingComp.get(friendCard);
+				tFriend.multiplicity++;
 			}
 			
 		};
-		b.TargetingComp().debugMustHaveCard = true;
 		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();

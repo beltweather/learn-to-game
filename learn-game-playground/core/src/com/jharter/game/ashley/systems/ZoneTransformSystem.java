@@ -12,7 +12,7 @@ import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
-import com.jharter.game.ashley.components.Components.TargetingComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -92,7 +92,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		te.region = getCursorForZone(zp.zoneType());
 		
 		CursorComp c = Mapper.CursorComp.get(entity);
-		TargetingComp ta = c.getTargetingComp();
+		TurnActionComp ta = c.getTurnActionComp();
 		
 		if(ta != null && ta.all) {
 			
@@ -140,7 +140,12 @@ public class ZoneTransformSystem extends IteratingSystem {
 						ts = Mapper.SizeComp.get(card);
 					}
 				}
-				
+				position.x = tp.position.x - s.scaledWidth() - 20;
+				position.y = tp.position.y + (ts.scaledHeight() - s.scaledHeight()) / 2;
+				break;
+			case ACTIVE_CARD:
+				tp = Mapper.PositionComp.get(target);
+				ts = Mapper.SizeComp.get(target);
 				position.x = tp.position.x - s.scaledWidth() - 20;
 				position.y = tp.position.y + (ts.scaledHeight() - s.scaledHeight()) / 2;
 				break;
@@ -196,6 +201,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 			case HAND:
 				return Media.handPointDown;
 			case FRIEND:
+			case ACTIVE_CARD:
 				 return Media.handPointRight;
 			case ENEMY:
 				return Media.handPointLeft;

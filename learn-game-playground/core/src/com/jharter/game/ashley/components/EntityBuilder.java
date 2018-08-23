@@ -33,7 +33,7 @@ import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
-import com.jharter.game.ashley.components.Components.TargetingComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
@@ -123,7 +123,7 @@ public class EntityBuilder implements Poolable {
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
 	public CardComp CardComp() { return get(CardComp.class); }
 	public ActiveCardComp ActiveCardComp() { return get(ActiveCardComp.class); }
-	public TargetingComp TargetingComp() { return get(TargetingComp.class); }
+	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
 	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }

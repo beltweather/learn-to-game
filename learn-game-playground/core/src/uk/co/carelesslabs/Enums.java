@@ -47,5 +47,13 @@ public class Enums {
     	TIME,
     	NONE
     }
+    
+    public enum CardType {
+    	TARGET_ENEMY,
+    	TARGET_FRIEND,
+    	TARGET_CARD,
+    	TARGET_FRIEND_THEN_ENEMY,
+    	NONE
+    }
 
 }

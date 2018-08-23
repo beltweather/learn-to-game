@@ -8,21 +8,21 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
-import com.jharter.game.ashley.components.Components.TargetingComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Mapper;
 
-public class PerformActionsSystem extends SortedIteratingSystem {
+public class PerformTurnActionsSystem extends SortedIteratingSystem {
 	
 	public static final float DEFAULT_INTERVAL = 10f;
 	
 	@SuppressWarnings("unchecked")
-	public PerformActionsSystem() {
-		super(Family.all(ActionReadyComp.class, TargetingComp.class).get(), new PrioritySort());
+	public PerformTurnActionsSystem() {
+		super(Family.all(ActionReadyComp.class, TurnActionComp.class).get(), new PrioritySort());
 	}
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		TargetingComp t = Mapper.TargetingComp.get(entity);
+		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null) {
 			t.performAcceptCallback();
 		}
@@ -31,7 +31,7 @@ public class PerformActionsSystem extends SortedIteratingSystem {
 	}
 	
 	private static class PrioritySort implements Comparator<Entity> {
-		private ComponentMapper<TargetingComp> t = ComponentMapper.getFor(TargetingComp.class);
+		private ComponentMapper<TurnActionComp> t = ComponentMapper.getFor(TurnActionComp.class);
 		
 		@Override
 		public int compare(Entity entityA, Entity entityB) {

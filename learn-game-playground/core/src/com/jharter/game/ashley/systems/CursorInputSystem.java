@@ -6,12 +6,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.entities.EntityUtil;
 
 public class CursorInputSystem extends IteratingSystem {
 
@@ -19,7 +15,7 @@ public class CursorInputSystem extends IteratingSystem {
 	public CursorInputSystem() {
 		super(Family.all(CursorInputComp.class,
 						 CursorInputRegulatorComp.class,
-						 InputComp.class).get());
+						 InputComp.class).exclude(InvisibleComp.class).get());
 	}
 
 	@Override

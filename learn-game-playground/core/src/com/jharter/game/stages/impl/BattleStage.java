@@ -15,25 +15,25 @@ import com.jharter.game.ashley.components.subcomponents.CombatUtil;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemyCallback;
-import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendWithCardCallback;
+import com.jharter.game.ashley.components.subcomponents.VoidCallback.CardCallback;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
-import com.jharter.game.ashley.systems.CleanupActionsSystem;
+import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
-import com.jharter.game.ashley.systems.CursorSelectTargetSystem;
+import com.jharter.game.ashley.systems.CursorSelectSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
-import com.jharter.game.ashley.systems.PerformActionsSystem;
-import com.jharter.game.ashley.systems.QueueActionsSystem;
+import com.jharter.game.ashley.systems.PerformTurnActionsSystem;
+import com.jharter.game.ashley.systems.QueueTurnActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.RenderTimerSystem;
-import com.jharter.game.ashley.systems.TurnSystem;
+import com.jharter.game.ashley.systems.TimeTurnActionsSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.ashley.systems.ZoneTransformSystem;
@@ -79,7 +79,7 @@ public class BattleStage extends GameStage {
 		// Turn timer
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnTimerID();
-		b.TurnTimerComp().turnTime = TurnSystem.DEFAULT_INTERVAL;
+		b.TurnTimerComp().turnTime = TimeTurnActionsSystem.DEFAULT_INTERVAL;
 		b.PositionComp().position.x = 800;
 		b.PositionComp().position.y = -400;
 		b.SizeComp().width = 100;
@@ -223,9 +223,9 @@ public class BattleStage extends GameStage {
 		b = EntityUtil.buildBasicEntity(engine, 
 										EntityType.CARD, 
 										new Vector3(-700,-475,0), 
-										Media.plains);
-		b.CardComp().ownerID = warriorID;
-		b.DescriptionComp().name = "Plains";
+										Media.forest);
+		b.CardComp().ownerID = rangerID;
+		b.DescriptionComp().name = "Forest";
 		new FriendEnemyCallback(b) {
 
 			@Override
@@ -271,7 +271,7 @@ public class BattleStage extends GameStage {
 				new Vector3(-450,-475,0), 
 				Media.swamp);
 		ID swampId = b.IDComp().id;
-		b.CardComp().ownerID = warriorID;
+		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Swamp";
 		new EnemyCallback(b) {
 
@@ -291,19 +291,35 @@ public class BattleStage extends GameStage {
 				EntityType.CARD, 
 				new Vector3(-200,-475,0), 
 				Media.island);
-		b.CardComp().ownerID = warriorID;
+		b.CardComp().ownerID = sorcererID;
 		b.DescriptionComp().name = "Island";
-		new FriendWithCardCallback(b) {
+		new CardCallback(b) {
 
 			@Override
-			public void call(Entity owner, Entity card, Entity friend, Entity friendCard) {
-				if(friendCard == null) {
-					System.err.println("Card is no longer here");
-					return;
-				}
-				DescriptionComp d = Mapper.DescriptionComp.get(friendCard);
+			public void call(Entity owner, Entity card, Entity activeCard) {
+				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
 				System.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TargetingComp.get(friendCard).multiplicity++;
+				Mapper.TurnActionComp.get(activeCard).multiplicity++;
+			}
+			
+		};
+		handZone.add(b);
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		b = EntityUtil.buildBasicEntity(engine, 
+				EntityType.CARD, 
+				new Vector3(-200,-475,0), 
+				Media.island);
+		b.CardComp().ownerID = sorcererID;
+		b.DescriptionComp().name = "Island";
+		new CardCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity activeCard) {
+				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
+				System.out.println("Increasing multiplicity for: " + d.name);
+				Mapper.TurnActionComp.get(activeCard).multiplicity++;
 			}
 			
 		};
@@ -317,8 +333,8 @@ public class BattleStage extends GameStage {
 				Media.mountain);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Mountain";
-		b.TargetingComp().defaultAll = true;
-		b.TargetingComp().all = true;
+		b.TurnActionComp().defaultAll = true;
+		b.TurnActionComp().all = true;
 		new FriendCallback(b) {
 
 			@Override
@@ -396,16 +412,15 @@ public class BattleStage extends GameStage {
 		}
 		
 		engine.addSystem(new UpdatePhysicsSystem(this));
+		engine.addSystem(new CollisionSystem()); 
 		
 		// Used in battle demo
-		engine.addSystem(new CollisionSystem()); 
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorMoveSystem());
-		engine.addSystem(new CursorSelectTargetSystem());
-		engine.addSystem(new QueueActionsSystem());
-		engine.addSystem(new TurnSystem());
-		engine.addSystem(new PerformActionsSystem());
-		engine.addSystem(new CleanupActionsSystem());
+		engine.addSystem(new CursorSelectSystem());
+		engine.addSystem(new QueueTurnActionsSystem());
+		engine.addSystem(new TimeTurnActionsSystem());
+		engine.addSystem(new PerformTurnActionsSystem());
 		
 		// Used in movement demo
 		//engine.addSystem(new InputMovementSystem());
@@ -427,6 +442,7 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new RenderTimerSystem(getCamera()));
 		}
 		
+		engine.addSystem(new CleanupTurnActionsSystem());
 		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
 		
 		/*if(endPointHelper.isClient()) {

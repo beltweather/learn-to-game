@@ -7,12 +7,12 @@ import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.systems.boilerplate.CustomIntervalIteratingSystem;
 
-public class TurnSystem extends CustomIntervalIteratingSystem {
+public class TimeTurnActionsSystem extends CustomIntervalIteratingSystem {
 	
 	public static final float DEFAULT_INTERVAL = 10f;
 	
 	@SuppressWarnings("unchecked")
-	public TurnSystem() {
+	public TimeTurnActionsSystem() {
 		super(Family.all(ActionQueuedComp.class).get(), DEFAULT_INTERVAL);
 	}
 	

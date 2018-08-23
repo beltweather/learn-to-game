@@ -12,12 +12,12 @@ import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.subcomponents.TurnAction;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
@@ -92,7 +92,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		te.region = getCursorForZone(zp.zoneType());
 		
 		CursorComp c = Mapper.CursorComp.get(entity);
-		TurnActionComp ta = c.getTurnActionComp();
+		TurnAction ta = c.getTurnAction();
 		
 		if(ta != null && ta.all) {
 			

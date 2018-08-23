@@ -299,7 +299,7 @@ public class BattleStage extends GameStage {
 			public void call(Entity owner, Entity card, Entity activeCard) {
 				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
 				System.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).multiplicity++;
+				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
 			}
 			
 		};
@@ -319,7 +319,7 @@ public class BattleStage extends GameStage {
 			public void call(Entity owner, Entity card, Entity activeCard) {
 				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
 				System.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).multiplicity++;
+				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
 			}
 			
 		};
@@ -333,8 +333,8 @@ public class BattleStage extends GameStage {
 				Media.mountain);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Mountain";
-		b.TurnActionComp().defaultAll = true;
-		b.TurnActionComp().all = true;
+		b.TurnActionComp().turnAction.defaultAll = true;
+		b.TurnActionComp().turnAction.all = true;
 		new FriendCallback(b) {
 
 			@Override

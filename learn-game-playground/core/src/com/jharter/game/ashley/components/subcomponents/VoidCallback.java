@@ -2,7 +2,6 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.CardComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
@@ -18,18 +17,18 @@ public abstract class VoidCallback<T> {
 	
 	public abstract void call(T object);
 	
-	public abstract static class FriendEnemyCallback extends VoidCallback<TurnActionComp> {
+	public abstract static class FriendEnemyCallback extends VoidCallback<TurnAction> {
 		
 		public FriendEnemyCallback(EntityBuilder b) {
 			b.CardComp().cardType = CardType.TARGET_FRIEND_THEN_ENEMY;
-			TurnActionComp t = b.TurnActionComp();
+			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND);
 			t.targetZoneTypes.add(ZoneType.ENEMY);
 			t.acceptCallback = this;
 		}
 		
 		@Override
-		public void call(TurnActionComp t) {
+		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			Entity friend = t.getEntity(1);
 			Entity enemy = t.getEntity(2);
@@ -44,17 +43,17 @@ public abstract class VoidCallback<T> {
 		
 	}
 	
-	public abstract static class FriendCallback extends VoidCallback<TurnActionComp> {
+	public abstract static class FriendCallback extends VoidCallback<TurnAction> {
 		
 		public FriendCallback(EntityBuilder b) {
 			b.CardComp().cardType = CardType.TARGET_FRIEND;
-			TurnActionComp t = b.TurnActionComp();
+			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND);
 			t.acceptCallback = this;
 		}
 		
 		@Override
-		public void call(TurnActionComp t) {
+		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			CardComp cCard = Mapper.CardComp.get(card);
 			Entity owner = Mapper.Entity.get(cCard.ownerID);
@@ -85,18 +84,18 @@ public abstract class VoidCallback<T> {
 		
 	}
 	
-	public abstract static class CardCallback extends VoidCallback<TurnActionComp> {
+	public abstract static class CardCallback extends VoidCallback<TurnAction> {
 		
 		public CardCallback(EntityBuilder b) {
 			b.CardComp().cardType = CardType.TARGET_CARD;
-			TurnActionComp t = b.TurnActionComp();
+			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.ACTIVE_CARD);
 			t.acceptCallback = this;
 			t.priority = 1;
 			//new HasActiveCardCallback(t);
 		}
 		
-		public void call(TurnActionComp t) {
+		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			CardComp cCard = Mapper.CardComp.get(card);
 			Entity owner = Mapper.Entity.get(cCard.ownerID);
@@ -108,17 +107,17 @@ public abstract class VoidCallback<T> {
 		
 	}
 
-	public abstract static class EnemyCallback extends VoidCallback<TurnActionComp> {
+	public abstract static class EnemyCallback extends VoidCallback<TurnAction> {
 		
 		public EnemyCallback(EntityBuilder b) {
 			b.CardComp().cardType = CardType.TARGET_ENEMY;
-			TurnActionComp t = b.TurnActionComp();
+			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.ENEMY);
 			t.acceptCallback = this;
 		}
 		
 		@Override
-		public void call(TurnActionComp t) {
+		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			CardComp cCard = Mapper.CardComp.get(card);
 			Entity owner = Mapper.Entity.get(cCard.ownerID);

@@ -10,8 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.subcomponents.Callback;
-import com.jharter.game.ashley.components.subcomponents.VoidCallback;
+import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
@@ -287,98 +286,13 @@ public final class Components {
 	
 	public static final class TurnActionComp implements Comp {
 		
-		public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
-		public Array<ID> targetIDs = new Array<ID>();
-		public VoidCallback<TurnActionComp> acceptCallback = null;
-		public Callback<Entity, Boolean> validTargetCallback = null;
-		public int defaultMultiplicity = 1;
-		public int multiplicity = 1;
-		public boolean defaultAll = false;
-		public boolean all = false;
-		public int priority = 0;
+		public TurnAction turnAction = Pools.get(TurnAction.class).obtain();
 		
 		private TurnActionComp() {}
 		
-		public Entity getEntity(int index) {
-			if(index < 0 || index >= targetIDs.size) {
-				return null;
-			}
-			return Mapper.Entity.get(targetIDs.get(index));
-		}
-		
-		public ZoneType getTargetZoneType() {
-			if(hasAllTargets()) {
-				return ZoneType.NONE;
-			}
-			return targetZoneTypes.get(targetIDs.size-1);
-		}
-		
-		public ZoneType getNextTargetZoneType() {
-			return getNextTargetZoneType(0);
-		}
-		
-		public ZoneType getNextTargetZoneType(int depth) {
-			if(hasAllTargets()) {
-				return ZoneType.NONE;
-			}
-			int index = targetIDs.size + depth;
-			if(index >= targetZoneTypes.size) {
-				return ZoneType.NONE;
-			}
-			return targetZoneTypes.get(index);
-		}
-		
-		public boolean hasAllTargets() {
-			return targetZoneTypes.size == targetIDs.size - 1;
-		}
-		
-		public void addTarget(Entity entity) {
-			targetIDs.add(Mapper.IDComp.get(entity).id);
-		}
-		
-		public boolean isValidTarget(Entity entity) {
-			if(entity == null) {
-				return false;
-			}
-			
-			if(validTargetCallback != null) {
-				return validTargetCallback.call(entity);
-			}
-			
-			// Special check for cards that modify other cards
-			CardComp c = Mapper.CardComp.get(entity);
-			ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-			if(c != null && zp != null) {
-				return c.cardType != CardType.TARGET_CARD || zp.zoneType != ZoneType.ACTIVE_CARD;
-			}
-			
-			return true;
-		}
-		
-		public void performAcceptCallback() {
-			if(acceptCallback != null) {
-				if(multiplicity == 1) {
-					acceptCallback.call(this);
-				} else {
-					for(int i = 0; i < multiplicity; i++) {
-						acceptCallback.call(this);
-					}
-					multiplicity = defaultMultiplicity;
-				}
-			}
-		}	
-			
 		@Override
 		public void reset() {
-			targetZoneTypes.clear();
-			targetIDs.clear();
-			acceptCallback = null;
-			validTargetCallback = null;
-			multiplicity = 1;
-			all = false;
-			defaultMultiplicity = 1;
-			defaultAll = false;
-			priority = 0;
+			turnAction.reset();
 		}
 		
 	}
@@ -431,15 +345,15 @@ public final class Components {
 		
 		private CursorComp() {}
 		
-		public boolean hasTargetingComp() {
-			return turnActionEntityID != null;
-		}
-		
-		public TurnActionComp getTurnActionComp() {
+		public TurnAction getTurnAction() {
 			if(turnActionEntityID == null) {
 				return null;
 			}
-			return Mapper.TurnActionComp.get(Mapper.Entity.get(turnActionEntityID));
+			TurnActionComp t = Mapper.TurnActionComp.get(Mapper.Entity.get(turnActionEntityID));
+			if(t == null) {
+				return null;
+			}
+			return t.turnAction;
 		}
 		
 		@Override

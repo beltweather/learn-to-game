@@ -31,7 +31,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 		
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null) {
-			t.targetIDs.clear();
+			t.turnAction.targetIDs.clear();
 		}
 		
 		if(ty != null) {

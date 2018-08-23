@@ -24,7 +24,7 @@ public class PerformTurnActionsSystem extends SortedIteratingSystem {
 	public void processEntity(Entity entity, float deltaTime) {
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null) {
-			t.performAcceptCallback();
+			t.turnAction.performAcceptCallback();
 		}
 		entity.remove(ActionReadyComp.class);
 		entity.add(Mapper.Comp.get(ActionSpentComp.class));
@@ -35,7 +35,7 @@ public class PerformTurnActionsSystem extends SortedIteratingSystem {
 		
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
-			return (int) t.get(entityB).priority - t.get(entityA).priority;
+			return (int) t.get(entityB).turnAction.priority - t.get(entityA).turnAction.priority;
 		}
 	}
 	

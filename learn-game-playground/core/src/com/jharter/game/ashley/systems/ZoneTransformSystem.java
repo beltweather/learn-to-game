@@ -14,6 +14,7 @@ import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
@@ -193,6 +194,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 			case ACTIVE_CARD:
 				show();
 				CardComp c = Mapper.CardComp.get(entity);
+				TurnActionComp t = Mapper.TurnActionComp.get(entity);
 				Entity owner = Mapper.Entity.get(c.ownerID);
 				PositionComp pOwner = Mapper.PositionComp.get(owner);
 				PositionComp pCard = Mapper.PositionComp.get(entity);
@@ -202,6 +204,19 @@ public class ZoneTransformSystem extends IteratingSystem {
 				s.scale.set(0.25f, 0.25f);
 				pCard.position.x = pOwner.position.x - sCard.scaledWidth() - 20;
 				pCard.position.y = pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2;
+				
+				if(t.turnAction.multiplicity > 1) {
+					if(!Mapper.MultiPositionComp.has(entity)) {
+						entity.add(Mapper.Comp.get(MultiPositionComp.class));
+					}
+					MultiPositionComp m = Mapper.MultiPositionComp.get(entity);
+					m.positions.clear();
+					for(int i = 0; i < t.turnAction.multiplicity; i++) {
+						m.positions.add(new Vector3(pCard.position.x - 10*i, pCard.position.y + 10*i, pCard.position.z));
+					}
+				} else if(Mapper.MultiPositionComp.has(entity)) {
+					entity.remove(MultiPositionComp.class);
+				}
 				break;
 			case DISCARD:
 				hide();

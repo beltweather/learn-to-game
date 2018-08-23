@@ -3,6 +3,7 @@ package com.jharter.game.stages.impl;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
@@ -53,6 +54,7 @@ import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.graphics.GraphicsUtil;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -274,10 +276,13 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		//TextureRegion swampTexture = GraphicsUtil.combineWithText(Media.swamp, "Hello World!", 20, 0, 0);
+		TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
+		
 		b = EntityUtil.buildBasicEntity(engine, 
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
-				Media.swamp);
+				swampTexture);
 		ID swampId = b.IDComp().id;
 		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Swamp";

@@ -40,7 +40,15 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		if(!valid) {
 			zoneType = ZoneType.HAND;
+			z = Mapper.ZoneComp.get(zoneType);
 			index = -1;
+			
+			// We need to be sure to cleanup our selection if we end up in an invalid state
+			if(t != null) {
+				t.targetIDs.clear();
+				c.turnActionEntityID = null;
+				t = null;
+			}
 		}
 		
 		int direction;
@@ -53,6 +61,9 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		int newIndex = findNextValidTargetInZone(zoneType, t, index, direction);
 		if(z.hasIndex(newIndex)) {
+			if(zp.zoneType() != zoneType) {
+				zp.zoneType(zoneType);
+			}
 			zp.index(newIndex);
 		} else {
 			zp.index(-1);

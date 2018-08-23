@@ -184,8 +184,10 @@ public final class Components {
 	
 	public static final class CardComp implements Comp {
 		
-		public ID ownerID;
+		public ID ownerID = null;
 		public CardType cardType = CardType.NONE;
+		public String text = null;
+		public String tooltipText = null;
 		
 		private CardComp() {}
 		
@@ -193,6 +195,8 @@ public final class Components {
 		public void reset() {
 			ownerID = null;
 			cardType = CardType.NONE;
+			text = null;
+			tooltipText = null;
 		}
 		
 	}

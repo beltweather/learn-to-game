@@ -8,6 +8,7 @@ import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.IDComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
@@ -44,6 +45,11 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					
 					z.add(id, zp);
 					ac.activeCardID = id.id;
+					
+					TurnActionComp t = Mapper.TurnActionComp.get(entity);
+					if(t != null && t.turnAction.priority > 0) {
+						t.turnAction.performAcceptCallback();
+					}
 					break;
 				default:
 					break;

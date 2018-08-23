@@ -284,6 +284,11 @@ public final class Components {
 		@Override public void reset() {}
 	}
 	
+	public static final class UntargetableComp implements Comp {
+		private UntargetableComp() {}
+		@Override public void reset() {}
+	}
+	
 	public static final class TurnActionComp implements Comp {
 		
 		public TurnAction turnAction = Pools.get(TurnAction.class).obtain();
@@ -628,6 +633,19 @@ public final class Components {
 			code = null;
 			secondaryTexture = null;
 		}
+	}
+	
+	public static final class AlphaComp implements Comp {
+		
+		public float alpha = 1f;
+		
+		private AlphaComp() {}
+		
+		@Override
+		public void reset() {
+			alpha = 1f;
+		}
+		
 	}
 	
 	public static final class TextureComp implements Comp {

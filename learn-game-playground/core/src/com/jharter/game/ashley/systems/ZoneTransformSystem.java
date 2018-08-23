@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.AlphaComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
@@ -31,6 +32,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	private ZoneComp z;
 	private PositionComp p;
 	private SizeComp s;
+	private AlphaComp a;
 	
 	@SuppressWarnings("unchecked")
 	public ZoneTransformSystem() {
@@ -45,6 +47,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		z = Mapper.ZoneComp.get(zp);
 		p = Mapper.PositionComp.get(entity);
 		s = Mapper.SizeComp.get(entity);
+		a = Mapper.AlphaComp.get(entity);
 		
 		if(!z.hasIndex(zp.index())) {
 			hide();
@@ -68,16 +71,28 @@ public class ZoneTransformSystem extends IteratingSystem {
 				break;
 		}
 		
+		if(a != null) {
+			if(Mapper.UntargetableComp.has(entity)) {
+				a.alpha = 0.25f;
+			} else {
+				a.alpha = 1f;
+			}
+		}
+		
+	}
+	
+	private boolean isHidden() {
+		return Mapper.InvisibleComp.has(entity);
 	}
 	
 	private void hide() {
-		if(!Mapper.InvisibleComp.has(entity)) {
+		if(!isHidden()) {
 			entity.add(Mapper.Comp.get(InvisibleComp.class));
 		}
 	}
 	
 	private void show() {
-		if(Mapper.InvisibleComp.has(entity)) {
+		if(isHidden()) {
 			entity.remove(InvisibleComp.class);
 		}
 	}
@@ -194,6 +209,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 			default:
 				break;
 		}
+			
 	}
 	
 	private TextureRegion getCursorForZone(ZoneType zoneType) {

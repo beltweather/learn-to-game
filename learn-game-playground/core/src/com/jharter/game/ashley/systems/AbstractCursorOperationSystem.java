@@ -3,10 +3,7 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.jharter.game.ashley.components.Components.CursorComp;
-import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 
@@ -15,10 +12,8 @@ import uk.co.carelesslabs.Enums.ZoneType;
 public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
-	public AbstractCursorOperationSystem() {
-		super(Family.all(CursorComp.class,
-						 CursorInputComp.class,
-						 ZonePositionComp.class).get());
+	public AbstractCursorOperationSystem(Family family) {
+		super(family);
 	}
 	
 	protected boolean isValidTarget(ZoneType zoneType, TurnAction t, int index) {
@@ -45,6 +40,9 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 		ZoneComp z = Mapper.ZoneComp.get(zoneType);
 		for(int i = 0; i < z.size(); i++) {
 			index = findNextIndex(index, direction, z.size());
+			if(!z.hasIndex(index)) {
+				return -1;
+			}
 			Entity entity = Mapper.Entity.get(z.get(index));
 			if(entity != null && (t == null || t.isValidTarget(entity))) {
 				if(t == null) {
@@ -65,6 +63,9 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 	}
 	
 	private int findNextIndex(int currentIndex, int direction, int size) {
+		if(direction == 0) {
+			return currentIndex;
+		}
 		int index = currentIndex + direction;
 		if(index < 0) {
 			index = size - 1;

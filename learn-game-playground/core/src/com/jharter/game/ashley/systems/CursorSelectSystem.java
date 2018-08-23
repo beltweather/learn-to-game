@@ -1,6 +1,7 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -17,7 +18,9 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorSelectSystem() {
-		super();
+		super(Family.all(CursorComp.class,
+				 CursorInputComp.class,
+				 ZonePositionComp.class).get());
 	}
 
 	@Override

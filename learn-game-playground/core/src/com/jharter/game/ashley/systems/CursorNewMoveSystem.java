@@ -11,10 +11,10 @@ import com.jharter.game.ashley.components.subcomponents.TurnAction;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class CursorMoveSystem extends AbstractCursorOperationSystem {
+public class CursorNewMoveSystem extends AbstractCursorOperationSystem {
 
 	@SuppressWarnings("unchecked")
-	public CursorMoveSystem() {
+	public CursorNewMoveSystem() {
 		super(Family.all(CursorComp.class,
 				 CursorInputComp.class,
 				 ZonePositionComp.class).get());

@@ -12,6 +12,7 @@ import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.AlphaComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
@@ -33,11 +34,12 @@ import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
+import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -132,5 +134,7 @@ public class EntityBuilder implements Poolable {
 	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
 	public ActionSpentComp ActionSpentComp() { return get(ActionSpentComp.class); }
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
+	public UntargetableComp UntargetableComp() { return get(UntargetableComp.class); }
+	public AlphaComp AlphaComp() { return get(AlphaComp.class); }
 	
 }

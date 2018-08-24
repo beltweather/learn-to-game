@@ -43,9 +43,14 @@ public class ApproachTargetSystem extends IteratingSystem {
 	}
 	
 	public void setPosition(Body body, float x, float y, float width, float height, Vector3 pos) {
-    	body.setTransform(x+width/2, y+height/4, body.getAngle());
-    	pos.x = body.getPosition().x - width/2;
-        pos.y = body.getPosition().y - height/4;
+		if(body == null) {
+			pos.x = x;
+			pos.y = y;
+		} else {
+			body.setTransform(x+width/2, y+height/4, body.getAngle());
+			pos.x = body.getPosition().x - width/2;
+			pos.y = body.getPosition().y - height/4;
+		}
     }
 
 	private boolean isCloseEnough(float n0, float n1) {

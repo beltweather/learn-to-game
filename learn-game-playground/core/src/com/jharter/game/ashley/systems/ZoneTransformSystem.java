@@ -7,15 +7,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
+import com.jharter.game.ashley.components.Components.AnimatedPathComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
+import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
@@ -57,7 +60,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		
 		switch(ty.type) {
 			case CARD:
-				transformCard();
+				transformCard(deltaTime);
 				break;
 			case CURSOR:
 				transformCursor();
@@ -119,6 +122,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 				mp = Mapper.Comp.get(MultiPositionComp.class);
 				entity.add(mp);
 			}
+			mp.positions.clear();
 			for(int i = 0; i < z.size(); i++) {
 				Entity target = Mapper.Entity.get(z.get(i));
 				PositionComp tp = Mapper.PositionComp.get(target);
@@ -174,10 +178,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		}
 	}
 	
-	private void transformCard() {
-		if(!z.isDirty() && !zp.isDirty()) {
-			return;
-		}
+	private void transformCard(float deltaTime) {
 		
 		switch(zp.zoneType()) {
 			case DECK:
@@ -200,22 +201,53 @@ public class ZoneTransformSystem extends IteratingSystem {
 				PositionComp pCard = Mapper.PositionComp.get(entity);
 				SizeComp sOwner = Mapper.SizeComp.get(owner);
 				SizeComp sCard = Mapper.SizeComp.get(entity);
+				VelocityComp v = Mapper.VelocityComp.get(entity);
+				v.speed = 3500;
+				float targetScale = 0.25f;
 				
-				s.scale.set(0.25f, 0.25f);
-				pCard.position.x = pOwner.position.x - sCard.scaledWidth() - 20;
-				pCard.position.y = pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2;
+				float targetX = (pOwner.position.x - sCard.scaledWidth() - 20);
+				float targetY = (pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2);
 				
-				if(t.turnAction.multiplicity > 1) {
-					if(!Mapper.MultiPositionComp.has(entity)) {
-						entity.add(Mapper.Comp.get(MultiPositionComp.class));
+				AnimatedPathComp ma;
+				if((targetX != pCard.position.x || targetY != pCard.position.y) && !Mapper.AnimatedPathComp.has(entity)) {
+					ma = Mapper.Comp.get(AnimatedPathComp.class);
+					entity.add(ma);
+					ma.startPosition.x = pCard.position.x;
+					ma.startPosition.y = pCard.position.y;
+				} else {
+					ma = Mapper.AnimatedPathComp.get(entity);
+				}
+				
+				if(ma == null || ma.isCloseEnough(pCard, v, deltaTime)) {
+					sCard.scale.set(targetScale, targetScale);
+					pCard.position.x = pOwner.position.x - sCard.scaledWidth() - 20;
+					pCard.position.y = pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2;
+					v.velocity.set(0, 0);
+					v.speed = 0;
+					
+					if(t.turnAction.multiplicity > 1) {
+						if(!Mapper.MultiPositionComp.has(entity)) {
+							entity.add(Mapper.Comp.get(MultiPositionComp.class));
+						}
+						MultiPositionComp m = Mapper.MultiPositionComp.get(entity);
+						m.positions.clear();
+						for(int i = 0; i < t.turnAction.multiplicity; i++) {
+							m.positions.add(new Vector3(pCard.position.x - 10*i, pCard.position.y + 10*i, pCard.position.z));
+						}
+					} else if(Mapper.MultiPositionComp.has(entity)) {
+						entity.remove(MultiPositionComp.class);
 					}
-					MultiPositionComp m = Mapper.MultiPositionComp.get(entity);
-					m.positions.clear();
-					for(int i = 0; i < t.turnAction.multiplicity; i++) {
-						m.positions.add(new Vector3(pCard.position.x - 10*i, pCard.position.y + 10*i, pCard.position.z));
+					
+					if(ma != null) {
+						entity.remove(AnimatedPathComp.class);
 					}
-				} else if(Mapper.MultiPositionComp.has(entity)) {
-					entity.remove(MultiPositionComp.class);
+					
+				} else if(ma != null) {
+					ma.targetPosition.x = targetX;
+					ma.targetPosition.y = targetY + targetX - pCard.position.x;
+					ma.setVelocityFromPath(pCard, v, deltaTime);
+					float scale = 1f - (1f-targetScale)*ma.getProgress(pCard);
+					sCard.scale.set(scale, scale);
 				}
 				break;
 			case DISCARD:

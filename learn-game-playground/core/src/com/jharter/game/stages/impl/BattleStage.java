@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
@@ -56,9 +57,11 @@ import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.graphics.GraphicsUtil;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.ZoneType;
+import uk.co.carelesslabs.box2d.Box2DWorld;
 import uk.co.carelesslabs.Media;
 
 public class BattleStage extends GameStage {
@@ -229,13 +232,22 @@ public class BattleStage extends GameStage {
 		
 		// Cards
 		
-		b = EntityUtil.buildBasicEntity(engine, 
-										EntityType.CARD, 
-										new Vector3(-700,-475,0), 
-										Media.forest);
+		b = EntityUtil.buildDynamicSprite(engine, 
+										  IDGenerator.newID(),
+										  EntityType.CARD, 
+										  new Vector3(-700,-475,0),
+										  (int) Media.forest.getWidth(),
+										  (int) Media.forest.getHeight(),
+										  new TextureRegion(Media.forest),
+										  getBox2DWorld(),
+										  BodyType.DynamicBody,
+										  100000);
+		
 		b.CardComp().ownerID = rangerID;
 		b.DescriptionComp().name = "Forest";
 		b.AlphaComp();
+		b.VelocityComp();
+		b.BodyComp();
 		new FriendEnemyCallback(b) {
 
 			@Override
@@ -287,6 +299,8 @@ public class BattleStage extends GameStage {
 		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Swamp";
 		b.AlphaComp();
+		b.VelocityComp();
+		b.BodyComp();
 		new EnemyCallback(b) {
 
 			@Override
@@ -308,6 +322,8 @@ public class BattleStage extends GameStage {
 		b.CardComp().ownerID = sorcererID;
 		b.DescriptionComp().name = "Island";
 		b.AlphaComp();
+		b.VelocityComp();
+		b.BodyComp();
 		new CardCallback(b) {
 
 			@Override
@@ -329,6 +345,8 @@ public class BattleStage extends GameStage {
 		b.CardComp().ownerID = sorcererID;
 		b.DescriptionComp().name = "Island";
 		b.AlphaComp();
+		b.VelocityComp();
+		b.BodyComp();
 		new CardCallback(b) {
 
 			@Override
@@ -352,6 +370,8 @@ public class BattleStage extends GameStage {
 		b.AlphaComp();
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
+		b.VelocityComp();
+		b.BodyComp();
 		new FriendCallback(b) {
 
 			@Override
@@ -434,6 +454,7 @@ public class BattleStage extends GameStage {
 		// Used in battle demo
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorTargetValidationSystem());
+		
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectSystem());
 		engine.addSystem(new QueueTurnActionsSystem());

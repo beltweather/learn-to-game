@@ -15,6 +15,7 @@ import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
+import com.jharter.game.ashley.components.Components.AnimatedPathComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
@@ -211,5 +212,6 @@ public class Mapper {
 	public static final ComponentMapper<TurnTimerComp> TurnTimerComp = ComponentMapper.getFor(TurnTimerComp.class);
 	public static final ComponentMapper<UntargetableComp> UntargetableComp = ComponentMapper.getFor(UntargetableComp.class);
 	public static final ComponentMapper<AlphaComp> AlphaComp = ComponentMapper.getFor(AlphaComp.class);
+	public static final ComponentMapper<AnimatedPathComp> AnimatedPathComp = ComponentMapper.getFor(AnimatedPathComp.class);
 	
 }

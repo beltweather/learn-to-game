@@ -13,6 +13,7 @@ import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
+import com.jharter.game.ashley.components.Components.AnimatedPathComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
@@ -136,5 +137,6 @@ public class EntityBuilder implements Poolable {
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
 	public UntargetableComp UntargetableComp() { return get(UntargetableComp.class); }
 	public AlphaComp AlphaComp() { return get(AlphaComp.class); }
+	public AnimatedPathComp AnimatedPathComp() { return get(AnimatedPathComp.class); }
 	
 }

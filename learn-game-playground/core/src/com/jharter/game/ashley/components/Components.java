@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
@@ -38,6 +39,45 @@ public final class Components {
 		@Override
 		public void reset() {
 			id = null;
+		}
+	}
+	
+	public static final class AnimatedPathComp implements Comp {
+		public Vector3 targetPosition = new Vector3(0, 0, 0);
+		public Vector3 startPosition = new Vector3(0, 0, 0);
+		public float tolerance = 3;
+		
+		private AnimatedPathComp() {}
+		
+		public float getProgress(PositionComp p) {
+			if(targetPosition.x == startPosition.x) {
+				return 1f;
+			}
+			return (p.position.x - startPosition.x) / (targetPosition.x - startPosition.x);
+		}
+		
+		public void setVelocityFromPath(PositionComp p, VelocityComp v, float deltaTime) {
+			setVelocityFromPath(p.position.x, p.position.y, targetPosition.x, targetPosition.y, v, v.speed, deltaTime);
+		}
+		
+		private void setVelocityFromPath(float x, float y, float targetX, float targetY, VelocityComp v, float speed, float deltaTime) {
+			float angle = (float) Math.atan2(targetY - y, targetX - x);
+			v.velocity.set((float) Math.cos(angle) * v.speed, (float) Math.sin(angle) * v.speed);
+		}
+		
+		public boolean isCloseEnough(PositionComp p, VelocityComp v, float deltaTime) {
+			return isCloseEnough(p.position.x, p.position.y, targetPosition.x, targetPosition.y, v.speed, tolerance, deltaTime);
+		}
+		
+		private boolean isCloseEnough(float x, float y, float targetX, float targetY, float speed, float tolerance, float deltaTime) {
+			return targetX - x <= speed / tolerance * deltaTime && targetY - y <= speed / tolerance * deltaTime;
+		}
+		
+		@Override
+		public void reset() {
+			targetPosition.set(0, 0, 0);
+			startPosition.set(0, 0, 0);
+			tolerance = 3;
 		}
 	}
 	
@@ -75,17 +115,25 @@ public final class Components {
 		private SizeComp() {}
 		
 		public float scaledWidth() {
-			if(scale.x == 1) {
+			return scaledWidth(scale.x);
+		}
+		
+		public float scaledWidth(float scaleX) {
+			if(scaleX == 1) {
 				return width;
 			}
-			return scale.x * width;
+			return scaleX * width;
 		}
 		
 		public float scaledHeight() {
-			if(scale.y == 1) {
+			return scaledHeight(scale.y);
+		}
+		
+		public float scaledHeight(float scaleY) {
+			if(scaleY == 1) {
 				return height;
 			}
-			return scale.y * height;
+			return scaleY * height;
 		}
 		
 		@Override
@@ -108,7 +156,7 @@ public final class Components {
 	}
 	
 	public static final class TargetPositionComp implements Comp {
-		public Vector3 position;
+		public Vector3 position = null;
 
 		private TargetPositionComp() {}
 		
@@ -457,6 +505,10 @@ public final class Components {
 			return dirty;
 		}
 		
+		public void clean() {
+			dirty = false;
+		}
+		
 		public boolean hasIndex(ZonePositionComp zp) {
 			return hasIndex(zp.index);
 		}
@@ -474,9 +526,9 @@ public final class Components {
 		}
 		
 		public void add(ID id, ZonePositionComp zp) {
-			zp.index = objects.size;
+			zp.index(objects.size);
 			objects.add(id);
-			zp.zoneType = zoneType;
+			zp.zoneType(zoneType);
 			dirty = true;
 		}
 		
@@ -506,7 +558,7 @@ public final class Components {
 				ID oID = objects.get(i);
 				Entity obj = Mapper.Entity.get(oID);
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(obj);
-				zp.index = i;
+				zp.index(i);
 			}
 			dirty = true;
 		}
@@ -566,6 +618,10 @@ public final class Components {
 		
 		public boolean isDirty() {
 			return dirty;
+		}
+		
+		public void clean() {
+			dirty = false;
 		}
 		
 		private ZonePositionComp copyForHistory() {

@@ -30,7 +30,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
  */
 public abstract class CustomIntervalIteratingSystem extends CustomIntervalSystem {
 	private Family family;
-	private ImmutableArray<Entity> entities;
+	protected ImmutableArray<Entity> entities;
 
 	/**
 	 * @param family represents the collection of family the system should process

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
@@ -14,7 +15,6 @@ import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
-import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
@@ -102,7 +102,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	}
 	
 	private void transformCursor() {
-		if(Mapper.ActionQueuedComp.has(entity)) {
+		if(Mapper.ActionQueuedComp.has(entity) || Mapper.getTurnTimerComp().isStopped()) {
 			hide();
 			return;
 		}
@@ -186,6 +186,9 @@ public class ZoneTransformSystem extends IteratingSystem {
 				break;
 			case HAND:
 				show();
+				if(Mapper.AnimatedPathComp.has(entity)) {
+					entity.remove(AnimatedPathComp.class);
+				}
 				int anchorX = -700;
 				int anchorY = -475;
 				s.scale.set(1f, 1f);
@@ -205,8 +208,8 @@ public class ZoneTransformSystem extends IteratingSystem {
 				v.speed = 3500;
 				float targetScale = 0.25f;
 				
-				float targetX = (pOwner.position.x - sCard.scaledWidth() - 20);
-				float targetY = (pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2);
+				float targetX = (pOwner.position.x - sCard.scaledWidth(targetScale) - 20);
+				float targetY = (pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight(targetScale)) / 2);
 				
 				AnimatedPathComp ma;
 				if((targetX != pCard.position.x || targetY != pCard.position.y) && !Mapper.AnimatedPathComp.has(entity)) {
@@ -214,6 +217,11 @@ public class ZoneTransformSystem extends IteratingSystem {
 					entity.add(ma);
 					ma.startPosition.x = pCard.position.x;
 					ma.startPosition.y = pCard.position.y;
+					//pCard.renderPosition = new Vector3();
+					//pCard.renderPosition.set(p.position.x, p.position.y, 0);
+					//sCard.renderScale = new Vector2();
+					//sCard.renderScale.x = sCard.scale.x;
+					//sCard.renderScale.y = sCard.scale.y;
 				} else {
 					ma = Mapper.AnimatedPathComp.get(entity);
 				}
@@ -222,6 +230,8 @@ public class ZoneTransformSystem extends IteratingSystem {
 					sCard.scale.set(targetScale, targetScale);
 					pCard.position.x = pOwner.position.x - sCard.scaledWidth() - 20;
 					pCard.position.y = pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2;
+					//pCard.renderPosition = null;
+					//sCard.renderScale = null;
 					v.velocity.set(0, 0);
 					v.speed = 0;
 					

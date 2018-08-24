@@ -45,7 +45,7 @@ public final class Components {
 	public static final class AnimatedPathComp implements Comp {
 		public Vector3 targetPosition = new Vector3(0, 0, 0);
 		public Vector3 startPosition = new Vector3(0, 0, 0);
-		public float tolerance = 3;
+		public float tolerance = 5;
 		
 		private AnimatedPathComp() {}
 		
@@ -57,12 +57,17 @@ public final class Components {
 		}
 		
 		public void setVelocityFromPath(PositionComp p, VelocityComp v, float deltaTime) {
-			setVelocityFromPath(p.position.x, p.position.y, targetPosition.x, targetPosition.y, v, v.speed, deltaTime);
+			setVelocityFromPath(p.position.x, p.position.y, targetPosition.x, targetPosition.y, p, v, v.speed, deltaTime);
 		}
 		
-		private void setVelocityFromPath(float x, float y, float targetX, float targetY, VelocityComp v, float speed, float deltaTime) {
+		private void setVelocityFromPath(float x, float y, float targetX, float targetY, PositionComp p, VelocityComp v, float speed, float deltaTime) {
 			float angle = (float) Math.atan2(targetY - y, targetX - x);
-			v.velocity.set((float) Math.cos(angle) * v.speed, (float) Math.sin(angle) * v.speed);
+			
+			float vX = (float) Math.cos(angle) * v.speed;
+			float vY = (float) Math.sin(angle) * v.speed;
+			//v.velocity.set(, );
+			p.position.x += vX * deltaTime;
+			p.position.y += vY * deltaTime;
 		}
 		
 		public boolean isCloseEnough(PositionComp p, VelocityComp v, float deltaTime) {
@@ -422,13 +427,29 @@ public final class Components {
 	public static final class TurnTimerComp implements Comp {
 		public float accumulator = 0;
 		public float turnTime = 0;
+		public boolean play = true;
 		
 		private TurnTimerComp() {}
+		
+		public void stop() {
+			play = false;
+			accumulator = 0;
+		}
+		
+		public void start() {
+			play = true;
+			accumulator = 0;
+		}
+		
+		public boolean isStopped() {
+			return !play;
+		}
 		
 		@Override
 		public void reset() {
 			accumulator = 0;
 			turnTime = 0;
+			play = true;
 		}
 	}
 	

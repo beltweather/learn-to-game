@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
+import com.jharter.game.ashley.components.Components.AnimatedPathComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Mapper;
 
@@ -20,8 +21,35 @@ public class PerformTurnActionsSystem extends SortedIteratingSystem {
 		super(Family.all(ActionReadyComp.class, TurnActionComp.class).get(), new PrioritySort());
 	}
 	
+	private boolean hasEntities = false;
+	private int animatedPathCompCount = -1;
+	
+	@Override
+	public void update (float deltaTime) {
+		hasEntities = false;
+		animatedPathCompCount = -1;
+		super.update(deltaTime);
+		if(!hasEntities && Mapper.getTurnTimerComp().isStopped()) {
+			Mapper.getTurnTimerComp().start();
+		}
+	}
+	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
+		hasEntities = true;
+		
+		if(Mapper.AnimatedPathComp.has(entity)) {
+			return;
+		}
+		
+		if(animatedPathCompCount == -1) {
+			animatedPathCompCount = getEngine().getEntitiesFor(Family.all(AnimatedPathComp.class).get()).size();
+		}
+		
+		if(animatedPathCompCount > 0) {
+			return;
+		}
+		
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null && t.turnAction.priority == 0) {
 			t.turnAction.performAcceptCallback();

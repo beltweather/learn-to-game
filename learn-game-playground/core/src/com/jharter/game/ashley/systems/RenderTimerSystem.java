@@ -38,6 +38,10 @@ public class RenderTimerSystem extends IteratingSystem {
 	public void processEntity(Entity entity, float deltaTime) {
 		TurnTimerComp t = Mapper.TurnTimerComp.get(entity);
 		
+		if(t.isStopped()) {
+			return;
+		}
+		
 		int degrees = Math.round(360 * t.accumulator / t.turnTime);
 		if(degrees < 200) {
 			//return;

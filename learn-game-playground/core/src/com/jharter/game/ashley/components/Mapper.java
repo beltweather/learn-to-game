@@ -222,6 +222,8 @@ public class Mapper {
 			if(Mapper.DisabledComp.has(entity)) {
 				entity.remove(DisabledComp.class);
 			}
+			InputComp in = Mapper.InputComp.get(entity);
+			in.input.reset();
 		}
 		
 		public void disable() {
@@ -229,6 +231,8 @@ public class Mapper {
 			if(!Mapper.DisabledComp.has(entity)) {
 				entity.add(Mapper.Comp.get(DisabledComp.class));
 			}
+			InputComp in = Mapper.InputComp.get(entity);
+			in.input.reset();
 		}
 		
 	}

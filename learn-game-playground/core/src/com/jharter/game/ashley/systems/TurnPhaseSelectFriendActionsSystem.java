@@ -26,16 +26,23 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 			return true;
 		}
 		
+		int actionsQueued = count(ActionQueuedComp.class);
+		
+		// Debug
+		if(actionsQueued > 0) {
+			disableCursor();
+		}
+		
 		// XXX This assumption will change, but the intent is to check if all characters
 		// have made a card selection. Currently, one cursor controls all actions so 
 		// we'll leave this hack in for testing.
-		return count(ActionQueuedComp.class) >= 4;
+		return actionsQueued >= 4;
 	}
 
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
-		Mapper.TurnEntity.TurnTimerComp().stop();
 		disableCursor();
+		Mapper.TurnEntity.TurnTimerComp().stop();
 	}
 	
 }

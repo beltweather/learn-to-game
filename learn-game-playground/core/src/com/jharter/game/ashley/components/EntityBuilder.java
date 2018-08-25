@@ -22,6 +22,7 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
+import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
@@ -38,6 +39,8 @@ import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseStartBattleComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
@@ -138,5 +141,8 @@ public class EntityBuilder implements Poolable {
 	public UntargetableComp UntargetableComp() { return get(UntargetableComp.class); }
 	public AlphaComp AlphaComp() { return get(AlphaComp.class); }
 	public AnimatedPathComp AnimatedPathComp() { return get(AnimatedPathComp.class); }
+	public TurnPhaseComp TurnPhaseComp() { return get(TurnPhaseComp.class); }
+	public TurnPhaseStartBattleComp TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleComp.class); }
+	public DisabledComp DisabledComp() { return get(DisabledComp.class); }
 	
 }

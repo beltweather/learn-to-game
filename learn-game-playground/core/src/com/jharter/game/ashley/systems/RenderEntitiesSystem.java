@@ -6,13 +6,12 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.AlphaComp;
+import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.SizeComp;
@@ -27,7 +26,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
-		super(Family.all(PositionComp.class, TextureComp.class, SizeComp.class).exclude(InvisibleComp.class, TileComp.class).get(), new PositionSort());
+		super(Family.all(PositionComp.class, TextureComp.class, SizeComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get(), new PositionSort());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 	}

@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
@@ -19,6 +18,7 @@ import com.jharter.game.util.id.ID;
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
+import uk.co.carelesslabs.Enums.TurnPhase;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public final class Components {
@@ -426,7 +426,7 @@ public final class Components {
 	
 	public static final class TurnTimerComp implements Comp {
 		public float accumulator = 0;
-		public float turnTime = 0;
+		public float maxTurnTime = 0;
 		public boolean play = true;
 		
 		private TurnTimerComp() {}
@@ -445,12 +445,84 @@ public final class Components {
 			return !play;
 		}
 		
+		public boolean isOvertime() {
+			return accumulator > maxTurnTime;
+		}
+		
+		public void increment(float deltaTime) {
+			accumulator += deltaTime;
+		}
+		
 		@Override
 		public void reset() {
 			accumulator = 0;
-			turnTime = 0;
+			maxTurnTime = 0;
 			play = true;
 		}
+	}
+	
+	public static final class TurnPhaseComp implements Comp {
+		
+		public TurnPhase turnPhase = TurnPhase.SELECT_ENEMY_ACTIONS;
+		
+		private TurnPhaseComp() {}
+		
+		@Override
+		public void reset() {
+			turnPhase = TurnPhase.SELECT_ENEMY_ACTIONS;
+		}
+		
+	}
+	
+	public static final class DisabledComp implements Comp {
+		public DisabledComp() {}
+		@Override public void reset() {}
+	}
+	
+	// Turn phase boolean components
+	public static final class TurnPhaseStartBattleComp implements Comp {
+		private TurnPhaseStartBattleComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhaseStartTurnComp implements Comp {
+		private TurnPhaseStartTurnComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhaseSelectEnemyActionsComp implements Comp {
+		private TurnPhaseSelectEnemyActionsComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhaseSelectFriendActionsComp implements Comp {
+		private TurnPhaseSelectFriendActionsComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhasePerformFriendActionsComp implements Comp {
+		private TurnPhasePerformFriendActionsComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhasePerformEnemyActionsComp implements Comp {
+		private TurnPhasePerformEnemyActionsComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhaseEndTurnComp implements Comp {
+		private TurnPhaseEndTurnComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhaseEndBattleComp implements Comp {
+		private TurnPhaseEndBattleComp() {}
+		@Override public void reset() {}
+	}
+	
+	public static final class TurnPhaseNoneComp implements Comp {
+		private TurnPhaseNoneComp() {}
+		@Override public void reset() {}
 	}
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------

@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
@@ -20,10 +21,12 @@ import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
+import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
+import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
@@ -40,6 +43,7 @@ import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
@@ -55,19 +59,24 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 
 public class Mapper {
 	
-	private static ID turnTimerID;
+	private static ID turnEntityID;
+	private static ID cursorEntityID;
+	
 	private static Map<ZoneType, ID> idsByZoneType = new HashMap<ZoneType, ID>();
 	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
-	public static ID getTurnTimerID() {
-		if(turnTimerID == null) {
-			turnTimerID = IDGenerator.newID();
+	public static ID getTurnEntityID() {
+		if(turnEntityID == null) {
+			turnEntityID = IDGenerator.newID();
 		}
-		return turnTimerID;
+		return turnEntityID;
 	}
 	
-	public static TurnTimerComp getTurnTimerComp() {
-		return Mapper.TurnTimerComp.get(Entity.get(turnTimerID));
+	public static ID getCursorEntityID() {
+		if(cursorEntityID == null) {
+			cursorEntityID = IDGenerator.newID();
+		}
+		return cursorEntityID;
 	}
 	
 	public static void addIdListener(PooledEngine engine, final Box2DWorld box2D) {
@@ -168,14 +177,67 @@ public class Mapper {
 		
 		private ComponentMapperComp() {}
 		
-		public <T> T get(Class<T> klass) {
+		public <T extends Poolable> T get(Class<T> klass) {
 			return Pools.get(klass).obtain();
+		}
+		
+		public boolean has(Class<? extends Comp> klass, Entity entity) {
+			return ComponentMapper.getFor(klass).has(entity);
 		}
 	
 	}
 	
+	public static class ComponentMapperTurnEntity {
+		
+		private ComponentMapperTurnEntity() {}
+		
+		public Entity Entity() {
+			return Mapper.Entity.get(turnEntityID);
+		}
+		
+		public TurnTimerComp TurnTimerComp() {
+			return Mapper.TurnTimerComp.get(Entity());
+		}
+		
+		public TurnPhaseComp TurnPhaseComp() {
+			return Mapper.TurnPhaseComp.get(Entity());
+		}
+		
+	}
+	
+	public static class ComponentMapperCursorEntity {
+		
+		private ComponentMapperCursorEntity() {}
+		
+		public Entity Entity() {
+			return Mapper.Entity.get(cursorEntityID);
+		}
+		
+		public CursorComp CursorComp() {
+			return Mapper.CursorComp.get(Entity());
+		}
+		
+		public void enable() {
+			Entity entity = Entity();
+			if(Mapper.DisabledComp.has(entity)) {
+				entity.remove(DisabledComp.class);
+			}
+		}
+		
+		public void disable() {
+			Entity entity = Entity();
+			if(!Mapper.DisabledComp.has(entity)) {
+				entity.add(Mapper.Comp.get(DisabledComp.class));
+			}
+		}
+		
+	}
+	
 	public static final ComponentMapperComp Comp = new ComponentMapperComp();
 	public static final ComponentMapperEntity Entity = new ComponentMapperEntity();
+	public static final ComponentMapperTurnEntity TurnEntity = new ComponentMapperTurnEntity();
+	public static final ComponentMapperCursorEntity CursorEntity = new ComponentMapperCursorEntity();
+	
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
 	public static final ComponentMapper<IDComp> IDComp = ComponentMapper.getFor(IDComp.class);
@@ -213,5 +275,7 @@ public class Mapper {
 	public static final ComponentMapper<UntargetableComp> UntargetableComp = ComponentMapper.getFor(UntargetableComp.class);
 	public static final ComponentMapper<AlphaComp> AlphaComp = ComponentMapper.getFor(AlphaComp.class);
 	public static final ComponentMapper<AnimatedPathComp> AnimatedPathComp = ComponentMapper.getFor(AnimatedPathComp.class);
-	
+	public static final ComponentMapper<TurnPhaseComp> TurnPhaseComp = ComponentMapper.getFor(TurnPhaseComp.class);
+	public static final ComponentMapper<DisabledComp> DisabledComp = ComponentMapper.getFor(DisabledComp.class);
+
 }

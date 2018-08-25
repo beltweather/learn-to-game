@@ -18,16 +18,16 @@ public class TimeTurnActionsSystem extends CustomIntervalIteratingSystem {
 	
 	@Override
 	public void update (float deltaTime) {
-		if(Mapper.getTurnTimerComp().isStopped()) {
+		if(Mapper.TurnEntity.TurnTimerComp().isStopped()) {
 			return;
 		}
 		accumulator += deltaTime;
-		Mapper.getTurnTimerComp().accumulator = accumulator;
+		Mapper.TurnEntity.TurnTimerComp().accumulator = accumulator;
 		
 		if(entities.size() == 4) { // HACK
 	
 			updateInterval();
-			Mapper.getTurnTimerComp().stop();
+			Mapper.TurnEntity.TurnTimerComp().stop();
 			System.out.println("Stop the clock");
 			accumulator = 0;
 			
@@ -35,9 +35,9 @@ public class TimeTurnActionsSystem extends CustomIntervalIteratingSystem {
 		
 			while (accumulator >= interval) {
 				accumulator -= interval;
-				//Mapper.getTurnTimerComp().accumulator = accumulator;
+				//Mapper.TurnEntity.TurnTimerComp().accumulator = accumulator;
 				updateInterval();
-				Mapper.getTurnTimerComp().stop();
+				Mapper.TurnEntity.TurnTimerComp().stop();
 			}
 			
 		}

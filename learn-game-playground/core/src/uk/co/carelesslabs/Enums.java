@@ -55,5 +55,17 @@ public class Enums {
     	TARGET_FRIEND_THEN_ENEMY,
     	NONE
     }
+    
+    public enum TurnPhase {
+    	START_BATTLE,
+    	START_TURN,
+    	SELECT_ENEMY_ACTIONS,
+    	SELECT_FRIEND_ACTIONS,
+    	PERFORM_FRIEND_ACTIONS,
+    	PERFORM_ENEMY_ACTIONS,
+    	END_TURN,
+    	END_BATTLE,
+    	NONE
+    }
 
 }

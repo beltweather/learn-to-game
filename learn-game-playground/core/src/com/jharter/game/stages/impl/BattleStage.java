@@ -37,6 +37,14 @@ import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.RenderTimerSystem;
 import com.jharter.game.ashley.systems.TimeTurnActionsSystem;
+import com.jharter.game.ashley.systems.TurnPhaseEndBattleSystem;
+import com.jharter.game.ashley.systems.TurnPhaseEndTurnSystem;
+import com.jharter.game.ashley.systems.TurnPhasePerformEnemyActionsSystem;
+import com.jharter.game.ashley.systems.TurnPhasePerformFriendActionsSystem;
+import com.jharter.game.ashley.systems.TurnPhaseSelectEnemyActionsSystem;
+import com.jharter.game.ashley.systems.TurnPhaseSelectFriendActionsSystem;
+import com.jharter.game.ashley.systems.TurnPhaseStartBattleSystem;
+import com.jharter.game.ashley.systems.TurnPhaseStartTurnSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
 import com.jharter.game.ashley.systems.ZoneTransformSystem;
@@ -61,7 +69,6 @@ import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.ZoneType;
-import uk.co.carelesslabs.box2d.Box2DWorld;
 import uk.co.carelesslabs.Media;
 
 public class BattleStage extends GameStage {
@@ -84,8 +91,10 @@ public class BattleStage extends GameStage {
 		
 		// Turn timer
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.getTurnTimerID();
-		b.TurnTimerComp().turnTime = TimeTurnActionsSystem.DEFAULT_INTERVAL;
+		b.IDComp().id = Mapper.getTurnEntityID();
+		b.TurnTimerComp().maxTurnTime = TimeTurnActionsSystem.DEFAULT_INTERVAL;
+		b.TurnPhaseComp();
+		b.TurnPhaseStartBattleComp();
 		b.PositionComp().position.x = 800;
 		b.PositionComp().position.y = -400;
 		b.SizeComp().width = 100;
@@ -401,6 +410,7 @@ public class BattleStage extends GameStage {
 				  EntityType.CURSOR, 
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);
+		b.IDComp().id = Mapper.getCursorEntityID();
 		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
@@ -448,6 +458,17 @@ public class BattleStage extends GameStage {
 		
 		}
 		
+		// START OF ACTIVE SYSTEMS
+		
+		engine.addSystem(new TurnPhaseStartBattleSystem());
+		engine.addSystem(new TurnPhaseStartTurnSystem());
+		engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
+		engine.addSystem(new TurnPhaseSelectFriendActionsSystem());
+		engine.addSystem(new TurnPhasePerformFriendActionsSystem());
+		engine.addSystem(new TurnPhasePerformEnemyActionsSystem());
+		engine.addSystem(new TurnPhaseEndTurnSystem());
+		engine.addSystem(new TurnPhaseEndBattleSystem());
+		
 		engine.addSystem(new UpdatePhysicsSystem(this));
 		engine.addSystem(new CollisionSystem()); 
 		
@@ -458,8 +479,9 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectSystem());
 		engine.addSystem(new QueueTurnActionsSystem());
-		engine.addSystem(new TimeTurnActionsSystem());
-		engine.addSystem(new PerformTurnActionsSystem());
+		
+		// REDUNDANT // engine.addSystem(new TimeTurnActionsSystem());
+		// REDUNDANT // engine.addSystem(new PerformTurnActionsSystem());
 		
 		// Used in movement demo
 		//engine.addSystem(new InputMovementSystem());

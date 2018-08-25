@@ -42,7 +42,7 @@ public class RenderTimerSystem extends IteratingSystem {
 			return;
 		}
 		
-		int degrees = Math.round(360 * t.accumulator / t.turnTime);
+		int degrees = Math.round(360 * t.accumulator / t.maxTurnTime);
 		if(degrees < 200) {
 			//return;
 		}

@@ -102,7 +102,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	}
 	
 	private void transformCursor() {
-		if(Mapper.ActionQueuedComp.has(entity) || Mapper.getTurnTimerComp().isStopped()) {
+		if(Mapper.ActionQueuedComp.has(entity) || Mapper.TurnEntity.TurnTimerComp().isStopped()) {
 			hide();
 			return;
 		}

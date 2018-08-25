@@ -29,8 +29,8 @@ public class PerformTurnActionsSystem extends SortedIteratingSystem {
 		hasEntities = false;
 		animatedPathCompCount = -1;
 		super.update(deltaTime);
-		if(!hasEntities && Mapper.getTurnTimerComp().isStopped()) {
-			Mapper.getTurnTimerComp().start();
+		if(!hasEntities && Mapper.TurnEntity.TurnTimerComp().isStopped()) {
+			Mapper.TurnEntity.TurnTimerComp().start();
 		}
 	}
 	

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -61,9 +62,15 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				ZoneType targetZoneType = t.hasAllTargets() ? ZoneType.HAND : t.getTargetZoneType();
 				int targetIndex = findFirstValidTargetInZone(targetZoneType, t);
 				
-				zp.checkpoint();
-				zp.index(targetIndex);
-				zp.zoneType(targetZoneType);
+				ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+				cz.newZoneType = targetZoneType;
+				cz.newIndex = targetIndex;
+				cz.checkpoint = true;
+				entity.add(cz);
+				
+				//zp.checkpoint();
+				//zp.index(targetIndex);
+				//zp.zoneType(targetZoneType);
 				
 				// If we're done selecting objects, do some clean up and pass our turn action
 				// entity on to the next step
@@ -86,6 +93,8 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 						c.turnActionEntityID = null;
 					}
 				}
+				ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+				entity.add(cz);
 			}			
 		}
 		

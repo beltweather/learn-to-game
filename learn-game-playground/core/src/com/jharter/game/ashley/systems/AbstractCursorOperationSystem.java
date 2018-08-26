@@ -3,6 +3,7 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
@@ -46,10 +47,13 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 			Entity entity = Mapper.Entity.get(z.get(index));
 			if(entity != null && (t == null || t.isValidTarget(entity))) {
 				if(t == null) {
-					TurnAction ta = Mapper.TurnActionComp.get(entity).turnAction;
-					ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
-					if(nextZoneType == ZoneType.NONE || hasValidTarget(nextZoneType, ta, 0, 1, depth+1)) {
-						return index;
+					TurnActionComp taComp = Mapper.TurnActionComp.get(entity);
+					if(taComp != null) {
+						TurnAction ta = taComp.turnAction;
+						ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
+						if(nextZoneType == ZoneType.NONE || hasValidTarget(nextZoneType, ta, 0, 1, depth+1)) {
+							return index;
+						}
 					}
 				} else {
 					return index;

@@ -21,6 +21,7 @@ import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemy
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
+import com.jharter.game.ashley.systems.ZoneChangeSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
@@ -29,7 +30,6 @@ import com.jharter.game.ashley.systems.CursorMoveSystem;
 import com.jharter.game.ashley.systems.CursorSelectSystem;
 import com.jharter.game.ashley.systems.CursorTargetValidationSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
-import com.jharter.game.ashley.systems.PerformTurnActionsSystem;
 import com.jharter.game.ashley.systems.QueueTurnActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
@@ -45,9 +45,10 @@ import com.jharter.game.ashley.systems.TurnPhaseSelectEnemyActionsSystem;
 import com.jharter.game.ashley.systems.TurnPhaseSelectFriendActionsSystem;
 import com.jharter.game.ashley.systems.TurnPhaseStartBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseStartTurnSystem;
+import com.jharter.game.ashley.systems.TweenSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
-import com.jharter.game.ashley.systems.ZoneTransformSystem;
+import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
@@ -59,6 +60,10 @@ import com.jharter.game.ashley.systems.network.server.ServerRegisterPlayerPacket
 import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketSystem;
 import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.debug.Debug;
+import com.jharter.game.layout.ActiveCardLayout;
+import com.jharter.game.layout.CursorPositionSystem;
+import com.jharter.game.layout.HandLayout;
+import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
@@ -107,6 +112,7 @@ public class BattleStage extends GameStage {
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.HAND);
 		b.ZoneComp().zoneType(ZoneType.HAND);
+		b.ZoneComp().setLayout(new HandLayout(b.ZoneComp()));
 		ZoneComp handZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -114,6 +120,7 @@ public class BattleStage extends GameStage {
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.FRIEND);
 		b.ZoneComp().zoneType(ZoneType.FRIEND);
+		b.ZoneComp().setLayout(new IdentityLayout(b.ZoneComp()));
 		ZoneComp friendZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -121,6 +128,7 @@ public class BattleStage extends GameStage {
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ACTIVE_CARD);
 		b.ZoneComp().zoneType(ZoneType.ACTIVE_CARD);
+		b.ZoneComp().setLayout(new ActiveCardLayout(b.ZoneComp()));
 		ZoneComp activeCardZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -128,6 +136,7 @@ public class BattleStage extends GameStage {
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.DISCARD);
 		b.ZoneComp().zoneType(ZoneType.DISCARD);
+		b.ZoneComp().setLayout(new IdentityLayout(b.ZoneComp()));
 		ZoneComp discardCardZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -135,6 +144,7 @@ public class BattleStage extends GameStage {
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ENEMY);
 		b.ZoneComp().zoneType(ZoneType.ENEMY);
+		b.ZoneComp().setLayout(new IdentityLayout(b.ZoneComp()));
 		ZoneComp enemyZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -411,6 +421,8 @@ public class BattleStage extends GameStage {
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);
 		b.IDComp().id = Mapper.getCursorEntityID();
+		b.ChangeZoneComp().newZoneType = ZoneType.HAND;
+		b.ChangeZoneComp().newIndex = 0;
 		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
@@ -459,6 +471,9 @@ public class BattleStage extends GameStage {
 		}
 		
 		// START OF ACTIVE SYSTEMS
+		engine.addSystem(new ZoneLayoutSystem());
+		engine.addSystem(new CursorPositionSystem());
+		engine.addSystem(new TweenSystem());
 		
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 		engine.addSystem(new TurnPhaseStartTurnSystem());
@@ -491,7 +506,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new InteractSystem());
 		
 		if(!endPointHelper.isHeadless()) {
-			engine.addSystem(new ZoneTransformSystem());
+			engine.addSystem(new ZoneChangeSystem());
 			engine.addSystem(new AnimationSystem());
 			
 			// Used in movement demo

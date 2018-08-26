@@ -6,11 +6,11 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -37,16 +37,19 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 		if(ty != null) {
 			switch(ty.type) {
 				case CARD:
-					ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-					zp.getZoneComp().remove(id);
+					//ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+					//zp.getZoneComp().remove(id);
 					
-					ZoneComp z = Mapper.ZoneComp.get(ZoneType.HAND);
 					CardComp ca = Mapper.CardComp.get(entity);
 					Entity owner = Mapper.Entity.get(ca.ownerID);
 					if(Mapper.ActiveCardComp.has(owner)) {
 						owner.remove(ActiveCardComp.class);
 					}
-					z.add(id, zp);
+					
+					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+					cz.useNextIndex = true;
+					cz.newZoneType = ZoneType.HAND;
+					entity.add(cz);
 					break;
 				default:
 					break;

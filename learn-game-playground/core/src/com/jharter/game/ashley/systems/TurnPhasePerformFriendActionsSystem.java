@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
-import com.jharter.game.ashley.components.Components.AnimatedPathComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
@@ -21,7 +21,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
-		return Mapper.TurnEntity.TurnTimerComp().isStopped() && !has(AnimatedPathComp.class); // XXX There's probably a better way to wait for animations
+		return Mapper.TurnEntity.TurnTimerComp().isStopped() && !has(AnimatingComp.class); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override

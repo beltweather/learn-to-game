@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
+import com.jharter.game.layout.LayoutTarget;
+import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -29,6 +31,15 @@ public final class Components {
 		
 	}
 	
+	public static class BoolComp implements Comp {
+		private BoolComp() {}
+		
+		@Override
+		public void reset() {
+			
+		}
+	}
+	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
 	public static final class IDComp implements Comp {
@@ -41,6 +52,8 @@ public final class Components {
 			id = null;
 		}
 	}
+	
+	public static final class AnimatingComp extends BoolComp {}
 	
 	public static final class AnimatedPathComp implements Comp {
 		public Vector3 targetPosition = new Vector3(0, 0, 0);
@@ -580,10 +593,58 @@ public final class Components {
 		}
 	}
 	
+	public static final class ChangeZoneComp implements Comp {
+		
+		public boolean instantChange = true;
+		public ZoneType newZoneType = ZoneType.NONE;
+		public int newIndex = -1;
+		public boolean checkpoint = false;
+		public boolean useNextIndex = false;
+		
+		private ChangeZoneComp() {}
+		
+		@Override
+		public void reset() {
+			instantChange = true;
+			newZoneType = ZoneType.NONE;
+			newIndex = -1;
+			checkpoint = false;
+			useNextIndex = false;
+		}
+		
+	}
+	
 	public static final class ZoneComp implements Comp {
 		private ZoneType zoneType = ZoneType.NONE;
 		private Array<ID> objects = new Array<ID>();
 		private boolean dirty = true;
+		private ZoneLayout layout = null;
+		
+		public void setLayout(ZoneLayout layout) {
+			this.layout = layout;
+		}
+		
+		public Array<ID> getIds() {
+			return objects;
+		}
+		
+		public LayoutTarget getTarget(ID id) {
+			if(layout == null) {
+				return null;
+			}
+			return layout.getTarget(id);
+		}
+		
+		public void revalidate() {
+			layout.revalidate();
+		}
+		
+		public boolean matchesTarget(Entity entity, LayoutTarget target) {
+			if(layout == null) {
+				return true;
+			}
+			return layout.matchesTarget(entity, target);
+		}
 		
 		public void zoneType(ZoneType zoneType) {
 			this.zoneType = zoneType;
@@ -656,6 +717,10 @@ public final class Components {
 			dirty = true;
 		}
 		
+		public void soil() {
+			dirty = true;
+		}
+		
 		public int size() {
 			return objects.size;
 		}
@@ -664,13 +729,16 @@ public final class Components {
 			return objects.get(index);
 		}
 		
-		private ZoneComp() {}
+		private ZoneComp() {
+			
+		}
 		
 		@Override
 		public void reset() {
 			zoneType = ZoneType.NONE;
 			objects.clear();
 			dirty = true;
+			layout = null;
 		}
 		
 	}
@@ -706,6 +774,10 @@ public final class Components {
 		
 		public void zoneType(ZoneType zoneType) {
 			this.zoneType = zoneType;
+			dirty = true;
+		}
+		
+		public void soil() {
 			dirty = true;
 		}
 		

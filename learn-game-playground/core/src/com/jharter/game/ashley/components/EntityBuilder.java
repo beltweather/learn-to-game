@@ -14,9 +14,11 @@ import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
 import com.jharter.game.ashley.components.Components.AnimatedPathComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -144,5 +146,7 @@ public class EntityBuilder implements Poolable {
 	public TurnPhaseComp TurnPhaseComp() { return get(TurnPhaseComp.class); }
 	public TurnPhaseStartBattleComp TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleComp.class); }
 	public DisabledComp DisabledComp() { return get(DisabledComp.class); }
+	public AnimatingComp AnimatingComp() { return get(AnimatingComp.class); }
+	public ChangeZoneComp ChangeZoneComp() { return get(ChangeZoneComp.class); }
 	
 }

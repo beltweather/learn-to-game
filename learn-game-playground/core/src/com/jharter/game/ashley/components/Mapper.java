@@ -17,9 +17,11 @@ import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
 import com.jharter.game.ashley.components.Components.AnimatedPathComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -281,5 +283,7 @@ public class Mapper {
 	public static final ComponentMapper<AnimatedPathComp> AnimatedPathComp = ComponentMapper.getFor(AnimatedPathComp.class);
 	public static final ComponentMapper<TurnPhaseComp> TurnPhaseComp = ComponentMapper.getFor(TurnPhaseComp.class);
 	public static final ComponentMapper<DisabledComp> DisabledComp = ComponentMapper.getFor(DisabledComp.class);
+	public static final ComponentMapper<AnimatingComp> AnimatingComp = ComponentMapper.getFor(AnimatingComp.class);
+	public static final ComponentMapper<ChangeZoneComp> ChangeZoneComp = ComponentMapper.getFor(ChangeZoneComp.class);
 
 }

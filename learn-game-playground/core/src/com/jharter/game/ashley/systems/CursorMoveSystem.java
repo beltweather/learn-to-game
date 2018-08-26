@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -60,14 +61,25 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		}
 		
 		int newIndex = findNextValidTargetInZone(zoneType, t, index, direction);
-		if(z.hasIndex(newIndex)) {
+		if(!z.hasIndex(newIndex)) {
+			newIndex = -1;
+		}
+		
+		if(zp.index() != newIndex || zp.zoneType() != zoneType) {
+			ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+			cz.newZoneType = zoneType;
+			cz.newIndex = newIndex;
+			entity.add(cz);
+		}
+		
+		/*if(z.hasIndex(newIndex)) {
 			if(zp.zoneType() != zoneType) {
 				zp.zoneType(zoneType);
 			}
 			zp.index(newIndex);
 		} else {
 			zp.index(-1);
-		}
+		}*/
 	}
 
 }

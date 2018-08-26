@@ -4,13 +4,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.AlphaComp;
 import com.jharter.game.ashley.components.Components.AnimatedPathComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PositionComp;
@@ -23,10 +24,14 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.tween.TweenType;
+import com.jharter.game.tween.TweenUtil;
 
+import aurelienribon.tweenengine.Tween;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
+@Deprecated
 public class ZoneTransformSystem extends IteratingSystem {
 
 	private Entity entity;
@@ -37,10 +42,14 @@ public class ZoneTransformSystem extends IteratingSystem {
 	private PositionComp p;
 	private SizeComp s;
 	private AlphaComp a;
+	private ChangeZoneComp cz;
+	
+	private ZoneType targetZone;
+	private int targetIndex;
 	
 	@SuppressWarnings("unchecked")
 	public ZoneTransformSystem() {
-		super(Family.all(TypeComp.class, TextureComp.class, ZonePositionComp.class, PositionComp.class, SizeComp.class).get());
+		super(Family.all(TypeComp.class, TextureComp.class, ZonePositionComp.class, PositionComp.class, SizeComp.class, ChangeZoneComp.class).get());
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
@@ -52,6 +61,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		p = Mapper.PositionComp.get(entity);
 		s = Mapper.SizeComp.get(entity);
 		a = Mapper.AlphaComp.get(entity);
+		cz = Mapper.ChangeZoneComp.get(entity);
 		
 		if(!z.hasIndex(zp.index())) {
 			hide();
@@ -202,6 +212,48 @@ public class ZoneTransformSystem extends IteratingSystem {
 				Entity owner = Mapper.Entity.get(c.ownerID);
 				PositionComp pOwner = Mapper.PositionComp.get(owner);
 				PositionComp pCard = Mapper.PositionComp.get(entity);
+				IDComp id = Mapper.IDComp.get(entity);
+				SizeComp sOwner = Mapper.SizeComp.get(owner);
+				SizeComp sCard = Mapper.SizeComp.get(entity);
+				VelocityComp v = Mapper.VelocityComp.get(entity);
+				v.speed = 3500;
+				float targetScale = 0.25f;
+				
+				float targetX = (pOwner.position.x - sCard.scaledWidth(targetScale) - 20);
+				float targetY = (pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight(targetScale)) / 2);
+				
+				boolean animating = Mapper.AnimatingComp.has(entity); 
+				if(!animating && !isCloseEnough(pCard.position.x, pCard.position.y, targetX, targetY, v.speed, 10, deltaTime)) {
+					TweenUtil.start(Tween.to(id.id, TweenType.POSITION_XY.asInt(), 1).target(targetX, targetY));
+				} else if(!animating){
+					sCard.scale.set(targetScale, targetScale);
+					pCard.position.x = pOwner.position.x - sCard.scaledWidth() - 20;
+					pCard.position.y = pOwner.position.y + (sOwner.scaledHeight() - sCard.scaledHeight()) / 2;
+					v.velocity.set(0, 0);
+					v.speed = 0;
+					
+					if(t.turnAction.multiplicity > 1) {
+						if(!Mapper.MultiPositionComp.has(entity)) {
+							entity.add(Mapper.Comp.get(MultiPositionComp.class));
+						}
+						MultiPositionComp m = Mapper.MultiPositionComp.get(entity);
+						m.positions.clear();
+						for(int i = 0; i < t.turnAction.multiplicity; i++) {
+							m.positions.add(new Vector3(pCard.position.x - 10*i, pCard.position.y + 10*i, pCard.position.z));
+						}
+					} else if(Mapper.MultiPositionComp.has(entity)) {
+						entity.remove(MultiPositionComp.class);
+					}
+				}
+				break;
+				
+				/*case ACTIVE_CARD:
+				show();
+				CardComp c = Mapper.CardComp.get(entity);
+				TurnActionComp t = Mapper.TurnActionComp.get(entity);
+				Entity owner = Mapper.Entity.get(c.ownerID);
+				PositionComp pOwner = Mapper.PositionComp.get(owner);
+				PositionComp pCard = Mapper.PositionComp.get(entity);
 				SizeComp sOwner = Mapper.SizeComp.get(owner);
 				SizeComp sCard = Mapper.SizeComp.get(entity);
 				VelocityComp v = Mapper.VelocityComp.get(entity);
@@ -259,7 +311,14 @@ public class ZoneTransformSystem extends IteratingSystem {
 					float scale = 1f - (1f-targetScale)*ma.getProgress(pCard);
 					sCard.scale.set(scale, scale);
 				}
-				break;
+				break;*/
+				
+				
+				
+				
+				
+				
+				
 			case DISCARD:
 				hide();
 				break;
@@ -267,6 +326,10 @@ public class ZoneTransformSystem extends IteratingSystem {
 				break;
 		}
 			
+	}
+	
+	private boolean isCloseEnough(float x, float y, float targetX, float targetY, float speed, float tolerance, float deltaTime) {
+		return targetX - x <= speed / tolerance * deltaTime && targetY - y <= speed / tolerance * deltaTime;
 	}
 	
 	private TextureRegion getCursorForZone(ZoneType zoneType) {

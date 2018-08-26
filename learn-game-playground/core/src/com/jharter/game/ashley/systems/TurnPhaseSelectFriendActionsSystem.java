@@ -30,7 +30,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		
 		// Debug
 		if(actionsQueued > 0) {
-			disableCursor();
+			//disableCursor();
 		}
 		
 		// XXX This assumption will change, but the intent is to check if all characters

@@ -7,6 +7,7 @@ import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
@@ -31,10 +32,10 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 		if(ty != null) {
 			switch(ty.type) {
 				case CARD:
-					ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-					zp.getZoneComp().remove(id);
+					//ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+					//zp.getZoneComp().remove(id);
+					//ZoneComp z = Mapper.ZoneComp.get(ZoneType.ACTIVE_CARD);
 					
-					ZoneComp z = Mapper.ZoneComp.get(ZoneType.ACTIVE_CARD);
 					CardComp ca = Mapper.CardComp.get(entity);
 					Entity owner = Mapper.Entity.get(ca.ownerID);
 					ActiveCardComp ac = Mapper.ActiveCardComp.get(owner);
@@ -43,7 +44,14 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 						owner.add(ac);
 					}
 					
-					z.add(id, zp);
+					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+					cz.newZoneType = ZoneType.ACTIVE_CARD;
+					cz.useNextIndex = true;
+					cz.instantChange = false;
+					entity.add(cz);
+					
+					//z.add(id, zp);
+					
 					ac.activeCardID = id.id;
 					
 					TurnActionComp t = Mapper.TurnActionComp.get(entity);

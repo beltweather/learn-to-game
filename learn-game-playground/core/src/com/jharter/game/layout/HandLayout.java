@@ -13,7 +13,7 @@ public class HandLayout extends ZoneLayout {
 	}
 
 	@Override
-	protected LayoutTarget getTarget(ID id, int index, Entity entity, LayoutTarget target) {
+	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
 		int anchorX = -700;

@@ -37,6 +37,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					//ZoneComp z = Mapper.ZoneComp.get(ZoneType.ACTIVE_CARD);
 					
 					CardComp ca = Mapper.CardComp.get(entity);
+					ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 					Entity owner = Mapper.Entity.get(ca.ownerID);
 					ActiveCardComp ac = Mapper.ActiveCardComp.get(owner);
 					if(ac == null) {
@@ -45,6 +46,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					}
 					
 					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+					cz.oldZoneType = zp.zoneType;
 					cz.newZoneType = ZoneType.ACTIVE_CARD;
 					cz.useNextIndex = true;
 					cz.instantChange = false;

@@ -12,7 +12,7 @@ import com.jharter.game.util.id.ID;
 public abstract class ZoneLayout {
 	
 	protected ImmutableArray<ID> ids = null;
-	private ObjectMap<ID, LayoutTarget> dataById = new ObjectMap<ID, LayoutTarget>();
+	private ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
 	
 	public ZoneLayout(ZoneComp z) {
 		setIds(z.objectIDs);
@@ -23,13 +23,13 @@ public abstract class ZoneLayout {
 	}
 	
 	public void revalidate() {
-		for(LayoutTarget t : dataById.values()) {
+		for(TweenTarget t : dataById.values()) {
 			Pools.free(t);
 		}
 		dataById.clear();
 	}
 	
-	public LayoutTarget getTarget(ID id) {
+	public TweenTarget getTarget(ID id) {
 		if(id == null) {
 			return null;
 		}
@@ -45,13 +45,13 @@ public abstract class ZoneLayout {
 			return null;
 		}
 		
-		LayoutTarget target = getTarget(id, index, entity, Pools.get(LayoutTarget.class).obtain());
+		TweenTarget target = getTarget(id, index, entity, Pools.get(TweenTarget.class).obtain());
 		dataById.put(id, target);
 		return target;
 	}
 	
 	public boolean matchesTarget(ID id) {
-		LayoutTarget target = getTarget(id);
+		TweenTarget target = getTarget(id);
 		if(target == null) {
 			return false;
 		}
@@ -62,25 +62,17 @@ public abstract class ZoneLayout {
 		return matchesTarget(entity, target);
 	}
 	
-	public boolean matchesTarget(Entity entity, LayoutTarget target) {
-		SpriteComp s = Mapper.SpriteComp.get(entity);
-		if(s == null) {
+	public boolean matchesTarget(Entity entity, TweenTarget target) {
+		if(target == null) {
 			return false;
 		}
-		
-		return s.position.x == target.position.x &&
-			   s.position.y == target.position.y &&
-			   s.position.z == target.position.z &&
-			   s.scale.x == target.scale.x &&
-			   s.scale.y == target.scale.y &&
-			   s.angleDegrees == target.angleDegrees &&
-			   s.alpha == target.alpha;
+		return target.matchesTarget(Mapper.SpriteComp.get(entity));
 	}
 	
-	protected abstract LayoutTarget getTarget(ID id, int index, Entity entity, LayoutTarget target);
+	protected abstract TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target);
 	
 	public void reset() {
-		for(LayoutTarget d : dataById.values()) {
+		for(TweenTarget d : dataById.values()) {
 			Pools.free(d);
 		}
 		dataById.clear();

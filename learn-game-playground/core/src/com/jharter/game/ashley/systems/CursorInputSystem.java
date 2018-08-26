@@ -3,6 +3,7 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
@@ -14,7 +15,8 @@ public class CursorInputSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorInputSystem() {
-		super(Family.all(CursorInputComp.class,
+		super(Family.all(CursorComp.class,
+						 CursorInputComp.class,
 						 CursorInputRegulatorComp.class,
 						 InputComp.class).exclude(InvisibleComp.class, DisabledComp.class).get());
 	}
@@ -22,7 +24,7 @@ public class CursorInputSystem extends IteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		InputComp in = Mapper.InputComp.get(entity);
-		if(Mapper.TurnEntity.TurnTimerComp().isStopped()) {
+		if(Mapper.TurnEntity.TurnTimerComp().isStopped() || Mapper.AnimatingComp.has(entity)) {
 			in.input.reset();
 			return;
 		}

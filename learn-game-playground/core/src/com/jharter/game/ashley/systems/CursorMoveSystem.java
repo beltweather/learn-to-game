@@ -67,6 +67,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		if(zp.index != newIndex || zp.zoneType != zoneType) {
 			ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+			cz.oldZoneType = zp.zoneType;
 			cz.newZoneType = zoneType;
 			cz.newIndex = newIndex;
 			entity.add(cz);

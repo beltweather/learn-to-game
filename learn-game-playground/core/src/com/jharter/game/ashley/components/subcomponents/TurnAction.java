@@ -60,7 +60,9 @@ public class TurnAction implements Poolable {
 	}
 	
 	public void addTarget(Entity entity) {
-		targetIDs.add(Mapper.IDComp.get(entity).id);
+		if(!hasAllTargets()) {
+			targetIDs.add(Mapper.IDComp.get(entity).id);
+		}
 	}
 	
 	public boolean isValidTarget(Entity entity) {

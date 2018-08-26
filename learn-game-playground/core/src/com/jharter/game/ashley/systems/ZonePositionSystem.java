@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -59,6 +60,8 @@ public class ZonePositionSystem extends IteratingSystem {
 				if(cz.checkpoint) {
 					zp.checkpoint();
 				}
+				CursorComp c = Mapper.CursorComp.get(entity);
+				c.lastZoneType = cz.oldZoneType;
 				zp.zoneType = targetZoneType;
 				zp.index = targetIndex;
 				entity.remove(ChangeZoneComp.class);

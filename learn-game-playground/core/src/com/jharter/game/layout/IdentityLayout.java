@@ -11,7 +11,7 @@ public class IdentityLayout extends ZoneLayout {
 	}
 
 	@Override
-	protected LayoutTarget getTarget(ID id, int index, Entity entity, LayoutTarget target) {
+	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		target.setFromEntity(entity);
 		return target;
 	}

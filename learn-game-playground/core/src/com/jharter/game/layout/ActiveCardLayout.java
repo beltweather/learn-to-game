@@ -14,7 +14,7 @@ public class ActiveCardLayout extends ZoneLayout {
 	}
 
 	@Override
-	protected LayoutTarget getTarget(ID id, int index, Entity entity, LayoutTarget target) {
+	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		float targetScale = 0.25f;
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		CardComp c = Mapper.CardComp.get(entity);

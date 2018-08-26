@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
@@ -18,6 +19,7 @@ import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.id.ID;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Circ;
 import uk.co.carelesslabs.Media;
@@ -30,47 +32,177 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 
 	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-		CursorComp c = Mapper.CursorComp.get(entity);
-		IDComp id = Mapper.IDComp.get(entity);
-		SpriteComp s = Mapper.SpriteComp.get(entity);
-		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-		setCursorDirection(entity, zp);
+	protected void processEntity(final Entity entity, float deltaTime) {
+		final CursorComp c = Mapper.CursorComp.get(entity);
+		final IDComp id = Mapper.IDComp.get(entity);
+		final SpriteComp s = Mapper.SpriteComp.get(entity);
+		final ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 		
-		if(isAll(c)) {
+		float targetAngle = getCursorAngle(entity, zp);
+		
+		tempPosition = getCursorPosition(entity, zp);
+		if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
+			if(c.lastZoneType != zp.zoneType) {
+				
+				TweenTarget tt = Pools.get(TweenTarget.class).obtain();
+				tt.setFromEntity(entity);
+				tt.position.x = tempPosition.x;
+				tt.position.y = tempPosition.y;
+				tt.angleDegrees = targetAngle;
+				
+				if(!tt.matchesTarget(s)) {
+					
+					Timeline tween;
+					if(isAll(c)) {
+						
+						float convergeX = s.position.x + (tempPosition.x - s.position.x) * 0.75f;
+						//float convergeY = s.position.y + (tempPosition.y - s.position.y) * 0.75f;
+						float duration = 0.25f;
+						
+						Timeline single = TweenUtil.tween(id.id, tt, duration);
+						Timeline multiA = Timeline.createParallel();
+						Timeline multiB = Timeline.createParallel();
+						
+						float centerY = 0;
+						MultiPositionComp mp = getMultiPositionComp(entity);
+						for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
+							tempPosition = getCursorPosition(entity, zp, i);
+							if(tempPosition != null) {
+								centerY += tempPosition.y;
+							} else {
+								tempPosition = new Vector3();
+							}
+						}
+						centerY /= Mapper.ZoneComp.get(zp).objectIDs.size();
+						
+						for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
+							tempPosition = getCursorPosition(entity, zp, i);
+							if(tempPosition != null) {
+								Vector3 currP = new Vector3(s.position);
+								mp.positions.add(currP);
+								Vector3 targP = new Vector3(tempPosition);
+										
+								multiA.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(convergeX, centerY));
+								multiB.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(targP.x, targP.y));
+								
+							} else {
+								tempPosition = new Vector3();
+							}
+						}
+						
+						tween = Timeline.createParallel().push(single).push(Timeline.createSequence().push(multiA).push(multiB));
+						
+					} else {
+						removeMultiPositionComp(entity);
+						tween = TweenUtil.tween(id.id, tt);
+					}
+					
+					TweenUtil.start(id.id, tween);
+				}
+				
+				Pools.free(tt);
+				
+			} else {
+				s.position.x = tempPosition.x;
+				s.position.y = tempPosition.y;
+				s.angleDegrees = targetAngle;
+				
+				if(isAll(c)) {
+					MultiPositionComp mp = getMultiPositionComp(entity);
+					for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
+						tempPosition = getCursorPosition(entity, zp, i);
+						if(tempPosition != null) {
+							Vector3 targP = new Vector3(tempPosition);
+							mp.positions.add(targP);
+						} else {
+							tempPosition = new Vector3();
+						}
+					}
+				} else {
+					removeMultiPositionComp(entity);
+				}
+			}
+		} else {
+			tempPosition = new Vector3();
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*if(isAll(c)) {
 			MultiPositionComp mp = getMultiPositionComp(entity);
 			if(mp.positions.size == 0) {
-				for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
-					tempPosition = getCursorPosition(entity, zp, i);
-					if(tempPosition != null) {
-						Vector3 currP = new Vector3(s.position);
-						Vector3 targP = new Vector3(tempPosition);
-						mp.positions.add(currP);
-						
-						TweenUtil.start(Tween.to(currP, TweenType.POSITION_XY.asInt(), 0.25f).ease(Circ.INOUT).target(targP.x, targP.y));
-	
-						//mp.positions.add(new Vector3(tempPosition));
-					} else {
-						tempPosition = new Vector3();
+				
+				tempPosition = getCursorPosition(entity, zp);
+				TweenTarget tt = Pools.get(TweenTarget.class).obtain();
+				tt.setFromEntity(entity);
+				tt.position.x = tempPosition.x;
+				tt.position.y = tempPosition.y;
+				tt.angleDegrees = targetAngle;
+				
+				if(!tt.matchesTarget(s)) {
+					TweenUtil.start(id.id, tt);
+					
+					for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
+						tempPosition = getCursorPosition(entity, zp, i);
+						if(tempPosition != null) {
+							Vector3 currP = new Vector3(s.position);
+							Vector3 targP = new Vector3(tempPosition);
+							mp.positions.add(currP);
+							
+							TweenUtil.start(id.id, Tween.to(currP, TweenType.POSITION_XY.asInt(), 0.25f).ease(Circ.INOUT).target(targP.x, targP.y));
+							s.angleDegrees = targetAngle;
+						} else {
+							tempPosition = new Vector3();
+						}
 					}
+				
 				}
+				
+				Pools.free(tt);
 			}
 		} else {
 			removeMultiPositionComp(entity);
 			tempPosition = getCursorPosition(entity, zp);
 			if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
-				
-				TweenUtil.start(Tween.to(id.id, TweenType.POSITION_XY.asInt(), 0.1f).ease(Circ.INOUT).target(tempPosition.x, tempPosition.y));
-				
-				//TweenUtil.start(Timeline.createParallel().push(Tween.to(id.id, TweenType.SCALE_XY.asInt(), 0.1f).target(2f, 2f))
-				//						 .push(Tween.to(id.id, TweenType.POSITION_XY.asInt(), 0.1f).ease(Circ.INOUT).target(tempPosition.x, tempPosition.y)));
-				
-				//p.position.x = tempPosition.x;
-				//p.position.y = tempPosition.y;
+				if(c.lastZoneType != zp.zoneType) {
+					
+					TweenTarget tt = Pools.get(TweenTarget.class).obtain();
+					tt.setFromEntity(entity);
+					tt.position.x = tempPosition.x;
+					tt.position.y = tempPosition.y;
+					tt.angleDegrees = targetAngle;
+					
+					if(!tt.matchesTarget(s)) {
+						TweenUtil.start(id.id, tt);
+						if(Mapper.TypeComp.get(entity).type == EntityType.CURSOR) {
+							System.out.println("Tween cursor");
+						}
+					}
+					
+					Pools.free(tt);
+					
+				} else {
+					s.position.x = tempPosition.x;
+					s.position.y = tempPosition.y;
+					s.angleDegrees = targetAngle;
+				}
 			} else {
 				tempPosition = new Vector3();
 			}
-		}
+		}*/
 	}
 	
 	private MultiPositionComp getMultiPositionComp(Entity entity) {
@@ -114,6 +246,19 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 	}
 	
+	private float getCursorAngle(Entity entity, ZonePositionComp zp) {
+		switch(zp.zoneType) {
+			case FRIEND:
+			case ACTIVE_CARD:
+				return 90f;
+			case ENEMY:
+				return 270f;
+			case HAND:
+			default:
+				return 0f;
+		}
+	}
+	
 	private Vector3 tempPosition = new Vector3();
 	
 	private Vector3 getCursorPosition(Entity entity, ZonePositionComp zp) {
@@ -133,7 +278,7 @@ public class CursorPositionSystem extends IteratingSystem {
 			return null;
 		}
 		
-		LayoutTarget lTarget = z.layout.getTarget(cursorTargetID);
+		TweenTarget lTarget = z.layout.getTarget(cursorTargetID);
 		SpriteComp sTarget = Mapper.SpriteComp.get(target);
 		
 		if(lTarget == null || sTarget == null) {

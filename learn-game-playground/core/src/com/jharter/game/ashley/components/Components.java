@@ -344,6 +344,7 @@ public final class Components {
 	
 	public static final class CursorComp implements Comp {
 		public ID turnActionEntityID = null;
+		public ZoneType lastZoneType = ZoneType.NONE;
 		
 		private CursorComp() {}
 		
@@ -361,6 +362,7 @@ public final class Components {
 		@Override
 		public void reset() {
 			turnActionEntityID = null;
+			lastZoneType = ZoneType.NONE;
 		}
 	}
 	
@@ -472,6 +474,7 @@ public final class Components {
 	public static final class ChangeZoneComp implements Comp {
 		
 		public boolean instantChange = true;
+		public ZoneType oldZoneType = ZoneType.NONE;
 		public ZoneType newZoneType = ZoneType.NONE;
 		public int newIndex = -1;
 		public boolean checkpoint = false;
@@ -482,6 +485,7 @@ public final class Components {
 		@Override
 		public void reset() {
 			instantChange = true;
+			oldZoneType = ZoneType.NONE;
 			newZoneType = ZoneType.NONE;
 			newIndex = -1;
 			checkpoint = false;

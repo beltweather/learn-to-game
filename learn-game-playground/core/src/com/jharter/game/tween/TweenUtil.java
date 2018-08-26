@@ -3,25 +3,23 @@ package com.jharter.game.tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.layout.LayoutTarget;
+import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
-import com.jharter.game.tween.TweenCallbacks.ZoneLayoutCallback;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Circ;
 
 public class TweenUtil {
 	private TweenUtil() {}
 		
 	private static TweenManager manager;
-	private static TweenCallback finishedAnimatingCallback = new FinishedAnimatingCallback();
-	private static TweenCallback zoneLayoutCallback = new ZoneLayoutCallback();
 	
 	public static void init() {
 		manager = new TweenManager();
@@ -39,44 +37,47 @@ public class TweenUtil {
 		}
 	}
 	
-	public static void start(BaseTween<?> baseTween) {
+	public static void start(ID id, BaseTween<?> baseTween) {
 		if(manager == null) {
 			return;
 		}
 		
-		if(baseTween instanceof Timeline) {
-			Timeline timeline = (Timeline) baseTween;
-			timeline.start(manager);
-		
-		} else if(baseTween instanceof Tween) {
-			Tween tween = (Tween) baseTween;
-			Object target = tween.getTarget();
-			if(!(target instanceof ID)) {
-				tween.start(manager);
-				return;
-			}
-			
-			Entity entity = Mapper.Entity.get((ID) target);
+		if(id != null) {
+			Entity entity = Mapper.Entity.get(id);
 			if(!Mapper.AnimatingComp.has(entity)) {
 				entity.add(Mapper.Comp.get(AnimatingComp.class));
 			}
-			
-			tween.setCallback(finishedAnimatingCallback).start(manager);
+			FinishedAnimatingCallback callback = Pools.get(FinishedAnimatingCallback.class).obtain();
+			callback.setID(id);
+			baseTween.setCallback(callback);
 		}
+		
+		baseTween.start(manager);
 	}
 	
-	public static void tween(ID id, LayoutTarget target) {
+	public static void start(ID id, TweenTarget target) {
+		start(id, target, 0.25f);
+	}
+	
+	public static void start(ID id, TweenTarget target, float duration) {
 		Entity entity = Mapper.Entity.get((ID) id);
 		if(!Mapper.AnimatingComp.has(entity)) {
 			entity.add(Mapper.Comp.get(AnimatingComp.class));
 		}
-		
-		float d = 1f;
-		start(Timeline.createParallel()
-			.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).target(target.position.x, target.position.y))
-			.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).target(target.scale.x, target.scale.y))
-			.push(Tween.to(id, TweenType.ALPHA.asInt(), d).target(target.alpha))
-			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).target(target.angleDegrees)).setCallback(zoneLayoutCallback));
+		start(id, tween(id, target, duration));
+	}
+	
+	public static Timeline tween(ID id, TweenTarget target) {
+		return tween(id, target, 0.25f);
+	}
+	
+	public static Timeline tween(ID id, TweenTarget target, float duration) {
+		float d = duration;
+		return Timeline.createParallel()
+			.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).ease(Circ.INOUT).target(target.position.x, target.position.y))
+			.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).ease(Circ.INOUT).target(target.scale.x, target.scale.y))
+			.push(Tween.to(id, TweenType.ALPHA.asInt(), d).ease(Circ.INOUT).target(target.alpha))
+			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(Circ.INOUT).target(target.angleDegrees));
 	}
 	
 }

@@ -63,6 +63,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				int targetIndex = findFirstValidTargetInZone(targetZoneType, t);
 				
 				ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+				cz.oldZoneType = zp.zoneType;
 				cz.newZoneType = targetZoneType;
 				cz.newIndex = targetIndex;
 				cz.checkpoint = true;

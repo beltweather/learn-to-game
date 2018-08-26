@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.layout.LayoutTarget;
+import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.id.ID;
 
@@ -25,9 +25,9 @@ public class ZoneLayoutSystem extends IteratingSystem {
 			if(Mapper.AnimatingComp.has(zEntity)) {
 				continue;
 			}
-			LayoutTarget target = z.layout.getTarget(id);
+			TweenTarget target = z.layout.getTarget(id);
 			if(!z.layout.matchesTarget(zEntity, target)) {
-				TweenUtil.tween(id, target);
+				TweenUtil.start(id, target);
 			}
 		}
 	}

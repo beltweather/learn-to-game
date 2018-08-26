@@ -41,6 +41,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		float targetAngle = getCursorAngle(entity, zp);
 		
 		tempPosition = getCursorPosition(entity, zp);
+		offsetPositionForAngle(tempPosition, s, zp);
 		if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
 			if(c.lastZoneType != zp.zoneType) {
 				
@@ -56,7 +57,6 @@ public class CursorPositionSystem extends IteratingSystem {
 					if(isAll(c)) {
 						
 						float convergeX = s.position.x + (tempPosition.x - s.position.x) * 0.75f;
-						//float convergeY = s.position.y + (tempPosition.y - s.position.y) * 0.75f;
 						float duration = 0.25f;
 						
 						Timeline single = TweenUtil.tween(id.id, tt, duration);
@@ -77,6 +77,7 @@ public class CursorPositionSystem extends IteratingSystem {
 						
 						for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
 							tempPosition = getCursorPosition(entity, zp, i);
+							offsetPositionForAngle(tempPosition, s, zp);
 							if(tempPosition != null) {
 								Vector3 currP = new Vector3(s.position);
 								mp.positions.add(currP);
@@ -125,84 +126,6 @@ public class CursorPositionSystem extends IteratingSystem {
 		} else {
 			tempPosition = new Vector3();
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*if(isAll(c)) {
-			MultiPositionComp mp = getMultiPositionComp(entity);
-			if(mp.positions.size == 0) {
-				
-				tempPosition = getCursorPosition(entity, zp);
-				TweenTarget tt = Pools.get(TweenTarget.class).obtain();
-				tt.setFromEntity(entity);
-				tt.position.x = tempPosition.x;
-				tt.position.y = tempPosition.y;
-				tt.angleDegrees = targetAngle;
-				
-				if(!tt.matchesTarget(s)) {
-					TweenUtil.start(id.id, tt);
-					
-					for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
-						tempPosition = getCursorPosition(entity, zp, i);
-						if(tempPosition != null) {
-							Vector3 currP = new Vector3(s.position);
-							Vector3 targP = new Vector3(tempPosition);
-							mp.positions.add(currP);
-							
-							TweenUtil.start(id.id, Tween.to(currP, TweenType.POSITION_XY.asInt(), 0.25f).ease(Circ.INOUT).target(targP.x, targP.y));
-							s.angleDegrees = targetAngle;
-						} else {
-							tempPosition = new Vector3();
-						}
-					}
-				
-				}
-				
-				Pools.free(tt);
-			}
-		} else {
-			removeMultiPositionComp(entity);
-			tempPosition = getCursorPosition(entity, zp);
-			if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
-				if(c.lastZoneType != zp.zoneType) {
-					
-					TweenTarget tt = Pools.get(TweenTarget.class).obtain();
-					tt.setFromEntity(entity);
-					tt.position.x = tempPosition.x;
-					tt.position.y = tempPosition.y;
-					tt.angleDegrees = targetAngle;
-					
-					if(!tt.matchesTarget(s)) {
-						TweenUtil.start(id.id, tt);
-						if(Mapper.TypeComp.get(entity).type == EntityType.CURSOR) {
-							System.out.println("Tween cursor");
-						}
-					}
-					
-					Pools.free(tt);
-					
-				} else {
-					s.position.x = tempPosition.x;
-					s.position.y = tempPosition.y;
-					s.angleDegrees = targetAngle;
-				}
-			} else {
-				tempPosition = new Vector3();
-			}
-		}*/
 	}
 	
 	private MultiPositionComp getMultiPositionComp(Entity entity) {
@@ -256,6 +179,21 @@ public class CursorPositionSystem extends IteratingSystem {
 			case HAND:
 			default:
 				return 0f;
+		}
+	}
+	
+	private void offsetPositionForAngle(Vector3 position, SpriteComp s, ZonePositionComp zp) {
+		switch(zp.zoneType) {
+			case FRIEND:
+			case ACTIVE_CARD:
+				position.x += s.scaledWidth();
+				break;
+			case ENEMY:
+				position.y += s.scaledHeight();
+				break;
+			case HAND:
+			default:
+				break;
 		}
 	}
 	

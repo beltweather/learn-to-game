@@ -245,9 +245,6 @@ public class Mapper {
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
 	public static final ComponentMapper<IDComp> IDComp = ComponentMapper.getFor(IDComp.class);
-	//public static final ComponentMapper<PositionComp> PositionComp = ComponentMapper.getFor(PositionComp.class);
-	//public static final ComponentMapper<SizeComp> SizeComp = ComponentMapper.getFor(SizeComp.class);
-	//public static final ComponentMapper<AlphaComp> AlphaComp = ComponentMapper.getFor(AlphaComp.class);
 	public static final ComponentMapper<TypeComp> TypeComp = ComponentMapper.getFor(TypeComp.class);
 	public static final ComponentMapper<TileComp> TileComp = ComponentMapper.getFor(TileComp.class);
 	public static final ComponentMapper<TextureComp> TextureComp = ComponentMapper.getFor(TextureComp.class);

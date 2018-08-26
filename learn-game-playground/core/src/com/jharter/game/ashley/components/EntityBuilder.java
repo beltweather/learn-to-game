@@ -107,9 +107,6 @@ public class EntityBuilder implements Poolable {
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public FocusComp FocusComp() { return get(FocusComp.class); }
 	public IDComp IDComp() { return get(IDComp.class); }
-	//public PositionComp PositionComp() { return get(PositionComp.class); }
-	//public SizeComp SizeComp() { return get(SizeComp.class); }
-	//public AlphaComp AlphaComp() { return get(AlphaComp.class); }
 	public TypeComp TypeComp() { return get(TypeComp.class); }
 	public TileComp TileComp() { return get(TileComp.class); }
 	public TextureComp TextureComp() { return get(TextureComp.class); }

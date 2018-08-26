@@ -12,10 +12,10 @@ import com.jharter.game.ashley.components.Mapper;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class ZoneChangeSystem extends IteratingSystem {
+public class ZonePositionSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
-	public ZoneChangeSystem() {
+	public ZonePositionSystem() {
 		super(Family.all(IDComp.class, TypeComp.class, ZonePositionComp.class, ChangeZoneComp.class).get());
 	}
 	

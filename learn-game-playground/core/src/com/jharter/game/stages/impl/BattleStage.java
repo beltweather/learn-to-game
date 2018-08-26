@@ -46,7 +46,7 @@ import com.jharter.game.ashley.systems.TurnPhaseStartTurnSystem;
 import com.jharter.game.ashley.systems.TweenSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
-import com.jharter.game.ashley.systems.ZoneChangeSystem;
+import com.jharter.game.ashley.systems.ZonePositionSystem;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
@@ -471,6 +471,7 @@ public class BattleStage extends GameStage {
 		
 		// START OF ACTIVE SYSTEMS
 		engine.addSystem(new ZoneLayoutSystem());
+		engine.addSystem(new ZonePositionSystem());
 		engine.addSystem(new CursorPositionSystem());
 		engine.addSystem(new TweenSystem());
 		
@@ -502,7 +503,6 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new InteractSystem());
 		
 		if(!endPointHelper.isHeadless()) {
-			engine.addSystem(new ZoneChangeSystem());
 			engine.addSystem(new AnimationSystem());
 			
 			// Used in movement demo

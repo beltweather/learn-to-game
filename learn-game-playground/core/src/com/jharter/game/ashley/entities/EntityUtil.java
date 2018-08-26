@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.GameInput;
@@ -31,8 +31,7 @@ public class EntityUtil {
 		EntityBuilder b = EntityBuilder.create(engine);
 		
 		b.IDComp();
-		b.PositionComp();
-		b.SizeComp();
+		b.SpriteComp();
 		b.TypeComp();
 		b.RemoveComp();
 		
@@ -56,9 +55,9 @@ public class EntityUtil {
 		
 		b.IDComp().id = id;
 		b.TypeComp().type = type;
-		b.PositionComp().position = position;
-		b.SizeComp().width = width;
-		b.SizeComp().height = height;
+		b.SpriteComp().position = position;
+		b.SpriteComp().width = width;
+		b.SpriteComp().height = height;
 		b.TextureComp().defaultRegion = texture;
 		
 		return b;
@@ -93,6 +92,6 @@ public class EntityUtil {
 		return b;
 	}
 	
-	private static final Family renderFamily = Family.all(PositionComp.class, TextureComp.class).exclude(InvisibleComp.class).get();
+	private static final Family renderFamily = Family.all(SpriteComp.class, TextureComp.class).exclude(InvisibleComp.class).get();
 	
 }

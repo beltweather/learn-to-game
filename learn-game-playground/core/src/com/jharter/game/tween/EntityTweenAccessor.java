@@ -1,9 +1,7 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Mapper;
 
 import aurelienribon.tweenengine.TweenAccessor;
@@ -14,51 +12,40 @@ public class EntityTweenAccessor implements TweenAccessor<Entity> {
 		
 	}
 	
-	protected PositionComp p(Entity entity) {
-		return Mapper.PositionComp.get(entity);
-	}
-	
-	protected SizeComp s(Entity entity) {
-		return Mapper.SizeComp.get(entity);
-	}
-	
-	protected AlphaComp a(Entity entity) {
-		return Mapper.AlphaComp.get(entity);
-	}
-
 	@Override
-	public int getValues(Entity e, int tweenType, float[] returnValues) {
+	public int getValues(Entity entity, int tweenType, float[] returnValues) {
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		switch(TweenType.get(tweenType)) {
 			case POSITION_X: 
-				returnValues[0] = p(e).position.x; 
+				returnValues[0] = s.position.x; 
 				return 1;
 			case POSITION_Y: 
-				returnValues[0] = p(e).position.y; 
+				returnValues[0] = s.position.y; 
 				return 1;
 			case POSITION_XY: 
-				returnValues[0] = p(e).position.x;
-				returnValues[1] = p(e).position.y;
+				returnValues[0] = s.position.x;
+				returnValues[1] = s.position.y;
 				return 2;
 			case  POSITION_XY_SCALE:
-				returnValues[0] = p(e).position.x;
-				returnValues[1] = p(e).position.y;
-				returnValues[2] = s(e).scale.x;
+				returnValues[0] = s.position.x;
+				returnValues[1] = s.position.y;
+				returnValues[2] = s.scale.x;
 				return 3;
 			case SCALE_X: 
-				returnValues[0] = s(e).scale.x;
+				returnValues[0] = s.scale.x;
 				return 1;
 			case SCALE_Y:
-				returnValues[0] = s(e).scale.y;
+				returnValues[0] = s.scale.y;
 				return 1;
 			case SCALE_XY:
-				returnValues[0] = s(e).scale.x;
-				returnValues[1] = s(e).scale.y;
+				returnValues[0] = s.scale.x;
+				returnValues[1] = s.scale.y;
 				return 2;
 			case ALPHA:
-				returnValues[0] = a(e).alpha;
+				returnValues[0] = s.alpha;
 				return 1;
 			case ANGLE:
-				returnValues[0] = p(e).angleDegrees;
+				returnValues[0] = s.angleDegrees;
 				return 1;
 			default:
 				return 0;
@@ -66,39 +53,40 @@ public class EntityTweenAccessor implements TweenAccessor<Entity> {
 	}
 
 	@Override
-	public void setValues(Entity e, int tweenType, float[] newValues) {
+	public void setValues(Entity entity, int tweenType, float[] newValues) {
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		switch(TweenType.get(tweenType)) {
 			case POSITION_X:
-				p(e).position.x = newValues[0];
+				s.position.x = newValues[0];
 				break;
 			case POSITION_Y:
-				p(e).position.y = newValues[0];
+				s.position.y = newValues[0];
 				break;
 			case POSITION_XY:
-				p(e).position.x = newValues[0];
-				p(e).position.y = newValues[1];
+				s.position.x = newValues[0];
+				s.position.y = newValues[1];
 				break;
 			case POSITION_XY_SCALE:
-				p(e).position.x = newValues[0];
-				p(e).position.y = newValues[1];
-				s(e).scale.x = newValues[2];
-				s(e).scale.y = newValues[2];
+				s.position.x = newValues[0];
+				s.position.y = newValues[1];
+				s.scale.x = newValues[2];
+				s.scale.y = newValues[2];
 				break;
 			case SCALE_X: 
-				s(e).scale.x = newValues[0];
+				s.scale.x = newValues[0];
 				break;
 			case SCALE_Y:
-				s(e).scale.y = newValues[0];
+				s.scale.y = newValues[0];
 				break;
 			case SCALE_XY:
-				s(e).scale.x = newValues[0];
-				s(e).scale.y = newValues[1];
+				s.scale.x = newValues[0];
+				s.scale.y = newValues[1];
 				break;
 			case ALPHA:
-				a(e).alpha = newValues[0];
+				s.alpha = newValues[0];
 				break;
 			case ANGLE:
-				p(e).angleDegrees = newValues[0];
+				s.angleDegrees = newValues[0];
 				break;
 			default:
 				break;

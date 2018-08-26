@@ -4,9 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
@@ -65,27 +63,18 @@ public abstract class ZoneLayout {
 	}
 	
 	public boolean matchesTarget(Entity entity, LayoutTarget target) {
-		PositionComp p = Mapper.PositionComp.get(entity);
-		SizeComp s = Mapper.SizeComp.get(entity);
-		AlphaComp a = Mapper.AlphaComp.get(entity);
-		if(p == null || s == null) {
+		SpriteComp s = Mapper.SpriteComp.get(entity);
+		if(s == null) {
 			return false;
 		}
 		
-		// Allow alpha to be null only if our alpha
-		// is set to one. Require position and size though
-		if(target.alpha != 1 && a == null) {
-			return false;
-		} else if(target.alpha != a.alpha) {
-			return false;
-		}
-		
-		return p.position.x == target.position.x &&
-			   p.position.y == target.position.y &&
-			   p.position.z == target.position.z &&
+		return s.position.x == target.position.x &&
+			   s.position.y == target.position.y &&
+			   s.position.z == target.position.z &&
 			   s.scale.x == target.scale.x &&
 			   s.scale.y == target.scale.y &&
-			   p.angleDegrees == target.angleDegrees;
+			   s.angleDegrees == target.angleDegrees &&
+			   s.alpha == target.alpha;
 	}
 	
 	protected abstract LayoutTarget getTarget(ID id, int index, Entity entity, LayoutTarget target);

@@ -7,8 +7,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.jharter.game.ashley.components.Components.BodyComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Mapper;
 
@@ -19,25 +18,24 @@ public class ApproachTargetSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public ApproachTargetSystem() {
-		super(Family.all(PositionComp.class, TargetPositionComp.class).get());
+		super(Family.all(SpriteComp.class, TargetPositionComp.class).get());
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
-		PositionComp p = Mapper.PositionComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		TargetPositionComp t = Mapper.TargetPositionComp.get(entity);
 		
 		if(t.position != null) {
 			float alpha = ALPHA;
-			float newX = Interpolation.linear.apply(p.position.x, t.position.x, alpha);
-	    	float newY = Interpolation.linear.apply(p.position.y, t.position.y, alpha);
-	    	if(isCloseEnough(p.position.x, t.position.x) &&
-			   isCloseEnough(p.position.y, t.position.y)) {	
+			float newX = Interpolation.linear.apply(s.position.x, t.position.x, alpha);
+	    	float newY = Interpolation.linear.apply(s.position.y, t.position.y, alpha);
+	    	if(isCloseEnough(s.position.x, t.position.x) &&
+			   isCloseEnough(s.position.y, t.position.y)) {	
 	    		t.position = null;
 	    		// Optionally, could just remove target comp here
 			} else {
 				BodyComp b = Mapper.BodyComp.get(entity);
-				SizeComp s = Mapper.SizeComp.get(entity);
-				setPosition(b.body, newX, newY, s.width, s.height, p.position);
+				setPosition(b.body, newX, newY, s.width, s.height, s.position);
 			}
 		}
 	}

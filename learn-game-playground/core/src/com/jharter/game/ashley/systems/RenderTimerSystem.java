@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Mapper;
 
@@ -20,7 +19,7 @@ public class RenderTimerSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderTimerSystem (OrthographicCamera camera) {
-		super(Family.all(PositionComp.class, SizeComp.class, TurnTimerComp.class).get());
+		super(Family.all(SpriteComp.class, TurnTimerComp.class).get());
 		this.camera = camera;
 		this.shapeRenderer = new ShapeRenderer();
 	}
@@ -42,13 +41,12 @@ public class RenderTimerSystem extends IteratingSystem {
 			return;
 		}
 		
-		int degrees = Math.round(360 * t.accumulator / t.maxTurnTime);
+		int degrees = Math.round(360 * t.accumulator / t.maxTurnTimeSec);
 		if(degrees < 200) {
 			//return;
 		}
 		
-		PositionComp p = Mapper.PositionComp.get(entity);
-		SizeComp s = Mapper.SizeComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
 		//shapeRenderer.begin(ShapeType.Line);
 		//shapeRenderer.circle(p.position.x, p.position.y, s.width / 2);
@@ -56,7 +54,7 @@ public class RenderTimerSystem extends IteratingSystem {
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(0, 0, 0, (float) Math.pow(degrees / 360f, 2));
-		shapeRenderer.arc(p.position.x, p.position.y, s.width / 2, 90, degrees, 2*degrees + 1);
+		shapeRenderer.arc(s.position.x, s.position.y, s.width / 2, 90, degrees, 2*degrees + 1);
 		shapeRenderer.end();
 		
 		//batch.draw(v.region, p.position.x, p.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);

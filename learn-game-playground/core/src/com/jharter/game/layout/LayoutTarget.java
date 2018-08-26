@@ -4,9 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Mapper;
 
 public class LayoutTarget implements Poolable {
@@ -19,14 +17,12 @@ public class LayoutTarget implements Poolable {
 	private LayoutTarget() {}
 	
 	public void setFromEntity(Entity entity) {
-		PositionComp p = Mapper.PositionComp.get(entity);
-		SizeComp s = Mapper.SizeComp.get(entity);
-		AlphaComp a = Mapper.AlphaComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		position.set(p.position);
+		position.set(s.position);
 		scale.set(s.scale);
-		alpha = a == null ? 1f : a.alpha;
-		angleDegrees = p.angleDegrees;
+		alpha = s.alpha;
+		angleDegrees = s.angleDegrees;
 	}
 
 	@Override

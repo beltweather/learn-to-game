@@ -12,8 +12,6 @@ import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.AnimatedPathComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -32,10 +30,9 @@ import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
@@ -106,11 +103,13 @@ public class EntityBuilder implements Poolable {
 		comps.clear();
 	}
 
+	public SpriteComp SpriteComp() { return get(SpriteComp.class); }
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public FocusComp FocusComp() { return get(FocusComp.class); }
 	public IDComp IDComp() { return get(IDComp.class); }
-	public PositionComp PositionComp() { return get(PositionComp.class); }
-	public SizeComp SizeComp() { return get(SizeComp.class); }
+	//public PositionComp PositionComp() { return get(PositionComp.class); }
+	//public SizeComp SizeComp() { return get(SizeComp.class); }
+	//public AlphaComp AlphaComp() { return get(AlphaComp.class); }
 	public TypeComp TypeComp() { return get(TypeComp.class); }
 	public TileComp TileComp() { return get(TileComp.class); }
 	public TextureComp TextureComp() { return get(TextureComp.class); }
@@ -141,8 +140,6 @@ public class EntityBuilder implements Poolable {
 	public ActionSpentComp ActionSpentComp() { return get(ActionSpentComp.class); }
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
 	public UntargetableComp UntargetableComp() { return get(UntargetableComp.class); }
-	public AlphaComp AlphaComp() { return get(AlphaComp.class); }
-	public AnimatedPathComp AnimatedPathComp() { return get(AnimatedPathComp.class); }
 	public TurnPhaseComp TurnPhaseComp() { return get(TurnPhaseComp.class); }
 	public TurnPhaseStartBattleComp TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleComp.class); }
 	public DisabledComp DisabledComp() { return get(DisabledComp.class); }

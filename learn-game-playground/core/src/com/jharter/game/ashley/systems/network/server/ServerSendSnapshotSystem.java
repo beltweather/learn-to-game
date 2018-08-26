@@ -8,7 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
@@ -30,7 +30,7 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
 	@SuppressWarnings("unchecked")
 	@Override
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(PositionComp.class, IDComp.class, VelocityComp.class).get());
+        entities = engine.getEntitiesFor(Family.all(SpriteComp.class, IDComp.class, VelocityComp.class).get());
     }
 
 	@Override
@@ -39,13 +39,13 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
     	snapshotPacket.sendTime = TimeUtils.millis();
     	for(Entity e : entities) {
     		IDComp id = Mapper.IDComp.get(e);
-    		PositionComp p = Mapper.PositionComp.get(e);
+    		SpriteComp s = Mapper.SpriteComp.get(e);
     		InputComp in = Mapper.InputComp.get(e);
     		
     		EntityData entityData = new EntityData();
         	entityData.id = id.id;
-        	entityData.x = p.position.x;
-        	entityData.y = p.position.y;
+        	entityData.x = s.position.x;
+        	entityData.y = s.position.y;
         	
         	if(in != null) {
         		in.input.addInputState(entityData);

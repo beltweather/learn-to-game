@@ -3,33 +3,14 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Components.ActiveCardComp;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.AnimatedPathComp;
-import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
-import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
-import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.MultiPositionComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
-import com.jharter.game.ashley.components.Components.TextureComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
-import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.tween.TweenType;
-import com.jharter.game.tween.TweenUtil;
 
-import aurelienribon.tweenengine.Tween;
 import uk.co.carelesslabs.Enums.ZoneType;
-import uk.co.carelesslabs.Media;
 
 public class ZoneChangeSystem extends IteratingSystem {
 

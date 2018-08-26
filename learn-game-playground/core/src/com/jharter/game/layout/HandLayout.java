@@ -1,8 +1,7 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
@@ -15,7 +14,7 @@ public class HandLayout extends ZoneLayout {
 
 	@Override
 	protected LayoutTarget getTarget(ID id, int index, Entity entity, LayoutTarget target) {
-		SizeComp s = Mapper.SizeComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
 		int anchorX = -700;
 		int anchorY = -475;

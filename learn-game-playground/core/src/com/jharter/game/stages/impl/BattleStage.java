@@ -21,7 +21,6 @@ import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemy
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
-import com.jharter.game.ashley.systems.ZoneChangeSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ashley.systems.CollisionSystem;
@@ -36,7 +35,6 @@ import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.RenderTimerSystem;
-import com.jharter.game.ashley.systems.TimeTurnActionsSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndTurnSystem;
 import com.jharter.game.ashley.systems.TurnPhasePerformEnemyActionsSystem;
@@ -48,6 +46,7 @@ import com.jharter.game.ashley.systems.TurnPhaseStartTurnSystem;
 import com.jharter.game.ashley.systems.TweenSystem;
 import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
 import com.jharter.game.ashley.systems.VelocityMovementSystem;
+import com.jharter.game.ashley.systems.ZoneChangeSystem;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
@@ -97,14 +96,14 @@ public class BattleStage extends GameStage {
 		// Turn timer
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnEntityID();
-		b.TurnTimerComp().maxTurnTime = TimeTurnActionsSystem.DEFAULT_INTERVAL;
+		b.TurnTimerComp().maxTurnTimeSec = 10f;
 		b.TurnPhaseComp();
 		b.TurnPhaseStartBattleComp();
-		b.PositionComp().position.x = 800;
-		b.PositionComp().position.y = -400;
-		b.SizeComp().width = 100;
-		b.SizeComp().height = 100;
-		b.AlphaComp();
+		b.SpriteComp().position.x = 800;
+		b.SpriteComp().position.y = -400;
+		b.SpriteComp().width = 100;
+		b.SpriteComp().height = 100;
+		b.SpriteComp();
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -165,7 +164,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mPower = 2;
 		b.StatsComp().mDefense = 2;
 		b.DescriptionComp().name = "Warrior";
-		b.AlphaComp();
+		b.SpriteComp();
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -185,7 +184,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mPower = 5;
 		b.StatsComp().mDefense = 6;
 		b.DescriptionComp().name = "Rogue";
-		b.AlphaComp();
+		b.SpriteComp();
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -204,7 +203,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mPower = 10;
 		b.StatsComp().mDefense = 10;
 		b.DescriptionComp().name = "Sorcerer";
-		b.AlphaComp();
+		b.SpriteComp();
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -223,7 +222,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mPower = 3;
 		b.StatsComp().mDefense = 4;
 		b.DescriptionComp().name = "Ranger";
-		b.AlphaComp();
+		b.SpriteComp();
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -238,13 +237,13 @@ public class BattleStage extends GameStage {
 		b.VitalsComp().weakHealth = 50;
 		b.VitalsComp().health = 500;
 		b.DescriptionComp().name = "Atma";
-		b.AlphaComp();
+		b.SpriteComp();
 		b.StatsComp().level = 3;
 		b.StatsComp().power = 20;
 		b.StatsComp().defense = 15;
 		b.StatsComp().mPower = 10;
 		b.StatsComp().mDefense = 10;
-		b.SizeComp().scale = new Vector2(2f,2f);
+		b.SpriteComp().scale = new Vector2(2f,2f);
 		enemyZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -264,7 +263,7 @@ public class BattleStage extends GameStage {
 		
 		b.CardComp().ownerID = rangerID;
 		b.DescriptionComp().name = "Forest";
-		b.AlphaComp();
+		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
 		new FriendEnemyCallback(b) {
@@ -317,7 +316,7 @@ public class BattleStage extends GameStage {
 		ID swampId = b.IDComp().id;
 		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Swamp";
-		b.AlphaComp();
+		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
 		new EnemyCallback(b) {
@@ -340,7 +339,7 @@ public class BattleStage extends GameStage {
 				Media.island);
 		b.CardComp().ownerID = sorcererID;
 		b.DescriptionComp().name = "Island";
-		b.AlphaComp();
+		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
 		new CardCallback(b) {
@@ -363,7 +362,7 @@ public class BattleStage extends GameStage {
 				Media.island);
 		b.CardComp().ownerID = sorcererID;
 		b.DescriptionComp().name = "Island";
-		b.AlphaComp();
+		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
 		new CardCallback(b) {
@@ -386,7 +385,7 @@ public class BattleStage extends GameStage {
 				Media.mountain);
 		b.CardComp().ownerID = warriorID;
 		b.DescriptionComp().name = "Mountain";
-		b.AlphaComp();
+		b.SpriteComp();
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		b.VelocityComp();
@@ -494,9 +493,6 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectSystem());
 		engine.addSystem(new QueueTurnActionsSystem());
-		
-		// REDUNDANT // engine.addSystem(new TimeTurnActionsSystem());
-		// REDUNDANT // engine.addSystem(new PerformTurnActionsSystem());
 		
 		// Used in movement demo
 		//engine.addSystem(new InputMovementSystem());

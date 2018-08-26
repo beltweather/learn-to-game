@@ -1,6 +1,6 @@
 package com.jharter.game.ashley.systems.network.server;
 
-import com.jharter.game.ashley.components.Components.PositionComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
@@ -36,11 +36,11 @@ public class ServerRegisterPlayerPacketSystem extends ConsumingPacketSystem<Game
 		AddPlayersPacket addPlayers = AddPlayersPacket.newInstance();
 		//for(Entity player : stage.getEngine().getEntitiesFor(Family.all(PlayerComp.class, IDComp.class, PositionComp.class).get())) {
 			AddPlayer addPlayer = new AddPlayer();
-			PositionComp p = b.PositionComp(); //Mapper.PositionComp.get(player);
+			SpriteComp s = b.SpriteComp(); //Mapper.PositionComp.get(player);
 			addPlayer.id = b.IDComp().id; //Mapper.IDComp.get(player).id;
-			addPlayer.x = p.position.x;
-			addPlayer.y = p.position.y;
-			addPlayer.z = p.position.z;
+			addPlayer.x = s.position.x;
+			addPlayer.y = s.position.y;
+			addPlayer.z = s.position.z;
 			addPlayers.players.add(addPlayer);
 		//}
 		System.out.println("Server sending " + addPlayers.players.size + " players to all clients.");

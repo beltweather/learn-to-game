@@ -8,8 +8,7 @@ import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.MultiPositionComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
@@ -19,7 +18,6 @@ import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.id.ID;
 
-import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Circ;
 import uk.co.carelesslabs.Media;
@@ -28,14 +26,14 @@ public class CursorPositionSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorPositionSystem() {
-		super(Family.all(CursorComp.class, ZonePositionComp.class, TextureComp.class).get());
+		super(Family.all(CursorComp.class, ZonePositionComp.class, SpriteComp.class, TextureComp.class).get());
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		CursorComp c = Mapper.CursorComp.get(entity);
 		IDComp id = Mapper.IDComp.get(entity);
-		PositionComp p = Mapper.PositionComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 		setCursorDirection(entity, zp);
 		
@@ -45,7 +43,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
 					tempPosition = getCursorPosition(entity, zp, i);
 					if(tempPosition != null) {
-						Vector3 currP = new Vector3(p.position);
+						Vector3 currP = new Vector3(s.position);
 						Vector3 targP = new Vector3(tempPosition);
 						mp.positions.add(currP);
 						
@@ -136,13 +134,13 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		LayoutTarget lTarget = z.layout.getTarget(cursorTargetID);
-		SizeComp sTarget = Mapper.SizeComp.get(target);
+		SpriteComp sTarget = Mapper.SpriteComp.get(target);
 		
 		if(lTarget == null || sTarget == null) {
 			return null;
 		}
 		
-		SizeComp s = Mapper.SizeComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
 
 		switch(zp.zoneType) {
 			case HAND:
@@ -155,7 +153,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				if(ac != null && ac.activeCardID != null) {
 					Entity card = Mapper.Entity.get(ac.activeCardID);
 					if(card != null) {
-						SizeComp sCard = Mapper.SizeComp.get(card);
+						SpriteComp sCard = Mapper.SpriteComp.get(card);
 						cardOffset = sCard.scaledWidth(0.25f) + 20;
 					}
 				}

@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
-import com.jharter.game.layout.LayoutTarget;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
 
@@ -41,6 +40,30 @@ public final class Components {
 		}
 	}
 	
+	// ------------------- BOOL COMPONENTS -----------------------------
+
+	public static final class AnimatingComp extends BoolComp {}
+	public static final class UntargetableComp extends BoolComp {}
+	public static final class PlayerComp extends BoolComp {}
+	public static final class FocusComp extends BoolComp {}
+	public static final class InvisibleComp extends BoolComp {}
+	public static final class DisabledComp extends BoolComp {}
+	
+	public static final class TurnPhaseStartBattleComp extends BoolComp {}
+	public static final class TurnPhaseStartTurnComp extends BoolComp {}
+	public static final class TurnPhaseSelectEnemyActionsComp extends BoolComp {}
+	public static final class TurnPhaseSelectFriendActionsComp extends BoolComp {}
+	public static final class TurnPhasePerformFriendActionsComp extends BoolComp {}
+	public static final class TurnPhasePerformEnemyActionsComp extends BoolComp {}
+	public static final class TurnPhaseEndTurnComp extends BoolComp {}
+	public static final class TurnPhaseEndBattleComp extends BoolComp {}
+	public static final class TurnPhaseNoneComp extends BoolComp {}
+	
+	public static final class ActionQueueableComp extends BoolComp {}
+	public static final class ActionQueuedComp extends BoolComp {}
+	public static final class ActionReadyComp extends BoolComp {}
+	public static final class ActionSpentComp extends BoolComp {}
+	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
 	public static final class IDComp implements Comp {
@@ -54,53 +77,79 @@ public final class Components {
 		}
 	}
 	
-	public static final class AnimatingComp extends BoolComp {}
-	
-	public static final class AnimatedPathComp implements Comp {
-		public Vector3 targetPosition = new Vector3(0, 0, 0);
-		public Vector3 startPosition = new Vector3(0, 0, 0);
-		public float tolerance = 5;
-		
-		private AnimatedPathComp() {}
-		
-		public float getProgress(PositionComp p) {
-			if(targetPosition.x == startPosition.x) {
-				return 1f;
-			}
-			return (p.position.x - startPosition.x) / (targetPosition.x - startPosition.x);
-		}
-		
-		public void setVelocityFromPath(PositionComp p, VelocityComp v, float deltaTime) {
-			setVelocityFromPath(p.position.x, p.position.y, targetPosition.x, targetPosition.y, p, v, v.speed, deltaTime);
-		}
-		
-		private void setVelocityFromPath(float x, float y, float targetX, float targetY, PositionComp p, VelocityComp v, float speed, float deltaTime) {
-			float angle = (float) Math.atan2(targetY - y, targetX - x);
-			
-			float vX = (float) Math.cos(angle) * v.speed;
-			float vY = (float) Math.sin(angle) * v.speed;
-			//v.velocity.set(, );
-			p.position.x += vX * deltaTime;
-			p.position.y += vY * deltaTime;
-		}
-		
-		public boolean isCloseEnough(PositionComp p, VelocityComp v, float deltaTime) {
-			return isCloseEnough(p.position.x, p.position.y, targetPosition.x, targetPosition.y, v.speed, tolerance, deltaTime);
-		}
-		
-		private boolean isCloseEnough(float x, float y, float targetX, float targetY, float speed, float tolerance, float deltaTime) {
-			return targetX - x <= speed / tolerance * deltaTime && targetY - y <= speed / tolerance * deltaTime;
-		}
+	public static final class TypeComp implements Comp {
+		public EntityType type;
+
+		private TypeComp() {}
 		
 		@Override
 		public void reset() {
-			targetPosition.set(0, 0, 0);
-			startPosition.set(0, 0, 0);
-			tolerance = 3;
+			type = null;
 		}
 	}
 	
-	public static final class PositionComp implements Comp {
+	public static final class DescriptionComp implements Comp {
+		
+		public String name = null;
+		
+		private DescriptionComp() {}
+		
+		@Override
+		public void reset() {
+			name = null;
+		}
+	}
+	
+	public static final class SpriteComp implements Comp {
+		public Vector3 position = new Vector3(0, 0, 0);
+		public Vector2 direction = new Vector2(0, 0);
+		public float angleDegrees = 0.0f;
+		
+		public float width;
+		public float height;
+		public Vector2 scale = new Vector2(1.0f, 1.0f);
+		
+		public float alpha = 1f;
+		
+		private SpriteComp() {}
+		
+		public float scaledWidth() {
+			return scaledWidth(scale.x);
+		}
+		
+		public float scaledWidth(float scaleX) {
+			if(scaleX == 1) {
+				return width;
+			}
+			return scaleX * width;
+		}
+		
+		public float scaledHeight() {
+			return scaledHeight(scale.y);
+		}
+		
+		public float scaledHeight(float scaleY) {
+			if(scaleY == 1) {
+				return height;
+			}
+			return scaleY * height;
+		}
+		
+		@Override 
+		public void reset() {
+			position.set(0, 0, 0);
+			direction.set(0, 0);
+			angleDegrees = 0.0f;
+			
+			width = 0f;
+			height = 0f;
+			scale.set(1.0f, 1.0f);
+			
+			alpha = 1f;
+		}
+	}
+	
+	/*public static final class PositionComp implements Comp {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
 		public float angleDegrees = 0.0f;
@@ -112,17 +161,6 @@ public final class Components {
 			position.set(0, 0, 0);
 			direction.set(0, 0);
 			angleDegrees = 0.0f;
-		}
-	}
-	
-	public static final class MultiPositionComp implements Comp {
-		public Array<Vector3> positions = new Array<Vector3>();
-		
-		private MultiPositionComp() {}
-		
-		@Override
-		public void reset() {
-			positions.clear();
 		}
 	}
 	
@@ -163,14 +201,27 @@ public final class Components {
 		}
 	}
 	
-	public static final class TypeComp implements Comp {
-		public EntityType type;
-
-		private TypeComp() {}
+	public static final class AlphaComp implements Comp {
+		
+		public float alpha = 1f;
+		
+		private AlphaComp() {}
 		
 		@Override
 		public void reset() {
-			type = null;
+			alpha = 1f;
+		}
+		
+	}*/
+	
+	public static final class MultiPositionComp implements Comp {
+		public Array<Vector3> positions = new Array<Vector3>();
+		
+		private MultiPositionComp() {}
+		
+		@Override
+		public void reset() {
+			positions.clear();
 		}
 	}
 	
@@ -234,18 +285,6 @@ public final class Components {
 		public void reset() {
 			interactables.clear();
 			interaction = null;
-		}
-	}
-	
-	public static final class DescriptionComp implements Comp {
-		
-		public String name = null;
-		
-		private DescriptionComp() {}
-		
-		@Override
-		public void reset() {
-			name = null;
 		}
 	}
 	
@@ -335,31 +374,6 @@ public final class Components {
 		
 	}
 
-	public static final class ActionQueueableComp implements Comp {
-		private ActionQueueableComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class ActionQueuedComp implements Comp {
-		private ActionQueuedComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class ActionReadyComp implements Comp {
-		private ActionReadyComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class ActionSpentComp implements Comp {
-		private ActionSpentComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class UntargetableComp implements Comp {
-		private UntargetableComp() {}
-		@Override public void reset() {}
-	}
-	
 	public static final class TurnActionComp implements Comp {
 		
 		public TurnAction turnAction = Pools.get(TurnAction.class).obtain();
@@ -393,29 +407,6 @@ public final class Components {
 		}
 	}
 	
-	// ------------------- BOOLEAN COMPONENTS -------------------------
-	
-	public static final class PlayerComp implements Comp {
-		private PlayerComp() {}
-		
-		@Override
-		public void reset() {}
-	}
-	
-	public static final class FocusComp implements Comp {
-		private FocusComp() {}
-		
-		@Override
-		public void reset() {}
-	}
-	
-	public static final class InvisibleComp implements Comp {
-		private InvisibleComp() {}
-		
-		@Override
-		public void reset() {}
-	}
-	
 	public static final class CursorComp implements Comp {
 		public ID turnActionEntityID = null;
 		
@@ -440,7 +431,7 @@ public final class Components {
 	
 	public static final class TurnTimerComp implements Comp {
 		public float accumulator = 0;
-		public float maxTurnTime = 0;
+		public float maxTurnTimeSec = 0;
 		public boolean play = true;
 		
 		private TurnTimerComp() {}
@@ -460,7 +451,7 @@ public final class Components {
 		}
 		
 		public boolean isOvertime() {
-			return accumulator > maxTurnTime;
+			return accumulator > maxTurnTimeSec;
 		}
 		
 		public void increment(float deltaTime) {
@@ -470,7 +461,7 @@ public final class Components {
 		@Override
 		public void reset() {
 			accumulator = 0;
-			maxTurnTime = 0;
+			maxTurnTimeSec = 0;
 			play = true;
 		}
 	}
@@ -486,57 +477,6 @@ public final class Components {
 			turnPhase = TurnPhase.SELECT_ENEMY_ACTIONS;
 		}
 		
-	}
-	
-	public static final class DisabledComp implements Comp {
-		public DisabledComp() {}
-		@Override public void reset() {}
-	}
-	
-	// Turn phase boolean components
-	public static final class TurnPhaseStartBattleComp implements Comp {
-		private TurnPhaseStartBattleComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhaseStartTurnComp implements Comp {
-		private TurnPhaseStartTurnComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhaseSelectEnemyActionsComp implements Comp {
-		private TurnPhaseSelectEnemyActionsComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhaseSelectFriendActionsComp implements Comp {
-		private TurnPhaseSelectFriendActionsComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhasePerformFriendActionsComp implements Comp {
-		private TurnPhasePerformFriendActionsComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhasePerformEnemyActionsComp implements Comp {
-		private TurnPhasePerformEnemyActionsComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhaseEndTurnComp implements Comp {
-		private TurnPhaseEndTurnComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhaseEndBattleComp implements Comp {
-		private TurnPhaseEndBattleComp() {}
-		@Override public void reset() {}
-	}
-	
-	public static final class TurnPhaseNoneComp implements Comp {
-		private TurnPhaseNoneComp() {}
-		@Override public void reset() {}
 	}
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
@@ -741,19 +681,6 @@ public final class Components {
 			code = null;
 			secondaryTexture = null;
 		}
-	}
-	
-	public static final class AlphaComp implements Comp {
-		
-		public float alpha = 1f;
-		
-		private AlphaComp() {}
-		
-		@Override
-		public void reset() {
-			alpha = 1f;
-		}
-		
 	}
 	
 	public static final class TextureComp implements Comp {

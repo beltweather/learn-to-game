@@ -4,21 +4,20 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.FocusComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.debug.Debug;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.debug.Debug;
 
 import uk.co.carelesslabs.Rumble;
 
-public class CameraSystem extends IteratingSystem {
+public class FocusCameraSystem extends IteratingSystem {
 
 	private OrthographicCamera camera;
 	
 	@SuppressWarnings("unchecked")
-	public CameraSystem(OrthographicCamera camera) {
-		super(Family.all(FocusComp.class, PositionComp.class).get());
+	public FocusCameraSystem(OrthographicCamera camera) {
+		super(Family.all(FocusComp.class, SpriteComp.class).get());
 		this.camera = camera;
 	}
 
@@ -28,7 +27,7 @@ public class CameraSystem extends IteratingSystem {
             Rumble.tick(deltaTime);
             camera.translate(Rumble.getPos());
         } else {
-            camera.position.lerp(Debug.LOCK_CAMERA ? Debug.LOCKED_CAMERA_CENTER : Mapper.PositionComp.get(entity).position, .2f);
+            camera.position.lerp(Debug.LOCK_CAMERA ? Debug.LOCKED_CAMERA_CENTER : Mapper.SpriteComp.get(entity).position, .2f);
         }
 		camera.update();
 	}

@@ -10,11 +10,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Components.AlphaComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Mapper;
@@ -26,7 +24,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
-		super(Family.all(PositionComp.class, TextureComp.class, SizeComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get(), new PositionSort());
+		super(Family.all(SpriteComp.class, TextureComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get(), new PositionSort());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 	}
@@ -42,29 +40,27 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		PositionComp p = Mapper.PositionComp.get(entity);
-		TextureComp v = Mapper.TextureComp.get(entity);
-		SizeComp s = Mapper.SizeComp.get(entity);
-		AlphaComp a = Mapper.AlphaComp.get(entity);
-		boolean hasAlpha = a != null && a.alpha != 1f;
+		TextureComp t = Mapper.TextureComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
+		boolean hasAlpha = s.alpha != 1f;
 		
-		if(v.region == null) {
-			v.region = v.defaultRegion;
+		if(t.region == null) {
+			t.region = t.defaultRegion;
 		}
-		if(v.region != null) {
+		if(t.region != null) {
 			
 			Color c = null;
 			if(hasAlpha) {
 				c = batch.getColor();
-				batch.setColor(c.r, c.g, c.b, a.alpha);
+				batch.setColor(c.r, c.g, c.b, s.alpha);
 			}
 			
 			if(Mapper.MultiPositionComp.has(entity)) {
 				for(Vector3 position : Mapper.MultiPositionComp.get(entity).positions) {
-					batch.draw(v.region, position.x, position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);
+					batch.draw(t.region, position.x, position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
 				}
 			} else {
-				batch.draw(v.region, p.position.x, p.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);
+				batch.draw(t.region, s.position.x, s.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
 			}
 			
 			if(hasAlpha) {
@@ -74,12 +70,12 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	}
 	
 	private static class PositionSort implements Comparator<Entity> {
-		private ComponentMapper<PositionComp> pm = ComponentMapper.getFor(PositionComp.class);
+		private ComponentMapper<SpriteComp> sm = ComponentMapper.getFor(SpriteComp.class);
 		
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
-			Vector3 posA = pm.get(entityA).position;
-			Vector3 posB = pm.get(entityB).position;
+			Vector3 posA = sm.get(entityA).position;
+			Vector3 posB = sm.get(entityB).position;
 			if(posA.z == posB.z) {
 				return (int) (posB.y - posA.y);
 			}

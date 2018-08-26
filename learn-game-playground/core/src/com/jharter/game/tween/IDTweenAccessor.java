@@ -1,9 +1,6 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.AlphaComp;
-import com.jharter.game.ashley.components.Components.PositionComp;
-import com.jharter.game.ashley.components.Components.SizeComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
 

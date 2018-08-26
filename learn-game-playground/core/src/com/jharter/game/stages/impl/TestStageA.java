@@ -21,7 +21,7 @@ import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
-import com.jharter.game.ashley.systems.CameraSystem;
+import com.jharter.game.ashley.systems.FocusCameraSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.InputMovementSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
@@ -186,7 +186,7 @@ public class TestStageA extends GameStage {
 			engine.addSystem(new AnimationSystem());
 			
 			// Used in movement demo
-			engine.addSystem(new CameraSystem(getCamera()));
+			engine.addSystem(new FocusCameraSystem(getCamera()));
 			engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderTilesSystem(getCamera()));
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));

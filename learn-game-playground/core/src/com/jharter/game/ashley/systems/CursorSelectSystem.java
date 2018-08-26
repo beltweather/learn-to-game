@@ -32,7 +32,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 		ZoneComp z = zp.getZoneComp();
 		
 		// A little failsafe here for when zones are empty
-		if(!z.hasIndex(zp)) {
+		if(!z.hasIndex(zp.index)) {
 			ci.reset();
 			return;
 		}
@@ -40,11 +40,11 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 		if(ci.accept) {
 			
 			TurnAction t = c.getTurnAction();
-			int index = zp.index();
+			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
-			if(isValidTarget(z.zoneType(), t, index)) {
-				ID targetEntityID = z.getID(zp);
+			if(isValidTarget(z.zoneType, t, index)) {
+				ID targetEntityID = z.objectIDs.get(index);
 				Entity targetEntity = Mapper.Entity.get(targetEntityID);
 				
 				// If this is our first target, make them the turn action entity

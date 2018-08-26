@@ -29,8 +29,8 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		ZoneComp z = zp.getZoneComp();
 		TurnAction t = c.getTurnAction();
 		
-		ZoneType zoneType = z.zoneType();
-		int index = zp.index();
+		ZoneType zoneType = z.zoneType;
+		int index = zp.index;
 		
 		boolean move = ci.move();
 		boolean valid = isValidTarget(zoneType, t, index);
@@ -65,7 +65,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 			newIndex = -1;
 		}
 		
-		if(zp.index() != newIndex || zp.zoneType() != zoneType) {
+		if(zp.index != newIndex || zp.zoneType != zoneType) {
 			ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
 			cz.newZoneType = zoneType;
 			cz.newIndex = newIndex;
@@ -73,7 +73,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		}
 		
 		/*if(z.hasIndex(newIndex)) {
-			if(zp.zoneType() != zoneType) {
+			if(zp.zoneType != zoneType) {
 				zp.zoneType(zoneType);
 			}
 			zp.index(newIndex);

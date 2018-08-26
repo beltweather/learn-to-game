@@ -129,7 +129,7 @@ public class Mapper {
 		}
 		
 		public ZoneComp get(ZonePositionComp zp) {
-			Entity zone = Mapper.Entity.get(zp.zoneType());
+			Entity zone = Mapper.Entity.get(zp.zoneType);
 			return Mapper.ZoneComp.get(zone);
 		}
 		
@@ -143,7 +143,7 @@ public class Mapper {
 		}
 		
 		public boolean has(ZonePositionComp zp) {
-			return has(Mapper.Entity.get(zp.zoneType()));
+			return has(Mapper.Entity.get(zp.zoneType));
 		}
 		
 		public boolean has(ZoneType zoneType) {

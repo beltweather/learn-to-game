@@ -28,8 +28,8 @@ public class CursorNewMoveSystem extends AbstractCursorOperationSystem {
 		ZoneComp z = zp.getZoneComp();
 		TurnAction t = c.getTurnAction();
 		
-		ZoneType zoneType = z.zoneType();
-		int index = zp.index();
+		ZoneType zoneType = z.zoneType;
+		int index = zp.index;
 		
 		boolean move = ci.move();
 		boolean valid = isValidTarget(zoneType, t, index);
@@ -53,9 +53,9 @@ public class CursorNewMoveSystem extends AbstractCursorOperationSystem {
 		
 		int newIndex = findNextValidTargetInZone(zoneType, t, index, direction);
 		if(z.hasIndex(newIndex)) {
-			zp.index(newIndex);
+			zp.index = newIndex;
 		} else {
-			zp.index(-1);
+			zp.index = -1;
 		}
 	}
 

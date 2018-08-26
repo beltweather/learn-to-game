@@ -27,9 +27,9 @@ public class CursorTargetValidationSystem extends AbstractCursorOperationSystem 
 		ZoneComp z = zp.getZoneComp();
 		TurnAction t = c.getTurnAction();
 		
-		ZoneType zoneType = z.zoneType();
-		for(int i = 0; i < z.size(); i++) {
-			ID id = z.get(i);
+		ZoneType zoneType = z.zoneType;
+		for(int i = 0; i < z.objectIDs.size(); i++) {
+			ID id = z.objectIDs.get(i);
 			Entity zoneItem = Mapper.Entity.get(id);
 			if(!isValidTarget(zoneType, t, i)) {
 				if(!Mapper.UntargetableComp.has(zoneItem)) {

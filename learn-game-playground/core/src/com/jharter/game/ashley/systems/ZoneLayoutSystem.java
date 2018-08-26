@@ -19,19 +19,14 @@ public class ZoneLayoutSystem extends IteratingSystem {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		ZoneComp z = Mapper.ZoneComp.get(entity);
-		for(ID id : z.getIds()) {
-			/*if(z.isDirty()) {
-				z.revalidate();
-				z.clean();
-			}*/
-			
-			z.revalidate();
+		for(ID id : z.objectIDs) {
+			z.layout.revalidate();
 			Entity zEntity = Mapper.Entity.get(id);
 			if(Mapper.AnimatingComp.has(zEntity)) {
 				continue;
 			}
-			LayoutTarget target = z.getTarget(id);
-			if(!z.matchesTarget(zEntity, target)) {
+			LayoutTarget target = z.layout.getTarget(id);
+			if(!z.layout.matchesTarget(zEntity, target)) {
 				TweenUtil.tween(id, target);
 			}
 		}

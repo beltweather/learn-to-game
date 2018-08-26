@@ -111,40 +111,40 @@ public class BattleStage extends GameStage {
 		// Zones
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.HAND);
-		b.ZoneComp().zoneType(ZoneType.HAND);
-		b.ZoneComp().setLayout(new HandLayout(b.ZoneComp()));
+		b.ZoneComp().zoneType = ZoneType.HAND;
+		b.ZoneComp().layout = new HandLayout(b.ZoneComp());
 		ZoneComp handZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
 
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.FRIEND);
-		b.ZoneComp().zoneType(ZoneType.FRIEND);
-		b.ZoneComp().setLayout(new IdentityLayout(b.ZoneComp()));
+		b.ZoneComp().zoneType = ZoneType.FRIEND;
+		b.ZoneComp().layout = new  IdentityLayout(b.ZoneComp());
 		ZoneComp friendZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ACTIVE_CARD);
-		b.ZoneComp().zoneType(ZoneType.ACTIVE_CARD);
-		b.ZoneComp().setLayout(new ActiveCardLayout(b.ZoneComp()));
+		b.ZoneComp().zoneType = ZoneType.ACTIVE_CARD;
+		b.ZoneComp().layout = new ActiveCardLayout(b.ZoneComp());
 		ZoneComp activeCardZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
 
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.DISCARD);
-		b.ZoneComp().zoneType(ZoneType.DISCARD);
-		b.ZoneComp().setLayout(new IdentityLayout(b.ZoneComp()));
+		b.ZoneComp().zoneType = ZoneType.DISCARD;
+		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
 		ZoneComp discardCardZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ENEMY);
-		b.ZoneComp().zoneType(ZoneType.ENEMY);
-		b.ZoneComp().setLayout(new IdentityLayout(b.ZoneComp()));
+		b.ZoneComp().zoneType = ZoneType.ENEMY;
+		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
 		ZoneComp enemyZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -427,8 +427,8 @@ public class BattleStage extends GameStage {
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
 		b.InputComp().input = buildInput(focus);
-		b.ZonePositionComp().zoneType(ZoneType.HAND);
-		b.ZonePositionComp().index(0);
+		b.ZonePositionComp().zoneType = ZoneType.HAND;
+		b.ZonePositionComp().index = 0;
 		if(focus) {
 			b.FocusComp();
 		}

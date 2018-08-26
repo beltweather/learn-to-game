@@ -39,12 +39,12 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 	
 	private int findNextValidTarget(ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
 		ZoneComp z = Mapper.ZoneComp.get(zoneType);
-		for(int i = 0; i < z.size(); i++) {
-			index = findNextIndex(index, direction, z.size());
+		for(int i = 0; i < z.objectIDs.size(); i++) {
+			index = findNextIndex(index, direction, z.objectIDs.size());
 			if(!z.hasIndex(index)) {
 				return -1;
 			}
-			Entity entity = Mapper.Entity.get(z.get(index));
+			Entity entity = Mapper.Entity.get(z.objectIDs.get(index));
 			if(entity != null && (t == null || t.isValidTarget(entity))) {
 				if(t == null) {
 					TurnActionComp taComp = Mapper.TurnActionComp.get(entity);

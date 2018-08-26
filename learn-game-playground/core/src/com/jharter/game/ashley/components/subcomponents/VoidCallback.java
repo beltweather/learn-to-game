@@ -63,8 +63,8 @@ public abstract class VoidCallback<T> {
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(friend);
 				ZoneComp z = Mapper.ZoneComp.get(zp);
 				ID id;
-				for(int i = 0; i < z.size(); i++) {
-					id = z.get(i);
+				for(int i = 0; i < z.objectIDs.size(); i++) {
+					id = z.objectIDs.get(i);
 					Entity entity = Mapper.Entity.get(id);
 					if(Mapper.CursorComp.has(entity)) {
 						continue;
@@ -127,8 +127,8 @@ public abstract class VoidCallback<T> {
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(enemy);
 				ZoneComp z = Mapper.ZoneComp.get(zp);
 				ID id;
-				for(int i = 0; i < z.size(); i++) {
-					id = z.get(i);
+				for(int i = 0; i < z.objectIDs.size(); i++) {
+					id = z.objectIDs.get(i);
 					Entity entity = Mapper.Entity.get(id);
 					if(Mapper.CursorComp.has(entity)) {
 						continue;

@@ -48,18 +48,18 @@ public class ZoneChangeSystem extends IteratingSystem {
 		if(cz.newZoneType != null && cz.newZoneType != ZoneType.NONE) {
 			targetZoneType = cz.newZoneType;
 		} else {
-			targetZoneType = zp.zoneType();
+			targetZoneType = zp.zoneType;
 		}
 		
 		ZoneComp z = Mapper.ZoneComp.get(targetZoneType);
 		
 		int targetIndex;
 		if(cz.useNextIndex) {
-			targetIndex = z.size();
+			targetIndex = z.objectIDs.size();
 		} else if(cz.newIndex >= 0) {
 			targetIndex = cz.newIndex;
 		} else {
-			targetIndex = zp.index();
+			targetIndex = zp.index;
 		}
 		
 		if(!cz.useNextIndex && !z.hasIndex(targetIndex)) {
@@ -70,16 +70,16 @@ public class ZoneChangeSystem extends IteratingSystem {
 			case CARD:
 				ZoneComp zOld = Mapper.ZoneComp.get(zp);
 				zOld.remove(id.id);
-				z.add(id, zp);
-				zp.index(targetIndex);
+				z.add(id.id, zp);
+				zp.index = targetIndex;
 				entity.remove(ChangeZoneComp.class);
 				break;
 			case CURSOR:
 				if(cz.checkpoint) {
 					zp.checkpoint();
 				}
-				zp.zoneType(targetZoneType);
-				zp.index(targetIndex);
+				zp.zoneType = targetZoneType;
+				zp.index = targetIndex;
 				entity.remove(ChangeZoneComp.class);
 				break;
 			case FRIEND:

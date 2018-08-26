@@ -2,6 +2,7 @@ package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -615,129 +616,43 @@ public final class Components {
 	}
 	
 	public static final class ZoneComp implements Comp {
-		private ZoneType zoneType = ZoneType.NONE;
-		private Array<ID> objects = new Array<ID>();
-		private boolean dirty = true;
-		private ZoneLayout layout = null;
-		
-		public void setLayout(ZoneLayout layout) {
-			this.layout = layout;
-		}
-		
-		public Array<ID> getIds() {
-			return objects;
-		}
-		
-		public LayoutTarget getTarget(ID id) {
-			if(layout == null) {
-				return null;
-			}
-			return layout.getTarget(id);
-		}
-		
-		public void revalidate() {
-			layout.revalidate();
-		}
-		
-		public boolean matchesTarget(Entity entity, LayoutTarget target) {
-			if(layout == null) {
-				return true;
-			}
-			return layout.matchesTarget(entity, target);
-		}
-		
-		public void zoneType(ZoneType zoneType) {
-			this.zoneType = zoneType;
-			dirty = true;
-		}
-
-		public ZoneType zoneType() {
-			return zoneType;
-		}
-		
-		public boolean isDirty() {
-			return dirty;
-		}
-		
-		public void clean() {
-			dirty = false;
-		}
-		
-		public boolean hasIndex(ZonePositionComp zp) {
-			return hasIndex(zp.index);
-		}
-		
-		public boolean hasIndex(int index) {
-			return index >= 0 && index < objects.size;
-		}
-		
-		public void add(EntityBuilder b) {
-			add(b.IDComp(), b.ZonePositionComp());
-		}
-		
-		public void add(IDComp id, ZonePositionComp zp) {
-			add(id.id, zp);
-		}
-		
-		public void add(ID id, ZonePositionComp zp) {
-			zp.index(objects.size);
-			objects.add(id);
-			zp.zoneType(zoneType);
-			dirty = true;
-		}
-		
-		public ID getID(ZonePositionComp zp) {
-			int index = zp.index;
-			if(index < 0 || index >= objects.size) {
-				return null;
-			}
-			return objects.get(index);
-		}
-		
-		public Entity getEntity(ZonePositionComp zp) {
-			ID id = getID(zp);
-			if(id == null) {
-				return null;
-			}
-			return Mapper.Entity.get(id);
-		}
-		
-		public void remove(IDComp id) {
-			remove(id.id);
-		}
-		
-		public void remove(ID id) {
-			objects.removeValue(id, false);
-			for(int i = 0; i < objects.size; i++) {
-				ID oID = objects.get(i);
-				Entity obj = Mapper.Entity.get(oID);
-				ZonePositionComp zp = Mapper.ZonePositionComp.get(obj);
-				zp.index(i);
-			}
-			dirty = true;
-		}
-		
-		public void soil() {
-			dirty = true;
-		}
-		
-		public int size() {
-			return objects.size;
-		}
-		
-		public ID get(int index) {
-			return objects.get(index);
-		}
+		public ZoneType zoneType = ZoneType.NONE;
+		private Array<ID> internalObjectIDs = new Array<ID>();
+		public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
+		public ZoneLayout layout = null;
 		
 		private ZoneComp() {
 			
 		}
 		
+		public boolean hasIndex(int index) {
+			return index >= 0 && index < internalObjectIDs.size;
+		}
+		
+		public void add(EntityBuilder b) {
+			add(b.IDComp().id, b.ZonePositionComp());
+		}
+		
+		public void add(ID id, ZonePositionComp zp) {
+			zp.index = internalObjectIDs.size;
+			internalObjectIDs.add(id);
+			zp.zoneType = zoneType;
+		}
+		
+		public void remove(ID id) {
+			internalObjectIDs.removeValue(id, false);
+			for(int i = 0; i < internalObjectIDs.size; i++) {
+				ID oID = internalObjectIDs.get(i);
+				Entity obj = Mapper.Entity.get(oID);
+				ZonePositionComp zp = Mapper.ZonePositionComp.get(obj);
+				zp.index = i;
+			}
+		}
+		
 		@Override
 		public void reset() {
 			zoneType = ZoneType.NONE;
-			objects.clear();
-			dirty = true;
+			internalObjectIDs.clear();
 			layout = null;
 		}
 		
@@ -745,10 +660,9 @@ public final class Components {
 	
 	public static final class ZonePositionComp implements Comp {
 		
-		private ZoneType zoneType = ZoneType.NONE;
-		private int index = -1;
+		public ZoneType zoneType = ZoneType.NONE;
+		public int index = -1;
 		private transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
-		private boolean dirty = true;
 		
 		private ZonePositionComp() {}
 		
@@ -757,44 +671,6 @@ public final class Components {
 				return null;
 			}
 			return Mapper.ZoneComp.get(this);
-		}
-		
-		public int index() {
-			return index;
-		}
-		
-		public void index(int index) {
-			this.index = index;
-			dirty = true;
-		}
-		
-		public ZoneType zoneType() {
-			return zoneType;
-		}
-		
-		public void zoneType(ZoneType zoneType) {
-			this.zoneType = zoneType;
-			dirty = true;
-		}
-		
-		public void soil() {
-			dirty = true;
-		}
-		
-		public boolean isDirty() {
-			return dirty;
-		}
-		
-		public void clean() {
-			dirty = false;
-		}
-		
-		private ZonePositionComp copyForHistory() {
-			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
-			zp.zoneType = zoneType;
-			zp.index = index;
-			// Intentionally ignoring history for copies since we don't use it
-			return zp;
 		}
 		
 		public void checkpoint() {
@@ -822,12 +698,19 @@ public final class Components {
 			history.clear();
 		}
 		
+		private ZonePositionComp copyForHistory() {
+			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
+			zp.zoneType = zoneType;
+			zp.index = index;
+			// Intentionally ignoring history for copies since we don't use it
+			return zp;
+		}
+		
 		@Override
 		public void reset() {
 			zoneType = ZoneType.NONE;
 			index = -1;
 			history.clear();
-			dirty = true;
 		}
 		
 	}

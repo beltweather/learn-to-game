@@ -42,7 +42,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		if(isAll(c)) {
 			MultiPositionComp mp = getMultiPositionComp(entity);
 			if(mp.positions.size == 0) {
-				for(int i = 0; i < Mapper.ZoneComp.get(zp).size(); i++) {
+				for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
 					tempPosition = getCursorPosition(entity, zp, i);
 					if(tempPosition != null) {
 						Vector3 currP = new Vector3(p.position);
@@ -99,7 +99,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	
 	private void setCursorDirection(Entity entity, ZonePositionComp zp) {
 		TextureComp t = Mapper.TextureComp.get(entity);
-		switch(zp.zoneType()) {
+		switch(zp.zoneType) {
 			case HAND:
 				t.region = Media.handPointDown;
 				break;
@@ -119,7 +119,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	private Vector3 tempPosition = new Vector3();
 	
 	private Vector3 getCursorPosition(Entity entity, ZonePositionComp zp) {
-		return getCursorPosition(entity, zp, zp.index());
+		return getCursorPosition(entity, zp, zp.index);
 	}
 	
 	private Vector3 getCursorPosition(Entity entity, ZonePositionComp zp, int index) {
@@ -129,13 +129,13 @@ public class CursorPositionSystem extends IteratingSystem {
 			return null;
 		}
 		
-		ID cursorTargetID = z.get(index);
+		ID cursorTargetID = z.objectIDs.get(index);
 		Entity target = Mapper.Entity.get(cursorTargetID);
 		if(target == null) {
 			return null;
 		}
 		
-		LayoutTarget lTarget = z.getTarget(cursorTargetID);
+		LayoutTarget lTarget = z.layout.getTarget(cursorTargetID);
 		SizeComp sTarget = Mapper.SizeComp.get(target);
 		
 		if(lTarget == null || sTarget == null) {
@@ -144,7 +144,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		
 		SizeComp s = Mapper.SizeComp.get(entity);
 
-		switch(zp.zoneType()) {
+		switch(zp.zoneType) {
 			case HAND:
 				tempPosition.x = lTarget.position.x + (sTarget.scaledWidth() - s.scaledWidth()) /2;
 				tempPosition.y = lTarget.position.y + sTarget.scaledHeight() - (int) (s.scaledHeight() * 0.25);

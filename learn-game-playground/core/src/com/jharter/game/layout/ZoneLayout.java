@@ -17,7 +17,7 @@ public abstract class ZoneLayout {
 	private ObjectMap<ID, LayoutTarget> dataById = new ObjectMap<ID, LayoutTarget>();
 	
 	public ZoneLayout(ZoneComp z) {
-		setIds(new ImmutableArray<ID>(z.getIds()));
+		setIds(z.objectIDs);
 	}
 	
 	public void setIds(ImmutableArray<ID> ids) {

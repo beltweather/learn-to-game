@@ -63,7 +63,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		a = Mapper.AlphaComp.get(entity);
 		cz = Mapper.ChangeZoneComp.get(entity);
 		
-		if(!z.hasIndex(zp.index())) {
+		if(!z.hasIndex(zp.index)) {
 			hide();
 			return;
 		}
@@ -118,7 +118,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 		}
 		
 		show();
-		te.region = getCursorForZone(zp.zoneType());
+		te.region = getCursorForZone(zp.zoneType);
 		
 		CursorComp c = Mapper.CursorComp.get(entity);
 		TurnAction ta = c.getTurnAction();
@@ -133,8 +133,8 @@ public class ZoneTransformSystem extends IteratingSystem {
 				entity.add(mp);
 			}
 			mp.positions.clear();
-			for(int i = 0; i < z.size(); i++) {
-				Entity target = Mapper.Entity.get(z.get(i));
+			for(int i = 0; i < z.objectIDs.size(); i++) {
+				Entity target = Mapper.Entity.get(z.objectIDs.get(i));
 				PositionComp tp = Mapper.PositionComp.get(target);
 				SizeComp ts = Mapper.SizeComp.get(target);
 				Vector3 position = new Vector3(0, 0, 0);
@@ -147,7 +147,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 				entity.remove(MultiPositionComp.class);
 			}
 			
-			Entity target = Mapper.Entity.get(z.get(zp.index()));
+			Entity target = Mapper.Entity.get(z.objectIDs.get(zp.index));
 			PositionComp tp = Mapper.PositionComp.get(target);
 			SizeComp ts = Mapper.SizeComp.get(target);
 			setCursorPositionForTarget(p.position, target, tp, ts);
@@ -156,7 +156,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	}
 	
 	private void setCursorPositionForTarget(Vector3 position, Entity target, PositionComp tp, SizeComp ts) {
-		switch(zp.zoneType()) {
+		switch(zp.zoneType) {
 			case HAND:
 				position.x = tp.position.x + (ts.scaledWidth() - s.scaledWidth()) / 2;
 				position.y = tp.position.y + ts.scaledHeight() - (int) (s.scaledHeight() * 0.25);
@@ -190,7 +190,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 	
 	private void transformCard(float deltaTime) {
 		
-		switch(zp.zoneType()) {
+		switch(zp.zoneType) {
 			case DECK:
 				hide();
 				break;
@@ -202,7 +202,7 @@ public class ZoneTransformSystem extends IteratingSystem {
 				int anchorX = -700;
 				int anchorY = -475;
 				s.scale.set(1f, 1f);
-				p.position.x = anchorX + (s.scaledWidth() + 20) * zp.index();
+				p.position.x = anchorX + (s.scaledWidth() + 20) * zp.index;
 				p.position.y = anchorY;
 				break;
 			case ACTIVE_CARD:

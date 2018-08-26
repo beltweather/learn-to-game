@@ -484,32 +484,17 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new TurnPhaseEndTurnSystem());
 		engine.addSystem(new TurnPhaseEndBattleSystem());
 		
-		engine.addSystem(new UpdatePhysicsSystem(this));
-		engine.addSystem(new CollisionSystem()); 
-		
-		// Used in battle demo
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorTargetValidationSystem());
-		
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectSystem());
 		engine.addSystem(new QueueTurnActionsSystem());
 		
-		// Used in movement demo
-		//engine.addSystem(new InputMovementSystem());
-		
-		engine.addSystem(new VelocityMovementSystem());
 		engine.addSystem(new ApproachTargetSystem());
-		engine.addSystem(new InteractSystem());
 		
 		if(!endPointHelper.isHeadless()) {
 			engine.addSystem(new AnimationSystem());
-			
-			// Used in movement demo
-			//engine.addSystem(new CameraSystem(getCamera()));
-			
 			engine.addSystem(new RenderInitSystem());
-			engine.addSystem(new RenderTilesSystem(getCamera()));
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
 			engine.addSystem(new RenderTimerSystem(getCamera()));
 		}

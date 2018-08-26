@@ -30,6 +30,10 @@ public abstract class ZoneLayout {
 	}
 	
 	public TweenTarget getTarget(ID id) {
+		return getTarget(id, false);
+	}
+	
+	public TweenTarget getTarget(ID id, boolean applyModification) {
 		if(id == null) {
 			return null;
 		}
@@ -46,6 +50,10 @@ public abstract class ZoneLayout {
 		}
 		
 		TweenTarget target = getTarget(id, index, entity, Pools.get(TweenTarget.class).obtain());
+		if(applyModification) {
+			modifyEntity(id, index, entity, target);
+		}
+		
 		dataById.put(id, target);
 		return target;
 	}
@@ -70,6 +78,8 @@ public abstract class ZoneLayout {
 	}
 	
 	protected abstract TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target);
+	
+	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {}
 	
 	public void reset() {
 		for(TweenTarget d : dataById.values()) {

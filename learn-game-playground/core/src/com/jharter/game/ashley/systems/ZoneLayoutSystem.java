@@ -25,7 +25,7 @@ public class ZoneLayoutSystem extends IteratingSystem {
 			if(Mapper.AnimatingComp.has(zEntity)) {
 				continue;
 			}
-			TweenTarget target = z.layout.getTarget(id);
+			TweenTarget target = z.layout.getTarget(id, true);
 			if(!z.layout.matchesTarget(zEntity, target)) {
 				TweenUtil.start(id, target);
 			}

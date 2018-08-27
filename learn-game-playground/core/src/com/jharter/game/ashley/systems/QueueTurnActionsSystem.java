@@ -61,6 +61,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					if(t != null && t.turnAction.priority > 0) {
 						t.turnAction.performAcceptCallback();
 					}
+					
 					break;
 				default:
 					break;

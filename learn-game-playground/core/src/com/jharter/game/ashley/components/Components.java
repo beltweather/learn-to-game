@@ -201,6 +201,19 @@ public final class Components {
 		}
 	}
 	
+	public static final class ActivePlayerComp implements Comp {
+		
+		public ID activePlayerID = null;
+		
+		private ActivePlayerComp() {}
+		
+		@Override
+		public void reset() {
+			activePlayerID = null;
+		}
+		
+	}
+	
 	public static final class CharacterComp implements Comp {
 		
 		public ID playerID;
@@ -403,7 +416,7 @@ public final class Components {
 	public static final class CursorComp implements Comp {
 		public ID turnActionEntityID = null;
 		public ID lastZoneID = null;
-		public ID playerID = null;
+		//public ID playerID = null;
 		
 		private CursorComp() {}
 		
@@ -418,11 +431,15 @@ public final class Components {
 			return t.turnAction;
 		}
 		
+		public ID playerID() {
+			return Mapper.getPlayerEntityID();
+		}
+		
 		@Override
 		public void reset() {
 			turnActionEntityID = null;
 			lastZoneID = null;
-			playerID = null;
+			//playerID = null;
 		}
 	}
 	

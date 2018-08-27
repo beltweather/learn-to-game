@@ -31,7 +31,7 @@ public class CursorTargetValidationSystem extends AbstractCursorOperationSystem 
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			ID id = z.objectIDs.get(i);
 			Entity zoneItem = Mapper.Entity.get(id);
-			if(!isValidTarget(c.playerID, zoneType, t, i)) {
+			if(!isValidTarget(c.playerID(), zoneType, t, i)) {
 				if(!Mapper.UntargetableComp.has(zoneItem)) {
 					zoneItem.add(Mapper.Comp.get(UntargetableComp.class));
 				}

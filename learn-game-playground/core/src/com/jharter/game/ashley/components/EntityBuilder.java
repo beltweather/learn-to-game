@@ -12,6 +12,7 @@ import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -144,5 +145,6 @@ public class EntityBuilder implements Poolable {
 	public AnimatingComp AnimatingComp() { return get(AnimatingComp.class); }
 	public ChangeZoneComp ChangeZoneComp() { return get(ChangeZoneComp.class); }
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
+	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	
 }

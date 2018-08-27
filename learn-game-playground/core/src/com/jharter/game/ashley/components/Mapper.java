@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
@@ -12,6 +13,7 @@ import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
@@ -56,14 +58,23 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 
 public class Mapper {
 	
+	private static ID battleEntityID;
 	private static ID turnEntityID;
 	private static ID cursorEntityID;
-	private static ID playerID;
+	private static Array<ID> playerIDs = new Array<ID>();
+	private static int activePlayerIndex = 0;
 	private static ID globalID;
 	
 	//private static Map<ZoneType, ID> idsByZoneType = new HashMap<ZoneType, ID>();
 	private static ObjectMap<ID, ObjectMap<ZoneType, ID>> zoneIDsByOwnerIDAndType = new ObjectMap<ID, ObjectMap<ZoneType, ID>>();
 	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
+	
+	public static ID getBattleEntityID() {
+		if(battleEntityID == null) {
+			battleEntityID = IDGenerator.newID();
+		}
+		return battleEntityID;
+	}
 	
 	public static ID getTurnEntityID() {
 		if(turnEntityID == null) {
@@ -73,15 +84,37 @@ public class Mapper {
 	}
 	
 	public static ID getPlayerEntityID() {
-		if(playerID == null) {
-			playerID = IDGenerator.newID();
+		return getPlayerEntityID(activePlayerIndex);
+	}
+	
+	public static ID getPlayerEntityID(int activePlayerIndex) {
+		if(activePlayerIndex < 0 || activePlayerIndex >= playerIDs.size) {
+			return null;
 		}
-		return playerID;
+		return playerIDs.get(activePlayerIndex);
+	}
+	
+	public static ID buildPlayerEntityID() {
+		ID id = IDGenerator.newID();
+		playerIDs.add(id);
+		return id;
+	}
+	
+	public static void resetActivePlayer() {
+		activePlayerIndex = 0;
+	}
+	
+	public static void nextActivePlayer() {
+		activePlayerIndex = (activePlayerIndex+1) % playerIDs.size;
+	}
+	
+	public static boolean hasNextActivePlayer() {
+		return activePlayerIndex == playerIDs.size-1;
 	}
 	
 	public static ID getCursorEntityID() {
 		if(cursorEntityID == null) {
-			cursorEntityID = getPlayerEntityID();
+			cursorEntityID = getPlayerEntityID(0); // XXX This is problematic
 		}
 		return cursorEntityID;
 	}
@@ -106,6 +139,9 @@ public class Mapper {
 	private static ID getZoneID(ID ownerID, ZoneType type) {
 		if(ownerID != getGlobalEntityID() && (!zoneIDsByOwnerIDAndType.containsKey(ownerID) || !zoneIDsByOwnerIDAndType.get(ownerID).containsKey(type))) {
 			return getZoneID(getGlobalEntityID(), type);
+		}
+		if(!zoneIDsByOwnerIDAndType.containsKey(ownerID)) {
+			return null;
 		}
 		return zoneIDsByOwnerIDAndType.get(ownerID).get(type);
  	}
@@ -316,5 +352,6 @@ public class Mapper {
 	public static final ComponentMapper<AnimatingComp> AnimatingComp = ComponentMapper.getFor(AnimatingComp.class);
 	public static final ComponentMapper<ChangeZoneComp> ChangeZoneComp = ComponentMapper.getFor(ChangeZoneComp.class);
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
+	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = ComponentMapper.getFor(ActivePlayerComp.class);
 
 }

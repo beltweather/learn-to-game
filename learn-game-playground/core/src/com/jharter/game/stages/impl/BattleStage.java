@@ -92,6 +92,16 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		// We'll make this later in the "add player"
+		ID roguePlayerID = Mapper.buildPlayerEntityID();
+		
+		// Battle entity
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.getBattleEntityID();
+		b.ActivePlayerComp().activePlayerID = roguePlayerID;
+		engine.addEntity(b.Entity());
+		b.free();
+		
 		// Turn timer
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnEntityID();
@@ -105,10 +115,10 @@ public class BattleStage extends GameStage {
 		b.SpriteComp();
 		engine.addEntity(b.Entity());
 		b.free();
-		
+
 		// Player Zones
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.HAND);
+		b.IDComp().id = Mapper.generateZoneID(roguePlayerID, ZoneType.HAND);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.HAND;
 		b.ZoneComp().layout = new HandLayout(b.ZoneComp());
@@ -116,7 +126,7 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		ID warriorPlayerID = IDGenerator.newID();
+		ID warriorPlayerID = Mapper.buildPlayerEntityID();
 		
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.generateZoneID(warriorPlayerID, ZoneType.HAND);
@@ -127,21 +137,25 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		
-		
-		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.DISCARD);
+		b.IDComp().id = Mapper.generateZoneID(roguePlayerID, ZoneType.DISCARD);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.DISCARD;
 		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
-		ZoneComp discardCardZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(warriorPlayerID, ZoneType.DISCARD);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.DISCARD;
+		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		// Global Zones
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.FRIEND);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalEntityID(), ZoneType.FRIEND);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.FRIEND;
 		b.ZoneComp().layout = new  IdentityLayout(b.ZoneComp());
@@ -150,20 +164,19 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.ACTIVE_CARD);
-		b.ZoneComp().zoneID = b.IDComp().id;
-		b.ZoneComp().zoneType = ZoneType.ACTIVE_CARD;
-		b.ZoneComp().layout = new ActiveCardLayout(b.ZoneComp());
-		ZoneComp activeCardZone = b.ZoneComp();
-		engine.addEntity(b.Entity());
-		b.free();
-		
-		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.ENEMY);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalEntityID(), ZoneType.ENEMY);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.ENEMY;
 		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
 		ZoneComp enemyZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalEntityID(), ZoneType.ACTIVE_CARD);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.ACTIVE_CARD;
+		b.ZoneComp().layout = new ActiveCardLayout(b.ZoneComp());
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -175,9 +188,6 @@ public class BattleStage extends GameStage {
 		Entity warriorEntity = b.Entity();
 		engine.addEntity(b.Entity());
 		b.free();
-		
-		// We'll make this later in the "add player"
-		ID roguePlayerID = Mapper.getPlayerEntityID();
 		
 		b = EntityBuilder.create(engine);
 		PlayerComp sorcererPlayer = b.PlayerComp();
@@ -412,7 +422,7 @@ public class BattleStage extends GameStage {
 		
 		
 		
-		
+		// SPECIAL WARRIOR ISLAND
 		
 		b = EntityUtil.buildBasicEntity(engine, 
 				EntityType.CARD, 
@@ -510,8 +520,9 @@ public class BattleStage extends GameStage {
 		b.IDComp().id = Mapper.getPlayerEntityID();
 		b.PlayerComp().characterID = rogueCharacterID;
 		b.PlayerComp().cursorID = b.IDComp().id;
-		b.CursorComp().playerID = Mapper.getPlayerEntityID(); 
-		b.ChangeZoneComp().newZoneID = Mapper.ZoneComp.getID(b.CursorComp().playerID, ZoneType.HAND);
+		b.CursorComp();
+		//b.CursorComp().playerID = Mapper.getPlayerEntityID(); 
+		b.ChangeZoneComp().newZoneID = Mapper.ZoneComp.getID(Mapper.getPlayerEntityID(), ZoneType.HAND);
 		b.ChangeZoneComp().newIndex = 0;
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();

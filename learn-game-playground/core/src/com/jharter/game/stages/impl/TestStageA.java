@@ -21,8 +21,8 @@ import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
-import com.jharter.game.ashley.systems.FocusCameraSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
+import com.jharter.game.ashley.systems.FocusCameraSystem;
 import com.jharter.game.ashley.systems.InputMovementSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
@@ -46,6 +46,7 @@ import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -132,7 +133,7 @@ public class TestStageA extends GameStage {
 		float height = 8;
 		TextureRegion texture = new TextureRegion(Media.hero);
 		float speed = 90;
-		System.out.println("Hero id: " + id);
+		Sys.out.println("Hero id: " + id);
 		EntityBuilder b = EntityUtil.buildPlayerSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, speed, buildInput(focus));
 		if(focus) {
 			b.FocusComp();

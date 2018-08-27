@@ -10,6 +10,7 @@ import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.network.packets.Packets.RequestEntityPacket;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameServer, RequestEntityPacket> {
@@ -23,7 +24,7 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 		ID id = request.id;
 		Entity entity = Mapper.Entity.get(id); 
 		if(entity == null) {
-			System.err.println("Requested entity with id " + id + " but none exists!");
+			Sys.err.println("Requested entity with id " + id + " but none exists!");
 			return;
 		}
 		
@@ -38,7 +39,7 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 			addPlayer.y = s.position.y;
 			addPlayer.z = s.position.z;
 			addPlayers.players.add(addPlayer);
-			System.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
+			Sys.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
 			server.sendTo(request.connectionId, addPlayers);
 		}
 	}

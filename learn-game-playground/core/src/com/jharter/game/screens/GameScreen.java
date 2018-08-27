@@ -55,7 +55,7 @@ public abstract class GameScreen implements Screen {
 
 	@Override
 	public void render(float deltaTime) {
-		//System.out.println("fps: " + Gdx.graphics.getFramesPerSecond());
+		//Sys.out.println("fps: " + Gdx.graphics.getFramesPerSecond());
 		currentStage.tick(deltaTime);
 	}
 

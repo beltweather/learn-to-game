@@ -9,6 +9,7 @@ import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 public class ServerRegisterPlayerPacketSystem extends ConsumingPacketSystem<GameServer, RegisterPlayerPacket> {
@@ -23,7 +24,7 @@ public class ServerRegisterPlayerPacketSystem extends ConsumingPacketSystem<Game
 	public void update(GameServer server, GameStage stage, float deltaTime, RegisterPlayerPacket request) {
 		ID id = request.id;
 		if(Mapper.Entity.get(id) != null) {
-			System.err.println("Requested new player with id " + id + " but they already exist.");
+			Sys.err.println("Requested new player with id " + id + " but they already exist.");
 			return;
 		}
 		
@@ -43,7 +44,7 @@ public class ServerRegisterPlayerPacketSystem extends ConsumingPacketSystem<Game
 			addPlayer.z = s.position.z;
 			addPlayers.players.add(addPlayer);
 		//}
-		System.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
+		Sys.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
 		server.sendToAll(addPlayers);
 		
 		b.free();

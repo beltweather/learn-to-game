@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.jharter.game.util.Sys;
 
 public class TestServer {
 	
@@ -31,7 +32,7 @@ public class TestServer {
 	       public void received (Connection connection, Object object) {
 	          if (object instanceof SomeRequest) {
 	             SomeRequest request = (SomeRequest)object;
-	             System.out.println(request.text);
+	             Sys.out.println(request.text);
 	    
 	             SomeResponse response = new SomeResponse();
 	             response.text = "Thanks";
@@ -59,7 +60,7 @@ public class TestServer {
 	       public void received (Connection connection, Object object) {
 	          if (object instanceof SomeResponse) {
 	             SomeResponse response = (SomeResponse)object;
-	             System.out.println(response.text);
+	             Sys.out.println(response.text);
 	          }
 	       }
 	    });

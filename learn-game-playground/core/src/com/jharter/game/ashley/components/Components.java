@@ -15,6 +15,7 @@ import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -507,6 +508,7 @@ public final class Components {
 	}
 	
 	public static final class ZoneComp implements Comp {
+		public ID zoneID = null; // XXX Currently unused, this is the next thing to incorporate
 		public ZoneType zoneType = ZoneType.NONE;
 		private Array<ID> internalObjectIDs = new Array<ID>();
 		public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
@@ -542,6 +544,7 @@ public final class Components {
 		
 		@Override
 		public void reset() {
+			zoneID = null;
 			zoneType = ZoneType.NONE;
 			internalObjectIDs.clear();
 			layout = null;

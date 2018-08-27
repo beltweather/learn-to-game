@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.util.Sys;
 
 public abstract class TurnPhaseSystem extends IteratingSystem {
 
@@ -68,10 +69,10 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	protected abstract void processEntityPhaseEnd(Entity turnEntity, float deltaTime);
 	
 	protected void startPhase(Entity entity, float deltaTime) {
-		System.out.println("Waiting to Start Phase: " + phaseClass.getSimpleName());
+		Sys.out.println("Waiting to Start Phase: " + phaseClass.getSimpleName());
 		phaseStarted = processEntityPhaseStart(entity, deltaTime);
 		if(phaseStarted) {
-			System.out.println("Start Phase: " + phaseClass.getSimpleName());
+			Sys.out.println("Start Phase: " + phaseClass.getSimpleName());
 		}
 	}
 	
@@ -89,7 +90,7 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		phaseStarted = false;
 		phaseShouldEnd = false;
 		//endPhaseWhenEntitiesGone = false;
-		System.out.println("End Phase: " + phaseClass.getSimpleName() + " (Next Phase: " + nextPhaseClass.getSimpleName() + ")");
+		Sys.out.println("End Phase: " + phaseClass.getSimpleName() + " (Next Phase: " + nextPhaseClass.getSimpleName() + ")");
 	}
 	
 	protected boolean endAndReroute(Class<? extends Comp> nextPhaseClass) {

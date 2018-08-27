@@ -23,17 +23,14 @@ import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
-import com.jharter.game.ashley.systems.CollisionSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
 import com.jharter.game.ashley.systems.CursorSelectSystem;
 import com.jharter.game.ashley.systems.CursorTargetValidationSystem;
-import com.jharter.game.ashley.systems.InteractSystem;
 import com.jharter.game.ashley.systems.QueueTurnActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
-import com.jharter.game.ashley.systems.RenderTilesSystem;
 import com.jharter.game.ashley.systems.RenderTimerSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndTurnSystem;
@@ -44,10 +41,8 @@ import com.jharter.game.ashley.systems.TurnPhaseSelectFriendActionsSystem;
 import com.jharter.game.ashley.systems.TurnPhaseStartBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseStartTurnSystem;
 import com.jharter.game.ashley.systems.TweenSystem;
-import com.jharter.game.ashley.systems.UpdatePhysicsSystem;
-import com.jharter.game.ashley.systems.VelocityMovementSystem;
-import com.jharter.game.ashley.systems.ZonePositionSystem;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
+import com.jharter.game.ashley.systems.ZonePositionSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
@@ -67,6 +62,7 @@ import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.graphics.GraphicsUtil;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
@@ -287,17 +283,17 @@ public class BattleStage extends GameStage {
 				String nameFriend = Mapper.DescriptionComp.get(friend).name;
 				String nameEnemy = Mapper.DescriptionComp.get(enemy).name;
 				
-				System.out.println("Deal damage and heal friend for amount:");
-				System.out.println(nameEnemy + " received " + damaged + " damage.");
-				System.out.println(nameFriend + " received " + healed + " health.");
+				Sys.out.println("Deal damage and heal friend for amount:");
+				Sys.out.println(nameEnemy + " received " + damaged + " damage.");
+				Sys.out.println(nameFriend + " received " + healed + " health.");
 				
-				System.out.println(nameEnemy + " hp: " + vEnemy.health);
-				System.out.println(nameFriend + " hp: " + vFriend.health);
+				Sys.out.println(nameEnemy + " hp: " + vEnemy.health);
+				Sys.out.println(nameFriend + " hp: " + vFriend.health);
 				
 				if(vEnemy.isNearDeath()) {
-					System.out.println(nameEnemy + " is near death.");
+					Sys.out.println(nameEnemy + " is near death.");
 				} else if(vEnemy.isDead()) {
-					System.out.println(nameEnemy + " is dead.");
+					Sys.out.println(nameEnemy + " is dead.");
 				}
 			}
 			
@@ -325,7 +321,7 @@ public class BattleStage extends GameStage {
 			public void call(Entity owner, Entity card, Entity enemy) {
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
 				Mapper.VitalsComp.get(enemy).damage(damage);
-				System.out.println("Dealt " + damage + " damage.");
+				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
 		};
@@ -347,7 +343,7 @@ public class BattleStage extends GameStage {
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
 				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
-				System.out.println("Increasing multiplicity for: " + d.name);
+				Sys.out.println("Increasing multiplicity for: " + d.name);
 				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
 			}
 			
@@ -370,7 +366,7 @@ public class BattleStage extends GameStage {
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
 				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
-				System.out.println("Increasing multiplicity for: " + d.name);
+				Sys.out.println("Increasing multiplicity for: " + d.name);
 				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
 			}
 			
@@ -396,7 +392,7 @@ public class BattleStage extends GameStage {
 			public void call(Entity owner, Entity card, Entity friend) {
 				int hp = 50;
 				Mapper.VitalsComp.get(friend).heal(hp);
-				System.out.println("Healed " + hp + " hp to " + Mapper.DescriptionComp.get(friend).name);
+				Sys.out.println("Healed " + hp + " hp to " + Mapper.DescriptionComp.get(friend).name);
 			}
 			
 		};

@@ -120,7 +120,7 @@ public class GameInput extends InputAdapter implements InputProcessor {
 		
     	// Debug println
     	/*if(!popOldestState && stateHistory.size > 0) {
-			System.out.println("Ignoring inputState (" + stateHistory.size + " / " + CONTROL_FRAME_DELAY + ")");
+			Sys.out.println("Ignoring inputState (" + stateHistory.size + " / " + CONTROL_FRAME_DELAY + ")");
 		}*/
 		
     	// Either use the oldest state in our history or just use a 

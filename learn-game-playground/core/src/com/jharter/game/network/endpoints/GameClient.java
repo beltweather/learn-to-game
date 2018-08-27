@@ -8,6 +8,7 @@ import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import com.jharter.game.network.packets.Packet;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -82,7 +83,7 @@ public class GameClient extends GameEndPoint {
 	
 	private void logPing(Ping ping) {
 		if(ping.isReply) {
-			System.out.println("Client has been pinged! (" + client.getReturnTripTime() + " ms)");
+			Sys.out.println("Client has been pinged! (" + client.getReturnTripTime() + " ms)");
 		}
 	}
 	

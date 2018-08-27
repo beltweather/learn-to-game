@@ -6,7 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 public class InteractSystem extends IteratingSystem {
@@ -23,7 +23,7 @@ public class InteractSystem extends IteratingSystem {
 		InteractComp interactComp = Mapper.InteractComp.get(entity);
 		
 		if(in.input.isAccept()) {
-			System.out.println("interact!");
+			Sys.out.println("interact!");
 		}
 		
 		if(in.input.isAccept() && interactComp.interactables.size > 0) {

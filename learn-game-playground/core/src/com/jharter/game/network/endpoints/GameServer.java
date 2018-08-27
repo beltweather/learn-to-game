@@ -75,7 +75,7 @@ public class GameServer extends GameEndPoint {
 					RequestPlayer request = (RequestPlayer) object;
 					ID id = request.id;
 					if(Mapper.Entity.get(id) != null) {
-						System.err.println("Requested new player with id " + id + " but they already exist.");
+						Sys.err.println("Requested new player with id " + id + " but they already exist.");
 						return;
 					}
 					
@@ -95,7 +95,7 @@ public class GameServer extends GameEndPoint {
 						addPlayer.z = p.position.z;
 						addPlayers.players.add(addPlayer);
 					}
-					System.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
+					Sys.out.println("Server sending " + addPlayers.players.size + " players to all clients.");
 					server.sendToAllTCP(addPlayers);*/
 					
 				

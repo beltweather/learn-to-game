@@ -8,6 +8,7 @@ import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
 import com.jharter.game.screens.GameScreen;
 import com.jharter.game.screens.impl.TestStageScreen;
 import com.jharter.game.stages.GameStage;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Media;
@@ -62,14 +63,14 @@ public class OnlineGame extends Game {
     }
     
     private void initServer() {
-    	System.out.println("Starting Server");
+    	Sys.out.println("Starting Server");
 		server = new GameServer();
 		endPointHelper.setEndPoint(server);
 		server.start();
     }
     
     private void initClient() {
-    	System.out.println("Starting Client");
+    	Sys.out.println("Starting Client");
 		client = new GameClient(); //{
 
 			/*@Override
@@ -86,13 +87,13 @@ public class OnlineGame extends Game {
 					serverMoveUserTime = System.currentTimeMillis();
 				} else if(object instanceof AddHeroes) {
 					AddHeroes addHeroes = (AddHeroes) object;
-					System.out.println("Client " + client.getID() + " received " + addHeroes.heroes.size + " heroes from server.");
+					Sys.out.println("Client " + client.getID() + " received " + addHeroes.heroes.size + " heroes from server.");
 					for(AddHero addHero : addHeroes.heroes) {
 						if(heroes.containsKey(addHero.id)) {
-							System.out.println("Client " + client.getID() + " skipping hero " + addHero.id);
+							Sys.out.println("Client " + client.getID() + " skipping hero " + addHero.id);
 							continue;
 						}
-						System.out.println("Client " + client.getID() + " adding new hero " + addHero.id);
+						Sys.out.println("Client " + client.getID() + " adding new hero " + addHero.id);
     					Vector3 pos = new Vector3(addHero.x, addHero.y, addHero.z);
     					Hero hero = EntityFactory.newHero(addHero.id, pos, box2D);
     					addHero(hero);

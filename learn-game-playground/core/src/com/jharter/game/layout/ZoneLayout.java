@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
@@ -77,9 +79,23 @@ public abstract class ZoneLayout {
 		return target.matchesTarget(Mapper.SpriteComp.get(entity));
 	}
 	
+	public void show(Entity entity) {
+		if(Mapper.InvisibleComp.has(entity)) {
+			entity.remove(InvisibleComp.class);
+		}
+	}
+	
+	public void hide(Entity entity) {
+		if(!Mapper.InvisibleComp.has(entity)) {
+			entity.add(Mapper.Comp.get(InvisibleComp.class));
+		}
+	}
+	
 	protected abstract TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target);
 	
-	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {}
+	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
+		show(entity);
+	}
 	
 	public void reset() {
 		for(TweenTarget d : dataById.values()) {

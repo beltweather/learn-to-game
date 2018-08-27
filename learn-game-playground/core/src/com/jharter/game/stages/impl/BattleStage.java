@@ -116,6 +116,20 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		ID warriorPlayerID = IDGenerator.newID();
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(warriorPlayerID, ZoneType.HAND);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.HAND;
+		b.ZoneComp().layout = new HandLayout(b.ZoneComp());
+		ZoneComp warriorHandZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		
+		
+		
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.DISCARD);
 		b.ZoneComp().zoneID = b.IDComp().id;
@@ -155,9 +169,9 @@ public class BattleStage extends GameStage {
 		
 		// Other players
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = IDGenerator.newID();
+		b.IDComp().id = warriorPlayerID;
 		PlayerComp warriorPlayer = b.PlayerComp();
-		ID warriorPlayerID = b.IDComp().id;
+		//ID warriorPlayerID = b.IDComp().id;
 		Entity warriorEntity = b.Entity();
 		engine.addEntity(b.Entity());
 		b.free();
@@ -392,6 +406,43 @@ public class BattleStage extends GameStage {
 		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
+		
+		
+		
+		
+		
+		
+		
+		
+		b = EntityUtil.buildBasicEntity(engine, 
+				EntityType.CARD, 
+				new Vector3(-200,-475,0), 
+				Media.island);
+		b.CardComp().playerID = warriorPlayerID;
+		b.DescriptionComp().name = "Island";
+		b.SpriteComp();
+		b.VelocityComp();
+		b.BodyComp();
+		new CardCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity activeCard) {
+				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
+				Sys.out.println("Increasing multiplicity for: " + d.name);
+				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
+			}
+			
+		};
+		warriorHandZone.add(b);
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		
+		
+		
+		
+		
+		
 		
 		b = EntityUtil.buildBasicEntity(engine, 
 				EntityType.CARD, 

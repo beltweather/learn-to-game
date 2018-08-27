@@ -7,14 +7,13 @@ import com.jharter.game.ashley.components.Components.MultiPositionComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.equations.Circ;
 
 public class ActiveCardLayout extends ZoneLayout {
 
@@ -47,6 +46,8 @@ public class ActiveCardLayout extends ZoneLayout {
 
 	private Vector3 tempPosition = new Vector3();
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
+		super.modifyEntity(id, index, entity, target);
+		
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null && t.turnAction != null && t.turnAction.multiplicity > 1) {
 			MultiPositionComp m;

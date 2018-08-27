@@ -28,7 +28,11 @@ public class TweenCallbacks {
 		public void onEvent(int type, BaseTween<?> source) {
 			Entity entity = Mapper.Entity.get(id);
 			if(Mapper.AnimatingComp.has(entity)) {
-				entity.remove(AnimatingComp.class);
+				AnimatingComp a = Mapper.AnimatingComp.get(entity);
+				a.activeCount--;
+				if(a.activeCount == 0) {
+					entity.remove(AnimatingComp.class);
+				}
 			}
 			Pools.free(this);
 		}

@@ -42,7 +42,6 @@ public final class Components {
 	
 	// ------------------- BOOL COMPONENTS -----------------------------
 
-	public static final class AnimatingComp extends BoolComp {}
 	public static final class UntargetableComp extends BoolComp {}
 	public static final class PlayerComp extends BoolComp {}
 	public static final class FocusComp extends BoolComp {}
@@ -158,6 +157,19 @@ public final class Components {
 		public void reset() {
 			positions.clear();
 		}
+	}
+	
+	public static final class AnimatingComp implements Comp {
+		
+		public int activeCount = 0;
+		
+		private AnimatingComp() {}
+		
+		@Override
+		public void reset() {
+			activeCount = 0;
+		}
+		
 	}
 	
 	public static final class TargetPositionComp implements Comp {

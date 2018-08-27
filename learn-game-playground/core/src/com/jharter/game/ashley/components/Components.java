@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
@@ -44,7 +43,6 @@ public final class Components {
 	// ------------------- BOOL COMPONENTS -----------------------------
 
 	public static final class UntargetableComp extends BoolComp {}
-	public static final class CharacterComp extends BoolComp {}
 	public static final class FocusComp extends BoolComp {}
 	public static final class InvisibleComp extends BoolComp {}
 	public static final class DisabledComp extends BoolComp {}
@@ -203,6 +201,19 @@ public final class Components {
 		}
 	}
 	
+	public static final class CharacterComp implements Comp {
+		
+		public ID playerID;
+		
+		private CharacterComp() {}
+		
+		@Override
+		public void reset() {
+			playerID = null;
+		}
+		
+	}
+	
 	public static final class TargetPositionComp implements Comp {
 		public Vector3 position = null;
 
@@ -268,7 +279,7 @@ public final class Components {
 	
 	public static final class CardComp implements Comp {
 		
-		public ID ownerID = null;
+		public ID playerID = null;
 		public CardType cardType = CardType.NONE;
 		public String text = null;
 		public String tooltipText = null;
@@ -276,12 +287,12 @@ public final class Components {
 		private CardComp() {}
 		
 		public Entity getCharacterEntity() {
-			return Mapper.PlayerComp.get(Mapper.Entity.get(ownerID)).getCharacterEntity();
+			return Mapper.PlayerComp.get(Mapper.Entity.get(playerID)).getCharacterEntity();
 		}
 		
 		@Override
 		public void reset() {
-			ownerID = null;
+			playerID = null;
 			cardType = CardType.NONE;
 			text = null;
 			tooltipText = null;
@@ -392,7 +403,7 @@ public final class Components {
 	public static final class CursorComp implements Comp {
 		public ID turnActionEntityID = null;
 		public ID lastZoneID = null;
-		public ID ownerID = null;
+		public ID playerID = null;
 		
 		private CursorComp() {}
 		
@@ -411,7 +422,7 @@ public final class Components {
 		public void reset() {
 			turnActionEntityID = null;
 			lastZoneID = null;
-			ownerID = null;
+			playerID = null;
 		}
 	}
 	

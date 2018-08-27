@@ -34,7 +34,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		int index = zp.index;
 		
 		boolean move = ci.move();
-		boolean valid = isValidTarget(c.ownerID, zoneType, t, index);
+		boolean valid = isValidTarget(c.playerID, zoneType, t, index);
 		
 		if(!move && valid) {
 			return;
@@ -42,7 +42,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		if(!valid) {
 			zoneType = ZoneType.HAND;
-			z = Mapper.ZoneComp.get(c.ownerID, zoneType);
+			z = Mapper.ZoneComp.get(c.playerID, zoneType);
 			index = -1;
 			
 			// We need to be sure to cleanup our selection if we end up in an invalid state
@@ -61,7 +61,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 			direction = (int) (ci.direction.x != 0 ? ci.direction.x : ci.direction.y);
 		}
 		
-		int newIndex = findNextValidTargetInZone(c.ownerID, zoneType, t, index, direction);
+		int newIndex = findNextValidTargetInZone(c.playerID, zoneType, t, index, direction);
 		if(!z.hasIndex(newIndex)) {
 			newIndex = -1;
 		}

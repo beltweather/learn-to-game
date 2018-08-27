@@ -42,7 +42,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					//zp.getZoneComp().remove(id);
 					
 					CardComp ca = Mapper.CardComp.get(entity);
-					Entity owner = Mapper.Entity.get(ca.ownerID);
+					Entity owner = Mapper.Entity.get(ca.playerID);
 					ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 					if(Mapper.ActiveCardComp.has(owner)) {
 						owner.remove(ActiveCardComp.class);
@@ -52,7 +52,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
 					cz.useNextIndex = true;
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Mapper.ZoneComp.getID(ca.ownerID, ZoneType.HAND);
+					cz.newZoneID = Mapper.ZoneComp.getID(ca.playerID, ZoneType.HAND);
 					entity.add(cz);
 					break;
 				default:

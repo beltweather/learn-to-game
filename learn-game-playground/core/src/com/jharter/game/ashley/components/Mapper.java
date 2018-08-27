@@ -114,7 +114,7 @@ public class Mapper {
 	
 	public static ID getCursorEntityID() {
 		if(cursorEntityID == null) {
-			cursorEntityID = getPlayerEntityID(0); // XXX This is problematic
+			cursorEntityID = IDGenerator.newID();
 		}
 		return cursorEntityID;
 	}

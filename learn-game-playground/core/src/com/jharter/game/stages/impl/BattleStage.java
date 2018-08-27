@@ -520,8 +520,14 @@ public class BattleStage extends GameStage {
 		b.IDComp().id = Mapper.getPlayerEntityID();
 		b.PlayerComp().characterID = rogueCharacterID;
 		b.PlayerComp().cursorID = b.IDComp().id;
+		engine.addEntity(b.Entity());
+		
+		b = EntityUtil.buildBasicEntity(engine, 
+				  EntityType.CURSOR, 
+				  new Vector3(-550,-100,1), 
+				  Media.handPointDown);
+		b.IDComp().id = Mapper.getCursorEntityID();
 		b.CursorComp();
-		//b.CursorComp().playerID = Mapper.getPlayerEntityID(); 
 		b.ChangeZoneComp().newZoneID = Mapper.ZoneComp.getID(Mapper.getPlayerEntityID(), ZoneType.HAND);
 		b.ChangeZoneComp().newIndex = 0;
 		b.CursorInputRegulatorComp();

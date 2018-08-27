@@ -43,7 +43,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
-			if(isValidTarget(z.zoneType, t, index)) {
+			if(isValidTarget(c.ownerID, z.zoneType, t, index)) {
 				ID targetEntityID = z.objectIDs.get(index);
 				Entity targetEntity = Mapper.Entity.get(targetEntityID);
 				
@@ -59,12 +59,12 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				// Update our current cursor position based on our next object to select or
 				// wether we should go back to the hand. We don't need to do an extra check
 				// for validity here because we covered that at the top of this menu.
-				ZoneType targetZoneType = t.hasAllTargets() ? ZoneType.HAND : t.getTargetZoneType();
-				int targetIndex = findFirstValidTargetInZone(targetZoneType, t);
+				ZoneComp targetZone = t.hasAllTargets() ? Mapper.ZoneComp.get(c.ownerID, ZoneType.HAND) : Mapper.ZoneComp.get(c.ownerID, t.getTargetZoneType());
+				int targetIndex = findFirstValidTargetInZone(c.ownerID, targetZone.zoneType, t);
 				
 				ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
-				cz.oldZoneType = z.zoneType;
-				cz.newZoneType = targetZoneType;
+				cz.oldZoneID = z.zoneID;
+				cz.newZoneID = targetZone.zoneID;
 				cz.newIndex = targetIndex;
 				cz.checkpoint = true;
 				entity.add(cz);

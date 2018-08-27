@@ -10,6 +10,7 @@ import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 
@@ -47,10 +48,11 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 						owner.remove(ActiveCardComp.class);
 					}
 					
+					ZoneComp z = zp.getZoneComp();
 					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
 					cz.useNextIndex = true;
-					cz.oldZoneType = zp.getZoneComp().zoneType;
-					cz.newZoneType = ZoneType.HAND;
+					cz.oldZoneID = z.zoneID;
+					cz.newZoneID = Mapper.ZoneComp.getID(ca.ownerID, ZoneType.HAND);
 					entity.add(cz);
 					break;
 				default:

@@ -17,7 +17,8 @@ public class Enums {
         FRIEND,
         CURSOR,
         BACKGROUND,
-        ENEMY
+        ENEMY,
+        PLAYER
     }
     
     public enum EnityState {

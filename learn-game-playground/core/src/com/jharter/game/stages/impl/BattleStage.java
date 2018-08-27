@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
+import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
@@ -76,6 +77,8 @@ public class BattleStage extends GameStage {
 	public static final int CARD_WIDTH = 72;
 	public static final int CARD_HEIGHT = 100;
 	
+	private ID rogueCharacterID;
+	
 	public BattleStage(EndPointHelper endPointHelper) {
 		super(endPointHelper);
 	}
@@ -103,17 +106,29 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		// Zones
+		// Player Zones
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.HAND);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.HAND);
+		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.HAND;
 		b.ZoneComp().layout = new HandLayout(b.ZoneComp());
 		ZoneComp handZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
-
+		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.FRIEND);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.DISCARD);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.DISCARD;
+		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
+		ZoneComp discardCardZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		// Global Zones
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.FRIEND);
+		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.FRIEND;
 		b.ZoneComp().layout = new  IdentityLayout(b.ZoneComp());
 		ZoneComp friendZone = b.ZoneComp();
@@ -121,26 +136,48 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ACTIVE_CARD);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.ACTIVE_CARD);
+		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.ACTIVE_CARD;
 		b.ZoneComp().layout = new ActiveCardLayout(b.ZoneComp());
 		ZoneComp activeCardZone = b.ZoneComp();
 		engine.addEntity(b.Entity());
 		b.free();
-
+		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.DISCARD);
-		b.ZoneComp().zoneType = ZoneType.DISCARD;
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getPlayerEntityID(), ZoneType.ENEMY);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.ENEMY;
 		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
-		ZoneComp discardCardZone = b.ZoneComp();
+		ZoneComp enemyZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		// Other players
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = IDGenerator.newID();
+		PlayerComp warriorPlayer = b.PlayerComp();
+		ID warriorID = b.IDComp().id;
+		Entity warriorEntity = b.Entity();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		// We'll make this later in the "add player"
+		ID rogueID = Mapper.getPlayerEntityID();
+		
+		b = EntityBuilder.create(engine);
+		PlayerComp sorcererPlayer = b.PlayerComp();
+		b.IDComp().id = IDGenerator.newID();
+		ID sorcererID = b.IDComp().id;
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.ZoneComp.getID(ZoneType.ENEMY);
-		b.ZoneComp().zoneType = ZoneType.ENEMY;
-		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
-		ZoneComp enemyZone = b.ZoneComp();
+		b.PlayerComp();
+		PlayerComp rangerPlayer = b.PlayerComp();
+		b.IDComp().id = IDGenerator.newID();
+		ID rangerID = b.IDComp().id;
+		Entity rangerEntity = b.Entity();
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -150,7 +187,7 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(660,140,0), 
 				  Media.warrior);
-		ID warriorID = b.IDComp().id;
+		b.CharacterComp();
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 10;
@@ -161,6 +198,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 2;
 		b.DescriptionComp().name = "Warrior";
 		b.SpriteComp();
+		warriorPlayer.characterID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -169,8 +207,8 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(750,15,0), 
 				  Media.rogue);
-		ID rogueID = b.IDComp().id;
 		ActiveCardComp rogueActiveCardComp = b.ActiveCardComp();
+		b.CharacterComp();
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 47;
@@ -181,6 +219,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 6;
 		b.DescriptionComp().name = "Rogue";
 		b.SpriteComp();
+		rogueCharacterID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -189,7 +228,7 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(675,-120,0), 
 				  Media.sorcerer);
-		ID sorcererID = b.IDComp().id;
+		b.CharacterComp();
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 67;
@@ -200,6 +239,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 10;
 		b.DescriptionComp().name = "Sorcerer";
 		b.SpriteComp();
+		sorcererPlayer.characterID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -208,7 +248,7 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(750,-255,0), 
 				  Media.ranger);
-		ID rangerID = b.IDComp().id;
+		b.CharacterComp();
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 80;
@@ -219,6 +259,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 4;
 		b.DescriptionComp().name = "Ranger";
 		b.SpriteComp();
+		rangerPlayer.characterID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -257,7 +298,7 @@ public class BattleStage extends GameStage {
 										  BodyType.DynamicBody,
 										  100000);
 		
-		b.CardComp().ownerID = rangerID;
+		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Forest";
 		b.SpriteComp();
 		b.VelocityComp();
@@ -333,7 +374,7 @@ public class BattleStage extends GameStage {
 				EntityType.CARD, 
 				new Vector3(-200,-475,0), 
 				Media.island);
-		b.CardComp().ownerID = sorcererID;
+		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Island";
 		b.SpriteComp();
 		b.VelocityComp();
@@ -356,7 +397,7 @@ public class BattleStage extends GameStage {
 				EntityType.CARD, 
 				new Vector3(-200,-475,0), 
 				Media.island);
-		b.CardComp().ownerID = sorcererID;
+		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Island";
 		b.SpriteComp();
 		b.VelocityComp();
@@ -379,7 +420,7 @@ public class BattleStage extends GameStage {
 				EntityType.CARD, 
 				new Vector3(50,-475,0), 
 				Media.mountain);
-		b.CardComp().ownerID = warriorID;
+		b.CardComp().ownerID = rogueID;
 		b.DescriptionComp().name = "Mountain";
 		b.SpriteComp();
 		b.TurnActionComp().turnAction.defaultAll = true;
@@ -415,14 +456,16 @@ public class BattleStage extends GameStage {
 				  EntityType.CURSOR, 
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);
-		b.IDComp().id = Mapper.getCursorEntityID();
-		b.ChangeZoneComp().newZoneType = ZoneType.HAND;
+		b.IDComp().id = Mapper.getPlayerEntityID();
+		b.PlayerComp().characterID = rogueCharacterID;
+		b.PlayerComp().cursorID = b.IDComp().id;
+		b.CursorComp().ownerID = Mapper.getPlayerEntityID(); 
+		b.ChangeZoneComp().newZoneID = Mapper.ZoneComp.getID(b.CursorComp().ownerID, ZoneType.HAND);
 		b.ChangeZoneComp().newIndex = 0;
-		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
 		b.InputComp().input = buildInput(focus);
-		b.ZonePositionComp().zoneType = ZoneType.HAND;
+		b.ZonePositionComp().zoneID = b.ChangeZoneComp().newZoneID;
 		b.ZonePositionComp().index = 0;
 		if(focus) {
 			b.FocusComp();

@@ -33,13 +33,13 @@ public abstract class VoidCallback<T> {
 			Entity friend = t.getEntity(1);
 			Entity enemy = t.getEntity(2);
 			CardComp cCard = Mapper.CardComp.get(card);
-			Entity owner = Mapper.Entity.get(cCard.ownerID);
-			call(owner, card, friend, enemy);
+			Entity character = cCard.getCharacterEntity();
+			call(character, card, friend, enemy);
 			
 			// XXX Add ALL variant
 		}
 		
-		public abstract void call(Entity owner, Entity card, Entity friend, Entity enemy);
+		public abstract void call(Entity character, Entity card, Entity friend, Entity enemy);
 		
 	}
 	
@@ -56,8 +56,8 @@ public abstract class VoidCallback<T> {
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			CardComp cCard = Mapper.CardComp.get(card);
-			Entity owner = Mapper.Entity.get(cCard.ownerID);
 			Entity friend = t.getEntity(1);
+			Entity character = cCard.getCharacterEntity();
 			
 			if(t.all) {
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(friend);
@@ -71,16 +71,16 @@ public abstract class VoidCallback<T> {
 					}
 					
 					// Maybe need to check what's valid or not here
-					call(owner, card, entity);
+					call(character, card, entity);
 				}
 				t.all = t.defaultAll;
 				
 			} else {
-				call(owner, card, friend);	
+				call(character, card, friend);	
 			}
 		}
 		
-		public abstract void call(Entity owner, Entity card, Entity friend);
+		public abstract void call(Entity character, Entity card, Entity friend);
 		
 	}
 	
@@ -98,12 +98,13 @@ public abstract class VoidCallback<T> {
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			CardComp cCard = Mapper.CardComp.get(card);
-			Entity owner = Mapper.Entity.get(cCard.ownerID);
 			Entity activeCard = t.getEntity(1); 
-			call(owner, card, activeCard);
+			Entity character = cCard.getCharacterEntity();
+			
+			call(character, card, activeCard);
 		}
 		
-		public abstract void call(Entity owner, Entity card, Entity activeCard);
+		public abstract void call(Entity character, Entity card, Entity activeCard);
 		
 	}
 
@@ -120,8 +121,8 @@ public abstract class VoidCallback<T> {
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
 			CardComp cCard = Mapper.CardComp.get(card);
-			Entity owner = Mapper.Entity.get(cCard.ownerID);
 			Entity enemy = t.getEntity(1);
+			Entity character = cCard.getCharacterEntity();
 			
 			if(t.all) {
 				ZonePositionComp zp = Mapper.ZonePositionComp.get(enemy);
@@ -135,16 +136,16 @@ public abstract class VoidCallback<T> {
 					}
 					
 					// Maybe need to check what's valid or not here
-					call(owner, card, entity);
+					call(character, card, entity);
 				}
 				t.all = t.defaultAll;
 				
 			} else {
-				call(owner, card, enemy);	
+				call(character, card, enemy);	
 			}
 		}
 		
-		public abstract void call(Entity owner, Entity card, Entity enemy);
+		public abstract void call(Entity character, Entity card, Entity enemy);
 		
 	}
 	

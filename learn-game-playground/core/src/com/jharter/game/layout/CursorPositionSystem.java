@@ -45,7 +45,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		tempPosition = getCursorPosition(entity, z, zp.index);
 		offsetPositionForAngle(tempPosition, s, z.zoneType);
 		if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
-			if(c.lastZoneType != z.zoneType) {
+			if(c.lastZoneID != z.zoneID) {
 				
 				TweenTarget tt = Pools.get(TweenTarget.class).obtain();
 				tt.setFromEntity(entity);

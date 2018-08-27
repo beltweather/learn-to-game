@@ -11,11 +11,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -44,7 +44,7 @@ public final class Components {
 	// ------------------- BOOL COMPONENTS -----------------------------
 
 	public static final class UntargetableComp extends BoolComp {}
-	public static final class PlayerComp extends BoolComp {}
+	public static final class CharacterComp extends BoolComp {}
 	public static final class FocusComp extends BoolComp {}
 	public static final class InvisibleComp extends BoolComp {}
 	public static final class DisabledComp extends BoolComp {}
@@ -173,6 +173,36 @@ public final class Components {
 		
 	}
 	
+	public static final class PlayerComp implements Comp {
+		
+		public ID cursorID = null;
+		public ID characterID = null;
+		
+		private PlayerComp() {}
+
+		public Entity getCursorEntity() {
+			return Mapper.Entity.get(cursorID);
+		}
+		
+		public Entity getCharacterEntity() {
+			return Mapper.Entity.get(characterID);
+		}
+		
+		public CursorComp getCursorComp() {
+			return Mapper.CursorComp.get(getCursorEntity());
+		}
+		
+		public CharacterComp getCharacterComp() {
+			return Mapper.CharacterComp.get(getCharacterEntity());
+		}
+		
+		@Override
+		public void reset() {
+			cursorID = null;
+			characterID = null;
+		}
+	}
+	
 	public static final class TargetPositionComp implements Comp {
 		public Vector3 position = null;
 
@@ -244,6 +274,10 @@ public final class Components {
 		public String tooltipText = null;
 		
 		private CardComp() {}
+		
+		public Entity getCharacterEntity() {
+			return Mapper.PlayerComp.get(Mapper.Entity.get(ownerID)).getCharacterEntity();
+		}
 		
 		@Override
 		public void reset() {
@@ -357,7 +391,8 @@ public final class Components {
 	
 	public static final class CursorComp implements Comp {
 		public ID turnActionEntityID = null;
-		public ZoneType lastZoneType = ZoneType.NONE;
+		public ID lastZoneID = null;
+		public ID ownerID = null;
 		
 		private CursorComp() {}
 		
@@ -375,7 +410,8 @@ public final class Components {
 		@Override
 		public void reset() {
 			turnActionEntityID = null;
-			lastZoneType = ZoneType.NONE;
+			lastZoneID = null;
+			ownerID = null;
 		}
 	}
 	
@@ -487,8 +523,8 @@ public final class Components {
 	public static final class ChangeZoneComp implements Comp {
 		
 		public boolean instantChange = true;
-		public ZoneType oldZoneType = ZoneType.NONE;
-		public ZoneType newZoneType = ZoneType.NONE;
+		public ID oldZoneID = null;
+		public ID newZoneID = null;
 		public int newIndex = -1;
 		public boolean checkpoint = false;
 		public boolean useNextIndex = false;
@@ -498,8 +534,8 @@ public final class Components {
 		@Override
 		public void reset() {
 			instantChange = true;
-			oldZoneType = ZoneType.NONE;
-			newZoneType = ZoneType.NONE;
+			oldZoneID = null;
+			newZoneID = null;
 			newIndex = -1;
 			checkpoint = false;
 			useNextIndex = false;
@@ -508,7 +544,7 @@ public final class Components {
 	}
 	
 	public static final class ZoneComp implements Comp {
-		public ID zoneID = null; // XXX Currently unused, this is the next thing to incorporate
+		public ID zoneID = null;
 		public ZoneType zoneType = ZoneType.NONE;
 		private Array<ID> internalObjectIDs = new Array<ID>();
 		public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
@@ -529,7 +565,7 @@ public final class Components {
 		public void add(ID id, ZonePositionComp zp) {
 			zp.index = internalObjectIDs.size;
 			internalObjectIDs.add(id);
-			zp.zoneType = zoneType;
+			zp.zoneID = zoneID;
 		}
 		
 		public void remove(ID id) {
@@ -554,14 +590,14 @@ public final class Components {
 	
 	public static final class ZonePositionComp implements Comp {
 		
-		public ZoneType zoneType = ZoneType.NONE;
+		public ID zoneID = null;
 		public int index = -1;
 		private transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
 		
 		private ZonePositionComp() {}
 		
 		public ZoneComp getZoneComp() {
-			if(zoneType == ZoneType.NONE) {
+			if(zoneID == null) {
 				return null;
 			}
 			return Mapper.ZoneComp.get(this);
@@ -583,7 +619,7 @@ public final class Components {
 				return false;
 			}
 			ZonePositionComp copy = history.pop();
-			zoneType = copy.zoneType;
+			zoneID = copy.zoneID;
 			index = copy.index;
 			return true;
 		}
@@ -594,7 +630,7 @@ public final class Components {
 		
 		private ZonePositionComp copyForHistory() {
 			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
-			zp.zoneType = zoneType;
+			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it
 			return zp;
@@ -602,7 +638,7 @@ public final class Components {
 		
 		@Override
 		public void reset() {
-			zoneType = ZoneType.NONE;
+			zoneID = null;
 			index = -1;
 			history.clear();
 		}

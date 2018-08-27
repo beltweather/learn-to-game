@@ -87,7 +87,7 @@ public class EntityUtil {
 		
 		b.InputComp().input = input;
 		b.InteractComp();
-		b.PlayerComp();
+		b.CharacterComp();
 		
 		return b;
 	}

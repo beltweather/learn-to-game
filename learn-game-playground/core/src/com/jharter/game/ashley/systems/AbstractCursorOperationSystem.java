@@ -7,6 +7,7 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -17,28 +18,28 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 		super(family);
 	}
 	
-	protected boolean isValidTarget(ZoneType zoneType, TurnAction t, int index) {
-		return hasValidTarget(zoneType, t, index, 0, 0);
+	protected boolean isValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index) {
+		return hasValidTarget(ownerID, zoneType, t, index, 0, 0);
 	}
 	
-	protected boolean hasValidTargetInZone(ZoneType zoneType, TurnAction t, int index, int direction) {
-		return hasValidTarget(zoneType, t, index, direction, 0);
+	protected boolean hasValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction) {
+		return hasValidTarget(ownerID, zoneType, t, index, direction, 0);
 	}
 	
-	protected int findFirstValidTargetInZone(ZoneType zoneType, TurnAction t) {
-		return findNextValidTarget(zoneType, t, -1, 1, 0);
+	protected int findFirstValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t) {
+		return findNextValidTarget(ownerID, zoneType, t, -1, 1, 0);
 	}
 	
-	protected int findNextValidTargetInZone(ZoneType zoneType, TurnAction t, int index, int direction) {
-		return findNextValidTarget(zoneType, t, index, direction, 0);
+	protected int findNextValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction) {
+		return findNextValidTarget(ownerID, zoneType, t, index, direction, 0);
 	}
 	
-	private boolean hasValidTarget(ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
-		return findNextValidTarget(zoneType, t, index, direction, depth) >= 0;
+	private boolean hasValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+		return findNextValidTarget(ownerID, zoneType, t, index, direction, depth) >= 0;
 	}
 	
-	private int findNextValidTarget(ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
-		ZoneComp z = Mapper.ZoneComp.get(zoneType);
+	private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+		ZoneComp z = Mapper.ZoneComp.get(ownerID, zoneType);
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			index = findNextIndex(index, direction, z.objectIDs.size());
 			if(!z.hasIndex(index)) {
@@ -51,7 +52,7 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 					if(taComp != null) {
 						TurnAction ta = taComp.turnAction;
 						ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
-						if(nextZoneType == ZoneType.NONE || hasValidTarget(nextZoneType, ta, 0, 1, depth+1)) {
+						if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerID, nextZoneType, ta, 0, 1, depth+1)) {
 							return index;
 						}
 					}

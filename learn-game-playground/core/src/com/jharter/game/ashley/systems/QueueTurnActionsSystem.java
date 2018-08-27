@@ -45,9 +45,10 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 						owner.add(ac);
 					}
 					
+					ZoneComp z = zp.getZoneComp();
 					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
-					cz.oldZoneType = zp.getZoneComp().zoneType;
-					cz.newZoneType = ZoneType.ACTIVE_CARD;
+					cz.oldZoneID = z.zoneID;
+					cz.newZoneID = Mapper.ZoneComp.getID(ca.ownerID, ZoneType.ACTIVE_CARD);
 					cz.useNextIndex = true;
 					cz.instantChange = false;
 					entity.add(cz);

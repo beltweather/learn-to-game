@@ -28,11 +28,11 @@ public class ActiveCardLayout extends ZoneLayout {
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		CardComp c = Mapper.CardComp.get(entity);
 		
-		Entity owner = Mapper.Entity.get(c.ownerID);
-		SpriteComp sOwner = Mapper.SpriteComp.get(owner);
+		Entity character = c.getCharacterEntity();
+		SpriteComp sCharacter = Mapper.SpriteComp.get(character);
 		
-		target.position.x = (sOwner.position.x - s.scaledWidth(targetScale) - 20);
-		target.position.y = (sOwner.position.y + (sOwner.scaledHeight() - s.scaledHeight(targetScale)) / 2);
+		target.position.x = (sCharacter.position.x - s.scaledWidth(targetScale) - 20);
+		target.position.y = (sCharacter.position.y + (sCharacter.scaledHeight() - s.scaledHeight(targetScale)) / 2);
 		target.scale.x = targetScale;
 		target.scale.y = targetScale;
 		

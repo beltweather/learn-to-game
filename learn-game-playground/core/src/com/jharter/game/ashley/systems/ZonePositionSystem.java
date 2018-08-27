@@ -10,8 +10,7 @@ import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
-
-import uk.co.carelesslabs.Enums.ZoneType;
+import com.jharter.game.util.id.ID;
 
 public class ZonePositionSystem extends IteratingSystem {
 
@@ -26,14 +25,14 @@ public class ZonePositionSystem extends IteratingSystem {
 		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 		ChangeZoneComp cz = Mapper.ChangeZoneComp.get(entity);
 		
-		ZoneType targetZoneType;
-		if(cz.newZoneType != null && cz.newZoneType != ZoneType.NONE) {
-			targetZoneType = cz.newZoneType;
+		ID targetZoneID;
+		if(cz.newZoneID != null && cz.newZoneID != null) {
+			targetZoneID = cz.newZoneID;
 		} else {
-			targetZoneType = zp.getZoneComp().zoneType;
+			targetZoneID = zp.getZoneComp().zoneID;
 		}
 		
-		ZoneComp z = Mapper.ZoneComp.get(targetZoneType);
+		ZoneComp z = Mapper.ZoneComp.get(targetZoneID);
 		
 		int targetIndex;
 		if(cz.useNextIndex) {
@@ -61,8 +60,8 @@ public class ZonePositionSystem extends IteratingSystem {
 					zp.checkpoint();
 				}
 				CursorComp c = Mapper.CursorComp.get(entity);
-				c.lastZoneType = cz.oldZoneType;
-				zp.zoneType = targetZoneType;
+				c.lastZoneID = cz.oldZoneID;
+				zp.zoneID = targetZoneID;
 				zp.index = targetIndex;
 				entity.remove(ChangeZoneComp.class);
 				break;

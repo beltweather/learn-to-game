@@ -79,7 +79,7 @@ public class TurnAction implements Poolable {
 		CardComp c = Mapper.CardComp.get(entity);
 		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 		if(c != null && zp != null) {
-			return c.cardType != CardType.TARGET_CARD || zp.zoneType != ZoneType.ACTIVE_CARD;
+			return c.cardType != CardType.TARGET_CARD || zp.getZoneComp().zoneType != ZoneType.ACTIVE_CARD;
 		}
 		
 		return true;

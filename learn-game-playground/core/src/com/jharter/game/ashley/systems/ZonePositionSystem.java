@@ -30,7 +30,7 @@ public class ZonePositionSystem extends IteratingSystem {
 		if(cz.newZoneType != null && cz.newZoneType != ZoneType.NONE) {
 			targetZoneType = cz.newZoneType;
 		} else {
-			targetZoneType = zp.zoneType;
+			targetZoneType = zp.getZoneComp().zoneType;
 		}
 		
 		ZoneComp z = Mapper.ZoneComp.get(targetZoneType);

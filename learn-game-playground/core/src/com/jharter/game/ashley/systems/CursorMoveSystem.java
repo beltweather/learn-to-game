@@ -27,6 +27,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		CursorComp c = Mapper.CursorComp.get(entity);
 		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
+		ZoneComp origZ = z;
 		TurnAction t = c.getTurnAction();
 		
 		ZoneType zoneType = z.zoneType;
@@ -65,9 +66,9 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 			newIndex = -1;
 		}
 		
-		if(zp.index != newIndex || zp.zoneType != zoneType) {
+		if(zp.index != newIndex || origZ.zoneType != zoneType) {
 			ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
-			cz.oldZoneType = zp.zoneType;
+			cz.oldZoneType = origZ.zoneType;
 			cz.newZoneType = zoneType;
 			cz.newIndex = newIndex;
 			entity.add(cz);

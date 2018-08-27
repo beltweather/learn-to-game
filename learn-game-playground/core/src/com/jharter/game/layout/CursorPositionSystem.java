@@ -22,6 +22,7 @@ import com.jharter.game.util.id.ID;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Circ;
+import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
 public class CursorPositionSystem extends IteratingSystem {
@@ -33,17 +34,18 @@ public class CursorPositionSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(final Entity entity, float deltaTime) {
-		final CursorComp c = Mapper.CursorComp.get(entity);
-		final IDComp id = Mapper.IDComp.get(entity);
-		final SpriteComp s = Mapper.SpriteComp.get(entity);
-		final ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+		CursorComp c = Mapper.CursorComp.get(entity);
+		IDComp id = Mapper.IDComp.get(entity);
+		SpriteComp s = Mapper.SpriteComp.get(entity);
+		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+		ZoneComp z = zp.getZoneComp();
 		
-		float targetAngle = getCursorAngle(entity, zp);
+		float targetAngle = getCursorAngle(entity, z.zoneType);
 		
-		tempPosition = getCursorPosition(entity, zp);
-		offsetPositionForAngle(tempPosition, s, zp);
+		tempPosition = getCursorPosition(entity, z, zp.index);
+		offsetPositionForAngle(tempPosition, s, z.zoneType);
 		if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
-			if(c.lastZoneType != zp.zoneType) {
+			if(c.lastZoneType != z.zoneType) {
 				
 				TweenTarget tt = Pools.get(TweenTarget.class).obtain();
 				tt.setFromEntity(entity);
@@ -66,7 +68,7 @@ public class CursorPositionSystem extends IteratingSystem {
 						float centerY = 0;
 						MultiPositionComp mp = getMultiPositionComp(entity);
 						for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
-							tempPosition = getCursorPosition(entity, zp, i);
+							tempPosition = getCursorPosition(entity, z, i);
 							if(tempPosition != null) {
 								centerY += tempPosition.y;
 							} else {
@@ -76,8 +78,8 @@ public class CursorPositionSystem extends IteratingSystem {
 						centerY /= Mapper.ZoneComp.get(zp).objectIDs.size();
 						
 						for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
-							tempPosition = getCursorPosition(entity, zp, i);
-							offsetPositionForAngle(tempPosition, s, zp);
+							tempPosition = getCursorPosition(entity, z, i);
+							offsetPositionForAngle(tempPosition, s, z.zoneType);
 							if(tempPosition != null) {
 								Vector3 currP = new Vector3(s.position);
 								mp.positions.add(currP);
@@ -111,7 +113,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				if(isAll(c)) {
 					MultiPositionComp mp = getMultiPositionComp(entity);
 					for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
-						tempPosition = getCursorPosition(entity, zp, i);
+						tempPosition = getCursorPosition(entity, z, i);
 						if(tempPosition != null) {
 							Vector3 targP = new Vector3(tempPosition);
 							mp.positions.add(targP);
@@ -150,9 +152,9 @@ public class CursorPositionSystem extends IteratingSystem {
 		return ta != null && ta.all;
 	}
 	
-	private void setCursorDirection(Entity entity, ZonePositionComp zp) {
+	private void setCursorDirection(Entity entity, ZoneType zoneType) {
 		TextureComp t = Mapper.TextureComp.get(entity);
-		switch(zp.zoneType) {
+		switch(zoneType) {
 			case HAND:
 				t.region = Media.handPointDown;
 				break;
@@ -169,8 +171,8 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 	}
 	
-	private float getCursorAngle(Entity entity, ZonePositionComp zp) {
-		switch(zp.zoneType) {
+	private float getCursorAngle(Entity entity, ZoneType zoneType) {
+		switch(zoneType) {
 			case FRIEND:
 			case ACTIVE_CARD:
 				return 90f;
@@ -182,8 +184,11 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 	}
 	
-	private void offsetPositionForAngle(Vector3 position, SpriteComp s, ZonePositionComp zp) {
-		switch(zp.zoneType) {
+	private void offsetPositionForAngle(Vector3 position, SpriteComp s, ZoneType zoneType) {
+		if(position == null) {
+			return;
+		}
+		switch(zoneType) {
 			case FRIEND:
 			case ACTIVE_CARD:
 				position.x += s.scaledWidth();
@@ -199,13 +204,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	
 	private Vector3 tempPosition = new Vector3();
 	
-	private Vector3 getCursorPosition(Entity entity, ZonePositionComp zp) {
-		return getCursorPosition(entity, zp, zp.index);
-	}
-	
-	private Vector3 getCursorPosition(Entity entity, ZonePositionComp zp, int index) {
-		ZoneComp z = Mapper.ZoneComp.get(zp);
-		
+	private Vector3 getCursorPosition(Entity entity, ZoneComp z, int index) {
 		if(!z.hasIndex(index)) {
 			return null;
 		}
@@ -225,7 +224,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 
-		switch(zp.zoneType) {
+		switch(z.zoneType) {
 			case HAND:
 				tempPosition.x = lTarget.position.x + (sTarget.scaledWidth() - s.scaledWidth()) /2;
 				tempPosition.y = lTarget.position.y + sTarget.scaledHeight() - (int) (s.scaledHeight() * 0.25);

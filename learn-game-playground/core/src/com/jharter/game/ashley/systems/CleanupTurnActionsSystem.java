@@ -49,7 +49,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					
 					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
 					cz.useNextIndex = true;
-					cz.oldZoneType = zp.zoneType;
+					cz.oldZoneType = zp.getZoneComp().zoneType;
 					cz.newZoneType = ZoneType.HAND;
 					entity.add(cz);
 					break;

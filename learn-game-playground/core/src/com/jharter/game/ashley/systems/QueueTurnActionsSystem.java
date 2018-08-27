@@ -46,7 +46,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					}
 					
 					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
-					cz.oldZoneType = zp.zoneType;
+					cz.oldZoneType = zp.getZoneComp().zoneType;
 					cz.newZoneType = ZoneType.ACTIVE_CARD;
 					cz.useNextIndex = true;
 					cz.instantChange = false;

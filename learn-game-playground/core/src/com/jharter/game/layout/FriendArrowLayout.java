@@ -7,9 +7,11 @@ import com.jharter.game.ashley.components.Components.ZonePositionPointerComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
 
-public class ArrowLayout extends ZoneLayout {
+import uk.co.carelesslabs.Enums.ZoneType;
 
-	public ArrowLayout() {
+public class FriendArrowLayout extends ZoneLayout {
+
+	public FriendArrowLayout() {
 		super();
 	}
 
@@ -18,8 +20,7 @@ public class ArrowLayout extends ZoneLayout {
 		float scale = 1f;
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		ZonePositionPointerComp zp = Mapper.ZonePositionPointerComp.get(entity);
-		ZoneComp z = zp.getZoneComp();
+		ZoneComp z = Mapper.ZoneComp.get(null, ZoneType.FRIEND);
 		int targetIndex = Mapper.getActivePlayerIndex();
 		if(!z.hasIndex(targetIndex)) {
 			return null;
@@ -45,14 +46,15 @@ public class ArrowLayout extends ZoneLayout {
 
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
 		super.modifyEntity(id, index, entity, target);
-		ZonePositionPointerComp zp = Mapper.ZonePositionPointerComp.get(entity);
-		ZoneComp z = zp.getZoneComp();
-		
-		if(!z.hasIndex(zp.index)) {
+		if(Mapper.CursorEntity.isDisabled()) {
 			hide(entity);
+			return;
 		}
 		
-		if(Mapper.CursorEntity.isDisabled()) {
+		ZoneComp z = Mapper.ZoneComp.get(null, ZoneType.FRIEND);
+		int targetIndex = Mapper.getActivePlayerIndex();
+		
+		if(!z.hasIndex(targetIndex)) {
 			hide(entity);
 		}
 	}

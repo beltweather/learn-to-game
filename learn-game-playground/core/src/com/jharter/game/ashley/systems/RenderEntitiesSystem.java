@@ -61,16 +61,20 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 			float originY = s.height/2;
 			if(Mapper.MultiPositionComp.has(entity)) {
 				for(Vector3 position : Mapper.MultiPositionComp.get(entity).positions) {
-					batch.draw(t.region, position.x + offsetX, position.y + offsetY, originX, originY, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
+					batch.draw(t.region, round(position.x + offsetX), round(position.y + offsetY), round(originX), round(originY), s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
 				}
 			} else {
-				batch.draw(t.region, s.position.x + offsetX, s.position.y + offsetY, originX, originY, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
+				batch.draw(t.region, round(s.position.x + offsetX), round(s.position.y + offsetY), round(originX), round(originY), s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
 			}
 			
 			if(hasAlpha) {
 				batch.setColor(c);
 			}
 		}
+	}
+	
+	private float round(float v) {
+		return Math.round(v);
 	}
 	
 	private static class PositionSort implements Comparator<Entity> {

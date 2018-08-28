@@ -17,7 +17,6 @@ public class TweenTarget implements Poolable {
 	public Vector2 scale = new Vector2(0, 0);
 	public float alpha = 1f;
 	public float angleDegrees = 0f;
-	public boolean rounded = false;
 	
 	private TweenTarget() {}
 	
@@ -50,14 +49,10 @@ public class TweenTarget implements Poolable {
 	}
 	
 	public void round() {
-		if(rounded) {
-			return;
-		}
 		position.x = round(position.x);
 		position.y = round(position.y);
 		position.z = round(position.z);
 		angleDegrees = round(angleDegrees);
-		rounded = true;
 	}
 
 	@Override
@@ -66,7 +61,6 @@ public class TweenTarget implements Poolable {
 		scale.set(0, 0);
 		alpha = 1f;
 		angleDegrees = 0f;
-		rounded = false;
 	}
 	
 }

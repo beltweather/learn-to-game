@@ -42,7 +42,7 @@ import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketS
 import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.debug.Debug;
 import com.jharter.game.layout.ActiveCardLayout;
-import com.jharter.game.layout.ArrowLayout;
+import com.jharter.game.layout.FriendArrowLayout;
 import com.jharter.game.layout.CursorPositionSystem;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
@@ -95,7 +95,7 @@ public class BattleStage extends GameStage {
 		ZoneComp friendZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
 		ZoneComp enemyZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ENEMY);
 		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout());
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ARROW, new ArrowLayout());
+		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ARROW, new FriendArrowLayout());
 		
 		// Turn timer
 		TurnTimerHelper.addTurnTimer(engine, 15f);

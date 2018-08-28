@@ -28,8 +28,6 @@ public class ArrowHelper {
 		b.ZonePositionComp().index = 0;
 		b.ZonePositionComp().zoneID = Mapper.ZoneComp.getID(null, ZoneType.ARROW);
 		b.ZonePositionComp().getZoneComp().add(b);
-		b.ZonePositionPointerComp().index = 0;
-		b.ZonePositionPointerComp().zoneID = Mapper.ZoneComp.getID(null, ZoneType.FRIEND);
 		engine.addEntity(b.Entity());
 		b.free();
 	}

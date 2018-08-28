@@ -29,6 +29,7 @@ public class CursorHelper {
 		b.CursorInputComp();
 		b.ZonePositionComp().zoneID = b.ChangeZoneComp().newZoneID;
 		b.ZonePositionComp().index = 0;
+		b.SpriteComp().position.z = 3;
 		return b;
 	}
 	

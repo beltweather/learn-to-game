@@ -98,7 +98,7 @@ public class BattleStage extends GameStage {
 		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ARROW, new FriendArrowLayout());
 		
 		// Turn timer
-		TurnTimerHelper.addTurnTimer(engine, 15f);
+		TurnTimerHelper.addTurnTimer(engine, 30f);
 		
 		// Arrow
 		ArrowHelper.addArrow(engine);
@@ -121,20 +121,20 @@ public class BattleStage extends GameStage {
 		
 		// Cards
 		CardHelper.addDrainCard(engine, roguePlayerID, handZone);
-		CardHelper.addDrainCard(engine, roguePlayerID, handZone);
+		CardHelper.addX2Card(engine, roguePlayerID, handZone);
 		CardHelper.addAllCard(engine, roguePlayerID, handZone);
 		
 		CardHelper.addAttackCard(engine, warriorPlayerID, warriorHandZone);
 		CardHelper.addX2Card(engine, warriorPlayerID, warriorHandZone);
-		CardHelper.addAttackCard(engine, warriorPlayerID, warriorHandZone);
-		
+		CardHelper.addAllCard(engine, warriorPlayerID, warriorHandZone);
+
+		CardHelper.addHealAllCard(engine, sorcererPlayerID, sorcererHandZone);
+		CardHelper.addX2Card(engine, sorcererPlayerID, sorcererHandZone);
 		CardHelper.addAllCard(engine, sorcererPlayerID, sorcererHandZone);
-		CardHelper.addHealAllCard(engine, sorcererPlayerID, sorcererHandZone);
-		CardHelper.addHealAllCard(engine, sorcererPlayerID, sorcererHandZone);
 		
 		CardHelper.addAttackAllCard(engine, rangerPlayerID, rangerHandZone);
 		CardHelper.addX2Card(engine, rangerPlayerID, rangerHandZone);
-		CardHelper.addAttackAllCard(engine, rangerPlayerID, rangerHandZone);
+		CardHelper.addAllCard(engine, rangerPlayerID, rangerHandZone);
 		
 	}
 		

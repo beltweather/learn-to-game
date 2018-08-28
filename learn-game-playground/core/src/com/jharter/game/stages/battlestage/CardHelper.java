@@ -137,6 +137,7 @@ public class CardHelper {
 
 	public static void addX2Card(PooledEngine engine, ID playerID, ZoneComp zone) {
 		EntityBuilder b = buildCard(engine, playerID, zone, Media.x2, "x2");
+		b.TurnActionComp().turnAction.makesTargetMultiplicity = 2;
 		new CardCallback(b) {
 
 			@Override
@@ -153,12 +154,13 @@ public class CardHelper {
 	
 	public static void addAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
 		EntityBuilder b = buildCard(engine, playerID, zone, Media.all, "All");
+		b.TurnActionComp().turnAction.makesTargetAll = true;
 		new CardCallback(b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
 				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
-				Sys.out.println("Increasing multiplicity for: " + d.name);
+				Sys.out.println("Setting all ford: " + d.name);
 				Mapper.TurnActionComp.get(activeCard).turnAction.all = true;
 			}
 			

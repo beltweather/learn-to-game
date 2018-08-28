@@ -10,7 +10,7 @@ public class OfflineLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1920; //800;
 		config.height = 1080; //600;
-		config.samples = 4;
+		config.samples = 8;
 		new LwjglApplication(new OnlineGame(GameType.OFFLINE, false), config);
 	}
 }

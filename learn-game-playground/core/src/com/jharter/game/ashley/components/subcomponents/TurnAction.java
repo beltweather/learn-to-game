@@ -24,6 +24,9 @@ public class TurnAction implements Poolable {
 	public boolean all = false;
 	public int priority = 0;
 	
+	public boolean makesTargetAll = false;
+	public int makesTargetMultiplicity = 1;
+	
 	private TurnAction() {}
 	
 	public Entity getEntity(int index) {
@@ -113,6 +116,8 @@ public class TurnAction implements Poolable {
 		t.defaultAll = defaultAll;
 		t.all = defaultAll;
 		t.priority = priority;
+		t.makesTargetAll = makesTargetAll;
+		t.makesTargetMultiplicity = makesTargetMultiplicity;
 	}
 	
 	public TurnAction freshCopy() {
@@ -132,6 +137,8 @@ public class TurnAction implements Poolable {
 		defaultMultiplicity = 1;
 		defaultAll = false;
 		priority = 0;
+		makesTargetAll = false;
+		makesTargetMultiplicity = 1;
 	}
 	
 }

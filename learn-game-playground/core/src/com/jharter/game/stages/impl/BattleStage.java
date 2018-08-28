@@ -417,11 +417,6 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		
-		
-		
-		
-		
 		// SPECIAL WARRIOR ISLAND
 		
 		b = EntityUtil.buildBasicEntity(engine, 
@@ -444,36 +439,6 @@ public class BattleStage extends GameStage {
 			
 		};
 		warriorHandZone.add(b);
-		engine.addEntity(b.Entity());
-		b.free();
-		
-		
-		
-		
-		
-		
-		
-		
-		b = EntityUtil.buildBasicEntity(engine, 
-				EntityType.CARD, 
-				new Vector3(-200,-475,0), 
-				Media.island);
-		b.CardComp().playerID = roguePlayerID;
-		b.DescriptionComp().name = "Island";
-		b.SpriteComp();
-		b.VelocityComp();
-		b.BodyComp();
-		new CardCallback(b) {
-
-			@Override
-			public void call(Entity owner, Entity card, Entity activeCard) {
-				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
-				Sys.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
-			}
-			
-		};
-		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -513,10 +478,7 @@ public class BattleStage extends GameStage {
 	
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
-		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
-				  EntityType.CURSOR, 
-				  new Vector3(-550,-100,1), 
-				  Media.handPointDown);
+		EntityBuilder b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getPlayerEntityID();
 		b.PlayerComp().battleAvatarID = rogueCharacterID;
 		engine.addEntity(b.Entity());

@@ -45,6 +45,8 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -60,7 +62,8 @@ project(":core") {
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
         compile "com.badlogicgames.ashley:ashley:1.7.0"
         compile "com.badlogicgames.gdx:gdx-ai:1.8.1"
-		compile "org.mini2Dx:universal-tween-engine:6.3.3"      
+		compile "org.mini2Dx:universal-tween-engine:6.3.3"
+	 	compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"      
     }
 }
 

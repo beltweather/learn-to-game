@@ -2,6 +2,7 @@ package com.jharter.game.stages;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -134,6 +135,7 @@ public abstract class GameStage {
     public void activate() {
     	if(stageInput != null) {
     		Gdx.input.setInputProcessor(stageInput);
+    		Controllers.addListener(stageInput);
     		stageInput.reset();
     	}
     }

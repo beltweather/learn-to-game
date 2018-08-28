@@ -4,17 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.jharter.game.controller.XboxMapping;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.network.packets.Packets.InputPacket;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
-public class GameInput extends InputAdapter implements InputProcessor {
+public class GameInput extends InputAdapter implements InputProcessor, ControllerListener {
 	
 	private static final int CONTROL_FRAME_DELAY = 3;
 	
@@ -425,6 +431,91 @@ public class GameInput extends InputAdapter implements InputProcessor {
 	
 	public void setTime(long time) {
 		realtimeState.time = time;
+	}
+	
+	private int buttonCodeToKeyCode(int buttonCode) {
+		if(buttonCode == XboxMapping.DPAD_UP) {
+			return Keys.UP;
+		} else if(buttonCode == XboxMapping.DPAD_DOWN) {
+			return Keys.DOWN;
+		} else if(buttonCode == XboxMapping.DPAD_LEFT) {
+			return Keys.LEFT;
+		} else if(buttonCode == XboxMapping.DPAD_RIGHT) {
+			return Keys.RIGHT;
+		} else if(buttonCode == XboxMapping.A) {
+			return Keys.E;
+		} else if(buttonCode == XboxMapping.B) {
+			return Keys.Q;
+		}
+		return -1;
+	}
+	
+	private int povDirectionToButtonCode(PovDirection value) {
+		if(value == PovDirection.north) {
+			return XboxMapping.DPAD_UP;
+		} else if(value == PovDirection.south) {
+			return XboxMapping.DPAD_DOWN;
+		} else if(value == PovDirection.west) {
+			return XboxMapping.DPAD_LEFT;
+		} else if(value == PovDirection.east) {
+			return XboxMapping.DPAD_RIGHT;
+		}
+		return -1;
+	}
+
+	@Override
+	public void connected(Controller controller) {
+		
+	}
+
+	@Override
+	public void disconnected(Controller controller) {
+		
+	}
+
+	@Override
+	public boolean buttonDown(Controller controller, int buttonCode) {
+		keyDown(buttonCodeToKeyCode(buttonCode));
+		return false;
+	}
+
+	@Override
+	public boolean buttonUp(Controller controller, int buttonCode) {
+		keyUp(buttonCodeToKeyCode(buttonCode));
+		return false;
+	}
+
+	@Override
+	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		return false;
+	}
+
+	@Override
+	public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+		if(value == PovDirection.center) {
+			buttonUp(controller, XboxMapping.DPAD_UP);
+			buttonUp(controller, XboxMapping.DPAD_DOWN);
+			buttonUp(controller, XboxMapping.DPAD_LEFT);
+			buttonUp(controller, XboxMapping.DPAD_RIGHT);
+		} else {
+			buttonDown(controller, povDirectionToButtonCode(value));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
+		return false;
+	}
+
+	@Override
+	public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
+		return false;
+	}
+
+	@Override
+	public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
+		return false;
 	}
 
 }

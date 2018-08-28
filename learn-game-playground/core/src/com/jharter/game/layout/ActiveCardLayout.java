@@ -75,9 +75,9 @@ public class ActiveCardLayout extends ZoneLayout {
 			
 			TweenUtil.start(null, timeline);
 			
-		} else if(Mapper.MultiPositionComp.has(entity)) {
-			entity.remove(MultiPositionComp.class);
-		}
+		} //else if(Mapper.MultiPositionComp.has(entity)) {
+			//entity.remove(MultiPositionComp.class);
+		//}
 	}
 	
 }

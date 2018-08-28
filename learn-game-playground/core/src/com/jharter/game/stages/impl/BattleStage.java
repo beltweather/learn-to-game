@@ -596,12 +596,13 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new TweenSystem());
 		
 		engine.addSystem(new TurnPhaseStartBattleSystem());
-		engine.addSystem(new TurnPhaseStartTurnSystem());
-		engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
-		engine.addSystem(new TurnPhaseSelectFriendActionsSystem());
-		engine.addSystem(new TurnPhasePerformFriendActionsSystem());
-		engine.addSystem(new TurnPhasePerformEnemyActionsSystem());
-		engine.addSystem(new TurnPhaseEndTurnSystem());
+			engine.addSystem(new TurnPhaseStartTurnSystem());
+				engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
+				engine.addSystem(new TurnPhaseSelectFriendActionsSystem());
+					// ADD - Turn phase select new player
+				engine.addSystem(new TurnPhasePerformFriendActionsSystem());
+				engine.addSystem(new TurnPhasePerformEnemyActionsSystem());
+			engine.addSystem(new TurnPhaseEndTurnSystem());
 		engine.addSystem(new TurnPhaseEndBattleSystem());
 		
 		engine.addSystem(new CursorInputSystem());

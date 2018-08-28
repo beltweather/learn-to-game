@@ -55,12 +55,16 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 				batch.setColor(c.r, c.g, c.b, s.alpha);
 			}
 			
+			float offsetX = (s.scaledWidth() - s.width)/2;
+			float offsetY = (s.scaledHeight() - s.height)/2;
+			float originX = s.width/2;
+			float originY = s.height/2;
 			if(Mapper.MultiPositionComp.has(entity)) {
 				for(Vector3 position : Mapper.MultiPositionComp.get(entity).positions) {
-					batch.draw(t.region, position.x, position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
+					batch.draw(t.region, position.x + offsetX, position.y + offsetY, originX, originY, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
 				}
 			} else {
-				batch.draw(t.region, s.position.x, s.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
+				batch.draw(t.region, s.position.x + offsetX, s.position.y + offsetY, originX, originY, s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
 			}
 			
 			if(hasAlpha) {

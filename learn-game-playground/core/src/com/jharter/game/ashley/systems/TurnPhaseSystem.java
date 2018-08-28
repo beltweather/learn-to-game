@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 import com.jharter.game.ashley.components.Mapper;
@@ -123,11 +124,16 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		return count(klass) > 0;
 	}
 	
+	protected boolean isDoneAnimating() {
+		return !has(AnimatingComp.class);
+	}
+
 	protected int count(Class<? extends Comp> klass) {
 		if(!families.containsKey(klass)) {
 			families.put(klass, Family.all(klass).get());
 		}
 		return getEngine().getEntitiesFor(families.get(klass)).size();
 	}
+	
 	
 }

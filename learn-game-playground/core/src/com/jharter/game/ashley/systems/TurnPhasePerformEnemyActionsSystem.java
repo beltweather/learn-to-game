@@ -1,6 +1,7 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseEndTurnComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 
@@ -12,7 +13,7 @@ public class TurnPhasePerformEnemyActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
-		return true;
+		return isDoneAnimating();
 	}
 
 	@Override

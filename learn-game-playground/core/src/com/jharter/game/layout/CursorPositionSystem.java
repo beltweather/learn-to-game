@@ -43,7 +43,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		float targetAngle = getCursorAngle(entity, z.zoneType);
 		
 		tempPosition = getCursorPosition(entity, z, zp.index);
-		offsetPositionForAngle(tempPosition, s, z.zoneType);
+		//offsetPositionForAngle(tempPosition, s, z.zoneType);
 		if(tempPosition != null && !Mapper.AnimatingComp.has(entity)) {
 			if(c.lastZoneID != z.zoneID) {
 				
@@ -79,7 +79,7 @@ public class CursorPositionSystem extends IteratingSystem {
 						
 						for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
 							tempPosition = getCursorPosition(entity, z, i);
-							offsetPositionForAngle(tempPosition, s, z.zoneType);
+							//offsetPositionForAngle(tempPosition, s, z.zoneType);
 							if(tempPosition != null) {
 								Vector3 currP = new Vector3(s.position);
 								mp.positions.add(currP);

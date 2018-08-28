@@ -14,6 +14,9 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseStart(Entity turnEntity, float deltaTime) {
+		if(!isDoneAnimating()) {
+			return false;
+		}
 		Mapper.TurnEntity.TurnTimerComp().start();
 		enableCursor();
 		return true;

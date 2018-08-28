@@ -17,8 +17,10 @@ public class TweenTarget implements Poolable {
 	private TweenTarget() {}
 	
 	public void setFromEntity(Entity entity) {
-		SpriteComp s = Mapper.SpriteComp.get(entity);
-		
+		setFromEntity(Mapper.SpriteComp.get(entity));
+	}
+	
+	public void setFromEntity(SpriteComp s) {
 		position.set(s.position);
 		scale.set(s.scale);
 		alpha = s.alpha;

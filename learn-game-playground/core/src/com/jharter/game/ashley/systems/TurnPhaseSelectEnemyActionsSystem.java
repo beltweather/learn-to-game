@@ -12,7 +12,7 @@ public class TurnPhaseSelectEnemyActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
-		return true;
+		return isDoneAnimating();
 	}
 
 	@Override

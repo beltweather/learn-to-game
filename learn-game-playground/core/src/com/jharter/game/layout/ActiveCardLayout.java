@@ -32,6 +32,7 @@ public class ActiveCardLayout extends ZoneLayout {
 		
 		target.position.x = (sCharacter.position.x - s.scaledWidth(targetScale) - 20);
 		target.position.y = (sCharacter.position.y + (sCharacter.scaledHeight() - s.scaledHeight(targetScale)) / 2);
+		target.position.z = s.position.z;
 		target.scale.x = targetScale;
 		target.scale.y = targetScale;
 		

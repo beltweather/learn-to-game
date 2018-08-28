@@ -23,6 +23,7 @@ public class HandLayout extends ZoneLayout {
 		
 		target.position.x = anchorX + (s.scaledWidth() + 20) * index;
 		target.position.y = anchorY;
+		target.position.z = s.position.z;
 		target.scale.x = 1f;
 		target.scale.y = 1f;
 		target.angleDegrees = 0;

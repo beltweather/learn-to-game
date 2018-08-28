@@ -71,6 +71,7 @@ public class TweenUtil {
 	
 	public static Timeline tween(ID id, TweenTarget target, float duration) {
 		float d = duration;
+		target.round();
 		return Timeline.createParallel()
 			.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).ease(Circ.INOUT).target(target.position.x, target.position.y))
 			.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).ease(Circ.INOUT).target(target.scale.x, target.scale.y))
@@ -79,6 +80,7 @@ public class TweenUtil {
 	}
 	
 	public static Timeline set(ID id, TweenTarget target) {
+		target.round();
 		return Timeline.createParallel()
 			.push(Tween.set(id, TweenType.POSITION_XY.asInt()).target(target.position.x, target.position.y))
 			.push(Tween.set(id, TweenType.SCALE_XY.asInt()).target(target.scale.x, target.scale.y))

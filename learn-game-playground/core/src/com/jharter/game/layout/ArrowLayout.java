@@ -30,6 +30,7 @@ public class ArrowLayout extends ZoneLayout {
 		
 		target.position.x = (sTarget.position.x + (sTarget.scaledWidth() - s.scaledWidth(scale)) / 2);
 		target.position.y = sTarget.position.y + sTarget.scaledHeight();
+		target.position.z = s.position.z;
 		target.scale.x = scale;
 		target.scale.y = scale;
 		

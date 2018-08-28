@@ -9,10 +9,15 @@ import com.jharter.game.ashley.components.Mapper;
 
 public class TweenTarget implements Poolable {
 	
+	private static float round(float x) {
+		return Math.round(x);
+	}
+	
 	public Vector3 position = new Vector3(0, 0, 0);
 	public Vector2 scale = new Vector2(0, 0);
 	public float alpha = 1f;
 	public float angleDegrees = 0f;
+	public boolean rounded = false;
 	
 	private TweenTarget() {}
 	
@@ -32,13 +37,27 @@ public class TweenTarget implements Poolable {
 			return false;
 		}
 		
-		return s.position.x == position.x &&
+		round();
+		boolean val = s.position.x == position.x &&
 			   s.position.y == position.y &&
 			   s.position.z == position.z &&
 			   s.scale.x == scale.x &&
 			   s.scale.y == scale.y &&
 			   s.angleDegrees == angleDegrees &&
 			   s.alpha == alpha;
+	
+		return val;
+	}
+	
+	public void round() {
+		if(rounded) {
+			return;
+		}
+		position.x = round(position.x);
+		position.y = round(position.y);
+		position.z = round(position.z);
+		angleDegrees = round(angleDegrees);
+		rounded = true;
 	}
 
 	@Override
@@ -47,6 +66,7 @@ public class TweenTarget implements Poolable {
 		scale.set(0, 0);
 		alpha = 1f;
 		angleDegrees = 0f;
+		rounded = false;
 	}
 	
 }

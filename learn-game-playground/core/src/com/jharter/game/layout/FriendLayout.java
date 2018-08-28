@@ -20,6 +20,7 @@ public class FriendLayout extends ZoneLayout {
 		
 		target.position.x = anchorX - (index % 2 == 0 ? 75 : 0);
 		target.position.y = anchorY - (150) * index;
+		target.position.z = s.position.z;
 		target.scale.x = 1f;
 		target.scale.y = 1f;
 		target.angleDegrees = 0;

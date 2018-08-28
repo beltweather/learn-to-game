@@ -6,8 +6,8 @@ import com.jharter.game.util.id.ID;
 
 public class IdentityLayout extends ZoneLayout {
 
-	public IdentityLayout(ZoneComp z) {
-		super(z);
+	public IdentityLayout() {
+		super();
 	}
 
 	@Override

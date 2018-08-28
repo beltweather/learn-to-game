@@ -46,6 +46,7 @@ public class Enums {
     	DECK,
     	DISCARD,
     	TIME,
+    	ARROW,
     	NONE
     }
     

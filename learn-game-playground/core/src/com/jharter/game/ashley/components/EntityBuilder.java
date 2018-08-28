@@ -15,10 +15,10 @@ import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
+import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
-import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -49,6 +49,7 @@ import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.components.Components.ZonePositionPointerComp;
 
 public class EntityBuilder implements Poolable {
 	
@@ -127,6 +128,7 @@ public class EntityBuilder implements Poolable {
 	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
+	public ZonePositionPointerComp ZonePositionPointerComp() { return get(ZonePositionPointerComp.class); }
 	public CardComp CardComp() { return get(CardComp.class); }
 	public ActiveCardComp ActiveCardComp() { return get(ActiveCardComp.class); }
 	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }

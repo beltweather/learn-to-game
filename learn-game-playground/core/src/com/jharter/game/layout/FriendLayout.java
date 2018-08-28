@@ -1,16 +1,13 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.CardComp;
-import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
 
-public class HandLayout extends ZoneLayout {
+public class FriendLayout extends ZoneLayout {
 
-	public HandLayout() {
+	public FriendLayout() {
 		super();
 	}
 
@@ -18,11 +15,11 @@ public class HandLayout extends ZoneLayout {
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		int anchorX = -350;
-		int anchorY = -475;
+		int anchorX = 725;
+		int anchorY = 160;
 		
-		target.position.x = anchorX + (s.scaledWidth() + 20) * index;
-		target.position.y = anchorY;
+		target.position.x = anchorX - (index % 2 == 0 ? 75 : 0);
+		target.position.y = anchorY - (150) * index;
 		target.scale.x = 1f;
 		target.scale.y = 1f;
 		target.angleDegrees = 0;
@@ -38,12 +35,7 @@ public class HandLayout extends ZoneLayout {
 	
 	@Override
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		CardComp c = Mapper.CardComp.get(entity);
-		if(c.playerID != Mapper.getPlayerEntityID()) {
-			hide(entity);
-		} else {
-			show(entity);
-		}
+		
 	}
 
 }

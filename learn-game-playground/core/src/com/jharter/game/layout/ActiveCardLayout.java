@@ -17,8 +17,8 @@ import aurelienribon.tweenengine.Tween;
 
 public class ActiveCardLayout extends ZoneLayout {
 
-	public ActiveCardLayout(ZoneComp z) {
-		super(z);
+	public ActiveCardLayout() {
+		super();
 	}
 
 	@Override

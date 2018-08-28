@@ -78,4 +78,12 @@ public class TweenUtil {
 			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(Circ.INOUT).target(target.angleDegrees));
 	}
 	
+	public static Timeline set(ID id, TweenTarget target) {
+		return Timeline.createParallel()
+			.push(Tween.set(id, TweenType.POSITION_XY.asInt()).target(target.position.x, target.position.y))
+			.push(Tween.set(id, TweenType.SCALE_XY.asInt()).target(target.scale.x, target.scale.y))
+			.push(Tween.set(id, TweenType.ALPHA.asInt()).target(target.alpha))
+			.push(Tween.set(id, TweenType.ANGLE.asInt()).target(target.angleDegrees));
+	}
+	
 }

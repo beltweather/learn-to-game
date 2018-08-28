@@ -50,6 +50,7 @@ import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.components.Components.ZonePositionPointerComp;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -105,6 +106,10 @@ public class Mapper {
 	
 	public static void nextActivePlayerEntity() {
 		activePlayerIndex = (activePlayerIndex+1) % playerIDs.size;
+	}
+	
+	public static int getActivePlayerIndex() {
+		return activePlayerIndex;
 	}
 	
 	public static boolean hasNextActivePlayer() {
@@ -190,6 +195,11 @@ public class Mapper {
 		
 		public ZoneComp get(Entity entity) {
 			return ComponentMapper.getFor(ZoneComp.class).get(entity);
+		}
+		
+		public ZoneComp get(ZonePositionPointerComp zp) {
+			Entity zone = Mapper.Entity.get(zp.zoneID);
+			return Mapper.ZoneComp.get(zone);
 		}
 		
 		public ZoneComp get(ZonePositionComp zp) {
@@ -308,6 +318,14 @@ public class Mapper {
 			in.input.reset();
 		}
 		
+		public boolean isEnabled() {
+			return !isDisabled();
+		}
+		
+		public boolean isDisabled() {
+			return Mapper.DisabledComp.has(Entity());
+		}
+		
 		public void single() {
 			Entity entity = Entity();
 			if(Mapper.MultiPositionComp.has(entity)) {
@@ -357,6 +375,7 @@ public class Mapper {
 	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = ComponentMapper.getFor(CursorInputRegulatorComp.class);
 	public static final ComponentMapperZoneComp ZoneComp = new ComponentMapperZoneComp();
 	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = ComponentMapper.getFor(ZonePositionComp.class);
+	public static final ComponentMapper<ZonePositionPointerComp> ZonePositionPointerComp = ComponentMapper.getFor(ZonePositionPointerComp.class);
 	public static final ComponentMapper<CardComp> CardComp = ComponentMapper.getFor(CardComp.class);
 	public static final ComponentMapper<ActiveCardComp> ActiveCardComp = ComponentMapper.getFor(ActiveCardComp.class);
 	public static final ComponentMapper<TurnActionComp> TurnActionComp = ComponentMapper.getFor(TurnActionComp.class);

@@ -15,13 +15,24 @@ public abstract class ZoneLayout {
 	
 	protected ImmutableArray<ID> ids = null;
 	private ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
+	private boolean tween = true;
 	
-	public ZoneLayout(ZoneComp z) {
-		setIds(z.objectIDs);
-	}
+	public ZoneLayout() {}
 	
 	public void setIds(ImmutableArray<ID> ids) {
 		this.ids = ids;
+	}
+	
+	public boolean isTweenEnabled() {
+		return tween;
+	}
+	
+	public void enableTween() {
+		tween = true;
+	}
+	
+	public void disableTween() {
+		tween = false;
 	}
 	
 	public void revalidate() {

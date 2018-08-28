@@ -659,6 +659,63 @@ public final class Components {
 		
 	}
 	
+	public static final class ZonePositionPointerComp implements Comp {
+		
+		public ID zoneID = null;
+		public int index = -1;
+		private transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
+		
+		private ZonePositionPointerComp() {}
+		
+		public ZoneComp getZoneComp() {
+			if(zoneID == null) {
+				return null;
+			}
+			return Mapper.ZoneComp.get(this);
+		}
+		
+		public void checkpoint() {
+			history.add(copyForHistory());
+		}
+		
+		public void undoCheckpoint() {
+			if(history.size == 0) {
+				return;
+			}
+			history.pop();
+		}
+		
+		public boolean tryRevertToLastCheckpoint() {
+			if(history.size == 0) {
+				return false;
+			}
+			ZonePositionComp copy = history.pop();
+			zoneID = copy.zoneID;
+			index = copy.index;
+			return true;
+		}
+		
+		public void clearHistory() {
+			history.clear();
+		}
+		
+		private ZonePositionComp copyForHistory() {
+			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
+			zp.zoneID = zoneID;
+			zp.index = index;
+			// Intentionally ignoring history for copies since we don't use it
+			return zp;
+		}
+		
+		@Override
+		public void reset() {
+			zoneID = null;
+			index = -1;
+			history.clear();
+		}
+		
+	}
+	
 	public static final class InputComp implements Comp {
 		public GameInput input; // Can't serialize
 

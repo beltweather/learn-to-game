@@ -48,6 +48,9 @@ public class Media {
     // UI
     public static TextureRegion handPointUp, handPointDown, handPointRight, handPointLeft;
     
+    public static TextureRegion[] arrowFrames;
+    public static Animation<TextureRegion> arrowAnim;
+    
     public static void load_assets(){
         // HERO
         hero  = new Texture("entities/hero/hero.png");
@@ -85,6 +88,12 @@ public class Media {
         handPointDown = new TextureRegion(new Texture("entities/ui/hand-point-down.png"));
         handPointLeft = new TextureRegion(new Texture("entities/ui/hand-point-left.png"));
         handPointRight = new TextureRegion(new Texture("entities/ui/hand-point-right.png"));
+        
+        arrowFrames = new TextureRegion[15];
+        for(int i = 0; i < 15; i++) {
+        	arrowFrames[i] = new TextureRegion(new Texture("entities/ui/arrow_" + i + ".png"));
+        }
+        arrowAnim = new Animation<TextureRegion>(.1f, arrowFrames);
         
         // Source https://opengameart.org/content/micro-tileset-overworld-and-dungeon
         // Example Map: http://opengameart.org/sites/default/files/styles/watermarked/public/Render_0.png
@@ -129,6 +138,7 @@ public class Media {
         mainBack = new Texture(Gdx.files.internal("gui/main_background.png"));
         pinkButton = new Texture(Gdx.files.internal("gui/pink_button.png"));
         selector = new Texture(Gdx.files.internal("gui/selector.png"));
+        
         
         // ICONS
         iconBuild = new Texture(Gdx.files.internal("gui/icons/build.png"));

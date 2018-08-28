@@ -18,7 +18,7 @@ public class HandLayout extends ZoneLayout {
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		int anchorX = -700;
+		int anchorX = -350;
 		int anchorY = -475;
 		
 		target.position.x = anchorX + (s.scaledWidth() + 20) * index;

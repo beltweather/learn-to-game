@@ -34,13 +34,13 @@ public class Media {
     public static Texture close_menu;
     
     // Cards
-    public static Texture forest, plains, island, mountain, swamp;
+    public static Texture forest, plains, island, mountain, swamp, drainLife, healAll, attack, x2, card, all, attackAll;
    
     // Characters
     public static Texture ranger, rogue, sorcerer, warrior;
     
     // Enemies
-    public static Texture atma;
+    public static Texture atma, cactar;
     
     // Backgrounds
     public static Texture background;
@@ -59,6 +59,14 @@ public class Media {
         plains = new Texture("entities/card/plains.jpg");
         swamp = new Texture("entities/card/swamp.jpg");
         
+        attack = new Texture("entities/card/attack.png");
+        healAll = new Texture("entities/card/heal-all.png");
+        drainLife = new Texture("entities/card/drain-life.png");
+        x2 = new Texture("entities/card/x2.png");
+        card = new Texture("entities/card/card.png");
+        all = new Texture("entities/card/all.png");
+        attackAll = new Texture("entities/card/attack-all.png");
+      
         // Characters
         ranger = new Texture("entities/character/ranger-level-3-scaled.png");
         rogue = new Texture("entities/character/rogue-level-3-scaled.png");
@@ -67,6 +75,7 @@ public class Media {
         
         // Enemies
         atma = new Texture("entities/enemies/atma.png");
+        cactar = new Texture("entities/enemies/cactar.png");
         
         // Background
         background = new Texture("entities/background/background.png");

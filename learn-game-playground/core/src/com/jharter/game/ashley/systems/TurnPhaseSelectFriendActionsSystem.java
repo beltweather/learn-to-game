@@ -36,7 +36,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		// XXX This assumption will change, but the intent is to check if all characters
 		// have made a card selection. Currently, one cursor controls all actions so 
 		// we'll leave this hack in for testing.
-		return actionsQueued >= 2;
+		return actionsQueued >= 4;
 	}
 
 	@Override

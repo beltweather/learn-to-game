@@ -36,7 +36,26 @@ public abstract class VoidCallback<T> {
 			Entity character = cCard.getCharacterEntity();
 			call(character, card, friend, enemy);
 			
-			// XXX Add ALL variant
+			if(t.all) {
+				ZonePositionComp zp = Mapper.ZonePositionComp.get(friend);
+				ZoneComp z = Mapper.ZoneComp.get(zp);
+				ID id;
+				for(int i = 0; i < z.objectIDs.size(); i++) {
+					id = z.objectIDs.get(i);
+					Entity entity = Mapper.Entity.get(id);
+					if(Mapper.CursorComp.has(entity)) {
+						continue;
+					}
+					
+					// Maybe need to check what's valid or not here
+					call(character, card, entity, enemy);
+				}
+				t.all = t.defaultAll;
+				
+			} else {
+				call(character, card, friend, enemy);	
+			}
+			
 		}
 		
 		public abstract void call(Entity character, Entity card, Entity friend, Entity enemy);

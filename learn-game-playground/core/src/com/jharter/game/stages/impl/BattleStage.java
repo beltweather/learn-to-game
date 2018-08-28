@@ -3,10 +3,9 @@ package com.jharter.game.stages.impl;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
@@ -64,7 +63,6 @@ import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.Sys;
-import com.jharter.game.util.graphics.GraphicsUtil;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -105,7 +103,7 @@ public class BattleStage extends GameStage {
 		// Turn timer
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnEntityID();
-		b.TurnTimerComp().maxTurnTimeSec = 10f;
+		b.TurnTimerComp().maxTurnTimeSec = 20f;
 		b.TurnPhaseComp();
 		b.TurnPhaseStartBattleComp();
 		b.SpriteComp().position.x = 800;
@@ -126,7 +124,24 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(roguePlayerID, ZoneType.DISCARD);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.DISCARD;
+		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
+		engine.addEntity(b.Entity());
+		b.free();
+		
 		ID warriorPlayerID = Mapper.buildPlayerEntityID();
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(warriorPlayerID, ZoneType.DISCARD);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.DISCARD;
+		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
+		engine.addEntity(b.Entity());
+		b.free();
 		
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.generateZoneID(warriorPlayerID, ZoneType.HAND);
@@ -137,8 +152,10 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		ID sorcererPlayerID = Mapper.buildPlayerEntityID();
+		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(roguePlayerID, ZoneType.DISCARD);
+		b.IDComp().id = Mapper.generateZoneID(sorcererPlayerID, ZoneType.DISCARD);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.DISCARD;
 		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
@@ -146,12 +163,33 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(warriorPlayerID, ZoneType.DISCARD);
+		b.IDComp().id = Mapper.generateZoneID(sorcererPlayerID, ZoneType.HAND);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.HAND;
+		b.ZoneComp().layout = new HandLayout(b.ZoneComp());
+		ZoneComp sorcererHandZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
+		ID rangerPlayerID = Mapper.buildPlayerEntityID();
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(rangerPlayerID, ZoneType.DISCARD);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.DISCARD;
 		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
 		engine.addEntity(b.Entity());
 		b.free();
+		
+		b = EntityBuilder.create(engine);
+		b.IDComp().id = Mapper.generateZoneID(rangerPlayerID, ZoneType.HAND);
+		b.ZoneComp().zoneID = b.IDComp().id;
+		b.ZoneComp().zoneType = ZoneType.HAND;
+		b.ZoneComp().layout = new HandLayout(b.ZoneComp());
+		ZoneComp rangerHandZone = b.ZoneComp();
+		engine.addEntity(b.Entity());
+		b.free();
+		
 		
 		// Global Zones
 		b = EntityBuilder.create(engine);
@@ -184,24 +222,18 @@ public class BattleStage extends GameStage {
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = warriorPlayerID;
 		PlayerComp warriorPlayer = b.PlayerComp();
-		//ID warriorPlayerID = b.IDComp().id;
-		Entity warriorEntity = b.Entity();
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityBuilder.create(engine);
+		b.IDComp().id = sorcererPlayerID;
 		PlayerComp sorcererPlayer = b.PlayerComp();
-		b.IDComp().id = IDGenerator.newID();
-		ID sorcererPlayerID = b.IDComp().id;
 		engine.addEntity(b.Entity());
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.PlayerComp();
+		b.IDComp().id = rangerPlayerID;
 		PlayerComp rangerPlayer = b.PlayerComp();
-		b.IDComp().id = IDGenerator.newID();
-		ID rangerPlayerID = b.IDComp().id;
-		Entity rangerEntity = b.Entity();
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -292,7 +324,7 @@ public class BattleStage extends GameStage {
 		
 		b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.ENEMY, 
-				  new Vector3(-750,-100,0), 
+				  new Vector3(-750,0,0), 
 				  Media.atma);
 		b.VitalsComp().maxHealth = 500;
 		b.VitalsComp().weakHealth = 50;
@@ -309,24 +341,62 @@ public class BattleStage extends GameStage {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		b = EntityUtil.buildBasicEntity(engine, 
+				  EntityType.ENEMY, 
+				  new Vector3(-250, -100, 0), 
+				  Media.cactar);
+		b.VitalsComp().maxHealth = 1000;
+		b.VitalsComp().weakHealth = 100;
+		b.VitalsComp().health = 1000;
+		b.DescriptionComp().name = "Cactar";
+		b.SpriteComp();
+		b.StatsComp().level = 2;
+		b.StatsComp().power = 2;
+		b.StatsComp().defense = 5;
+		b.StatsComp().mPower = 5;
+		b.StatsComp().mDefense = 7;
+		//b.SpriteComp().scale = new Vector2(2f,2f);
+		enemyZone.add(b);
+		engine.addEntity(b.Entity());
+		b.free();
+		
 		// Cards
+		//TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
 		
-		b = EntityUtil.buildDynamicSprite(engine, 
-										  IDGenerator.newID(),
-										  EntityType.CARD, 
-										  new Vector3(-700,-475,0),
-										  (int) Media.forest.getWidth(),
-										  (int) Media.forest.getHeight(),
-										  new TextureRegion(Media.forest),
-										  getBox2DWorld(),
-										  BodyType.DynamicBody,
-										  100000);
+		addDrainCard(engine, roguePlayerID, handZone);
+		addDrainCard(engine, roguePlayerID, handZone);
+		addAllCard(engine, roguePlayerID, handZone);
 		
-		b.CardComp().playerID = roguePlayerID;
-		b.DescriptionComp().name = "Forest";
+		addAttackCard(engine, warriorPlayerID, warriorHandZone);
+		addX2Card(engine, warriorPlayerID, warriorHandZone);
+		addAttackCard(engine, warriorPlayerID, warriorHandZone);
+		
+		addAllCard(engine, sorcererPlayerID, sorcererHandZone);
+		addHealAllCard(engine, sorcererPlayerID, sorcererHandZone);
+		addHealAllCard(engine, sorcererPlayerID, sorcererHandZone);
+		
+		addAttackAllCard(engine, rangerPlayerID, rangerHandZone);
+		addX2Card(engine, rangerPlayerID, rangerHandZone);
+		addAttackAllCard(engine, rangerPlayerID, rangerHandZone);
+		
+	}
+	
+	private EntityBuilder buildCard(PooledEngine engine, ID playerID, ZoneComp zone, Texture texture, String name) {
+		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
+				EntityType.CARD, 
+				new Vector3(-450,-475,0), 
+				texture);
+		b.CardComp().playerID = playerID;
+		b.DescriptionComp().name = name;
 		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
+		zone.add(b);
+		return b;
+	}
+	
+	private void addDrainCard(PooledEngine engine, ID playerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, playerID, zone, Media.drainLife, "Drain Life");
 		new FriendEnemyCallback(b) {
 
 			@Override
@@ -363,23 +433,12 @@ public class BattleStage extends GameStage {
 			}
 			
 		};
-		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
-		
-		//TextureRegion swampTexture = GraphicsUtil.combineWithText(Media.swamp, "Hello World!", 20, 0, 0);
-		TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
-		
-		b = EntityUtil.buildBasicEntity(engine, 
-				EntityType.CARD, 
-				new Vector3(-450,-475,0), 
-				swampTexture);
-		ID swampId = b.IDComp().id;
-		b.CardComp().playerID = roguePlayerID;
-		b.DescriptionComp().name = "Swamp";
-		b.SpriteComp();
-		b.VelocityComp();
-		b.BodyComp();
+	}
+	
+	private void addAttackCard(PooledEngine engine, ID playerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, playerID, zone, Media.attack, "Attack");
 		new EnemyCallback(b) {
 
 			@Override
@@ -390,69 +449,30 @@ public class BattleStage extends GameStage {
 			}
 			
 		};
-		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
-		
-		b = EntityUtil.buildBasicEntity(engine, 
-				EntityType.CARD, 
-				new Vector3(-200,-475,0), 
-				Media.island);
-		b.CardComp().playerID = roguePlayerID;
-		b.DescriptionComp().name = "Island";
-		b.SpriteComp();
-		b.VelocityComp();
-		b.BodyComp();
-		new CardCallback(b) {
-
-			@Override
-			public void call(Entity owner, Entity card, Entity activeCard) {
-				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
-				Sys.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
-			}
-			
-		};
-		handZone.add(b);
-		engine.addEntity(b.Entity());
-		b.free();
-		
-		// SPECIAL WARRIOR ISLAND
-		
-		b = EntityUtil.buildBasicEntity(engine, 
-				EntityType.CARD, 
-				new Vector3(-200,-475,0), 
-				Media.island);
-		b.CardComp().playerID = warriorPlayerID;
-		b.DescriptionComp().name = "Island";
-		b.SpriteComp();
-		b.VelocityComp();
-		b.BodyComp();
-		new CardCallback(b) {
-
-			@Override
-			public void call(Entity owner, Entity card, Entity activeCard) {
-				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
-				Sys.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
-			}
-			
-		};
-		warriorHandZone.add(b);
-		engine.addEntity(b.Entity());
-		b.free();
-		
-		b = EntityUtil.buildBasicEntity(engine, 
-				EntityType.CARD, 
-				new Vector3(50,-475,0), 
-				Media.mountain);
-		b.CardComp().playerID = roguePlayerID;
-		b.DescriptionComp().name = "Mountain";
-		b.SpriteComp();
-		b.TurnActionComp().turnAction.defaultAll = true;
+	}
+	
+	private void addAttackAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, playerID, zone, Media.attackAll, "Attack All");
 		b.TurnActionComp().turnAction.all = true;
-		b.VelocityComp();
-		b.BodyComp();
+		new EnemyCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity enemy) {
+				int damage = CombatUtil.getDamage(owner, enemy, 20);
+				Mapper.VitalsComp.get(enemy).damage(damage);
+				Sys.out.println("Dealt " + damage + " damage.");
+			}
+			
+		};
+		engine.addEntity(b.Entity());
+		b.free();
+	}
+	
+	private void addHealAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, playerID, zone, Media.healAll, "Heal All");
+		b.TurnActionComp().turnAction.all = true;
 		new FriendCallback(b) {
 
 			@Override
@@ -463,10 +483,40 @@ public class BattleStage extends GameStage {
 			}
 			
 		};
-		handZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
-		
+	}
+
+	private void addX2Card(PooledEngine engine, ID playerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, playerID, zone, Media.x2, "x2");
+		new CardCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity activeCard) {
+				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
+				Sys.out.println("Increasing multiplicity for: " + d.name);
+				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
+			}
+			
+		};
+		engine.addEntity(b.Entity());
+		b.free();
+	}
+	
+	private void addAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, playerID, zone, Media.all, "All");
+		new CardCallback(b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity activeCard) {
+				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
+				Sys.out.println("Increasing multiplicity for: " + d.name);
+				Mapper.TurnActionComp.get(activeCard).turnAction.all = true;
+			}
+			
+		};
+		engine.addEntity(b.Entity());
+		b.free();
 	}
 	
 	@Override

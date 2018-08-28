@@ -18,7 +18,7 @@ public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		Mapper.resetActivePlayer();
+		Mapper.resetActivePlayerEntity();
 		return true;
 	}
 

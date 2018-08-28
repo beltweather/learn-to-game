@@ -61,7 +61,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				// entity on to the next step
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
-					Mapper.nextActivePlayer();
+					Mapper.nextActivePlayerEntity();
 					
 					Entity turnActionEntity = Mapper.Entity.get(c.turnActionEntityID);
 					turnActionEntity.add(Mapper.Comp.get(ActionQueueableComp.class));

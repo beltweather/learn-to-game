@@ -155,7 +155,7 @@ public class BattleStage extends GameStage {
 		
 		// Global Zones
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalEntityID(), ZoneType.FRIEND);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalPlayerEntityID(), ZoneType.FRIEND);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.FRIEND;
 		b.ZoneComp().layout = new  IdentityLayout(b.ZoneComp());
@@ -164,7 +164,7 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalEntityID(), ZoneType.ENEMY);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalPlayerEntityID(), ZoneType.ENEMY);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.ENEMY;
 		b.ZoneComp().layout = new IdentityLayout(b.ZoneComp());
@@ -173,7 +173,7 @@ public class BattleStage extends GameStage {
 		b.free();
 		
 		b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalEntityID(), ZoneType.ACTIVE_CARD);
+		b.IDComp().id = Mapper.generateZoneID(Mapper.getGlobalPlayerEntityID(), ZoneType.ACTIVE_CARD);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = ZoneType.ACTIVE_CARD;
 		b.ZoneComp().layout = new ActiveCardLayout(b.ZoneComp());
@@ -522,6 +522,8 @@ public class BattleStage extends GameStage {
 		b.PlayerComp().cursorID = b.IDComp().id;
 		engine.addEntity(b.Entity());
 		
+		
+		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
 		b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.CURSOR, 
 				  new Vector3(-550,-100,1), 

@@ -58,16 +58,15 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 
 public class Mapper {
 	
+	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
+	
+	private static Array<ID> playerIDs = new Array<ID>();
+	private static int activePlayerIndex = 0;
+	private static ID globalPlayerID;
 	private static ID battleEntityID;
 	private static ID turnEntityID;
 	private static ID cursorEntityID;
-	private static Array<ID> playerIDs = new Array<ID>();
-	private static int activePlayerIndex = 0;
-	private static ID globalID;
-	
-	//private static Map<ZoneType, ID> idsByZoneType = new HashMap<ZoneType, ID>();
 	private static ObjectMap<ID, ObjectMap<ZoneType, ID>> zoneIDsByOwnerIDAndType = new ObjectMap<ID, ObjectMap<ZoneType, ID>>();
-	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
 	public static ID getBattleEntityID() {
 		if(battleEntityID == null) {
@@ -100,11 +99,11 @@ public class Mapper {
 		return id;
 	}
 	
-	public static void resetActivePlayer() {
+	public static void resetActivePlayerEntity() {
 		activePlayerIndex = 0;
 	}
 	
-	public static void nextActivePlayer() {
+	public static void nextActivePlayerEntity() {
 		activePlayerIndex = (activePlayerIndex+1) % playerIDs.size;
 	}
 	
@@ -119,11 +118,11 @@ public class Mapper {
 		return cursorEntityID;
 	}
 	
-	public static ID getGlobalEntityID() {
-		if(globalID == null) {
-			globalID = IDGenerator.newID();
+	public static ID getGlobalPlayerEntityID() {
+		if(globalPlayerID == null) {
+			globalPlayerID = IDGenerator.newID();
 		}
-		return globalID;
+		return globalPlayerID;
 	}
 	
 	public static ID generateZoneID(ID ownerID, ZoneType type) {
@@ -137,8 +136,8 @@ public class Mapper {
  	}
 	
 	private static ID getZoneID(ID ownerID, ZoneType type) {
-		if(ownerID != getGlobalEntityID() && (!zoneIDsByOwnerIDAndType.containsKey(ownerID) || !zoneIDsByOwnerIDAndType.get(ownerID).containsKey(type))) {
-			return getZoneID(getGlobalEntityID(), type);
+		if(ownerID != getGlobalPlayerEntityID() && (!zoneIDsByOwnerIDAndType.containsKey(ownerID) || !zoneIDsByOwnerIDAndType.get(ownerID).containsKey(type))) {
+			return getZoneID(getGlobalPlayerEntityID(), type);
 		}
 		if(!zoneIDsByOwnerIDAndType.containsKey(ownerID)) {
 			return null;

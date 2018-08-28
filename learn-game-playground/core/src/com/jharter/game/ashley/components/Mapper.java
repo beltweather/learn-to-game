@@ -19,7 +19,7 @@ import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
-import com.jharter.game.ashley.components.Components.CharacterComp;
+import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -313,7 +313,7 @@ public class Mapper {
 	public static final ComponentMapperCursorEntity CursorEntity = new ComponentMapperCursorEntity();
 	
 	public static final ComponentMapper<SpriteComp> SpriteComp = ComponentMapper.getFor(SpriteComp.class);
-	public static final ComponentMapper<CharacterComp> CharacterComp = ComponentMapper.getFor(CharacterComp.class);
+	public static final ComponentMapper<BattleAvatarComp> BattleAvatarComp = ComponentMapper.getFor(BattleAvatarComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
 	public static final ComponentMapper<IDComp> IDComp = ComponentMapper.getFor(IDComp.class);
 	public static final ComponentMapper<TypeComp> TypeComp = ComponentMapper.getFor(TypeComp.class);

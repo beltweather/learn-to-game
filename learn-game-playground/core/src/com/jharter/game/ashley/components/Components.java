@@ -173,31 +173,17 @@ public final class Components {
 	
 	public static final class PlayerComp implements Comp {
 		
-		public ID cursorID = null;
-		public ID characterID = null;
+		public ID battleAvatarID = null;
 		
 		private PlayerComp() {}
 
-		public Entity getCursorEntity() {
-			return Mapper.Entity.get(cursorID);
-		}
-		
-		public Entity getCharacterEntity() {
-			return Mapper.Entity.get(characterID);
-		}
-		
-		public CursorComp getCursorComp() {
-			return Mapper.CursorComp.get(getCursorEntity());
-		}
-		
-		public CharacterComp getCharacterComp() {
-			return Mapper.CharacterComp.get(getCharacterEntity());
+		public Entity getBattleAvatarEntity() {
+			return Mapper.Entity.get(battleAvatarID);
 		}
 		
 		@Override
 		public void reset() {
-			cursorID = null;
-			characterID = null;
+			battleAvatarID = null;
 		}
 	}
 	
@@ -214,11 +200,11 @@ public final class Components {
 		
 	}
 	
-	public static final class CharacterComp implements Comp {
+	public static final class BattleAvatarComp implements Comp {
 		
 		public ID playerID;
 		
-		private CharacterComp() {}
+		private BattleAvatarComp() {}
 		
 		@Override
 		public void reset() {
@@ -300,7 +286,7 @@ public final class Components {
 		private CardComp() {}
 		
 		public Entity getCharacterEntity() {
-			return Mapper.PlayerComp.get(Mapper.Entity.get(playerID)).getCharacterEntity();
+			return Mapper.PlayerComp.get(Mapper.Entity.get(playerID)).getBattleAvatarEntity();
 		}
 		
 		@Override

@@ -211,7 +211,7 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(660,140,0), 
 				  Media.warrior);
-		b.CharacterComp().playerID = warriorPlayerID;
+		b.BattleAvatarComp().playerID = warriorPlayerID;
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 10;
@@ -222,7 +222,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 2;
 		b.DescriptionComp().name = "Warrior";
 		b.SpriteComp();
-		warriorPlayer.characterID = b.IDComp().id;
+		warriorPlayer.battleAvatarID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -232,7 +232,7 @@ public class BattleStage extends GameStage {
 				  new Vector3(750,15,0), 
 				  Media.rogue);
 		ActiveCardComp rogueActiveCardComp = b.ActiveCardComp();
-		b.CharacterComp().playerID = roguePlayerID;
+		b.BattleAvatarComp().playerID = roguePlayerID;
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 47;
@@ -252,7 +252,7 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(675,-120,0), 
 				  Media.sorcerer);
-		b.CharacterComp().playerID = sorcererPlayerID;
+		b.BattleAvatarComp().playerID = sorcererPlayerID;
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 67;
@@ -263,7 +263,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 10;
 		b.DescriptionComp().name = "Sorcerer";
 		b.SpriteComp();
-		sorcererPlayer.characterID = b.IDComp().id;
+		sorcererPlayer.battleAvatarID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -272,7 +272,7 @@ public class BattleStage extends GameStage {
 				  EntityType.FRIEND, 
 				  new Vector3(750,-255,0), 
 				  Media.ranger);
-		b.CharacterComp().playerID = rangerPlayerID;
+		b.BattleAvatarComp().playerID = rangerPlayerID;
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 80;
@@ -283,7 +283,7 @@ public class BattleStage extends GameStage {
 		b.StatsComp().mDefense = 4;
 		b.DescriptionComp().name = "Ranger";
 		b.SpriteComp();
-		rangerPlayer.characterID = b.IDComp().id;
+		rangerPlayer.battleAvatarID = b.IDComp().id;
 		friendZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
@@ -518,8 +518,7 @@ public class BattleStage extends GameStage {
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);
 		b.IDComp().id = Mapper.getPlayerEntityID();
-		b.PlayerComp().characterID = rogueCharacterID;
-		b.PlayerComp().cursorID = b.IDComp().id;
+		b.PlayerComp().battleAvatarID = rogueCharacterID;
 		engine.addEntity(b.Entity());
 		
 		

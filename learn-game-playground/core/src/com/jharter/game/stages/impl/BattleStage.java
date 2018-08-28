@@ -455,6 +455,7 @@ public class BattleStage extends GameStage {
 	
 	private void addAttackAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
 		EntityBuilder b = buildCard(engine, playerID, zone, Media.attackAll, "Attack All");
+		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		new EnemyCallback(b) {
 
@@ -472,6 +473,7 @@ public class BattleStage extends GameStage {
 	
 	private void addHealAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
 		EntityBuilder b = buildCard(engine, playerID, zone, Media.healAll, "Heal All");
+		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		new FriendCallback(b) {
 

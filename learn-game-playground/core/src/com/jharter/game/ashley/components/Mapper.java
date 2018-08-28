@@ -136,6 +136,9 @@ public class Mapper {
  	}
 	
 	private static ID getZoneID(ID ownerID, ZoneType type) {
+		if(ownerID == null) {
+			return getZoneID(getGlobalPlayerEntityID(), type);
+		}
 		if(ownerID != getGlobalPlayerEntityID() && (!zoneIDsByOwnerIDAndType.containsKey(ownerID) || !zoneIDsByOwnerIDAndType.get(ownerID).containsKey(type))) {
 			return getZoneID(getGlobalPlayerEntityID(), type);
 		}

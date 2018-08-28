@@ -184,7 +184,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 	}
 	
-	private void offsetPositionForAngle(Vector3 position, SpriteComp s, ZoneType zoneType) {
+	/*private void offsetPositionForAngle(Vector3 position, SpriteComp s, ZoneType zoneType) {
 		if(position == null) {
 			return;
 		}
@@ -200,7 +200,7 @@ public class CursorPositionSystem extends IteratingSystem {
 			default:
 				break;
 		}
-	}
+	}*/
 	
 	private Vector3 tempPosition = new Vector3();
 	
@@ -232,12 +232,14 @@ public class CursorPositionSystem extends IteratingSystem {
 			case FRIEND:
 				ActiveCardComp ac = Mapper.ActiveCardComp.get(target);
 				float cardOffset = 0;
-				if(ac != null && ac.activeCardID != null) {
-					Entity card = Mapper.Entity.get(ac.activeCardID);
+				
+				if(Mapper.ZoneComp.get(null, ZoneType.ACTIVE_CARD).hasIndex(index)) { //ac != null && ac.activeCardID != null) {
+					/*Entity card = Mapper.Entity.get(ac.activeCardID);
 					if(card != null) {
 						SpriteComp sCard = Mapper.SpriteComp.get(card);
 						cardOffset = sCard.scaledWidth(0.25f) + 20;
-					}
+					}*/
+					cardOffset = 70; // XXX Fix all this!!!
 				}
 				tempPosition.x = lTarget.position.x - s.scaledWidth() - 20 - cardOffset;
 				tempPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;

@@ -3,12 +3,12 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.util.Sys;
 
 public abstract class TurnPhaseSystem extends IteratingSystem {
 
@@ -70,10 +70,10 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	protected abstract void processEntityPhaseEnd(Entity turnEntity, float deltaTime);
 	
 	protected void startPhase(Entity entity, float deltaTime) {
-		Sys.out.println("Waiting to Start Phase: " + phaseClass.getSimpleName());
+		//Sys.out.println("Waiting to Start Phase: " + phaseClass.getSimpleName());
 		phaseStarted = processEntityPhaseStart(entity, deltaTime);
 		if(phaseStarted) {
-			Sys.out.println("Start Phase: " + phaseClass.getSimpleName());
+			//Sys.out.println("Start Phase: " + phaseClass.getSimpleName());
 		}
 	}
 	
@@ -91,7 +91,7 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		phaseStarted = false;
 		phaseShouldEnd = false;
 		//endPhaseWhenEntitiesGone = false;
-		Sys.out.println("End Phase: " + phaseClass.getSimpleName() + " (Next Phase: " + nextPhaseClass.getSimpleName() + ")");
+		//Sys.out.println("End Phase: " + phaseClass.getSimpleName() + " (Next Phase: " + nextPhaseClass.getSimpleName() + ")");
 	}
 	
 	protected boolean endAndReroute(Class<? extends Comp> nextPhaseClass) {
@@ -112,6 +112,10 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		}
 	}
 	
+	protected void resetCursor() {
+		Mapper.CursorEntity.reset();
+	}
+	
 	protected void enableCursor() {
 		Mapper.CursorEntity.enable();
 	}
@@ -129,10 +133,14 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	}
 
 	protected int count(Class<? extends Comp> klass) {
+		return getEntities(klass).size();
+	}
+	
+	protected ImmutableArray<Entity> getEntities(Class<? extends Comp> klass) {
 		if(!families.containsKey(klass)) {
 			families.put(klass, Family.all(klass).get());
 		}
-		return getEngine().getEntitiesFor(families.get(klass)).size();
+		return getEngine().getEntitiesFor(families.get(klass));
 	}
 	
 	

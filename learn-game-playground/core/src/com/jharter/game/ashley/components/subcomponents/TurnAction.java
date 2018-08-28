@@ -98,6 +98,12 @@ public class TurnAction implements Poolable {
 		}
 	}
 	
+	public void cleanUp() {
+		multiplicity = defaultMultiplicity;
+		all = defaultAll;
+		targetIDs.clear();
+	}
+	
 	public void freshCopyTo(TurnAction t) {
 		t.targetZoneTypes = new Array<ZoneType>(targetZoneTypes);
 		t.acceptCallback = acceptCallback;

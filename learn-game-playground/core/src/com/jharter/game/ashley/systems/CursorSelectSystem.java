@@ -59,6 +59,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				
 				// If we're done selecting objects, do some clean up and pass our turn action
 				// entity on to the next step
+				boolean checkpoint = true;
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
 					Mapper.nextActivePlayerEntity();
@@ -67,6 +68,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 					turnActionEntity.add(Mapper.Comp.get(ActionQueueableComp.class));
 					c.turnActionEntityID = null;
 					zp.clearHistory();
+					checkpoint = false;
 				}
 				
 				// Update our current cursor position based on our next object to select or
@@ -79,7 +81,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				cz.oldZoneID = z.zoneID;
 				cz.newZoneID = targetZone.zoneID;
 				cz.newIndex = targetIndex;
-				cz.checkpoint = true;
+				cz.checkpoint = checkpoint;
 				entity.add(cz);
 			}
 			

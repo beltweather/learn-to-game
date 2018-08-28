@@ -239,9 +239,9 @@ public class CursorPositionSystem extends IteratingSystem {
 						SpriteComp sCard = Mapper.SpriteComp.get(card);
 						cardOffset = sCard.scaledWidth(0.25f) + 20;
 					}*/
-					cardOffset = 70; // XXX Fix all this!!!
+					//cardOffset = 70; // XXX Fix all this!!!
 				}
-				tempPosition.x = lTarget.position.x - s.scaledWidth() - 20 - cardOffset;
+				tempPosition.x = lTarget.position.x - s.scaledWidth() - 10 - cardOffset;
 				tempPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
 				break;
 			case ACTIVE_CARD:

@@ -35,9 +35,6 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null && t.turnAction.priority == 0) { // XXX This priority system needs looking into
 			t.turnAction.performAcceptCallback();
-			if(t.turnAction.multiplicity == 1 && Mapper.MultiPositionComp.has(entity)) {
-				entity.remove(MultiPositionComp.class);
-			}
 		}
 		
 		if(Mapper.CardComp.has(entity)) {

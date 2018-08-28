@@ -12,10 +12,10 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
 
-public class ZonePositionSystem extends IteratingSystem {
+public class ZoneChangeSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
-	public ZonePositionSystem() {
+	public ZoneChangeSystem() {
 		super(Family.all(IDComp.class, TypeComp.class, ZonePositionComp.class, ChangeZoneComp.class).get());
 	}
 	

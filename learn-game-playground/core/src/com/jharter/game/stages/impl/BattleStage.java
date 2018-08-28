@@ -42,7 +42,7 @@ import com.jharter.game.ashley.systems.TurnPhaseStartBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseStartTurnSystem;
 import com.jharter.game.ashley.systems.TweenSystem;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
-import com.jharter.game.ashley.systems.ZonePositionSystem;
+import com.jharter.game.ashley.systems.ZoneChangeSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ashley.systems.network.client.ClientRemoveEntityPacketSystem;
@@ -103,7 +103,7 @@ public class BattleStage extends GameStage {
 		// Turn timer
 		b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnEntityID();
-		b.TurnTimerComp().maxTurnTimeSec = 20f;
+		b.TurnTimerComp().maxTurnTimeSec = 5f;
 		b.TurnPhaseComp();
 		b.TurnPhaseStartBattleComp();
 		b.SpriteComp().position.x = 800;
@@ -592,11 +592,11 @@ public class BattleStage extends GameStage {
 		}
 		
 		// START OF ACTIVE SYSTEMS
-		engine.addSystem(new ZoneLayoutSystem());
-		engine.addSystem(new ZonePositionSystem());
-		engine.addSystem(new CursorPositionSystem());
+		
+		// Supporting engine systems
 		engine.addSystem(new TweenSystem());
 		
+		// Turn phase systems
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 			engine.addSystem(new TurnPhaseStartTurnSystem());
 				engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
@@ -607,22 +607,20 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new TurnPhaseEndTurnSystem());
 		engine.addSystem(new TurnPhaseEndBattleSystem());
 		
+		// Cursor systems
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorTargetValidationSystem());
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectSystem());
+		
+		// Turn action systems
 		engine.addSystem(new QueueTurnActionsSystem());
-		
-		engine.addSystem(new ApproachTargetSystem());
-		
-		if(!endPointHelper.isHeadless()) {
-			engine.addSystem(new AnimationSystem());
-			engine.addSystem(new RenderInitSystem());
-			engine.addSystem(new RenderEntitiesSystem(getCamera()));
-			engine.addSystem(new RenderTimerSystem(getCamera()));
-		}
-		
 		engine.addSystem(new CleanupTurnActionsSystem());
+		
+		// Zone entity systems
+		engine.addSystem(new ZoneChangeSystem());
+		
+		// General cleanup systems
 		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
 		
 		/*if(endPointHelper.isClient()) {
@@ -630,6 +628,16 @@ public class BattleStage extends GameStage {
 		}*/
 		
 		engine.addSystem(new CleanupInputSystem(this));
+		
+		// Heady systems
+		if(!endPointHelper.isHeadless()) {
+			engine.addSystem(new ZoneLayoutSystem());
+			engine.addSystem(new CursorPositionSystem());
+			engine.addSystem(new AnimationSystem());
+			engine.addSystem(new RenderInitSystem());
+			engine.addSystem(new RenderEntitiesSystem(getCamera()));
+			engine.addSystem(new RenderTimerSystem(getCamera()));
+		}
 		
 		return engine;
     }

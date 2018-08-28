@@ -16,10 +16,10 @@ import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
+import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
-import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -308,6 +308,26 @@ public class Mapper {
 			in.input.reset();
 		}
 		
+		public void single() {
+			Entity entity = Entity();
+			if(Mapper.MultiPositionComp.has(entity)) {
+				entity.remove(MultiPositionComp.class);
+			}
+		}
+		
+		public void toHand() {
+			CursorComp c = Mapper.CursorComp.get(Entity());
+			ZonePositionComp zp = Mapper.ZonePositionComp.get(Entity());
+			zp.index = 0;
+			zp.zoneID = Mapper.ZoneComp.getID(c.playerID(), ZoneType.HAND);
+			zp.clearHistory();
+		}
+		
+		public void reset() {
+			single();
+			toHand();
+			CursorComp().turnActionEntityID = null;
+		}
 	}
 	
 	public static final ComponentMapperComp Comp = new ComponentMapperComp();

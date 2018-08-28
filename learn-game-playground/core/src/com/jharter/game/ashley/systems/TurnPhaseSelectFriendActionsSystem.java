@@ -2,9 +2,13 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
+import com.jharter.game.ashley.components.Components.ActionSpentComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.util.Sys;
 
 public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	
@@ -17,8 +21,10 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		if(!isDoneAnimating()) {
 			return false;
 		}
+		Sys.out.println("------------------------------------------Starting turn");
 		Mapper.TurnEntity.TurnTimerComp().start();
 		enableCursor();
+		resetCursor();
 		return true;
 	}
 
@@ -46,6 +52,15 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
 		Mapper.TurnEntity.TurnTimerComp().stop();
+		
+		// Cancel the current turn action if there is one
+		CursorComp c = Mapper.CursorEntity.CursorComp();
+		if(c.turnActionEntityID != null) {
+			Entity entity = Mapper.Entity.get(c.turnActionEntityID);
+			if(!Mapper.ActionSpentComp.has(entity)) {
+				entity.add(Mapper.Comp.get(ActionSpentComp.class));
+			}
+		}
 	}
 	
 }	

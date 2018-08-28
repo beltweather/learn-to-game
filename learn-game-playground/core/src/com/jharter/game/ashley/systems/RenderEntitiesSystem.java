@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
@@ -166,7 +165,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 						for(int k = 0; k < zone.objectIDs.size(); k++) {
 							SpriteComp sTargetB = Mapper.SpriteComp.get(Mapper.Entity.get(zone.objectIDs.get(k)));
 							//curve(sTargetA.position, sTargetB.position);
-							
+
 							for(int m = 0; m < multiplicity; m++) {
 								batch.draw(te.region, sTargetB.position.x - 25 * m, sTargetB.position.y - 10 * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
 							}

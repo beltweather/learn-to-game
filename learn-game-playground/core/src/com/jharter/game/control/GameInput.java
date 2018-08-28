@@ -462,6 +462,23 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 		}
 		return -1;
 	}
+	
+	private PovDirection axisCodeAndValueToPovDirection(int axisCode, float value) {
+		if(axisCode == XboxMapping.L_STICK_HORIZONTAL_AXIS) {
+			lastAxisHorz = true;
+			if(value < 0) {
+				return PovDirection.west;
+			}
+			return PovDirection.east;
+		} else if(axisCode == XboxMapping.L_STICK_VERTICAL_AXIS) {
+			lastAxisHorz = false;
+			if(value < 0) {
+				return PovDirection.north;
+			}
+			return PovDirection.south;
+		}
+		return null;
+	}
 
 	@Override
 	public void connected(Controller controller) {
@@ -484,24 +501,51 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 		keyUp(buttonCodeToKeyCode(buttonCode));
 		return false;
 	}
+	
+	private boolean lastDirectionJoystick = false;
+	private boolean lastAxisHorz = false;
 
 	@Override
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
-		return false;
+		if(axisCode != XboxMapping.L_STICK_HORIZONTAL_AXIS && axisCode != XboxMapping.L_STICK_VERTICAL_AXIS) {
+			return false;
+		}
+		if(Math.abs(value) < 0.4f) {
+			if(axisCode == XboxMapping.L_STICK_HORIZONTAL_AXIS && !lastAxisHorz) {
+				return false;
+			}
+			if(axisCode == XboxMapping.L_STICK_VERTICAL_AXIS && lastAxisHorz) {
+				return false;
+			}
+			//Sys.out.println("AxisCode: " + axisCode + " value: " + value);
+			return povMoved(controller, 0, PovDirection.center, true);
+		}
+		return povMoved(controller, 0, axisCodeAndValueToPovDirection(axisCode, value), true);
 	}
 
 	@Override
 	public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+		return povMoved(controller, povCode, value, false);
+	}
+	
+	public boolean povMoved(Controller controller, int povCode, PovDirection value, boolean isJoystick) {
 		if(value == PovDirection.center) {
+			if(isJoystick && !lastDirectionJoystick) {
+				return false;
+			}
+			//Sys.out.println("Button up");
 			buttonUp(controller, XboxMapping.DPAD_UP);
 			buttonUp(controller, XboxMapping.DPAD_DOWN);
 			buttonUp(controller, XboxMapping.DPAD_LEFT);
 			buttonUp(controller, XboxMapping.DPAD_RIGHT);
 		} else {
+			lastDirectionJoystick = isJoystick;
+			//Sys.out.println("Direction input");
 			buttonDown(controller, povDirectionToButtonCode(value));
 		}
 		return false;
 	}
+
 
 	@Override
 	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {

@@ -3,6 +3,7 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 
 public class FriendLayout extends ZoneLayout {
@@ -14,12 +15,11 @@ public class FriendLayout extends ZoneLayout {
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Mapper.SpriteComp.get(entity);
+		float anchorX = Units.u12(60);
+		float anchorY = Units.u12(6);
 		
-		int anchorX = 725;
-		int anchorY = 160;
-		
-		target.position.x = anchorX - (index % 2 == 0 ? 75 : 0);
-		target.position.y = anchorY - (150) * index;
+		target.position.x = anchorX - (index % 2 == 0 ? Units.u12(4) : 0);
+		target.position.y = anchorY - (Units.u12(10)) * index;
 		target.position.z = s.position.z;
 		target.scale.x = 1f;
 		target.scale.y = 1f;

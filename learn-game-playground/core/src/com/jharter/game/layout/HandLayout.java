@@ -2,10 +2,9 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.CardComp;
-import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 
 public class HandLayout extends ZoneLayout {
@@ -18,10 +17,10 @@ public class HandLayout extends ZoneLayout {
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		int anchorX = -350;
-		int anchorY = -475;
+		float anchorX = Units.u12(-30);
+		float anchorY = Units.u12(-41);
 		
-		target.position.x = anchorX + (s.scaledWidth() + 20) * index;
+		target.position.x = anchorX + (s.scaledWidth() + Units.u12(1)) * index;
 		target.position.y = anchorY;
 		target.position.z = s.position.z;
 		target.scale.x = 1f;

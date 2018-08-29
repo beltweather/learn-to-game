@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.IDGenerator;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -19,8 +20,8 @@ public class ArrowHelper {
 		b.SpriteComp().position.x = 200;
 		b.SpriteComp().position.y = 200;
 		b.SpriteComp().position.z = 1;
-		b.SpriteComp().width = Media.arrowFrames[0].getRegionWidth();
-		b.SpriteComp().height = Media.arrowFrames[0].getRegionHeight(); 
+		b.SpriteComp().width = Media.arrowFrames[0].getRegionWidth() / Units.PIXELS_PER_UNIT;
+		b.SpriteComp().height = Media.arrowFrames[0].getRegionHeight() / Units.PIXELS_PER_UNIT; 
 		b.AnimationComp().looping = true;
 		b.AnimationComp().animation = Media.arrowAnim;
 		b.AnimationComp().animation.setPlayMode(PlayMode.LOOP);

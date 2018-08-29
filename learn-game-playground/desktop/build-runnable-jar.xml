@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project learn-game-playground-desktop">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="X:/Workspace"/>
+    <property name="dir.jarfile" value="X:/GitHub/packr"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/game.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.jharter.game.OfflineLauncher"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/bin"/>
+            <fileset dir="X:/GitHub/learn-to-game/learn-game-playground/core/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.6/ee7c23636ee4a942d329579daecc3ec5e517fe4c/gdx-backend-lwjgl-1.9.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-platform/1.9.6/6f84dd7a18dc68e4ec492dfbb0594f930babcf63/gdx-platform-1.9.6-natives-desktop.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d-platform/1.9.6/d7b6168f5afd3948fd126c0b248f66c49b73ca35/gdx-box2d-platform-1.9.6-natives-desktop.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype-platform/1.9.6/4c24b0349ba9756a29e84a77dcb2f17e47bbcef3/gdx-freetype-platform-1.9.6-natives-desktop.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers-desktop/1.9.6/edcf47b2893482520a4966ec8e226312a7326c17/gdx-controllers-desktop-1.9.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers-platform/1.9.6/1c7ed71f8ade8f6f143f5ba42c003b183f499437/gdx-controllers-platform-1.9.6-natives-desktop.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.6/47d1e9b890e364ec28f128e9bb3b9a12a94c164/gdx-1.9.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d/1.9.6/c249ef4060a4fada952f278455c8f7b9cba3c18a/gdx-box2d-1.9.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.box2dlights/box2dlights/1.4/3d77ad5b4164fb32fc67e2446e35911bb0aaf0bd/box2dlights-1.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.9.6/69187cc3c8062f191df435b43671b0e5ffcbf353/gdx-freetype-1.9.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/kryonet/2.22.0-RC1/2f25f7250a3096a8d1b8182946f6572d90d280d0/kryonet-2.22.0-RC1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.ashley/ashley/1.7.0/a7c4083c0a42027a3c03ba7ccecef6cbe1c5f0a4/ashley-1.7.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-ai/1.8.1/a52367e373fe52f0d20f162cbf8711c38f002a25/gdx-ai-1.8.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.mini2Dx/universal-tween-engine/6.3.3/a65cd6d5c8c26adca5ddf8b4482238a422b33b18/universal-tween-engine-6.3.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers/1.9.6/ea1fd4884be631d9b7cd0f496b1ab39e31eb434b/gdx-controllers-1.9.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl/2.9.2/a9d80fe5935c7a9149f6584d9777cfd471f65489/lwjgl-2.9.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl_util/2.9.2/4b9e37300a87799856e0bd15ed81663cdb6b0947/lwjgl_util-2.9.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.badlogicgames.jlayer/jlayer/1.0.1-gdx/7cca83cec5c1b2f011362f4d85aabd71a73b049d/jlayer-1.0.1-gdx.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.jcraft/jorbis/0.0.17/8872d22b293e8f5d7d56ff92be966e6dc28ebdc6/jorbis-0.0.17.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.esotericsoftware.kryo/kryo/2.24.0/c6b206e80cfd97e66a1364003724491c757b92f/kryo-2.24.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.esotericsoftware/jsonbeans/0.7/de977f0875708eddd154f2a4c3a3f58a13ef297/jsonbeans-0.7.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.2/510c7d317f5e9e700b9cfaac5fd38bdebf0702e0/lwjgl-platform-2.9.2-natives-windows.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.2/d276cdf61fe2b516c7b7f4aa1b8dea91dbdc8d56/lwjgl-platform-2.9.2-natives-linux.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.2/d55b46b40b40249d627a83a7f7f22649709d70c3/lwjgl-platform-2.9.2-natives-osx.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.5/39c7796b469a600f72380316f6b1f11db6c2c7c4/jinput-2.0.5.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/com.esotericsoftware.minlog/minlog/1.2/59bfcd171d82f9981a5e242b9e840191f650e209/minlog-1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.m2/repository/org/objenesis/objenesis/2.1/objenesis-2.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/net.java.jutils/jutils/1.0.0/e12fe1fda814bd348c1579329c86943d2cd3c6a6/jutils-1.0.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput-platform/2.0.5/7ff832a6eb9ab6a767f1ade2b548092d0fa64795/jinput-platform-2.0.5-natives-linux.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput-platform/2.0.5/385ee093e01f587f30ee1c8a2ee7d408fd732e16/jinput-platform-2.0.5-natives-windows.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jon/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput-platform/2.0.5/53f9c919f34d2ca9de8c51fc4e1e8282029a9232/jinput-platform-2.0.5-natives-osx.jar"/>
+        </jar>
+    </target>
+</project>

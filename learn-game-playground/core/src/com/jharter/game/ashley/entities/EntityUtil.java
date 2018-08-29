@@ -12,6 +12,7 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.GameInput;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -56,8 +57,8 @@ public class EntityUtil {
 		b.IDComp().id = id;
 		b.TypeComp().type = type;
 		b.SpriteComp().position = position;
-		b.SpriteComp().width = width;
-		b.SpriteComp().height = height;
+		b.SpriteComp().width = width / Units.PIXELS_PER_UNIT;
+		b.SpriteComp().height = height / Units.PIXELS_PER_UNIT;
 		b.TextureComp().defaultRegion = texture;
 		
 		return b;

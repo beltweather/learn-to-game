@@ -10,6 +10,7 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.Timeline;
@@ -30,7 +31,7 @@ public class ActiveCardLayout extends ZoneLayout {
 		Entity character = c.getCharacterEntity();
 		SpriteComp sCharacter = Mapper.SpriteComp.get(character);
 		
-		target.position.x = (sCharacter.position.x - s.scaledWidth(targetScale) - 20);
+		target.position.x = (sCharacter.position.x - s.scaledWidth(targetScale) - Units.u12(1));
 		target.position.y = (sCharacter.position.y + (sCharacter.scaledHeight() - s.scaledHeight(targetScale)) / 2);
 		target.position.z = s.position.z;
 		target.scale.x = targetScale;
@@ -69,7 +70,7 @@ public class ActiveCardLayout extends ZoneLayout {
 			tempPosition.set(target.position);
 			for(int i = m.positions.size; i < t.turnAction.multiplicity; i++) {
 				Vector3 mPos = new Vector3(tempPosition);
-				Vector3 targetPos = new Vector3(tempPosition.x - 20*i, tempPosition.y, tempPosition.z);
+				Vector3 targetPos = new Vector3(tempPosition.x - Units.u12(1)*i, tempPosition.y, tempPosition.z);
 				m.positions.add(mPos);
 				timeline.push(Tween.to(mPos, TweenType.POSITION_XY.asInt(), 0.25f).target(targetPos.x, targetPos.y));
 			}

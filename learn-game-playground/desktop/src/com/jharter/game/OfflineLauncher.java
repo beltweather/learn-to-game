@@ -8,9 +8,10 @@ import com.jharter.game.game.OnlineGame;
 public class OfflineLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1920; //800;
-		config.height = 1080; //600;
-		config.samples = 8;
+		config.width = 1280; //800;
+		config.height = 720; //1080 + 200; //600;
+		config.samples = 4;
+		config.fullscreen = false;
 		new LwjglApplication(new OnlineGame(GameType.OFFLINE, false), config);
 	}
 }

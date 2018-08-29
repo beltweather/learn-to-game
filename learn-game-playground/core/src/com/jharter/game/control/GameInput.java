@@ -70,6 +70,9 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
     private int screenWidth;
     private int screenHeight;
     
+    // Joystick flags
+	private boolean lastDirectionJoystick = false;
+	private boolean lastAxisHorz = false;
     
     public GameInput(int screenWidth, int screenHeight, OrthographicCamera camera){
         this.camera = camera;
@@ -501,9 +504,6 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 		keyUp(buttonCodeToKeyCode(buttonCode));
 		return false;
 	}
-	
-	private boolean lastDirectionJoystick = false;
-	private boolean lastAxisHorz = false;
 
 	@Override
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
@@ -517,7 +517,6 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 			if(axisCode == XboxMapping.L_STICK_VERTICAL_AXIS && lastAxisHorz) {
 				return false;
 			}
-			//Sys.out.println("AxisCode: " + axisCode + " value: " + value);
 			return povMoved(controller, 0, PovDirection.center, true);
 		}
 		return povMoved(controller, 0, axisCodeAndValueToPovDirection(axisCode, value), true);
@@ -533,7 +532,6 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 			if(isJoystick && !lastDirectionJoystick) {
 				return false;
 			}
-			//Sys.out.println("Button up");
 			buttonUp(controller, XboxMapping.DPAD_UP);
 			buttonUp(controller, XboxMapping.DPAD_DOWN);
 			buttonUp(controller, XboxMapping.DPAD_LEFT);

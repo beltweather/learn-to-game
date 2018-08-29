@@ -43,7 +43,7 @@ public class Media {
     public static Texture atma, cactar;
     
     // Backgrounds
-    public static Texture background;
+    public static Texture background, bgField, bgLightYellow;
     
     // UI
     public static TextureRegion handPointUp, handPointDown, handPointRight, handPointLeft;
@@ -82,6 +82,8 @@ public class Media {
         
         // Background
         background = new Texture("entities/background/background.png");
+        bgField = new Texture("entities/background/bg-field.png");
+        bgLightYellow = new Texture("entities/background/bg-light-yellow.png");
         
         // UI
         handPointUp = new TextureRegion(new Texture("entities/ui/hand-point-up.png"));

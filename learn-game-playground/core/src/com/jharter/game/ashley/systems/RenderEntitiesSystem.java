@@ -98,7 +98,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	}
 	
 	private float round(float v) {
-		return Math.round(v);
+		return v; //Math.round(v);
 	}
 	
 	private static class PositionSort implements Comparator<Entity> {

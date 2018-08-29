@@ -17,6 +17,7 @@ import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.Timeline;
@@ -241,15 +242,15 @@ public class CursorPositionSystem extends IteratingSystem {
 					}*/
 					//cardOffset = 70; // XXX Fix all this!!!
 				}
-				tempPosition.x = lTarget.position.x - s.scaledWidth() - 10 - cardOffset;
+				tempPosition.x = lTarget.position.x - s.scaledWidth() - Units.u12(1) - cardOffset;
 				tempPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
 				break;
 			case ACTIVE_CARD:
-				tempPosition.x = lTarget.position.x - s.scaledWidth() - 20;
+				tempPosition.x = lTarget.position.x - s.scaledWidth() - Units.u12(2);
 				tempPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
 				break;
 			case ENEMY:
-				tempPosition.x = lTarget.position.x + sTarget.scaledWidth() + 20;  
+				tempPosition.x = lTarget.position.x + sTarget.scaledWidth() + Units.u12(2);  
 				tempPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
 				break;
 			default:

@@ -19,6 +19,7 @@ import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderInitSystem;
 import com.jharter.game.ashley.systems.RenderTimerSystem;
+import com.jharter.game.ashley.systems.RenderWorldGridSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndTurnSystem;
 import com.jharter.game.ashley.systems.TurnPhasePerformEnemyActionsSystem;
@@ -42,8 +43,8 @@ import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketS
 import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.debug.Debug;
 import com.jharter.game.layout.ActiveCardLayout;
-import com.jharter.game.layout.FriendArrowLayout;
 import com.jharter.game.layout.CursorPositionSystem;
+import com.jharter.game.layout.FriendArrowLayout;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
 import com.jharter.game.network.endpoints.EndPointHelper;
@@ -63,7 +64,8 @@ public class BattleStage extends GameStage {
 
 	@Override
 	public void addEntities(PooledEngine engine) {
-		BackgroundHelper.addBackground(engine, Media.background);
+		BackgroundHelper.addBackground(engine, Media.bgField);
+		BackgroundHelper.addBackground(engine, Media.bgLightYellow, 0.5f);
 		
 		// Player IDs
 		ID warriorPlayerID = Mapper.buildPlayerEntityID();
@@ -236,6 +238,7 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
 			engine.addSystem(new RenderTimerSystem(getCamera()));
+			//engine.addSystem(new RenderWorldGridSystem(getCamera()));
 		}
 		
 		return engine;

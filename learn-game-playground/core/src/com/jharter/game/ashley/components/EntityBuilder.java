@@ -30,7 +30,7 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.MultiPositionComp;
+import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -135,7 +135,7 @@ public class EntityBuilder implements Poolable {
 	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }
-	public MultiPositionComp MultiPositionComp() { return get(MultiPositionComp.class); }
+	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
 	public ActionReadyComp ActionReadyComp() { return get(ActionReadyComp.class); }
 	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
 	public ActionSpentComp ActionSpentComp() { return get(ActionSpentComp.class); }

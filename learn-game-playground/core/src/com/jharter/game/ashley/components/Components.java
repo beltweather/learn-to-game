@@ -1,6 +1,7 @@
 package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
@@ -147,14 +149,28 @@ public final class Components {
 		}
 	}
 	
-	public static final class MultiPositionComp implements Comp {
+	public static final class MultiSpriteComp implements Comp {
 		public Array<Vector3> positions = new Array<Vector3>();
+		public Array<Vector2> scales = new Array<Vector2>();
+		public Array<Float> alphas = new Array<Float>();
+		public Array<Float> anglesDegrees = new Array<Float>();
+		public int size = 0;
+		public boolean drawSingle = false;
 		
-		private MultiPositionComp() {}
+		private MultiSpriteComp() {}
+		
+		public void clear() {
+			positions.clear();
+			scales.clear();
+			alphas.clear();
+			anglesDegrees.clear();
+			size = 0;
+		}
 		
 		@Override
 		public void reset() {
-			positions.clear();
+			clear();
+			drawSingle = false;
 		}
 	}
 	

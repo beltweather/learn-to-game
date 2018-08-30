@@ -1,5 +1,6 @@
 package com.jharter.game.ashley.components;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
@@ -7,7 +8,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
@@ -21,7 +21,6 @@ import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
-import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
@@ -32,7 +31,7 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.MultiPositionComp;
+import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -250,6 +249,17 @@ public class Mapper {
 			return null;
 		}
 		
+		public void remove(ID id) {
+			remove(get(id));
+		}
+		
+		public void remove(Entity entity) {
+			if(entity == null) {
+				return;
+			}
+			Mapper.Comp.getOrAdd(RemoveComp.class, entity);
+		}
+		
 		/*public Entity get(ZoneType zoneType) {
 			return get(ZoneComp.getID(zoneType));
 		}*/
@@ -260,11 +270,28 @@ public class Mapper {
 		
 		private ComponentMapperComp() {}
 		
-		public <T extends Poolable> T get(Class<T> klass) {
+		public <T extends Component> T get(Class<T> klass) {
 			return Pools.get(klass).obtain();
 		}
 		
-		public boolean has(Class<? extends Comp> klass, Entity entity) {
+		public <T extends Component> T getOrAdd(Class<T> klass, Entity entity) {
+			if(ComponentMapper.getFor(klass).has(entity)) {
+				return ComponentMapper.getFor(klass).get(entity);
+			}
+			T comp = get(klass);
+			entity.add(comp);
+			return comp;
+		}
+		
+		public <T extends Component> boolean remove(Class<T> klass, Entity entity) {
+			if(!ComponentMapper.getFor(klass).has(entity)) {
+				return false;
+			}
+			entity.remove(klass);
+			return true;
+		}
+		
+		public boolean has(Class<? extends Component> klass, Entity entity) {
 			return ComponentMapper.getFor(klass).has(entity);
 		}
 	
@@ -328,8 +355,8 @@ public class Mapper {
 		
 		public void single() {
 			Entity entity = Entity();
-			if(Mapper.MultiPositionComp.has(entity)) {
-				entity.remove(MultiPositionComp.class);
+			if(Mapper.MultiSpriteComp.has(entity)) {
+				entity.remove(MultiSpriteComp.class);
 			}
 		}
 		
@@ -382,7 +409,7 @@ public class Mapper {
 	public static final ComponentMapper<DescriptionComp> DescriptionComp = ComponentMapper.getFor(DescriptionComp.class);
 	public static final ComponentMapper<VitalsComp> VitalsComp = ComponentMapper.getFor(VitalsComp.class);
 	public static final ComponentMapper<StatsComp> StatsComp = ComponentMapper.getFor(StatsComp.class);
-	public static final ComponentMapper<MultiPositionComp> MultiPositionComp = ComponentMapper.getFor(MultiPositionComp.class);
+	public static final ComponentMapper<MultiSpriteComp> MultiSpriteComp = ComponentMapper.getFor(MultiSpriteComp.class);
 	public static final ComponentMapper<ActionReadyComp> ActionReadyComp = ComponentMapper.getFor(ActionReadyComp.class);
 	public static final ComponentMapper<ActionQueuedComp> ActionQueuedComp = ComponentMapper.getFor(ActionQueuedComp.class);
 	public static final ComponentMapper<ActionSpentComp> ActionSpentComp = ComponentMapper.getFor(ActionSpentComp.class);

@@ -8,7 +8,7 @@ import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.IDComp;
-import com.jharter.game.ashley.components.Components.MultiPositionComp;
+import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -42,8 +42,8 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					//ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 					//zp.getZoneComp().remove(id);
 					
-					if(Mapper.MultiPositionComp.has(entity) && (t == null || t.turnAction.multiplicity <= 1)) {
-						entity.remove(MultiPositionComp.class);
+					if(Mapper.MultiSpriteComp.has(entity) && (t == null || t.turnAction.multiplicity <= 1)) {
+						entity.remove(MultiSpriteComp.class);
 					}
 					
 					CardComp ca = Mapper.CardComp.get(entity);

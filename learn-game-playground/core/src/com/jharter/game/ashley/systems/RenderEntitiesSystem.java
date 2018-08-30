@@ -9,23 +9,17 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
+import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.components.Components.TypeComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
-import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.util.Units;
-
-import uk.co.carelesslabs.Enums.EntityType;
-import uk.co.carelesslabs.Enums.ZoneType;
 
 public class RenderEntitiesSystem extends SortedIteratingSystem {
 	
@@ -56,46 +50,55 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 		TextureComp t = Mapper.TextureComp.get(entity);
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		// XXX DEBUG CODE!!!!!
-		TypeComp ty = Mapper.TypeComp.get(entity);
-		boolean isCursor = ty != null && ty.type == EntityType.CURSOR;
-		////////////////////////////////
-				
-		boolean hasAlpha = s.alpha != 1f;
-		
 		if(t.region == null) {
 			t.region = t.defaultRegion;
 		}
-		if(t.region != null) {
-			
-			Color c = null;
-			if(hasAlpha) {
-				c = batch.getColor();
-				batch.setColor(c.r, c.g, c.b, s.alpha);
-			}
-			
-			float offsetX = (s.scaledWidth() - s.width)/2;
-			float offsetY = (s.scaledHeight() - s.height)/2;
-			float originX = s.width/2;
-			float originY = s.height/2;
-			if(Mapper.MultiPositionComp.has(entity)) {
-				for(Vector3 position : Mapper.MultiPositionComp.get(entity).positions) {
-					batch.draw(t.region, round(position.x + offsetX), round(position.y + offsetY), round(originX), round(originY), s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
-					if(isCursor) {
-						drawLines(entity, s, position);
-					}
-				}
-			} else {
-				batch.draw(t.region, round(s.position.x + offsetX), round(s.position.y + offsetY), round(originX), round(originY), s.width, s.height, s.scale.x, s.scale.y, s.angleDegrees);
-				if(isCursor) {
-					drawLines(entity, s, s.position);
-				}
-			}
-			
-			if(hasAlpha) {
-				batch.setColor(c);
-			}
+		
+		if(t.region == null) {
+			return;
 		}
+			
+		Color c = batch.getColor();
+		float offsetX = (s.scaledWidth() - s.width)/2;
+		float offsetY = (s.scaledHeight() - s.height)/2;
+		float originX = s.width/2;
+		float originY = s.height/2;
+		
+		boolean drawSingle = true;
+		if(Mapper.MultiSpriteComp.has(entity)) {
+			MultiSpriteComp ms = Mapper.MultiSpriteComp.get(entity);
+			for(int i = 0; i < ms.size; i++) {
+				batchDraw(ms, i, s, t, offsetX, offsetY, originX, originY);
+			}
+			drawSingle = ms.drawSingle;
+		}
+		if(drawSingle) {
+			batchDraw(s, t, offsetX, offsetY, originX, originY);
+		}
+		
+		if(batch.getColor().a != c.a) {
+			batch.setColor(c);
+		}
+	}
+	
+	private void batchDraw(MultiSpriteComp ms, int index, SpriteComp s, TextureComp t, float offsetX, float offsetY, float originX, float originY) {
+		Vector3 position = index >= ms.positions.size ? s.position : ms.positions.get(index);
+		Vector2 scale = index >= ms.scales.size ? s.scale : ms.scales.get(index);
+		float alpha = index >= ms.alphas.size ? s.alpha : ms.alphas.get(index);
+		float angleDegrees = index >= ms.anglesDegrees.size ? s.angleDegrees : ms.anglesDegrees.get(index);
+		batchDraw(position, scale, alpha, angleDegrees, s.width, s.height, t.region, offsetX, offsetY, originX, originY);
+	}
+	
+	private void batchDraw(SpriteComp s, TextureComp t, float offsetX, float offsetY, float originX, float originY) {
+		batchDraw(s.position, s.scale, s.alpha, s.angleDegrees, s.width, s.height, t.region, offsetX, offsetY, originX, originY);
+	}
+	
+	private void batchDraw(Vector3 position, Vector2 scale, float alpha, float angleDegrees, float width, float height, TextureRegion t, float offsetX, float offsetY, float originX, float originY) {
+		if(alpha != batch.getColor().a) {
+			Color c = batch.getColor();
+			batch.setColor(c.r, c.g, c.b, alpha);
+		}
+		batch.draw(t, round(position.x + offsetX), round(position.y + offsetY), round(originX), round(originY), width, height, scale.x, scale.y, angleDegrees);
 	}
 	
 	private float round(float v) {
@@ -115,87 +118,5 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 			return (int) (posA.z - posB.z);
 		}
 	}
-	
-	// DEBUG!!!!!!!!!!!!!!!!!!
-	private void drawLines(Entity cursor, SpriteComp s, Vector3 position) {
-		CursorComp c = Mapper.CursorComp.get(cursor);
-		ZonePositionComp zp = Mapper.ZonePositionComp.get(cursor);
-		ZoneComp z = Mapper.ZoneComp.get(zp);
-		TextureComp te = Mapper.TextureComp.get(cursor);
 		
-		// Make sure cursor is in a valid place
-		if(!z.hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
-			return;
-		}
-		
-		// See if cursor is modifying an action
-		TurnAction t = c.getTurnAction();
-		if(t == null) {
-			return;
-		}
-		
-		// See if the cursor has already selected a card from hand
-		// that will force the card it targets to target all
-		boolean forceAll = t.makesTargetAll;
-		int forceMultiplicity = t.makesTargetMultiplicity;
-		
-		//batch.end();
-		//shapeRenderer.begin(ShapeType.Line);
-		//shapeRenderer.setColor(0, 0, 0, 1f);
-		
-		// Get the card that the cursor is above and verify it has a turn action associated with it
-		Entity activeCard = Mapper.Entity.get(z.objectIDs.get(zp.index));
-		if(Mapper.TurnActionComp.has(activeCard)) {
-			
-			TurnAction turnAction = Mapper.TurnActionComp.get(activeCard).turnAction;
-			if(turnAction.targetIDs.size > 1) {
-				
-				int multiplicity = Math.max(forceMultiplicity, turnAction.multiplicity);
-				
-				// Iterate through all targets of this card, looking in particular for the last two pairs
-				// of targets so we can handle their "all" status or lack thereof
-				for(int j = 0; j < turnAction.targetIDs.size - 1; j++) {
-					SpriteComp sTargetA = Mapper.SpriteComp.get(Mapper.Entity.get(turnAction.targetIDs.get(j)));
-					Entity subTargetEntity = Mapper.Entity.get(turnAction.targetIDs.get(j+1));
-					
-					// If the last pairs have an "all connection", find all targets within that zone and
-					// render lines to them.
-					if((turnAction.all || forceAll) && j == turnAction.targetIDs.size - 2) {
-						ZonePositionComp subTargetZone = Mapper.ZonePositionComp.get(subTargetEntity);
-						ZoneComp zone = subTargetZone.getZoneComp();
-						for(int k = 0; k < zone.objectIDs.size(); k++) {
-							SpriteComp sTargetB = Mapper.SpriteComp.get(Mapper.Entity.get(zone.objectIDs.get(k)));
-							//curve(sTargetA.position, sTargetB.position);
-
-							for(int m = 0; m < multiplicity; m++) {
-								batch.draw(te.region, sTargetB.position.x - Units.u1(25) * m, sTargetB.position.y - Units.u1(10) * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
-							}
-							
-						}
-					
-					// Otherwise, connect the pairs as usual
-					} else if(j == turnAction.targetIDs.size - 2) {
-						SpriteComp sTargetB = Mapper.SpriteComp.get(Mapper.Entity.get(turnAction.targetIDs.get(j+1)));
-						//curve(sTargetA.position, sTargetB.position);
-						
-						for(int m = 0; m < multiplicity; m++) {
-							batch.draw(te.region, sTargetB.position.x - Units.u1(30) * m, sTargetB.position.y - Units.u1(10) * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
-						}
-					}
-				}
-			}
-		}
-
-		//shapeRenderer.end();
-		//batch.begin();
-		//batch.setProjectionMatrix(camera.combined);
-	}
-	
-	private void curve(Vector3 from, Vector3 to) {
-		int segments = 30;
-		float maxY = Math.max(to.y, from.y) * 1.5f;
-		shapeRenderer.curve(from.x, from.y, from.x, maxY, to.x, maxY, to.x, to.y, segments);
-		shapeRenderer.curve(from.x, from.y-10, from.x, maxY-10, to.x, maxY-10, to.x, to.y-10, segments);
-	}
-	
 }

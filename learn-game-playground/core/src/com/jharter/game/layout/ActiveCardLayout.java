@@ -3,7 +3,7 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.CardComp;
-import com.jharter.game.ashley.components.Components.MultiPositionComp;
+import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -52,18 +52,11 @@ public class ActiveCardLayout extends ZoneLayout {
 		
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null && t.turnAction != null && t.turnAction.multiplicity > 1) {
-			MultiPositionComp m;
-			if(Mapper.MultiPositionComp.has(entity)) {
-				m = Mapper.MultiPositionComp.get(entity);
-			} else {
-				m = Mapper.Comp.get(MultiPositionComp.class);
-				entity.add(m);
-			}
-			
-			if(m.positions.size == t.turnAction.multiplicity) {
+			MultiSpriteComp m = Mapper.Comp.getOrAdd(MultiSpriteComp.class, entity);
+			if(m.size == t.turnAction.multiplicity) {
 				return;
 			}
-			//m.positions.clear();
+			m.clear();
 			
 			Timeline timeline = Timeline.createParallel();
 			
@@ -74,12 +67,13 @@ public class ActiveCardLayout extends ZoneLayout {
 				m.positions.add(mPos);
 				timeline.push(Tween.to(mPos, TweenType.POSITION_XY.asInt(), 0.25f).target(targetPos.x, targetPos.y));
 			}
+			m.size = m.positions.size;
 			
 			TweenUtil.start(null, timeline);
 			
-		} //else if(Mapper.MultiPositionComp.has(entity)) {
-			//entity.remove(MultiPositionComp.class);
-		//}
+		} else {
+			Mapper.Comp.remove(MultiSpriteComp.class, entity);
+		}
 	}
 	
 }

@@ -64,8 +64,9 @@ public class BattleStage extends GameStage {
 
 	@Override
 	public void addEntities(PooledEngine engine) {
-		BackgroundHelper.addBackground(engine, Media.bgField);
-		BackgroundHelper.addBackground(engine, Media.bgLightYellow, 0.5f);
+		BackgroundHelper.addBackground(engine, Media.background);
+		//BackgroundHelper.addBackground(engine, Media.bgField);
+		//BackgroundHelper.addBackground(engine, Media.bgLightYellow, 0.5f);
 		
 		// Player IDs
 		ID warriorPlayerID = Mapper.buildPlayerEntityID();
@@ -238,7 +239,7 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
 			engine.addSystem(new RenderTimerSystem(getCamera()));
-			//engine.addSystem(new RenderWorldGridSystem(getCamera()));
+			engine.addSystem(new RenderWorldGridSystem(getCamera()));
 		}
 		
 		return engine;

@@ -22,6 +22,7 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.Units;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -167,7 +168,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 							//curve(sTargetA.position, sTargetB.position);
 
 							for(int m = 0; m < multiplicity; m++) {
-								batch.draw(te.region, sTargetB.position.x - 25 * m, sTargetB.position.y - 10 * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
+								batch.draw(te.region, sTargetB.position.x - Units.u1(25) * m, sTargetB.position.y - Units.u1(10) * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
 							}
 							
 						}
@@ -178,7 +179,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 						//curve(sTargetA.position, sTargetB.position);
 						
 						for(int m = 0; m < multiplicity; m++) {
-							batch.draw(te.region, sTargetB.position.x - 30 * m, sTargetB.position.y - 10 * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
+							batch.draw(te.region, sTargetB.position.x - Units.u1(30) * m, sTargetB.position.y - Units.u1(10) * m, 0, 0, s.width, s.height, 0.5f*s.scale.x, 0.5f*s.scale.y, s.angleDegrees);
 						}
 					}
 				}

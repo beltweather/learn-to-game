@@ -98,7 +98,7 @@ public class BattleStage extends GameStage {
 		ZoneComp friendZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
 		ZoneComp enemyZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ENEMY);
 		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout());
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ARROW, new FriendArrowLayout());
+		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND_ARROW, new FriendArrowLayout());
 		
 		// Turn timer
 		TurnTimerHelper.addTurnTimer(engine, 30f);
@@ -236,9 +236,9 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new ZoneLayoutSystem());
 			engine.addSystem(new CursorPositionSystem());
 			engine.addSystem(new AnimationSystem());
-			engine.addSystem(new RenderInitSystem());
+			//engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
-			engine.addSystem(new RenderTimerSystem(getCamera()));
+			//engine.addSystem(new RenderTimerSystem(getCamera()));
 			engine.addSystem(new RenderWorldGridSystem(getCamera()));
 		}
 		

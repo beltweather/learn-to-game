@@ -6,7 +6,9 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,9 +18,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
+import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
+import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.ashley.components.Mapper;
 
 public class RenderEntitiesSystem extends SortedIteratingSystem {
@@ -29,7 +33,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
-		super(Family.all(SpriteComp.class, TextureComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get(), new PositionSort());
+		super(Family.all(SpriteComp.class).one(TextureComp.class, ShapeRenderComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get(), new PositionSort());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 		this.shapeRenderer = new ShapeRenderer();
@@ -37,6 +41,10 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 
 	@Override
 	public void update (float deltaTime) {
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
+						(Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
@@ -48,16 +56,19 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		TextureComp t = Mapper.TextureComp.get(entity);
+		ShapeRenderComp r = Mapper.ShapeRenderComp.get(entity);
 		SpriteComp s = Mapper.SpriteComp.get(entity);
 		
-		if(t.region == null) {
+		if(t != null && t.region == null) {
 			t.region = t.defaultRegion;
 		}
 		
-		if(t.region == null) {
+		boolean isTexture = t != null && t.region != null;
+		boolean isShapeRender = r != null && r.renderMethod != null;
+		if(!isTexture && !isShapeRender) {
 			return;
 		}
-			
+		
 		Color c = batch.getColor();
 		float offsetX = (s.scaledWidth() - s.width)/2;
 		float offsetY = (s.scaledHeight() - s.height)/2;
@@ -68,17 +79,35 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 		if(Mapper.MultiSpriteComp.has(entity)) {
 			MultiSpriteComp ms = Mapper.MultiSpriteComp.get(entity);
 			for(int i = 0; i < ms.size; i++) {
-				batchDraw(ms, i, s, t, offsetX, offsetY, originX, originY);
+				if(isTexture) {
+					batchDraw(ms, i, s, t, offsetX, offsetY, originX, originY);
+				}
+				if(isShapeRender) {
+					handleShapeRenderMethod(r.renderMethod, entity, deltaTime);
+					//r.renderMethod.render(shapeRenderer, entity, deltaTime);
+				}
 			}
 			drawSingle = ms.drawSingle;
 		}
 		if(drawSingle) {
-			batchDraw(s, t, offsetX, offsetY, originX, originY);
+			if(isTexture) {
+				batchDraw(s, t, offsetX, offsetY, originX, originY);
+			}
+			if(isShapeRender) {
+				handleShapeRenderMethod(r.renderMethod, entity, deltaTime);
+				//r.renderMethod.render(shapeRenderer, entity, deltaTime);
+			}
 		}
 		
 		if(batch.getColor().a != c.a) {
 			batch.setColor(c);
 		}
+	}
+	
+	private void handleShapeRenderMethod(ShapeRenderMethod r, Entity entity, float deltaTime) {
+		batch.end();
+		r.render(shapeRenderer, entity, deltaTime);
+		batch.begin();
 	}
 	
 	private void batchDraw(MultiSpriteComp ms, int index, SpriteComp s, TextureComp t, float offsetX, float offsetY, float originX, float originY) {

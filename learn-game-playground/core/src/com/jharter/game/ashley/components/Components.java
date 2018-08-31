@@ -1,7 +1,6 @@
 package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -10,16 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
+import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
+import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
 import uk.co.carelesslabs.Enums.TurnPhase;
@@ -171,6 +171,88 @@ public final class Components {
 		public void reset() {
 			clear();
 			drawSingle = false;
+		}
+	}
+	
+	public static final class RelativePositionComp implements Comp {
+		public ID baselineID = null;
+		//public float xMargin = 0;
+		//public float yMargin = 0;
+		//public float z;
+		public Direction xAlign = Direction.CENTER;
+		public Direction yAlign = Direction.CENTER;
+		private Vector3 tempPosition = new Vector3();
+		
+		private RelativePositionComp() {}
+		
+		public Vector3 toPosition(SpriteComp s) {
+			if(baselineID == null) {
+				return null;
+			}
+			Entity baselineEntity = Mapper.Entity.get(baselineID);
+			SpriteComp sBaseline = Mapper.SpriteComp.get(baselineEntity);
+			if(baselineEntity == null || s == null || sBaseline == null) {
+				return null;
+			}
+			
+			float x = sBaseline.position.x;
+			float y = sBaseline.position.y;
+			float z = sBaseline.position.z;
+			
+			float xMargin = s.position.x;
+			float yMargin = s.position.y;
+			
+			switch(xAlign) {
+				case WEST:
+				case NORTH_WEST:
+				case SOUTH_WEST:
+					x -= s.scaledWidth() + xMargin;
+					break;
+				case EAST:
+				case NORTH_EAST:
+				case SOUTH_EAST:
+					x += sBaseline.scaledWidth() + xMargin;
+					break;
+				case CENTER:
+					x += (sBaseline.scaledWidth() - s.scaledWidth()) / 2f + xMargin;
+					break;
+				default:
+					x += xMargin;
+					break;
+			}
+			
+			switch(yAlign) {
+				case SOUTH:
+				case SOUTH_WEST:
+				case SOUTH_EAST:
+					y -= s.scaledHeight() + yMargin;
+					break;
+				case NORTH:
+				case NORTH_WEST:
+				case NORTH_EAST:
+					y += sBaseline.scaledHeight() + yMargin;
+					break;
+				case CENTER:
+					y += (sBaseline.scaledHeight() - s.scaledHeight()) / 2f + yMargin;
+					break;
+				default:
+					y += yMargin;
+					break;
+			}
+			
+			tempPosition.set(x, y, z);
+			return tempPosition;
+		}
+		
+		@Override
+		public void reset() {
+			baselineID = null;
+			//xMargin = 0;
+			//yMargin = 0;
+			//z = 0;
+			xAlign = Direction.CENTER;
+			yAlign = Direction.CENTER;
+			tempPosition.set(0,0,0);
 		}
 	}
 	
@@ -770,6 +852,17 @@ public final class Components {
 		public void reset() {
 			defaultRegion = null;
 			region = null;
+		}
+	}
+	
+	public static final class ShapeRenderComp implements Comp {
+		public ShapeRenderMethod renderMethod = null;
+		
+		private ShapeRenderComp() {}
+		
+		@Override
+		public void reset() {
+			renderMethod = null;
 		}
 	}
 	

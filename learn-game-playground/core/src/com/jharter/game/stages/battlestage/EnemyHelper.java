@@ -7,6 +7,7 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.Units;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
@@ -18,9 +19,10 @@ public class EnemyHelper {
 				  EntityType.ENEMY, 
 				  new Vector3(Units.u12(-65),0,0), 
 				  Media.atma);
-		b.VitalsComp().maxHealth = 500;
-		b.VitalsComp().weakHealth = 50;
-		b.VitalsComp().health = 500;
+		ID id = b.IDComp().id;
+		b.VitalsComp().maxHealth = 10000;
+		b.VitalsComp().weakHealth = 1000;
+		b.VitalsComp().health = 10000;
 		b.DescriptionComp().name = "Atma";
 		b.SpriteComp();
 		b.StatsComp().level = 3;
@@ -32,6 +34,8 @@ public class EnemyHelper {
 		enemyZone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
+		
+		HealthBarHelper.addHealthBar(engine, id);
 	}
 	
 	public static void addCactar(PooledEngine engine, ZoneComp enemyZone) {
@@ -39,9 +43,10 @@ public class EnemyHelper {
 				  EntityType.ENEMY, 
 				  new Vector3(Units.u12(-20), Units.u12(-10), 0), 
 				  Media.cactar);
-		b.VitalsComp().maxHealth = 1000;
-		b.VitalsComp().weakHealth = 100;
-		b.VitalsComp().health = 1000;
+		ID id = b.IDComp().id;
+		b.VitalsComp().maxHealth = 5000;
+		b.VitalsComp().weakHealth = 500;
+		b.VitalsComp().health = 5000;
 		b.DescriptionComp().name = "Cactar";
 		b.SpriteComp();
 		b.StatsComp().level = 2;
@@ -54,6 +59,7 @@ public class EnemyHelper {
 		engine.addEntity(b.Entity());
 		b.free();
 		
+		HealthBarHelper.addHealthBar(engine, id);
 	}
 	
 }

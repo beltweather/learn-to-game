@@ -144,7 +144,7 @@ public class CardHelper {
 			public void call(Entity owner, Entity card, Entity activeCard) {
 				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
 				Sys.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity++;
+				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity*=2;
 			}
 			
 		};

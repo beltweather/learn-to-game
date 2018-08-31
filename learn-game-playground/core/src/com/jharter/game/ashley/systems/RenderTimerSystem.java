@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,6 +13,7 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Mapper;
 
+@Deprecated
 public class RenderTimerSystem extends IteratingSystem {
 	
 	private ShapeRenderer shapeRenderer;
@@ -52,10 +54,12 @@ public class RenderTimerSystem extends IteratingSystem {
 		//shapeRenderer.circle(p.position.x, p.position.y, s.width / 2);
 		//shapeRenderer.end();
 		
+		Color color = shapeRenderer.getColor();
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(0, 0, 0, (float) Math.pow(degrees / 360f, 2));
 		shapeRenderer.arc(s.position.x, s.position.y, s.width / 2, 90, degrees, 2*degrees + 1);
 		shapeRenderer.end();
+		shapeRenderer.setColor(color);
 		
 		//batch.draw(v.region, p.position.x, p.position.y, 0, 0, s.width, s.height, s.scale.x, s.scale.y, p.angleDegrees);
 	}

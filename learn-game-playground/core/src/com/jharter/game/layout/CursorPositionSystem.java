@@ -178,7 +178,7 @@ public class CursorPositionSystem extends IteratingSystem {
 			TurnAction turnAction = Mapper.TurnActionComp.get(activeCard).turnAction;
 			if(turnAction.targetIDs.size > 1) {
 				
-				int multiplicity = Math.max(forceMultiplicity, turnAction.multiplicity);
+				int multiplicity = forceMultiplicity * turnAction.multiplicity; //Math.max(forceMultiplicity, turnAction.multiplicity);
 				
 				// Iterate through all targets of this card, looking in particular for the last two pairs
 				// of targets so we can handle their "all" status or lack thereof

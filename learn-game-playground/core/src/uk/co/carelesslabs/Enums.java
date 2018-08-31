@@ -46,7 +46,7 @@ public class Enums {
     	DECK,
     	DISCARD,
     	TIME,
-    	ARROW,
+    	FRIEND_ARROW,
     	NONE
     }
     
@@ -68,6 +68,19 @@ public class Enums {
     	END_TURN,
     	END_BATTLE,
     	NONE
+    }
+    
+    public enum Direction {
+    	NORTH,
+    	SOUTH,
+    	EAST,
+    	WEST,
+    	NORTH_EAST,
+    	NORTH_WEST,
+    	SOUTH_EAST,
+    	SOUTH_WEST,
+    	CENTER,
+    	NONE,
     }
 
 }

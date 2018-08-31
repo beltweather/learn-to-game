@@ -27,7 +27,7 @@ public class ArrowHelper {
 		b.AnimationComp().animation.setPlayMode(PlayMode.LOOP);
 		b.TextureComp();
 		b.ZonePositionComp().index = 0;
-		b.ZonePositionComp().zoneID = Mapper.ZoneComp.getID(null, ZoneType.ARROW);
+		b.ZonePositionComp().zoneID = Mapper.ZoneComp.getID(null, ZoneType.FRIEND_ARROW);
 		b.ZonePositionComp().getZoneComp().add(b);
 		engine.addEntity(b.Entity());
 		b.free();

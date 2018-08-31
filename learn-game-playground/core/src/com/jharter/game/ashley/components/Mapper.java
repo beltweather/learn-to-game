@@ -33,8 +33,10 @@ import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
+import com.jharter.game.ashley.components.Components.RelativePositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
+import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
@@ -421,5 +423,7 @@ public class Mapper {
 	public static final ComponentMapper<ChangeZoneComp> ChangeZoneComp = ComponentMapper.getFor(ChangeZoneComp.class);
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = ComponentMapper.getFor(ActivePlayerComp.class);
-
+	public static final ComponentMapper<ShapeRenderComp> ShapeRenderComp = ComponentMapper.getFor(ShapeRenderComp.class);
+	public static final ComponentMapper<RelativePositionComp> RelativePositionComp = ComponentMapper.getFor(RelativePositionComp.class);
+	
 }

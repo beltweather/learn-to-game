@@ -7,12 +7,14 @@ import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.layout.TweenTarget;
+import com.jharter.game.tween.TweenCallbacks.CompositeCallback;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Circ;
 
@@ -38,6 +40,10 @@ public class TweenUtil {
 	}
 	
 	public static void start(ID id, BaseTween<?> baseTween) {
+		start(id, baseTween, null);
+	}
+	
+	public static void start(ID id, BaseTween<?> baseTween, TweenCallback callback) {
 		if(manager == null) {
 			return;
 		}
@@ -49,9 +55,17 @@ public class TweenUtil {
 			}
 			AnimatingComp a = Mapper.AnimatingComp.get(entity);
 			a.activeCount++;
-			FinishedAnimatingCallback callback = Pools.get(FinishedAnimatingCallback.class).obtain();
-			callback.setID(id);
-			baseTween.setCallback(callback);
+			FinishedAnimatingCallback finishedCallback = Pools.get(FinishedAnimatingCallback.class).obtain();
+			finishedCallback.setID(id);
+			
+			if(callback == null) {
+				baseTween.setCallback(finishedCallback);
+			} else {
+				CompositeCallback cc = Pools.get(CompositeCallback.class).obtain();
+				cc.addCallback(callback);
+				cc.addCallback(finishedCallback);
+				baseTween.setCallback(cc);
+			}
 		}
 		
 		baseTween.start(manager);

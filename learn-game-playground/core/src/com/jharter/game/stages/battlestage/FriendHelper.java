@@ -6,8 +6,12 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.render.HealthBarRenderMethod;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDGenerator;
 
+import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.EntityType;
 
 public class FriendHelper {
@@ -34,6 +38,8 @@ public class FriendHelper {
 		zone.add(b);
 		engine.addEntity(b.Entity());
 		b.free();
+		
+		HealthBarHelper.addHealthBar(engine, id);
 		
 		return id;
 	}

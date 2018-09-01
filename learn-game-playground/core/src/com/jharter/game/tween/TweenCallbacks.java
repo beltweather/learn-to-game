@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
@@ -56,9 +56,9 @@ public class TweenCallbacks {
 		
 		@Override
 		public void onEvent(int type, BaseTween<?> source) {
-			Entity entity = Mapper.Entity.get(id);
-			if(Mapper.AnimatingComp.has(entity)) {
-				AnimatingComp a = Mapper.AnimatingComp.get(entity);
+			Entity entity = M.Entity.get(id);
+			if(M.AnimatingComp.has(entity)) {
+				AnimatingComp a = M.AnimatingComp.get(entity);
 				a.activeCount--;
 				if(a.activeCount == 0) {
 					entity.remove(AnimatingComp.class);

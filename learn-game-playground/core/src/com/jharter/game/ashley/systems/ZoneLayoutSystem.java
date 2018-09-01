@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.Sys;
@@ -21,11 +21,11 @@ public class ZoneLayoutSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		ZoneComp z = Mapper.ZoneComp.get(entity);
+		ZoneComp z = M.ZoneComp.get(entity);
 		for(ID id : z.objectIDs) {
 			z.layout.revalidate();
-			Entity zEntity = Mapper.Entity.get(id);
-			if(Mapper.AnimatingComp.has(zEntity)) {
+			Entity zEntity = M.Entity.get(id);
+			if(M.AnimatingComp.has(zEntity)) {
 				continue;
 			}
 			TweenTarget target = z.layout.getTarget(id, true);

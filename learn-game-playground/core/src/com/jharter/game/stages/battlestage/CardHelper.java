@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
@@ -49,8 +49,8 @@ public class CardHelper {
 			public void call(Entity owner, Entity card, Entity friend, Entity enemy) {
 				int damage = CombatUtil.getDamage(owner, enemy, 13);
 				
-				VitalsComp vEnemy = Mapper.VitalsComp.get(enemy);
-				VitalsComp vFriend = Mapper.VitalsComp.get(friend);
+				VitalsComp vEnemy = M.VitalsComp.get(enemy);
+				VitalsComp vFriend = M.VitalsComp.get(friend);
 				int origHealthFriend = vFriend.health;
 				int origHealthEnemy = vEnemy.health;
 				
@@ -61,8 +61,8 @@ public class CardHelper {
 				int healed = vFriend.health - origHealthFriend;
 				int damaged = origHealthEnemy - vEnemy.health; 
 				
-				String nameFriend = Mapper.DescriptionComp.get(friend).name;
-				String nameEnemy = Mapper.DescriptionComp.get(enemy).name;
+				String nameFriend = M.DescriptionComp.get(friend).name;
+				String nameEnemy = M.DescriptionComp.get(enemy).name;
 				
 				Sys.out.println("Deal damage and heal friend for amount:");
 				Sys.out.println(nameEnemy + " received " + damaged + " damage.");
@@ -90,7 +90,7 @@ public class CardHelper {
 			@Override
 			public void call(Entity owner, Entity card, Entity enemy) {
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
-				Mapper.VitalsComp.get(enemy).damage(damage);
+				M.VitalsComp.get(enemy).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
@@ -108,7 +108,7 @@ public class CardHelper {
 			@Override
 			public void call(Entity owner, Entity card, Entity enemy) {
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
-				Mapper.VitalsComp.get(enemy).damage(damage);
+				M.VitalsComp.get(enemy).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
@@ -126,8 +126,8 @@ public class CardHelper {
 			@Override
 			public void call(Entity owner, Entity card, Entity friend) {
 				int hp = 50;
-				Mapper.VitalsComp.get(friend).heal(hp);
-				Sys.out.println("Healed " + hp + " hp to " + Mapper.DescriptionComp.get(friend).name);
+				M.VitalsComp.get(friend).heal(hp);
+				Sys.out.println("Healed " + hp + " hp to " + M.DescriptionComp.get(friend).name);
 			}
 			
 		};
@@ -142,9 +142,9 @@ public class CardHelper {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
-				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
+				DescriptionComp d = M.DescriptionComp.get(activeCard);
 				Sys.out.println("Increasing multiplicity for: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).turnAction.multiplicity*=2;
+				M.TurnActionComp.get(activeCard).turnAction.multiplicity*=2;
 			}
 			
 		};
@@ -159,9 +159,9 @@ public class CardHelper {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
-				DescriptionComp d = Mapper.DescriptionComp.get(activeCard);
+				DescriptionComp d = M.DescriptionComp.get(activeCard);
 				Sys.out.println("Setting all ford: " + d.name);
-				Mapper.TurnActionComp.get(activeCard).turnAction.all = true;
+				M.TurnActionComp.get(activeCard).turnAction.all = true;
 			}
 			
 		};

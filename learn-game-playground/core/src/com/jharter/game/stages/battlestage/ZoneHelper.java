@@ -3,7 +3,7 @@ package com.jharter.game.stages.battlestage;
 import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
@@ -20,7 +20,7 @@ public class ZoneHelper {
 	
 	public static ZoneComp addZone(PooledEngine engine, ID playerID, ZoneType zoneType, ZoneLayout layout) {
 		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = Mapper.generateZoneID(playerID, zoneType);
+		b.IDComp().id = M.generateZoneID(playerID, zoneType);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = zoneType;
 		if(layout == null) {

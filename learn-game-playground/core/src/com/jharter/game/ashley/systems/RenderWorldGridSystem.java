@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.jharter.game.util.Units;
+import com.jharter.game.util.U;
 
 public class RenderWorldGridSystem extends EntitySystem {
 	
@@ -29,9 +29,9 @@ public class RenderWorldGridSystem extends EntitySystem {
 		float h = camera.viewportHeight;
 		shapeRenderer.setColor(0,0,0, 0.25f);
 		shapeRenderer.translate(-w/2, -h/2, 0);
-		drawGrid(1, 1, w, h, Units.u1(1), 0.1f);
-		drawGrid(w/2, h/2, w, h, Units.u1(3), 0.1f);
-		drawGrid(w/8, h/6, w, h, Units.u1(3), 0.1f);
+		drawGrid(1, 1, w, h, U.u1(1), 0.1f);
+		drawGrid(w/2, h/2, w, h, U.u1(3), 0.1f);
+		drawGrid(w/8, h/6, w, h, U.u1(3), 0.1f);
 		shapeRenderer.translate(w/2, h/2, 0);
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}

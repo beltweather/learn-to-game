@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.util.Units;
+import com.jharter.game.util.U;
 
 import uk.co.carelesslabs.Enums.EntityType;
 
@@ -20,7 +20,7 @@ public class BackgroundHelper {
 	public static void addBackground(PooledEngine engine, Texture texture, float z) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.BACKGROUND, 
-				  new Vector3(Units.u12(-80),Units.u12(-45),z), // XXX
+				  new Vector3(U.u12(-80),U.u12(-45),z), // XXX
 					 //new Vector3(-1920/2,-1080/2,-1), 
 				  texture);
 		engine.addEntity(b.Entity());

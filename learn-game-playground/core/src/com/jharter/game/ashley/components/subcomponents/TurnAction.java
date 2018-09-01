@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -37,7 +37,7 @@ public class TurnAction implements Poolable {
 		if(index < 0 || index >= targetIDs.size) {
 			return null;
 		}
-		return Mapper.Entity.get(targetIDs.get(index));
+		return M.Entity.get(targetIDs.get(index));
 	}
 	
 	public ZoneType getTargetZoneType() {
@@ -68,7 +68,7 @@ public class TurnAction implements Poolable {
 	
 	public void addTarget(Entity entity) {
 		if(!hasAllTargets()) {
-			targetIDs.add(Mapper.IDComp.get(entity).id);
+			targetIDs.add(M.IDComp.get(entity).id);
 		}
 	}
 	
@@ -83,8 +83,8 @@ public class TurnAction implements Poolable {
 		
 		// Special check for cards that modify other cards, we don't
 		// want them to be able to target each other
-		CardComp c = Mapper.CardComp.get(entity);
-		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+		CardComp c = M.CardComp.get(entity);
+		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		if(c != null && zp != null) {
 			return c.cardType != CardType.TARGET_CARD || zp.getZoneComp().zoneType != ZoneType.ACTIVE_CARD;
 		}

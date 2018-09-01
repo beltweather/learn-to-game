@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
@@ -19,8 +19,8 @@ public class InteractSystem extends IteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		InputComp in = Mapper.InputComp.get(entity);
-		InteractComp interactComp = Mapper.InteractComp.get(entity);
+		InputComp in = M.InputComp.get(entity);
+		InteractComp interactComp = M.InteractComp.get(entity);
 		
 		if(in.input.isAccept()) {
 			Sys.out.println("interact!");
@@ -28,9 +28,9 @@ public class InteractSystem extends IteratingSystem {
 		
 		if(in.input.isAccept() && interactComp.interactables.size > 0) {
 			ID id = interactComp.interactables.get(0);
-			Entity targetEntity = Mapper.Entity.get(id);
+			Entity targetEntity = M.Entity.get(id);
 			if(targetEntity != null) {
-				InteractComp targetInteractComp = Mapper.InteractComp.get(targetEntity);
+				InteractComp targetInteractComp = M.InteractComp.get(targetEntity);
 				if(targetInteractComp != null && targetInteractComp.interaction != null) {
 					targetInteractComp.interaction.interact(entity, targetEntity);
 				}

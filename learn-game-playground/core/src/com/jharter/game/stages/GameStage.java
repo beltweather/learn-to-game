@@ -11,7 +11,7 @@ import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.util.Units;
+import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDGenerator;
 
@@ -101,7 +101,7 @@ public abstract class GameStage {
         //int h = 1080; //(int) (displayH/Math.floor(displayH/verticalPixels));
         //int w = 1920; //(int) (displayW/(displayH/ (displayH/Math.floor(displayH/verticalPixels))));
     	
-    	float worldH = Units.WORLD_HEIGHT_IN_UNITS;
+    	float worldH = U.WORLD_HEIGHT_IN_UNITS;
     	float ratio = displayW / (float) displayH;
     	float worldW = ratio * worldH;
     	

@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 @Deprecated
 public class RenderTimerSystem extends IteratingSystem {
@@ -37,7 +37,7 @@ public class RenderTimerSystem extends IteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		TurnTimerComp t = Mapper.TurnTimerComp.get(entity);
+		TurnTimerComp t = M.TurnTimerComp.get(entity);
 		
 		if(t.isStopped()) {
 			return;
@@ -48,7 +48,7 @@ public class RenderTimerSystem extends IteratingSystem {
 			//return;
 		}
 		
-		SpriteComp s = Mapper.SpriteComp.get(entity);
+		SpriteComp s = M.SpriteComp.get(entity);
 		
 		//shapeRenderer.begin(ShapeType.Line);
 		//shapeRenderer.circle(p.position.x, p.position.y, s.width / 2);

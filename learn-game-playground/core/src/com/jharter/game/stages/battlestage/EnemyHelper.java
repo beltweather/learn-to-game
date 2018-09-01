@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.util.Units;
+import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -17,7 +17,7 @@ public class EnemyHelper {
 	public static void addAtma(PooledEngine engine, ZoneComp enemyZone, ZoneComp infoZone) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.ENEMY, 
-				  new Vector3(Units.u12(-65),0,0), 
+				  new Vector3(U.u12(-65),0,0), 
 				  Media.atma);
 		ID id = b.IDComp().id;
 		b.VitalsComp().maxHealth = 10000;
@@ -41,7 +41,7 @@ public class EnemyHelper {
 	public static void addCactar(PooledEngine engine, ZoneComp enemyZone, ZoneComp infoZone) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.ENEMY, 
-				  new Vector3(Units.u12(-20), Units.u12(-10), 0), 
+				  new Vector3(U.u12(-20), U.u12(-10), 0), 
 				  Media.cactar);
 		ID id = b.IDComp().id;
 		b.VitalsComp().maxHealth = 5000;

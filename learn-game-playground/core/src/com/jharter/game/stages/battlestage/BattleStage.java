@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
@@ -67,11 +67,11 @@ public class BattleStage extends GameStage {
 		//BackgroundHelper.addBackground(engine, Media.bgLightYellow, 0.5f);
 		
 		// Player IDs
-		ID warriorPlayerID = Mapper.buildPlayerEntityID();
-		ID sorcererPlayerID = Mapper.buildPlayerEntityID();
-		ID roguePlayerID = Mapper.buildPlayerEntityID();
-		ID rangerPlayerID = Mapper.buildPlayerEntityID();
-		ID globalPlayerID = Mapper.getGlobalPlayerEntityID();
+		ID warriorPlayerID = M.buildPlayerEntityID();
+		ID sorcererPlayerID = M.buildPlayerEntityID();
+		ID roguePlayerID = M.buildPlayerEntityID();
+		ID rangerPlayerID = M.buildPlayerEntityID();
+		ID globalPlayerID = M.getGlobalPlayerEntityID();
 		
 		// Battle entity
 		BattleHelper.addBattle(engine, warriorPlayerID);
@@ -149,7 +149,7 @@ public class BattleStage extends GameStage {
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
-		EntityBuilder b = CursorHelper.buildCursor(engine, Mapper.getCursorEntityID(), Mapper.getPlayerEntityID(), ZoneType.HAND);
+		EntityBuilder b = CursorHelper.buildCursor(engine, M.getCursorEntityID(), M.getPlayerEntityID(), ZoneType.HAND);
 		if(focus) {
 			b.FocusComp();
 		}
@@ -166,7 +166,7 @@ public class BattleStage extends GameStage {
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-		Mapper.addIdListener(engine, getBox2DWorld());
+		M.addIdListener(engine, getBox2DWorld());
 		
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());

@@ -9,7 +9,7 @@ import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 public class RenderTilesSystem extends IteratingSystem {
 	
@@ -33,9 +33,9 @@ public class RenderTilesSystem extends IteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		SpriteComp s = Mapper.SpriteComp.get(entity);
-		TextureComp v = Mapper.TextureComp.get(entity);
-		TileComp t = Mapper.TileComp.get(entity);
+		SpriteComp s = M.SpriteComp.get(entity);
+		TextureComp v = M.TextureComp.get(entity);
+		TileComp t = M.TileComp.get(entity);
 		
 		if(v.region != null) {
 			batch.draw(v.region, s.position.x, s.position.y);

@@ -10,12 +10,12 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.util.Units;
+import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
@@ -37,7 +37,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
 		busy = false;
-		return Mapper.TurnEntity.TurnTimerComp().isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
+		return M.TurnEntity.TurnTimerComp().isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override
@@ -46,17 +46,17 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		
-		TurnActionComp t = Mapper.TurnActionComp.get(entity);
-		boolean performTurnAction = t != null && t.turnAction.priority == 0 && Mapper.CardComp.has(entity);
+		TurnActionComp t = M.TurnActionComp.get(entity);
+		boolean performTurnAction = t != null && t.turnAction.priority == 0 && M.CardComp.has(entity);
 		
 		entity.remove(ActionQueuedComp.class);
 		if(performTurnAction) {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
-			ID id = Mapper.IDComp.get(entity).id;
-			Entity player = Mapper.Entity.get(Mapper.CardComp.get(entity).playerID);
-			Entity battleAvatar = Mapper.PlayerComp.get(player).getBattleAvatarEntity();
-			IDComp idAvatar = Mapper.IDComp.get(battleAvatar);
-			SpriteComp sAvatar = Mapper.SpriteComp.get(battleAvatar);
+			ID id = M.IDComp.get(entity).id;
+			Entity player = M.Entity.get(M.CardComp.get(entity).playerID);
+			Entity battleAvatar = M.PlayerComp.get(player).getBattleAvatarEntity();
+			IDComp idAvatar = M.IDComp.get(battleAvatar);
+			SpriteComp sAvatar = M.SpriteComp.get(battleAvatar);
 			
 			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(entity);
@@ -64,8 +64,8 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.alpha = 0f;
 			tt.scale.x = 0f;
 			tt.scale.y = 0f;
-			tt.position.x = Units.u12(160);
-			tt.position.y = Units.u12(60);
+			tt.position.x = U.u12(160);
+			tt.position.y = U.u12(60);
 			
 			TweenUtil.start(id, TweenUtil.tween(id, tt, 1f), new TweenCallback() {
 
@@ -75,7 +75,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 						turnAction.performAcceptCallback();
 					}
 					
-					entity.add(Mapper.Comp.get(ActionSpentComp.class));
+					entity.add(M.Comp.get(ActionSpentComp.class));
 
 					busy = false;
 				}
@@ -84,15 +84,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			
 			tt = TweenTarget.newInstance();
 			tt.setFromEntity(battleAvatar);
-			tt.position.x -= Units.u12(10);
-			tt.position.y += Units.u12(4);
+			tt.position.x -= U.u12(10);
+			tt.position.y += U.u12(4);
 			tt.angleDegrees = 20;
 			
 			TweenUtil.start(idAvatar.id, TweenUtil.tween(idAvatar.id, tt, 0.25f).repeatYoyo(1, 0f));
 			
 			busy = true;
 		} else {
-			entity.add(Mapper.Comp.get(ActionSpentComp.class));
+			entity.add(M.Comp.get(ActionSpentComp.class));
 		}
 		
 		return false;

@@ -192,7 +192,7 @@ public final class Components {
 		private PlayerComp() {}
 
 		public Entity getBattleAvatarEntity() {
-			return Mapper.Entity.get(battleAvatarID);
+			return M.Entity.get(battleAvatarID);
 		}
 		
 		@Override
@@ -300,7 +300,7 @@ public final class Components {
 		private CardComp() {}
 		
 		public Entity getBattleAvatarEntity() {
-			return Mapper.PlayerComp.get(Mapper.Entity.get(playerID)).getBattleAvatarEntity();
+			return M.PlayerComp.get(M.Entity.get(playerID)).getBattleAvatarEntity();
 		}
 		
 		@Override
@@ -404,7 +404,7 @@ public final class Components {
 		}
 		
 		public CardComp getCardComp() {
-			return Mapper.CardComp.get(Mapper.Entity.get(activeCardID));
+			return M.CardComp.get(M.Entity.get(activeCardID));
 		}
 		
 		@Override
@@ -424,7 +424,7 @@ public final class Components {
 			if(turnActionEntityID == null) {
 				return null;
 			}
-			TurnActionComp t = Mapper.TurnActionComp.get(Mapper.Entity.get(turnActionEntityID));
+			TurnActionComp t = M.TurnActionComp.get(M.Entity.get(turnActionEntityID));
 			if(t == null) {
 				return null;
 			}
@@ -432,7 +432,7 @@ public final class Components {
 		}
 		
 		public ID playerID() {
-			return Mapper.getPlayerEntityID();
+			return M.getPlayerEntityID();
 		}
 		
 		@Override
@@ -594,8 +594,8 @@ public final class Components {
 			internalObjectIDs.removeValue(id, false);
 			for(int i = 0; i < internalObjectIDs.size; i++) {
 				ID oID = internalObjectIDs.get(i);
-				Entity obj = Mapper.Entity.get(oID);
-				ZonePositionComp zp = Mapper.ZonePositionComp.get(obj);
+				Entity obj = M.Entity.get(oID);
+				ZonePositionComp zp = M.ZonePositionComp.get(obj);
 				zp.index = i;
 			}
 		}
@@ -622,7 +622,7 @@ public final class Components {
 			if(zoneID == null) {
 				return null;
 			}
-			return Mapper.ZoneComp.get(this);
+			return M.ZoneComp.get(this);
 		}
 		
 		public void checkpoint() {
@@ -651,7 +651,7 @@ public final class Components {
 		}
 		
 		private ZonePositionComp copyForHistory() {
-			ZonePositionComp zp = Mapper.Comp.get(ZonePositionComp.class);
+			ZonePositionComp zp = M.Comp.get(ZonePositionComp.class);
 			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it
@@ -687,7 +687,7 @@ public final class Components {
 			if(zoneID == null) {
 				return null;
 			}
-			return Mapper.ZoneComp.get(this);
+			return M.ZoneComp.get(this);
 		}
 		
 		public void checkpoint() {
@@ -716,7 +716,7 @@ public final class Components {
 		}
 		
 		private ZonePositionPointerComp copyForHistory() {
-			ZonePositionPointerComp zp = Mapper.Comp.get(ZonePositionPointerComp.class);
+			ZonePositionPointerComp zp = M.Comp.get(ZonePositionPointerComp.class);
 			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it

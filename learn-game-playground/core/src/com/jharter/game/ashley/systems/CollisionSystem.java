@@ -6,7 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 public class CollisionSystem extends IteratingSystem {
 
@@ -17,13 +17,13 @@ public class CollisionSystem extends IteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		CollisionComp c = Mapper.CollisionComp.get(entity);
-		TypeComp t = Mapper.TypeComp.get(entity);
+		CollisionComp c = M.CollisionComp.get(entity);
+		TypeComp t = M.TypeComp.get(entity);
 		if(c.collisionWithId != null) {
 			// For now, just process collisions for heroes. We'll want to generalize this though!
 			switch(t.type) {
 				case HERO:
-					InteractComp interactComp = Mapper.InteractComp.get(entity);
+					InteractComp interactComp = M.InteractComp.get(entity);
 					if(interactComp != null) {
 						interactComp.interactables.add(c.collisionWithId);
 					}

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks.CompositeCallback;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
@@ -49,11 +49,11 @@ public class TweenUtil {
 		}
 		
 		if(id != null) {
-			Entity entity = Mapper.Entity.get(id);
-			if(!Mapper.AnimatingComp.has(entity)) {
-				entity.add(Mapper.Comp.get(AnimatingComp.class));
+			Entity entity = M.Entity.get(id);
+			if(!M.AnimatingComp.has(entity)) {
+				entity.add(M.Comp.get(AnimatingComp.class));
 			}
-			AnimatingComp a = Mapper.AnimatingComp.get(entity);
+			AnimatingComp a = M.AnimatingComp.get(entity);
 			a.activeCount++;
 			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(FinishedAnimatingCallback.class);
 			finishedCallback.setID(id);
@@ -72,7 +72,7 @@ public class TweenUtil {
 	}
 	
 	public static void start(Entity entity, TweenTarget target) {
-		start(Mapper.IDComp.get(entity).id, target);
+		start(M.IDComp.get(entity).id, target);
 	}
 	
 	public static void start(ID id, TweenTarget target) {

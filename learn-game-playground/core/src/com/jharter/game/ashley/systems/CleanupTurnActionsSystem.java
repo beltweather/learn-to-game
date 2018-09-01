@@ -13,7 +13,7 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -28,10 +28,10 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		IDComp id = Mapper.IDComp.get(entity);
-		TypeComp ty = Mapper.TypeComp.get(entity);
+		IDComp id = M.IDComp.get(entity);
+		TypeComp ty = M.TypeComp.get(entity);
 		
-		TurnActionComp t = Mapper.TurnActionComp.get(entity);
+		TurnActionComp t = M.TurnActionComp.get(entity);
 		if(t != null) {
 			t.turnAction.cleanUp();
 		}
@@ -42,22 +42,22 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					//ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
 					//zp.getZoneComp().remove(id);
 					
-					if(Mapper.MultiSpriteComp.has(entity) && (t == null || t.turnAction.multiplicity <= 1)) {
+					if(M.MultiSpriteComp.has(entity) && (t == null || t.turnAction.multiplicity <= 1)) {
 						entity.remove(MultiSpriteComp.class);
 					}
 					
-					CardComp ca = Mapper.CardComp.get(entity);
-					Entity owner = Mapper.Entity.get(ca.playerID);
-					ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-					if(Mapper.ActiveCardComp.has(owner)) {
+					CardComp ca = M.CardComp.get(entity);
+					Entity owner = M.Entity.get(ca.playerID);
+					ZonePositionComp zp = M.ZonePositionComp.get(entity);
+					if(M.ActiveCardComp.has(owner)) {
 						owner.remove(ActiveCardComp.class);
 					}
 					
 					ZoneComp z = zp.getZoneComp();
-					ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+					ChangeZoneComp cz = M.Comp.get(ChangeZoneComp.class);
 					cz.useNextIndex = true;
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Mapper.ZoneComp.getID(ca.playerID, ZoneType.HAND);
+					cz.newZoneID = M.ZoneComp.getID(ca.playerID, ZoneType.HAND);
 					entity.add(cz);
 					break;
 				default:

@@ -5,7 +5,7 @@ import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -32,18 +32,18 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			Entity friend = t.getEntity(1);
 			Entity enemy = t.getEntity(2);
-			CardComp cCard = Mapper.CardComp.get(card);
+			CardComp cCard = M.CardComp.get(card);
 			Entity character = cCard.getBattleAvatarEntity();
 			call(character, card, friend, enemy);
 			
 			if(t.all) {
-				ZonePositionComp zp = Mapper.ZonePositionComp.get(friend);
-				ZoneComp z = Mapper.ZoneComp.get(zp);
+				ZonePositionComp zp = M.ZonePositionComp.get(friend);
+				ZoneComp z = M.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
-					Entity entity = Mapper.Entity.get(id);
-					if(Mapper.CursorComp.has(entity)) {
+					Entity entity = M.Entity.get(id);
+					if(M.CursorComp.has(entity)) {
 						continue;
 					}
 					
@@ -74,18 +74,18 @@ public abstract class VoidCallback<T> {
 		@Override
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
-			CardComp cCard = Mapper.CardComp.get(card);
+			CardComp cCard = M.CardComp.get(card);
 			Entity friend = t.getEntity(1);
 			Entity character = cCard.getBattleAvatarEntity();
 			
 			if(t.all) {
-				ZonePositionComp zp = Mapper.ZonePositionComp.get(friend);
-				ZoneComp z = Mapper.ZoneComp.get(zp);
+				ZonePositionComp zp = M.ZonePositionComp.get(friend);
+				ZoneComp z = M.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
-					Entity entity = Mapper.Entity.get(id);
-					if(Mapper.CursorComp.has(entity)) {
+					Entity entity = M.Entity.get(id);
+					if(M.CursorComp.has(entity)) {
 						continue;
 					}
 					
@@ -116,7 +116,7 @@ public abstract class VoidCallback<T> {
 		
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
-			CardComp cCard = Mapper.CardComp.get(card);
+			CardComp cCard = M.CardComp.get(card);
 			Entity activeCard = t.getEntity(1); 
 			Entity character = cCard.getBattleAvatarEntity();
 			
@@ -139,18 +139,18 @@ public abstract class VoidCallback<T> {
 		@Override
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
-			CardComp cCard = Mapper.CardComp.get(card);
+			CardComp cCard = M.CardComp.get(card);
 			Entity enemy = t.getEntity(1);
 			Entity character = cCard.getBattleAvatarEntity();
 			
 			if(t.all) {
-				ZonePositionComp zp = Mapper.ZonePositionComp.get(enemy);
-				ZoneComp z = Mapper.ZoneComp.get(zp);
+				ZonePositionComp zp = M.ZonePositionComp.get(enemy);
+				ZoneComp z = M.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
-					Entity entity = Mapper.Entity.get(id);
-					if(Mapper.CursorComp.has(entity)) {
+					Entity entity = M.Entity.get(id);
+					if(M.CursorComp.has(entity)) {
 						continue;
 					}
 					

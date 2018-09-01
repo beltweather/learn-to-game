@@ -16,7 +16,7 @@ import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.ashley.systems.AnimationSystem;
@@ -99,7 +99,7 @@ public class TestStageA extends GameStage {
 	    interactComp.interaction = new Interaction() {
 	    	
 	    	public void interact(Entity interactor, Entity target) {
-	    		RemoveComp removeComp = Mapper.RemoveComp.get(target);
+	    		RemoveComp removeComp = M.RemoveComp.get(target);
 	    		removeComp.requestRemove = true;
 	    		// XXX Debug for now
 	    		removeComp.remove = true;
@@ -150,7 +150,7 @@ public class TestStageA extends GameStage {
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-		Mapper.addIdListener(engine, getBox2DWorld());
+		M.addIdListener(engine, getBox2DWorld());
 		
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());

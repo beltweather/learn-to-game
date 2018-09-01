@@ -1,8 +1,11 @@
 package com.jharter.game.util;
 
-public class Units {
+/**
+ * Main world unit conversion class
+ */
+public class U {
 
-	private Units() {}
+	private U() {}
 	
 	public static final float PIXELS_PER_UNIT = 12;
 	private static final float TARGET_PIXEL_HEIGHT = 1080;

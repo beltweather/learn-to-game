@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 public class HealthBarRenderMethod extends ShapeRenderMethod {
 
@@ -16,8 +16,8 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Entity entity, float deltaTime) {
-		SpriteComp s = Mapper.SpriteComp.get(entity);
-		VitalsComp v = Mapper.VitalsComp.get(Mapper.Entity.get(s.relativePositionRules.getRelativeToID()));
+		SpriteComp s = M.SpriteComp.get(entity);
+		VitalsComp v = M.VitalsComp.get(M.Entity.get(s.relativePositionRules.getRelativeToID()));
 		
 		if(s == null || v == null) {
 			return;

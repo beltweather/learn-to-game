@@ -7,7 +7,7 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.Sys;
 
 public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
@@ -22,7 +22,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		Sys.out.println("------------------------------------------Starting turn");
-		Mapper.TurnEntity.TurnTimerComp().start();
+		M.TurnEntity.TurnTimerComp().start();
 		enableCursor();
 		resetCursor();
 		return true;
@@ -30,8 +30,8 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		Mapper.TurnEntity.TurnTimerComp().increment(deltaTime);
-		if(Mapper.TurnEntity.TurnTimerComp().isOvertime()) {
+		M.TurnEntity.TurnTimerComp().increment(deltaTime);
+		if(M.TurnEntity.TurnTimerComp().isOvertime()) {
 			return true;
 		}
 		
@@ -51,14 +51,14 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
-		Mapper.TurnEntity.TurnTimerComp().stop();
+		M.TurnEntity.TurnTimerComp().stop();
 		
 		// Cancel the current turn action if there is one
-		CursorComp c = Mapper.CursorEntity.CursorComp();
+		CursorComp c = M.CursorEntity.CursorComp();
 		if(c.turnActionEntityID != null) {
-			Entity entity = Mapper.Entity.get(c.turnActionEntityID);
-			if(!Mapper.ActionSpentComp.has(entity)) {
-				entity.add(Mapper.Comp.get(ActionSpentComp.class));
+			Entity entity = M.Entity.get(c.turnActionEntityID);
+			if(!M.ActionSpentComp.has(entity)) {
+				entity.add(M.Comp.get(ActionSpentComp.class));
 			}
 		}
 	}

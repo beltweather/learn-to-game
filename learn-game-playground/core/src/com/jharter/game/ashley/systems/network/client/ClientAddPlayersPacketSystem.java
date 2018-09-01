@@ -1,7 +1,7 @@
 package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
@@ -19,7 +19,7 @@ public class ClientAddPlayersPacketSystem extends ConsumingPacketSystem<GameClie
 	public void update(GameClient client, GameStage stage, float deltaTime, AddPlayersPacket addPlayers) {
 		boolean addedFocus = false;
 		for(AddPlayer addPlayer : addPlayers.players) {
-			if(Mapper.Entity.get(addPlayer.id) != null) {
+			if(M.Entity.get(addPlayer.id) != null) {
 				Sys.out.println("Client " + client.getId() + " skipping player " + addPlayer.id);
 				continue;
 			}

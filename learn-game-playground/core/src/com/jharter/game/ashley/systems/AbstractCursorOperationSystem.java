@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -39,16 +39,16 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 	}
 	
 	private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
-		ZoneComp z = Mapper.ZoneComp.get(ownerID, zoneType);
+		ZoneComp z = M.ZoneComp.get(ownerID, zoneType);
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			index = findNextIndex(index, direction, z.objectIDs.size());
 			if(!z.hasIndex(index)) {
 				return -1;
 			}
-			Entity entity = Mapper.Entity.get(z.objectIDs.get(index));
+			Entity entity = M.Entity.get(z.objectIDs.get(index));
 			if(entity != null && (t == null || t.isValidTarget(entity))) {
 				if(t == null) {
-					TurnActionComp taComp = Mapper.TurnActionComp.get(entity);
+					TurnActionComp taComp = M.TurnActionComp.get(entity);
 					if(taComp != null) {
 						TurnAction ta = taComp.turnAction;
 						ZoneType nextZoneType = ta.getNextTargetZoneType(depth);

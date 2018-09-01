@@ -2,7 +2,7 @@ package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.RemoveComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
@@ -18,7 +18,7 @@ public class ClientRemoveEntityPacketSystem extends ConsumingPacketSystem<GameCl
 	public void update(GameClient client, GameStage stage, float deltaTime, RemoveEntityPacket packet) {
 		Entity entity = findEntity(packet.id);
 		if(entity != null) {
-			RemoveComp r = Mapper.RemoveComp.get(entity);
+			RemoveComp r = M.RemoveComp.get(entity);
 			if(r != null) {
 				r.remove = true;
 			}

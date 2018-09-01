@@ -10,7 +10,7 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.SnapshotPacket;
@@ -38,9 +38,9 @@ public class ServerSendSnapshotSystem extends IntervalSystem {
 		SnapshotPacket snapshotPacket = SnapshotPacket.newInstance();
     	snapshotPacket.sendTime = TimeUtils.millis();
     	for(Entity e : entities) {
-    		IDComp id = Mapper.IDComp.get(e);
-    		SpriteComp s = Mapper.SpriteComp.get(e);
-    		InputComp in = Mapper.InputComp.get(e);
+    		IDComp id = M.IDComp.get(e);
+    		SpriteComp s = M.SpriteComp.get(e);
+    		InputComp in = M.InputComp.get(e);
     		
     		EntityData entityData = new EntityData();
         	entityData.id = id.id;

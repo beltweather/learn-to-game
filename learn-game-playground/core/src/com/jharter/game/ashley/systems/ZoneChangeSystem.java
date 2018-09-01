@@ -9,7 +9,7 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.id.ID;
 
 public class ZoneChangeSystem extends IteratingSystem {
@@ -20,10 +20,10 @@ public class ZoneChangeSystem extends IteratingSystem {
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
-		IDComp id = Mapper.IDComp.get(entity);
-		TypeComp ty = Mapper.TypeComp.get(entity);
-		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
-		ChangeZoneComp cz = Mapper.ChangeZoneComp.get(entity);
+		IDComp id = M.IDComp.get(entity);
+		TypeComp ty = M.TypeComp.get(entity);
+		ZonePositionComp zp = M.ZonePositionComp.get(entity);
+		ChangeZoneComp cz = M.ChangeZoneComp.get(entity);
 		
 		ID targetZoneID;
 		if(cz.newZoneID != null && cz.newZoneID != null) {
@@ -32,7 +32,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 			targetZoneID = zp.getZoneComp().zoneID;
 		}
 		
-		ZoneComp z = Mapper.ZoneComp.get(targetZoneID);
+		ZoneComp z = M.ZoneComp.get(targetZoneID);
 		
 		int targetIndex;
 		if(cz.useNextIndex) {
@@ -49,7 +49,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 		
 		switch(ty.type) {
 			case CARD:
-				ZoneComp zOld = Mapper.ZoneComp.get(zp);
+				ZoneComp zOld = M.ZoneComp.get(zp);
 				zOld.remove(id.id);
 				z.add(id.id, zp);
 				zp.index = targetIndex;
@@ -59,7 +59,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 				if(cz.checkpoint) {
 					zp.checkpoint();
 				}
-				CursorComp c = Mapper.CursorComp.get(entity);
+				CursorComp c = M.CursorComp.get(entity);
 				c.lastZoneID = cz.oldZoneID;
 				zp.zoneID = targetZoneID;
 				zp.index = targetIndex;

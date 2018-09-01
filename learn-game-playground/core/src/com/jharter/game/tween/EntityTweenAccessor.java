@@ -2,7 +2,7 @@ package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
@@ -14,7 +14,7 @@ public class EntityTweenAccessor implements TweenAccessor<Entity> {
 	
 	@Override
 	public int getValues(Entity entity, int tweenType, float[] returnValues) {
-		SpriteComp s = Mapper.SpriteComp.get(entity);
+		SpriteComp s = M.SpriteComp.get(entity);
 		switch(TweenType.get(tweenType)) {
 			case POSITION_X: 
 				returnValues[0] = s.position.x; 
@@ -54,7 +54,7 @@ public class EntityTweenAccessor implements TweenAccessor<Entity> {
 
 	@Override
 	public void setValues(Entity entity, int tweenType, float[] newValues) {
-		SpriteComp s = Mapper.SpriteComp.get(entity);
+		SpriteComp s = M.SpriteComp.get(entity);
 		switch(TweenType.get(tweenType)) {
 			case POSITION_X:
 				s.position.x = newValues[0];

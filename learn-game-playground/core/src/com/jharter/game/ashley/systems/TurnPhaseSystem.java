@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 
 public abstract class TurnPhaseSystem extends IteratingSystem {
 
@@ -37,11 +37,11 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	
 	@Override
 	public void update (float deltaTime) {
-		if(!Mapper.Comp.has(phaseClass, Mapper.TurnEntity.Entity())) {
+		if(!M.Comp.has(phaseClass, M.TurnEntity.Entity())) {
 			return;
 		}
 		if(!phaseStarted) {
-			startPhase(Mapper.TurnEntity.Entity(), deltaTime);
+			startPhase(M.TurnEntity.Entity(), deltaTime);
 			if(!phaseStarted) {
 				return;
 			}
@@ -53,7 +53,7 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		}
 		
 		if(phaseShouldEnd) {
-			endPhase(Mapper.TurnEntity.Entity(), deltaTime);
+			endPhase(M.TurnEntity.Entity(), deltaTime);
 		}
 	}
 	
@@ -82,10 +82,10 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		entity.remove(phaseClass);
 		
 		if(alternativeNextPhaseClass != null) {
-			entity.add(Mapper.Comp.get(alternativeNextPhaseClass));
+			entity.add(M.Comp.get(alternativeNextPhaseClass));
 			alternativeNextPhaseClass = null;
 		} else {
-			entity.add(Mapper.Comp.get(nextPhaseClass));
+			entity.add(M.Comp.get(nextPhaseClass));
 		}
 		
 		phaseStarted = false;
@@ -113,15 +113,15 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	}
 	
 	protected void resetCursor() {
-		Mapper.CursorEntity.reset();
+		M.CursorEntity.reset();
 	}
 	
 	protected void enableCursor() {
-		Mapper.CursorEntity.enable();
+		M.CursorEntity.enable();
 	}
 	
 	protected void disableCursor() {
-		Mapper.CursorEntity.disable();
+		M.CursorEntity.disable();
 	}
 	
 	protected boolean has(Class<? extends Comp> klass) {

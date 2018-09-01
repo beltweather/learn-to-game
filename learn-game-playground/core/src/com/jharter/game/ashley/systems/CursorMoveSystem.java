@@ -7,7 +7,7 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -23,9 +23,9 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		CursorInputComp ci = Mapper.CursorInputComp.get(entity);
-		CursorComp c = Mapper.CursorComp.get(entity);
-		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+		CursorInputComp ci = M.CursorInputComp.get(entity);
+		CursorComp c = M.CursorComp.get(entity);
+		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
 		ZoneComp origZ = z;
 		TurnAction t = c.getTurnAction();
@@ -42,7 +42,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		if(!valid) {
 			zoneType = ZoneType.HAND;
-			z = Mapper.ZoneComp.get(c.playerID(), zoneType);
+			z = M.ZoneComp.get(c.playerID(), zoneType);
 			index = -1;
 			
 			// We need to be sure to cleanup our selection if we end up in an invalid state
@@ -67,7 +67,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		}
 		
 		if(zp.index != newIndex || origZ.zoneID != z.zoneID) {
-			ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+			ChangeZoneComp cz = M.Comp.get(ChangeZoneComp.class);
 			cz.oldZoneID = origZ.zoneID;
 			cz.newZoneID = z.zoneID;
 			cz.newIndex = newIndex;

@@ -10,7 +10,7 @@ import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -27,9 +27,9 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		CursorComp c = Mapper.CursorComp.get(entity);
-		CursorInputComp ci = Mapper.CursorInputComp.get(entity);
-		ZonePositionComp zp = Mapper.ZonePositionComp.get(entity);
+		CursorComp c = M.CursorComp.get(entity);
+		CursorInputComp ci = M.CursorInputComp.get(entity);
+		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
 		
 		// A little failsafe here for when zones are empty
@@ -46,12 +46,12 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 			// Make sure we're accepting a valid target
 			if(isValidTarget(c.playerID(), z.zoneType, t, index)) {
 				ID targetEntityID = z.objectIDs.get(index);
-				Entity targetEntity = Mapper.Entity.get(targetEntityID);
+				Entity targetEntity = M.Entity.get(targetEntityID);
 				
 				// If this is our first target, make them the turn action entity
 				if(t == null) {
 					c.turnActionEntityID = targetEntityID;
-					t = Mapper.TurnActionComp.get(targetEntity).turnAction;
+					t = M.TurnActionComp.get(targetEntity).turnAction;
 				}
 				
 				// Always add every object we select as we go to our turn action entity
@@ -62,10 +62,10 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				boolean checkpoint = true;
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
-					Mapper.nextActivePlayerEntity();
+					M.nextActivePlayerEntity();
 					
-					Entity turnActionEntity = Mapper.Entity.get(c.turnActionEntityID);
-					turnActionEntity.add(Mapper.Comp.get(ActionQueueableComp.class));
+					Entity turnActionEntity = M.Entity.get(c.turnActionEntityID);
+					turnActionEntity.add(M.Comp.get(ActionQueueableComp.class));
 					c.turnActionEntityID = null;
 					zp.clearHistory();
 					checkpoint = false;
@@ -74,10 +74,10 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				// Update our current cursor position based on our next object to select or
 				// wether we should go back to the hand. We don't need to do an extra check
 				// for validity here because we covered that at the top of this menu.
-				ZoneComp targetZone = t.hasAllTargets() ? Mapper.ZoneComp.get(c.playerID(), ZoneType.HAND) : Mapper.ZoneComp.get(c.playerID(), t.getTargetZoneType());
+				ZoneComp targetZone = t.hasAllTargets() ? M.ZoneComp.get(c.playerID(), ZoneType.HAND) : M.ZoneComp.get(c.playerID(), t.getTargetZoneType());
 				int targetIndex = findFirstValidTargetInZone(c.playerID(), targetZone.zoneType, t);
 				
-				ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+				ChangeZoneComp cz = M.Comp.get(ChangeZoneComp.class);
 				cz.oldZoneID = z.zoneID;
 				cz.newZoneID = targetZone.zoneID;
 				cz.newIndex = targetIndex;
@@ -96,7 +96,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 						c.turnActionEntityID = null;
 					}
 				}
-				ChangeZoneComp cz = Mapper.Comp.get(ChangeZoneComp.class);
+				ChangeZoneComp cz = M.Comp.get(ChangeZoneComp.class);
 				entity.add(cz);
 			}			
 		}

@@ -66,7 +66,10 @@ import com.jharter.game.util.id.IDGenerator;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
-public class Mapper {
+/**
+ * Main mapper class for all components
+ */
+public class M {
 	
 	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
@@ -178,8 +181,8 @@ public class Mapper {
 			@Override
 			public void entityRemoved(Entity entity) {
 				IDComp idComp = im.get(entity);
-				BodyComp b = Mapper.BodyComp.get(entity);
-				SensorComp s = Mapper.SensorComp.get(entity);
+				BodyComp b = M.BodyComp.get(entity);
+				SensorComp s = M.SensorComp.get(entity);
 				if(b != null && b.body != null) {
 					box2D.world.destroyBody(b.body);
 				}
@@ -207,17 +210,17 @@ public class Mapper {
 		}
 		
 		public ZoneComp get(ZonePositionPointerComp zp) {
-			Entity zone = Mapper.Entity.get(zp.zoneID);
-			return Mapper.ZoneComp.get(zone);
+			Entity zone = M.Entity.get(zp.zoneID);
+			return M.ZoneComp.get(zone);
 		}
 		
 		public ZoneComp get(ZonePositionComp zp) {
-			Entity zone = Mapper.Entity.get(zp.zoneID);
-			return Mapper.ZoneComp.get(zone);
+			Entity zone = M.Entity.get(zp.zoneID);
+			return M.ZoneComp.get(zone);
 		}
 		
 		public ZoneComp get(ID zoneID) {
-			return get(Mapper.Entity.get(zoneID));
+			return get(M.Entity.get(zoneID));
 		}
 		
 		public ZoneComp get(ID ownerID, ZoneType zoneType) {
@@ -225,11 +228,11 @@ public class Mapper {
 			if(zoneID == null) {
 				return null;
 			}
-			Entity zone = Mapper.Entity.get(zoneID);
+			Entity zone = M.Entity.get(zoneID);
 			if(zone == null) {
 				return null;
 			}
-			return Mapper.ZoneComp.get(zone);
+			return M.ZoneComp.get(zone);
 		}
 		
 		public boolean has(Entity entity) {
@@ -237,7 +240,7 @@ public class Mapper {
 		}
 		
 		public boolean has(ZonePositionComp zp) {
-			return has(Mapper.Entity.get(zp.zoneID));
+			return has(M.Entity.get(zp.zoneID));
 		}
 		
 	}
@@ -267,7 +270,7 @@ public class Mapper {
 			if(entity == null) {
 				return;
 			}
-			Mapper.Comp.getOrAdd(RemoveComp.class, entity);
+			M.Comp.getOrAdd(RemoveComp.class, entity);
 		}
 		
 		/*public Entity get(ZoneType zoneType) {
@@ -312,15 +315,15 @@ public class Mapper {
 		private ComponentMapperTurnEntity() {}
 		
 		public Entity Entity() {
-			return Mapper.Entity.get(turnEntityID);
+			return M.Entity.get(turnEntityID);
 		}
 		
 		public TurnTimerComp TurnTimerComp() {
-			return Mapper.TurnTimerComp.get(Entity());
+			return M.TurnTimerComp.get(Entity());
 		}
 		
 		public TurnPhaseComp TurnPhaseComp() {
-			return Mapper.TurnPhaseComp.get(Entity());
+			return M.TurnPhaseComp.get(Entity());
 		}
 		
 		public boolean isTurnPhaseStartBattle() { return ComponentMapper.getFor(TurnPhaseStartBattleComp.class).has(Entity()); }
@@ -340,28 +343,28 @@ public class Mapper {
 		private ComponentMapperCursorEntity() {}
 		
 		public Entity Entity() {
-			return Mapper.Entity.get(getCursorEntityID());
+			return M.Entity.get(getCursorEntityID());
 		}
 		
 		public CursorComp CursorComp() {
-			return Mapper.CursorComp.get(Entity());
+			return M.CursorComp.get(Entity());
 		}
 		
 		public void enable() {
 			Entity entity = Entity();
-			if(Mapper.DisabledComp.has(entity)) {
+			if(M.DisabledComp.has(entity)) {
 				entity.remove(DisabledComp.class);
 			}
-			InputComp in = Mapper.InputComp.get(entity);
+			InputComp in = M.InputComp.get(entity);
 			in.input.reset();
 		}
 		
 		public void disable() {
 			Entity entity = Entity();
-			if(!Mapper.DisabledComp.has(entity)) {
-				entity.add(Mapper.Comp.get(DisabledComp.class));
+			if(!M.DisabledComp.has(entity)) {
+				entity.add(M.Comp.get(DisabledComp.class));
 			}
-			InputComp in = Mapper.InputComp.get(entity);
+			InputComp in = M.InputComp.get(entity);
 			in.input.reset();
 		}
 		
@@ -370,21 +373,21 @@ public class Mapper {
 		}
 		
 		public boolean isDisabled() {
-			return Mapper.DisabledComp.has(Entity());
+			return M.DisabledComp.has(Entity());
 		}
 		
 		public void single() {
 			Entity entity = Entity();
-			if(Mapper.MultiSpriteComp.has(entity)) {
+			if(M.MultiSpriteComp.has(entity)) {
 				entity.remove(MultiSpriteComp.class);
 			}
 		}
 		
 		public void toHand() {
-			CursorComp c = Mapper.CursorComp.get(Entity());
-			ZonePositionComp zp = Mapper.ZonePositionComp.get(Entity());
+			CursorComp c = M.CursorComp.get(Entity());
+			ZonePositionComp zp = M.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = Mapper.ZoneComp.getID(c.playerID(), ZoneType.HAND);
+			zp.zoneID = M.ZoneComp.getID(c.playerID(), ZoneType.HAND);
 			zp.clearHistory();
 		}
 		

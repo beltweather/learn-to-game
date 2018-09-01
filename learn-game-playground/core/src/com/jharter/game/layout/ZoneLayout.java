@@ -69,7 +69,7 @@ public abstract class ZoneLayout {
 			return null;
 		}
 		
-		TweenTarget target = getTarget(id, index, entity, Pools.get(TweenTarget.class).obtain());
+		TweenTarget target = getTarget(id, index, entity, TweenTarget.newInstance());
         boolean hide = false;
 		if(allowRelativePositions) {
 			SpriteComp s = Mapper.SpriteComp.get(entity);

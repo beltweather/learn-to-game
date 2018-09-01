@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
@@ -383,7 +382,7 @@ public final class Components {
 
 	public static final class TurnActionComp implements Comp {
 		
-		public TurnAction turnAction = Pools.get(TurnAction.class).obtain();
+		public TurnAction turnAction = TurnAction.newInstance();
 		
 		private TurnActionComp() {}
 		
@@ -652,7 +651,7 @@ public final class Components {
 		}
 		
 		private ZonePositionComp copyForHistory() {
-			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
+			ZonePositionComp zp = Mapper.Comp.get(ZonePositionComp.class);
 			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it
@@ -668,11 +667,19 @@ public final class Components {
 		
 	}
 	
+	/**
+	 * Just not sure if this class if useful or not, I think it's supposed to capture
+	 * a zone position for a zone you're not a part of.
+	 * 
+	 * @author Jon
+	 *
+	 */
+	@Deprecated
 	public static final class ZonePositionPointerComp implements Comp {
 		
 		public ID zoneID = null;
 		public int index = -1;
-		private transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
+		private transient Array<ZonePositionPointerComp> history = new Array<ZonePositionPointerComp>();
 		
 		private ZonePositionPointerComp() {}
 		
@@ -698,7 +705,7 @@ public final class Components {
 			if(history.size == 0) {
 				return false;
 			}
-			ZonePositionComp copy = history.pop();
+			ZonePositionPointerComp copy = history.pop();
 			zoneID = copy.zoneID;
 			index = copy.index;
 			return true;
@@ -708,8 +715,8 @@ public final class Components {
 			history.clear();
 		}
 		
-		private ZonePositionComp copyForHistory() {
-			ZonePositionComp zp = Pools.get(ZonePositionComp.class).obtain();
+		private ZonePositionPointerComp copyForHistory() {
+			ZonePositionPointerComp zp = Mapper.Comp.get(ZonePositionPointerComp.class);
 			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it

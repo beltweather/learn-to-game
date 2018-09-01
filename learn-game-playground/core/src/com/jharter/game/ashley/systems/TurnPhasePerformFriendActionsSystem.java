@@ -58,7 +58,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			IDComp idAvatar = Mapper.IDComp.get(battleAvatar);
 			SpriteComp sAvatar = Mapper.SpriteComp.get(battleAvatar);
 			
-			TweenTarget tt = Pools.get(TweenTarget.class).obtain();
+			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(entity);
 			tt.angleDegrees = 3600;
 			tt.alpha = 0f;
@@ -82,7 +82,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 				
 			});
 			
-			tt = Pools.get(TweenTarget.class).obtain();
+			tt = TweenTarget.newInstance();
 			tt.setFromEntity(battleAvatar);
 			tt.position.x -= Units.u12(10);
 			tt.position.y += Units.u12(4);

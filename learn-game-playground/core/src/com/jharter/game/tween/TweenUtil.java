@@ -55,13 +55,13 @@ public class TweenUtil {
 			}
 			AnimatingComp a = Mapper.AnimatingComp.get(entity);
 			a.activeCount++;
-			FinishedAnimatingCallback finishedCallback = Pools.get(FinishedAnimatingCallback.class).obtain();
+			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(FinishedAnimatingCallback.class);
 			finishedCallback.setID(id);
 			
 			if(callback == null) {
 				baseTween.setCallback(finishedCallback);
 			} else {
-				CompositeCallback cc = Pools.get(CompositeCallback.class).obtain();
+				CompositeCallback cc = TweenCallbacks.newInstance(CompositeCallback.class);
 				cc.addCallback(callback);
 				cc.addCallback(finishedCallback);
 				baseTween.setCallback(cc);
@@ -69,6 +69,10 @@ public class TweenUtil {
 		}
 		
 		baseTween.start(manager);
+	}
+	
+	public static void start(Entity entity, TweenTarget target) {
+		start(Mapper.IDComp.get(entity).id, target);
 	}
 	
 	public static void start(ID id, TweenTarget target) {

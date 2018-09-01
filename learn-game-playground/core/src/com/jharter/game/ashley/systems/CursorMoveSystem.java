@@ -33,7 +33,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;
 		
-		boolean move = ci.move();
+		boolean move = ci.move() && (t == null || !t.all);
 		boolean valid = isValidTarget(c.playerID(), zoneType, t, index);
 		
 		if(!move && valid) {

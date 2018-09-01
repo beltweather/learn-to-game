@@ -13,6 +13,10 @@ import aurelienribon.tweenengine.TweenCallback;
 
 public class TweenCallbacks {
 	
+	public static <T extends TweenCallback> T newInstance(Class<T> klass) {
+		return Pools.get(klass).obtain();
+	}
+	
 	private TweenCallbacks() {}
 	
 	public static class CompositeCallback implements TweenCallback, Poolable {

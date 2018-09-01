@@ -18,6 +18,7 @@ import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 
@@ -69,7 +70,7 @@ public class CursorPositionSystem extends IteratingSystem {
 			return;
 		}
 		
-		TweenTarget tt = Pools.get(TweenTarget.class).obtain();
+		TweenTarget tt = TweenTarget.newInstance();
 		tt.setFromEntity(entity);
 		tt.position.x = position.x;
 		tt.position.y = position.y;
@@ -129,28 +130,43 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 	
 	private void handleStayInZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, float targetAngle) {
-		Vector3 position = getCursorPosition(entity, z, zp.index);
+		Vector3 targetPosition = getCursorPosition(entity, z, zp.index);
 		
-		if(position == null) {
+		if(targetPosition == null) {
 			return;
 		}
 		
-		s.position.x = position.x;
-		s.position.y = position.y;
-		s.angleDegrees = targetAngle;
+		//s.position.x = targetPosition.x;
+		//s.position.y = targetPosition.y;
+		//s.angleDegrees = targetAngle;
+		
+		TweenTarget tt = TweenTarget.newInstance(s);
+		tt.position.x = targetPosition.x;
+		tt.position.y = targetPosition.y;
+		tt.angleDegrees = targetAngle;
+		tt.duration = 0.0f;
+		
+		if(tt.matchesTarget(s)) {
+			return;
+		}
+		
+		Sys.out.println("Tweening");
+		TweenUtil.start(entity, tt);
 		
 		if(isAll(c)) {
 			MultiSpriteComp mp = Mapper.Comp.getOrAdd(MultiSpriteComp.class, entity);
 			for(int i = 0; i < Mapper.ZoneComp.get(zp).objectIDs.size(); i++) {
-				position = getCursorPosition(entity, z, i);
-				if(position != null) {
-					Vector3 targP = new Vector3(position);
+				targetPosition = getCursorPosition(entity, z, i);
+				if(targetPosition != null) {
+					Vector3 targP = new Vector3(targetPosition);
 					mp.positions.add(targP);
 				}
 			}
 			mp.size = mp.positions.size;
 			hasMulti = true;
 		}
+		
+		Pools.free(tt);
 	}
 	
 	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {

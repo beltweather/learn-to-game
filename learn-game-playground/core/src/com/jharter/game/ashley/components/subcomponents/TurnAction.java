@@ -14,6 +14,10 @@ import uk.co.carelesslabs.Enums.ZoneType;
 
 public class TurnAction implements Poolable {
 	
+	public static TurnAction newInstance() {
+		return Pools.get(TurnAction.class).obtain();
+	}
+	
 	public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 	public Array<ID> targetIDs = new Array<ID>();
 	public VoidCallback<TurnAction> acceptCallback = null;
@@ -121,7 +125,7 @@ public class TurnAction implements Poolable {
 	}
 	
 	public TurnAction freshCopy() {
-		TurnAction t = Pools.get(TurnAction.class).obtain();
+		TurnAction t = TurnAction.newInstance();
 		freshCopyTo(t);
 		return t;
 	}

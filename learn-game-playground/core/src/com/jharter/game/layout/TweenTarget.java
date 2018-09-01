@@ -3,11 +3,28 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Mapper;
 
 public class TweenTarget implements Poolable {
+	
+	public static TweenTarget newInstance() {
+		return Pools.get(TweenTarget.class).obtain();
+	}
+	
+	public static TweenTarget newInstance(SpriteComp s) {
+		TweenTarget tt = newInstance();
+		tt.setFromEntity(s);
+		return tt;
+	}
+	
+	public static TweenTarget newInstance(Entity entity) {
+		TweenTarget tt = newInstance();
+		tt.setFromEntity(entity);
+		return tt;
+	}
 	
 	private static float round(float x) {
 		return Math.round(x);

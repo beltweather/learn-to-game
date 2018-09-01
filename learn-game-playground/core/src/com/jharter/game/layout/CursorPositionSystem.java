@@ -207,7 +207,10 @@ public class CursorPositionSystem extends IteratingSystem {
 								pos.y -= Units.u1(10)*m;
 								ms.positions.add(pos);
 								ms.scales.add(new Vector2(0.5f*s.scale.x, 0.5f*s.scale.y));
-								ms.anglesDegrees.add(getCursorAngle(cursor, zone.zoneType));
+								//ms.anglesDegrees.add(getCursorAngle(cursor, zone.zoneType));
+								if(zone.zoneType == ZoneType.ENEMY) {
+									ms.reflectAngle = true;
+								}
 							}
 							
 						}
@@ -230,7 +233,10 @@ public class CursorPositionSystem extends IteratingSystem {
 							pos.y -= Units.u1(10)*m;
 							ms.positions.add(pos);
 							ms.scales.add(new Vector2(0.5f*s.scale.x, 0.5f*s.scale.y));
-							ms.anglesDegrees.add(getCursorAngle(cursor, zone.zoneType));
+							//ms.anglesDegrees.add(getCursorAngle(cursor, zone.zoneType));
+							if(zone.zoneType == ZoneType.ENEMY) {
+								ms.reflectAngle = true;
+							}
 						}
 						ms.size = ms.positions.size;
 						hasMulti = true;

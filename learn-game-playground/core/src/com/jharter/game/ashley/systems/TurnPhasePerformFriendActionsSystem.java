@@ -90,8 +90,6 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			
 			TweenUtil.start(idAvatar.id, TweenUtil.tween(idAvatar.id, tt, 0.25f).repeatYoyo(1, 0f));
 			
-			//TweenUtil.start(idAvatar.id, Tween.to(sAvatar.position, TweenType.POSITION_X.asInt(), 0.25f).target(sAvatar.position.x - Units.u12(10)));
-			
 			busy = true;
 		} else {
 			entity.add(Mapper.Comp.get(ActionSpentComp.class));

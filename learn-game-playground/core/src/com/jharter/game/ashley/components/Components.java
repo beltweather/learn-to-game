@@ -151,6 +151,7 @@ public final class Components {
 		public Array<Vector2> scales = new Array<Vector2>();
 		public Array<Float> alphas = new Array<Float>();
 		public Array<Float> anglesDegrees = new Array<Float>();
+		public boolean reflectAngle = false;
 		public int size = 0;
 		public boolean drawSingle = false;
 		
@@ -168,6 +169,7 @@ public final class Components {
 		public void reset() {
 			clear();
 			drawSingle = false;
+			reflectAngle = false;
 		}
 	}
 	

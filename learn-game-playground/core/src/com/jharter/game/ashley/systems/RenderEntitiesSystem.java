@@ -115,6 +115,9 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 		Vector2 scale = index >= ms.scales.size ? s.scale : ms.scales.get(index);
 		float alpha = index >= ms.alphas.size ? s.alpha : ms.alphas.get(index);
 		float angleDegrees = index >= ms.anglesDegrees.size ? s.angleDegrees : ms.anglesDegrees.get(index);
+		if(ms.reflectAngle) {
+			angleDegrees += 180;
+		}
 		batchDraw(position, scale, alpha, angleDegrees, s.width, s.height, t.region, offsetX, offsetY, originX, originY);
 	}
 	

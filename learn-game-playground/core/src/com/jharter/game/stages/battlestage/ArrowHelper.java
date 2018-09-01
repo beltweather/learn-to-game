@@ -8,7 +8,7 @@ import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Media;
@@ -19,7 +19,7 @@ public class ArrowHelper {
 	
 	public static void addArrow(PooledEngine engine, ZoneComp infoZone) {
 		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = IDGenerator.newID();
+		b.IDComp().id = IDUtil.newID();
 		b.SpriteComp().position.x = 200;
 		b.SpriteComp().position.y = 200;
 		b.SpriteComp().position.z = 1;
@@ -36,7 +36,7 @@ public class ArrowHelper {
 				if(M.CursorEntity.isDisabled()) {
 					return null;
 				}
-				return M.PlayerComp.get(M.Entity.get(M.getPlayerEntityID())).battleAvatarID;
+				return M.PlayerComp.get(M.Entity.get(IDUtil.getPlayerEntityID())).battleAvatarID;
 			}
 			
 		});

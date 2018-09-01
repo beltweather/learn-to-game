@@ -48,7 +48,7 @@ import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
@@ -84,7 +84,7 @@ public class TestStageA extends GameStage {
 		float height = 8;
 		TextureRegion texture = new TextureRegion(Media.birdWalk, Media.birdWalk.getWidth()/3, Media.birdWalk.getHeight());
 		float speed = 5;
-		ID id = IDGenerator.newID();
+		ID id = IDUtil.newID();
 		EntityBuilder b = EntityUtil.buildDynamicSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, BodyType.StaticBody, speed);
 		Entity birdEntity = b.Entity();
 		b.free();

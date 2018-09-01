@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 public abstract class GameEndPoint {
 
@@ -13,7 +13,7 @@ public abstract class GameEndPoint {
 	protected ObjectMap<Class<? extends Packet>, PacketManager<?>> packetManagers = new ObjectMap();
 	
 	public GameEndPoint() {
-		id = IDGenerator.newID();
+		id = IDUtil.newID();
 	}
 	
 	public ID getId() {

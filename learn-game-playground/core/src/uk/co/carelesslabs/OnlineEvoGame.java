@@ -19,7 +19,7 @@ import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;
 import com.jharter.game.network.packets.Packets.SnapshotPacket;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 import uk.co.carelesslabs.entity.Bird;
@@ -238,7 +238,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
     		};*/
     		client.start();
     		
-    		mainHeroId = IDGenerator.newID();
+    		mainHeroId = IDUtil.newID();
     		client.send(RegisterPlayerPacket.newInstance(mainHeroId));
         }
     }

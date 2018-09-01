@@ -6,7 +6,7 @@ import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.render.HealthBarRenderMethod;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.Direction;
 
@@ -16,7 +16,7 @@ public class HealthBarHelper {
 	
 	public static void addHealthBar(PooledEngine engine, ZoneComp infoZone, ID relativeToID) {
 		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = IDGenerator.newID();
+		b.IDComp().id = IDUtil.newID();
 		b.SpriteComp().position.x = 0;
 		b.SpriteComp().position.y = -U.u12(2f);
 		b.SpriteComp().position.z = 2;

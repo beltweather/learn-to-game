@@ -129,7 +129,6 @@ public class EntityBuilder implements Poolable {
 	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
-	public ZonePositionPointerComp ZonePositionPointerComp() { return get(ZonePositionPointerComp.class); }
 	public CardComp CardComp() { return get(CardComp.class); }
 	public ActiveCardComp ActiveCardComp() { return get(ActiveCardComp.class); }
 	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
@@ -150,6 +149,5 @@ public class EntityBuilder implements Poolable {
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
-	//public RelativePositionComp RelativePositionComp() { return get(RelativePositionComp.class); }
 	
 }

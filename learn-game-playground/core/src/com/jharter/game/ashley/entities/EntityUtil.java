@@ -14,7 +14,7 @@ import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.box2d.Box2DHelper;
@@ -40,11 +40,11 @@ public class EntityUtil {
 	}
 	
 	public static EntityBuilder buildBasicEntity(PooledEngine engine, EntityType type, Vector3 position, Texture texture) {
-		return buildBasicEntity(engine, IDGenerator.newID(), type, position, new TextureRegion(texture));
+		return buildBasicEntity(engine, IDUtil.newID(), type, position, new TextureRegion(texture));
 	}
 	
 	public static EntityBuilder buildBasicEntity(PooledEngine engine, EntityType type, Vector3 position, TextureRegion texture) {
-		return buildBasicEntity(engine, IDGenerator.newID(), type, position, texture.getRegionWidth(), texture.getRegionHeight(), texture);
+		return buildBasicEntity(engine, IDUtil.newID(), type, position, texture.getRegionWidth(), texture.getRegionHeight(), texture);
 	}
 	
 	public static EntityBuilder buildBasicEntity(PooledEngine engine, ID id, EntityType type, Vector3 position, TextureRegion texture) {

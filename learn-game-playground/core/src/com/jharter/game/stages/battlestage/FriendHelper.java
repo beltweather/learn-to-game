@@ -9,7 +9,7 @@ import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.render.HealthBarRenderMethod;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.EntityType;

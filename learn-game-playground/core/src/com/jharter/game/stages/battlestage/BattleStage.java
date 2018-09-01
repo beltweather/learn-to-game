@@ -50,6 +50,7 @@ import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
@@ -67,11 +68,11 @@ public class BattleStage extends GameStage {
 		//BackgroundHelper.addBackground(engine, Media.bgLightYellow, 0.5f);
 		
 		// Player IDs
-		ID warriorPlayerID = M.buildPlayerEntityID();
-		ID sorcererPlayerID = M.buildPlayerEntityID();
-		ID roguePlayerID = M.buildPlayerEntityID();
-		ID rangerPlayerID = M.buildPlayerEntityID();
-		ID globalPlayerID = M.getGlobalPlayerEntityID();
+		ID warriorPlayerID = IDUtil.buildPlayerEntityID();
+		ID sorcererPlayerID = IDUtil.buildPlayerEntityID();
+		ID roguePlayerID = IDUtil.buildPlayerEntityID();
+		ID rangerPlayerID = IDUtil.buildPlayerEntityID();
+		ID globalPlayerID = IDUtil.getGlobalPlayerEntityID();
 		
 		// Battle entity
 		BattleHelper.addBattle(engine, warriorPlayerID);
@@ -149,7 +150,7 @@ public class BattleStage extends GameStage {
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
-		EntityBuilder b = CursorHelper.buildCursor(engine, M.getCursorEntityID(), M.getPlayerEntityID(), ZoneType.HAND);
+		EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), IDUtil.getPlayerEntityID(), ZoneType.HAND);
 		if(focus) {
 			b.FocusComp();
 		}

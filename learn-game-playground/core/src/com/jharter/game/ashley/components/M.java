@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
@@ -61,7 +60,7 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Components.ZonePositionPointerComp;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.box2d.Box2DWorld;
@@ -72,52 +71,14 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 public class M {
 	
 	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
-	
-	private static Array<ID> playerIDs = new Array<ID>();
-	private static int activePlayerIndex = 0;
-	private static ID globalPlayerID;
-	private static ID battleEntityID;
-	private static ID turnEntityID;
-	private static ID cursorEntityID;
-	private static ObjectMap<ID, ObjectMap<ZoneType, ID>> zoneIDsByOwnerIDAndType = new ObjectMap<ID, ObjectMap<ZoneType, ID>>();
-	
-	public static ID getBattleEntityID() {
-		if(battleEntityID == null) {
-			battleEntityID = IDGenerator.newID();
-		}
-		return battleEntityID;
-	}
-	
-	public static ID getTurnEntityID() {
-		if(turnEntityID == null) {
-			turnEntityID = IDGenerator.newID();
-		}
-		return turnEntityID;
-	}
-	
-	public static ID getPlayerEntityID() {
-		return getPlayerEntityID(activePlayerIndex);
-	}
-	
-	public static ID getPlayerEntityID(int activePlayerIndex) {
-		if(activePlayerIndex < 0 || activePlayerIndex >= playerIDs.size) {
-			return null;
-		}
-		return playerIDs.get(activePlayerIndex);
-	}
-	
-	public static ID buildPlayerEntityID() {
-		ID id = IDGenerator.newID();
-		playerIDs.add(id);
-		return id;
-	}
+	public static int activePlayerIndex = 0;
 	
 	public static void resetActivePlayerEntity() {
 		activePlayerIndex = 0;
 	}
 	
 	public static void nextActivePlayerEntity() {
-		activePlayerIndex = (activePlayerIndex+1) % playerIDs.size;
+		activePlayerIndex = (activePlayerIndex+1) % IDUtil.getPlayerIDs().size();
 	}
 	
 	public static int getActivePlayerIndex() {
@@ -125,45 +86,8 @@ public class M {
 	}
 	
 	public static boolean hasNextActivePlayer() {
-		return activePlayerIndex == playerIDs.size-1;
+		return activePlayerIndex == IDUtil.getPlayerIDs().size()-1;
 	}
-	
-	public static ID getCursorEntityID() {
-		if(cursorEntityID == null) {
-			cursorEntityID = IDGenerator.newID();
-		}
-		return cursorEntityID;
-	}
-	
-	public static ID getGlobalPlayerEntityID() {
-		if(globalPlayerID == null) {
-			globalPlayerID = IDGenerator.newID();
-		}
-		return globalPlayerID;
-	}
-	
-	public static ID generateZoneID(ID ownerID, ZoneType type) {
-		if(!zoneIDsByOwnerIDAndType.containsKey(ownerID)) {
-			zoneIDsByOwnerIDAndType.put(ownerID, new ObjectMap<ZoneType, ID>());
-		}
-		if(!zoneIDsByOwnerIDAndType.get(ownerID).containsKey(type)) {
-			zoneIDsByOwnerIDAndType.get(ownerID).put(type, IDGenerator.newID());
-		}
-		return zoneIDsByOwnerIDAndType.get(ownerID).get(type);
- 	}
-	
-	private static ID getZoneID(ID ownerID, ZoneType type) {
-		if(ownerID == null) {
-			return getZoneID(getGlobalPlayerEntityID(), type);
-		}
-		if(ownerID != getGlobalPlayerEntityID() && (!zoneIDsByOwnerIDAndType.containsKey(ownerID) || !zoneIDsByOwnerIDAndType.get(ownerID).containsKey(type))) {
-			return getZoneID(getGlobalPlayerEntityID(), type);
-		}
-		if(!zoneIDsByOwnerIDAndType.containsKey(ownerID)) {
-			return null;
-		}
-		return zoneIDsByOwnerIDAndType.get(ownerID).get(type);
- 	}
 	
 	public static void addIdListener(PooledEngine engine, final Box2DWorld box2D) {
 		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
@@ -202,7 +126,7 @@ public class M {
 		private ComponentMapperZoneComp() {}
 		
 		public ID getID(ID ownerID, ZoneType type) {
-			return getZoneID(ownerID, type);
+			return IDUtil.getZoneID(ownerID, type);
 		}
 		
 		public ZoneComp get(Entity entity) {
@@ -315,7 +239,7 @@ public class M {
 		private ComponentMapperTurnEntity() {}
 		
 		public Entity Entity() {
-			return M.Entity.get(turnEntityID);
+			return M.Entity.get(IDUtil.getTurnEntityID());
 		}
 		
 		public TurnTimerComp TurnTimerComp() {
@@ -343,7 +267,7 @@ public class M {
 		private ComponentMapperCursorEntity() {}
 		
 		public Entity Entity() {
-			return M.Entity.get(getCursorEntityID());
+			return M.Entity.get(IDUtil.getCursorEntityID());
 		}
 		
 		public CursorComp CursorComp() {
@@ -387,7 +311,7 @@ public class M {
 			CursorComp c = M.CursorComp.get(Entity());
 			ZonePositionComp zp = M.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = M.ZoneComp.getID(M.getPlayerEntityID(), ZoneType.HAND);
+			zp.zoneID = M.ZoneComp.getID(IDUtil.getPlayerEntityID(), ZoneType.HAND);
 			zp.clearHistory();
 		}
 		
@@ -425,7 +349,6 @@ public class M {
 	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = ComponentMapper.getFor(CursorInputRegulatorComp.class);
 	public static final ComponentMapperZoneComp ZoneComp = new ComponentMapperZoneComp();
 	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = ComponentMapper.getFor(ZonePositionComp.class);
-	public static final ComponentMapper<ZonePositionPointerComp> ZonePositionPointerComp = ComponentMapper.getFor(ZonePositionPointerComp.class);
 	public static final ComponentMapper<CardComp> CardComp = ComponentMapper.getFor(CardComp.class);
 	public static final ComponentMapper<ActiveCardComp> ActiveCardComp = ComponentMapper.getFor(ActiveCardComp.class);
 	public static final ComponentMapper<TurnActionComp> TurnActionComp = ComponentMapper.getFor(TurnActionComp.class);
@@ -445,6 +368,5 @@ public class M {
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = ComponentMapper.getFor(ActivePlayerComp.class);
 	public static final ComponentMapper<ShapeRenderComp> ShapeRenderComp = ComponentMapper.getFor(ShapeRenderComp.class);
-	//public static final ComponentMapper<RelativePositionComp> RelativePositionComp = ComponentMapper.getFor(RelativePositionComp.class);
 	
 }

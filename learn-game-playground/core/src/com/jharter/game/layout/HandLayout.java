@@ -6,6 +6,7 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.M;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 public class HandLayout extends ZoneLayout {
 
@@ -40,7 +41,7 @@ public class HandLayout extends ZoneLayout {
 	@Override
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
 		CardComp c = M.CardComp.get(entity);
-		if(c.playerID != M.getPlayerEntityID()) {
+		if(c.playerID != IDUtil.getPlayerEntityID()) {
 			hide(entity);
 		} else {
 			show(entity);

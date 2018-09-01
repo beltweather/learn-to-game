@@ -10,7 +10,7 @@ import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 public class GameClient extends GameEndPoint {
 	
@@ -19,7 +19,7 @@ public class GameClient extends GameEndPoint {
 	protected Client client;
 	protected float time = 0;
 	
-	protected ID playerId = IDGenerator.newID();
+	protected ID playerId = IDUtil.newID();
 	
 	public GameClient() {
 		super();

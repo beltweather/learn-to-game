@@ -9,7 +9,7 @@ import com.jharter.game.screens.GameScreen;
 import com.jharter.game.screens.impl.TestStageScreen;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.Sys;
-import com.jharter.game.util.id.IDGenerator;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Media;
 
@@ -44,7 +44,7 @@ public class OnlineGame extends Game {
     	if(endPointHelper.isClient()) {
     		client.send(RegisterPlayerPacket.newInstance(client.getPlayerId()));
     	} else if(endPointHelper.isOffline()) {
-    		getStage().addPlayerEntity(IDGenerator.newID(), getStage().getEntryPoint(), true).free();
+    		getStage().addPlayerEntity(IDUtil.newID(), getStage().getEntryPoint(), true).free();
     		getStage().activate();
     	}
     	

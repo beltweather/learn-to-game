@@ -191,14 +191,11 @@ public final class Components {
 		
 		private PlayerComp() {}
 
-		public Entity getBattleAvatarEntity() {
-			return M.Entity.get(battleAvatarID);
-		}
-		
 		@Override
 		public void reset() {
 			battleAvatarID = null;
 		}
+		
 	}
 	
 	public static final class ActivePlayerComp implements Comp {
@@ -298,10 +295,6 @@ public final class Components {
 		public String tooltipText = null;
 		
 		private CardComp() {}
-		
-		public Entity getBattleAvatarEntity() {
-			return M.PlayerComp.get(M.Entity.get(playerID)).getBattleAvatarEntity();
-		}
 		
 		@Override
 		public void reset() {

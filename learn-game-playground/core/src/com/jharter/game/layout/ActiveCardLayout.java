@@ -2,10 +2,12 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;
@@ -24,9 +26,10 @@ public class ActiveCardLayout extends ZoneLayout {
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = M.SpriteComp.get(entity);
+		CardComp c = M.CardComp.get(entity);
 		
 		s.relativePositionRules.relative = true;
-		s.relativePositionRules.setRelativeToID(M.IDComp.get(M.CardComp.get(entity).getBattleAvatarEntity()).id);
+		s.relativePositionRules.setRelativeToID(CompLinker.getBattleAvatarID(c));
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);

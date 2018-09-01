@@ -11,6 +11,7 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenType;
@@ -54,7 +55,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = M.IDComp.get(entity).id;
 			Entity player = M.Entity.get(M.CardComp.get(entity).playerID);
-			Entity battleAvatar = M.PlayerComp.get(player).getBattleAvatarEntity();
+			Entity battleAvatar = CompLinker.getBattleAvatarEntity(M.PlayerComp.get(player));
 			IDComp idAvatar = M.IDComp.get(battleAvatar);
 			SpriteComp sAvatar = M.SpriteComp.get(battleAvatar);
 			

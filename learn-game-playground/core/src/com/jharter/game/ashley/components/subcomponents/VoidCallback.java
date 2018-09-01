@@ -32,8 +32,8 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			Entity friend = t.getEntity(1);
 			Entity enemy = t.getEntity(2);
-			CardComp cCard = M.CardComp.get(card);
-			Entity character = cCard.getBattleAvatarEntity();
+			CardComp c = M.CardComp.get(card);
+			Entity character = CompLinker.getBattleAvatarEntity(c);
 			call(character, card, friend, enemy);
 			
 			if(t.all) {
@@ -74,9 +74,9 @@ public abstract class VoidCallback<T> {
 		@Override
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
-			CardComp cCard = M.CardComp.get(card);
+			CardComp c = M.CardComp.get(card);
 			Entity friend = t.getEntity(1);
-			Entity character = cCard.getBattleAvatarEntity();
+			Entity character = CompLinker.getBattleAvatarEntity(c);
 			
 			if(t.all) {
 				ZonePositionComp zp = M.ZonePositionComp.get(friend);
@@ -116,9 +116,9 @@ public abstract class VoidCallback<T> {
 		
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
-			CardComp cCard = M.CardComp.get(card);
+			CardComp c = M.CardComp.get(card);
 			Entity activeCard = t.getEntity(1); 
-			Entity character = cCard.getBattleAvatarEntity();
+			Entity character = CompLinker.getBattleAvatarEntity(c);
 			
 			call(character, card, activeCard);
 		}
@@ -139,9 +139,9 @@ public abstract class VoidCallback<T> {
 		@Override
 		public void call(TurnAction t) {
 			Entity card = t.getEntity(0);
-			CardComp cCard = M.CardComp.get(card);
+			CardComp c = M.CardComp.get(card);
 			Entity enemy = t.getEntity(1);
-			Entity character = cCard.getBattleAvatarEntity();
+			Entity character = CompLinker.getBattleAvatarEntity(c);
 			
 			if(t.all) {
 				ZonePositionComp zp = M.ZonePositionComp.get(enemy);

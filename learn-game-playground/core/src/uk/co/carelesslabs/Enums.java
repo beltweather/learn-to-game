@@ -45,7 +45,6 @@ public class Enums {
     	ACTIVE_CARD,
     	DECK,
     	DISCARD,
-    	FRIEND_ARROW,
     	INFO,
     	NONE
     }

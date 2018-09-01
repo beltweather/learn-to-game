@@ -2,11 +2,9 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
@@ -15,6 +13,7 @@ import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import uk.co.carelesslabs.Enums.Direction;
 
 public class ActiveCardLayout extends ZoneLayout {
 
@@ -24,24 +23,17 @@ public class ActiveCardLayout extends ZoneLayout {
 
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
-		float targetScale = 0.25f;
 		SpriteComp s = Mapper.SpriteComp.get(entity);
-		CardComp c = Mapper.CardComp.get(entity);
 		
-		Entity character = c.getCharacterEntity();
-		SpriteComp sCharacter = Mapper.SpriteComp.get(character);
+		s.relativePositionRules.relative = true;
+		s.relativePositionRules.setRelativeToID(Mapper.IDComp.get(Mapper.CardComp.get(entity).getBattleAvatarEntity()).id);
+		s.relativePositionRules.xAlign = Direction.WEST;
+		s.relativePositionRules.yAlign = Direction.CENTER;
+		s.relativePositionRules.offset.x = -Units.u12(1);
 		
-		target.position.x = (sCharacter.position.x - s.scaledWidth(targetScale) - Units.u12(1));
-		target.position.y = (sCharacter.position.y + (sCharacter.scaledHeight() - s.scaledHeight(targetScale)) / 2);
-		target.position.z = s.position.z;
-		target.scale.x = targetScale;
-		target.scale.y = targetScale;
-		
-		if(Mapper.UntargetableComp.has(entity)) {
-			target.alpha = 0.25f;
-		} else {
-			target.alpha = 1f;
-		}
+		target.scale.y = 0.25f;
+		target.scale.x = 0.25f;
+		target.alpha = Mapper.UntargetableComp.has(entity) ? 0.25f : 1f;
 		
 		return target;
 	}

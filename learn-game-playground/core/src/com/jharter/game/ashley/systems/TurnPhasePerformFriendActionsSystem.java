@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.IDComp;
@@ -11,6 +12,7 @@ import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyAction
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.Units;
@@ -56,7 +58,16 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			IDComp idAvatar = Mapper.IDComp.get(battleAvatar);
 			SpriteComp sAvatar = Mapper.SpriteComp.get(battleAvatar);
 			
-			TweenUtil.start(id, Tween.to(id, TweenType.ANGLE.asInt(), 1f).target(720), new TweenCallback() {
+			TweenTarget tt = Pools.get(TweenTarget.class).obtain();
+			tt.setFromEntity(entity);
+			tt.angleDegrees = 3600;
+			tt.alpha = 0f;
+			tt.scale.x = 0f;
+			tt.scale.y = 0f;
+			tt.position.x = Units.u12(160);
+			tt.position.y = Units.u12(60);
+			
+			TweenUtil.start(id, TweenUtil.tween(id, tt, 1f), new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -71,7 +82,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 				
 			});
 			
-			TweenUtil.start(idAvatar.id, Tween.to(sAvatar.position, TweenType.POSITION_X.asInt(), 0.5f).ease(Circ.INOUT).target(Units.u12(-4f)));
+			TweenUtil.start(idAvatar.id, Tween.to(sAvatar.position, TweenType.POSITION_X.asInt(), 0.5f).target(Units.u12(-4)));
 			
 			busy = true;
 		} else {

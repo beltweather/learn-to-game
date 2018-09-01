@@ -133,14 +133,6 @@ public final class Components {
 			return scaleY * height;
 		}
 		
-		public boolean isRelative() {
-			return relativePositionRules.relative;
-		}
-		
-		public boolean setToRelativePosition(Vector3 position) {
-			return relativePositionRules.setToRelativePosition(this, position);
-		}
-		
 		@Override 
 		public void reset() {
 			position.set(0, 0, 0);
@@ -178,104 +170,6 @@ public final class Components {
 			drawSingle = false;
 		}
 	}
-	
-	/*public static final class RelativePositionComp implements Comp {
-		public ID baselineID = null;
-		public Vector3 margin = new Vector3();
-		public Direction xAlign = Direction.CENTER;
-		public Direction yAlign = Direction.CENTER;
-		public boolean spriteAsOffset = true;
-		private Vector3 tempPosition = new Vector3();
-		
-		private RelativePositionComp() {}
-		
-		public Vector3 toPosition(SpriteComp s) {
-			if(baselineID == null) {
-				float xOffset = margin.x;
-				float yOffset = margin.y;
-				float zOffset = margin.z;
-				
-				if(spriteAsOffset && s != null) {
-					xOffset += s.position.x;
-					yOffset += s.position.y;
-					zOffset += s.position.z;
-				}
-				
-				tempPosition.set(xOffset, yOffset, zOffset);
-				Sys.out.println("X: " + tempPosition.x);
-				return tempPosition;
-			}
-			
-			Entity baselineEntity = Mapper.Entity.get(baselineID);
-			SpriteComp sBaseline = Mapper.SpriteComp.get(baselineEntity);
-			if(baselineEntity == null || s == null || sBaseline == null) {
-				return null;
-			}
-			
-			float x = sBaseline.position.x;
-			float y = sBaseline.position.y;
-			float z = sBaseline.position.z;
-			
-			switch(xAlign) {
-				case WEST:
-				case NORTH_WEST:
-				case SOUTH_WEST:
-					x -= s.scaledWidth();
-					break;
-				case EAST:
-				case NORTH_EAST:
-				case SOUTH_EAST:
-					x += sBaseline.scaledWidth();
-					break;
-				case CENTER:
-					x += (sBaseline.scaledWidth() - s.scaledWidth()) / 2f;
-					break;
-				default:
-					break;
-			}
-			
-			switch(yAlign) {
-				case SOUTH:
-				case SOUTH_WEST:
-				case SOUTH_EAST:
-					y -= s.scaledHeight();
-					break;
-				case NORTH:
-				case NORTH_WEST:
-				case NORTH_EAST:
-					y += sBaseline.scaledHeight();
-					break;
-				case CENTER:
-					y += (sBaseline.scaledHeight() - s.scaledHeight()) / 2f;
-					break;
-				default:
-					break;
-			}
-			
-			float xOffset = margin.x;
-			float yOffset = margin.y;
-			float zOffset = margin.z;
-			
-			if(spriteAsOffset) {
-				xOffset += s.position.x;
-				yOffset += s.position.y;
-				zOffset += s.position.z;
-			}
-			
-			tempPosition.set(x + xOffset, y + yOffset, z + zOffset);
-			return tempPosition;
-		}
-		
-		@Override
-		public void reset() {
-			baselineID = null;
-			margin.set(0,0,0);
-			xAlign = Direction.CENTER;
-			yAlign = Direction.CENTER;
-			tempPosition.set(0,0,0);
-			spriteAsOffset = true;
-		}
-	}*/
 	
 	public static final class AnimatingComp implements Comp {
 		
@@ -404,7 +298,7 @@ public final class Components {
 		
 		private CardComp() {}
 		
-		public Entity getCharacterEntity() {
+		public Entity getBattleAvatarEntity() {
 			return Mapper.PlayerComp.get(Mapper.Entity.get(playerID)).getBattleAvatarEntity();
 		}
 		

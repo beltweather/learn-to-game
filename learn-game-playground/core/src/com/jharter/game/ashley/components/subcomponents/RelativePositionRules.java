@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Mapper;
+import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.Direction;
@@ -11,11 +12,12 @@ import uk.co.carelesslabs.Enums.Direction;
 public class RelativePositionRules {
 	
 	public boolean relative = false;
+	public boolean tween = true;
 	private ID relativeToID = null;
 	private RelativeToIDGetter relativeToIDGetter = null;
-	public Vector3 relativeOffset = new Vector3();
-	public Direction relativeXAlign = Direction.NONE;
-	public Direction relativeYAlign = Direction.NONE;
+	public Vector3 offset = new Vector3();
+	public Direction xAlign = Direction.NONE;
+	public Direction yAlign = Direction.NONE;
 	
 	public RelativePositionRules() {
 
@@ -40,7 +42,11 @@ public class RelativePositionRules {
 		this.relativeToIDGetter = relativeToIDGetter;
 	}
 	
-	public boolean setToRelativePosition(SpriteComp s, Vector3 positionToSet) {
+	public boolean setToRelativePosition(SpriteComp s, TweenTarget target) {
+		return setToRelativePosition(s, target.scale.x, target.scale.y, target.position);
+	}
+	
+	public boolean setToRelativePosition(SpriteComp s, float scaleX, float scaleY, Vector3 positionToSet) {
 		ID relativeToID = getRelativeToID();
 		if(s == null || !relative || relativeToID == null) {
 			return false;
@@ -60,11 +66,11 @@ public class RelativePositionRules {
 		float y = sBaseline.position.y;
 		float z = s.position.z;
 		
-		switch(relativeXAlign) {
+		switch(xAlign) {
 			case WEST:
 			case NORTH_WEST:
 			case SOUTH_WEST:
-				x -= s.scaledWidth();
+				x -= s.scaledWidth(scaleX);
 				break;
 			case EAST:
 			case NORTH_EAST:
@@ -72,17 +78,17 @@ public class RelativePositionRules {
 				x += sBaseline.scaledWidth();
 				break;
 			case CENTER:
-				x += (sBaseline.scaledWidth() - s.scaledWidth()) / 2f;
+				x += (sBaseline.scaledWidth() - s.scaledWidth(scaleX)) / 2f;
 				break;
 			default:
 				break;
 		}
 		
-		switch(relativeYAlign) {
+		switch(yAlign) {
 			case SOUTH:
 			case SOUTH_WEST:
 			case SOUTH_EAST:
-				y -= s.scaledHeight();
+				y -= s.scaledHeight(scaleY);
 				break;
 			case NORTH:
 			case NORTH_WEST:
@@ -90,13 +96,13 @@ public class RelativePositionRules {
 				y += sBaseline.scaledHeight();
 				break;
 			case CENTER:
-				y += (sBaseline.scaledHeight() - s.scaledHeight()) / 2f;
+				y += (sBaseline.scaledHeight() - s.scaledHeight(scaleY)) / 2f;
 				break;
 			default:
 				break;
 		}
 		
-		positionToSet.set(x + relativeOffset.x, y + relativeOffset.y, z + relativeOffset.z);
+		positionToSet.set(x + offset.x, y + offset.y, z + offset.z);
 		return true;
 	}
 	
@@ -104,9 +110,10 @@ public class RelativePositionRules {
 		relative = false;
 		relativeToID = null;
 		relativeToIDGetter = null;
-		relativeOffset.set(0,0,0);
-		relativeXAlign = Direction.NONE;
-		relativeYAlign = Direction.NONE;
+		offset.set(0,0,0);
+		xAlign = Direction.NONE;
+		yAlign = Direction.NONE;
+		tween = true;
 	}
 	
 	public abstract static class RelativeToIDGetter {

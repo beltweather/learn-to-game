@@ -26,9 +26,9 @@ public class ArrowHelper {
 		b.SpriteComp().width = Media.arrowFrames[0].getRegionWidth() / Units.PIXELS_PER_UNIT;
 		b.SpriteComp().height = Media.arrowFrames[0].getRegionHeight() / Units.PIXELS_PER_UNIT; 
 		b.SpriteComp().relativePositionRules.relative = true;
-		b.SpriteComp().relativePositionRules.relativeXAlign = Direction.CENTER;
-		b.SpriteComp().relativePositionRules.relativeYAlign = Direction.NORTH;
-		b.SpriteComp().relativePositionRules.relativeOffset.y = Units.u12(1);
+		b.SpriteComp().relativePositionRules.xAlign = Direction.CENTER;
+		b.SpriteComp().relativePositionRules.yAlign = Direction.NORTH;
+		b.SpriteComp().relativePositionRules.offset.y = Units.u12(1);
 		b.SpriteComp().relativePositionRules.setRelativeToIDGetter(new RelativeToIDGetter() {
 
 			@Override

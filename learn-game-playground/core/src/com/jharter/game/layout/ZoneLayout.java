@@ -73,11 +73,11 @@ public abstract class ZoneLayout {
         boolean hide = false;
 		if(allowRelativePositions) {
 			SpriteComp s = Mapper.SpriteComp.get(entity);
-			if(target != null && s != null && s.isRelative()) {
-				if(!s.setToRelativePosition(target.position)) {
+			if(target != null && s != null && s.relativePositionRules.relative) {
+				if(!s.relativePositionRules.setToRelativePosition(s, target)) {
 					hide(entity);
 					hide = true;
-				} else {
+				} else if(!s.relativePositionRules.tween) {
 					target.duration = 0f;
 				}
 			}

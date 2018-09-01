@@ -24,8 +24,10 @@ public class HealthBarHelper {
 		b.SpriteComp().height = Units.u12(1f);
 		b.SpriteComp().relativePositionRules.relative = true;
 		b.SpriteComp().relativePositionRules.setRelativeToID(relativeToID);
-		b.SpriteComp().relativePositionRules.relativeXAlign = Direction.EAST;
-		b.SpriteComp().relativePositionRules.relativeYAlign = Direction.NORTH;
+		b.SpriteComp().relativePositionRules.xAlign = Direction.EAST;
+		b.SpriteComp().relativePositionRules.yAlign = Direction.CENTER;
+		b.SpriteComp().relativePositionRules.offset.y = Units.u12(5);
+		b.SpriteComp().relativePositionRules.tween = false;
 		b.ShapeRenderComp().renderMethod = new HealthBarRenderMethod();
 		infoZone.add(b);
 		engine.addEntity(b.Entity());

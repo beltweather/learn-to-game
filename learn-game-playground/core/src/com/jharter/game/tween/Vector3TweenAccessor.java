@@ -1,6 +1,7 @@
 package com.jharter.game.tween;
 
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.util.Sys;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
@@ -32,6 +33,7 @@ public class Vector3TweenAccessor implements TweenAccessor<Vector3> {
 	public void setValues(Vector3 v, int tweenType, float[] newValues) {
 		switch(TweenType.get(tweenType)) {
 			case POSITION_X:
+				Sys.out.println("X: " + newValues[0]);
 				v.x = newValues[0];
 				break;
 			case POSITION_Y:

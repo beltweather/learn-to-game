@@ -82,7 +82,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 				
 			});
 			
-			TweenUtil.start(idAvatar.id, Tween.to(sAvatar.position, TweenType.POSITION_X.asInt(), 0.5f).target(Units.u12(-4)));
+			tt = Pools.get(TweenTarget.class).obtain();
+			tt.setFromEntity(battleAvatar);
+			tt.position.x -= Units.u12(10);
+			tt.position.y += Units.u12(4);
+			tt.angleDegrees = 20;
+			
+			TweenUtil.start(idAvatar.id, TweenUtil.tween(idAvatar.id, tt, 0.25f).repeatYoyo(1, 0f));
+			
+			//TweenUtil.start(idAvatar.id, Tween.to(sAvatar.position, TweenType.POSITION_X.asInt(), 0.25f).target(sAvatar.position.x - Units.u12(10)));
 			
 			busy = true;
 		} else {

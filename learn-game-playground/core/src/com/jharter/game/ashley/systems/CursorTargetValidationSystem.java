@@ -26,7 +26,7 @@ public class CursorTargetValidationSystem extends AbstractCursorOperationSystem 
 		CursorComp c = M.CursorComp.get(entity);
 		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
-		TurnAction t = CompLinker.getTurnAction(c);
+		TurnAction t = CompLinker.CursorComp.getTurnAction(c);
 		
 		ZoneType zoneType = z.zoneType;
 		for(int i = 0; i < z.objectIDs.size(); i++) {

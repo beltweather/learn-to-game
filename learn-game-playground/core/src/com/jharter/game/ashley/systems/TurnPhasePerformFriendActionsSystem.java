@@ -38,7 +38,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
 		busy = false;
-		return M.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
+		return CompLinker.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = M.IDComp.get(entity).id;
 			Entity player = M.Entity.get(M.CardComp.get(entity).playerID);
-			Entity battleAvatar = CompLinker.getBattleAvatarEntity(M.PlayerComp.get(player));
+			Entity battleAvatar = CompLinker.PlayerComp.getBattleAvatarEntity(M.PlayerComp.get(player));
 			IDComp idAvatar = M.IDComp.get(battleAvatar);
 			SpriteComp sAvatar = M.SpriteComp.get(battleAvatar);
 			

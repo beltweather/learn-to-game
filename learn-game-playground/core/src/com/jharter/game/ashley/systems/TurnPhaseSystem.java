@@ -9,6 +9,7 @@ import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.Comp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 
 public abstract class TurnPhaseSystem extends IteratingSystem {
 
@@ -37,11 +38,11 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	
 	@Override
 	public void update (float deltaTime) {
-		if(!M.Comp.has(phaseClass, M.TurnEntity.Entity())) {
+		if(!M.Comp.has(phaseClass, CompLinker.TurnEntity.Entity())) {
 			return;
 		}
 		if(!phaseStarted) {
-			startPhase(M.TurnEntity.Entity(), deltaTime);
+			startPhase(CompLinker.TurnEntity.Entity(), deltaTime);
 			if(!phaseStarted) {
 				return;
 			}
@@ -53,7 +54,7 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		}
 		
 		if(phaseShouldEnd) {
-			endPhase(M.TurnEntity.Entity(), deltaTime);
+			endPhase(CompLinker.TurnEntity.Entity(), deltaTime);
 		}
 	}
 	

@@ -29,7 +29,7 @@ public class ActiveCardLayout extends ZoneLayout {
 		CardComp c = M.CardComp.get(entity);
 		
 		s.relativePositionRules.relative = true;
-		s.relativePositionRules.setRelativeToID(CompLinker.getBattleAvatarID(c));
+		s.relativePositionRules.setRelativeToID(CompLinker.CardComp.getBattleAvatarID(c));
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);

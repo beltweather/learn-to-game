@@ -33,7 +33,7 @@ public abstract class VoidCallback<T> {
 			Entity friend = t.getEntity(1);
 			Entity enemy = t.getEntity(2);
 			CardComp c = M.CardComp.get(card);
-			Entity character = CompLinker.getBattleAvatarEntity(c);
+			Entity character = CompLinker.CardComp.getBattleAvatarEntity(c);
 			call(character, card, friend, enemy);
 			
 			if(t.all) {
@@ -76,7 +76,7 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			CardComp c = M.CardComp.get(card);
 			Entity friend = t.getEntity(1);
-			Entity character = CompLinker.getBattleAvatarEntity(c);
+			Entity character = CompLinker.CardComp.getBattleAvatarEntity(c);
 			
 			if(t.all) {
 				ZonePositionComp zp = M.ZonePositionComp.get(friend);
@@ -118,7 +118,7 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			CardComp c = M.CardComp.get(card);
 			Entity activeCard = t.getEntity(1); 
-			Entity character = CompLinker.getBattleAvatarEntity(c);
+			Entity character = CompLinker.CardComp.getBattleAvatarEntity(c);
 			
 			call(character, card, activeCard);
 		}
@@ -141,7 +141,7 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			CardComp c = M.CardComp.get(card);
 			Entity enemy = t.getEntity(1);
-			Entity character = CompLinker.getBattleAvatarEntity(c);
+			Entity character = CompLinker.CardComp.getBattleAvatarEntity(c);
 			
 			if(t.all) {
 				ZonePositionComp zp = M.ZonePositionComp.get(enemy);

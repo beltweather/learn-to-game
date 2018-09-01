@@ -29,7 +29,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
 		ZoneComp origZ = z;
-		TurnAction t = CompLinker.getTurnAction(c);
+		TurnAction t = CompLinker.CursorComp.getTurnAction(c);
 		
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;

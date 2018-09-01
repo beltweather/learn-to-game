@@ -58,7 +58,6 @@ import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Components.ZonePositionPointerComp;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
 
@@ -133,11 +132,6 @@ public class M {
 			return ComponentMapper.getFor(ZoneComp.class).get(entity);
 		}
 		
-		public ZoneComp get(ZonePositionPointerComp zp) {
-			Entity zone = M.Entity.get(zp.zoneID);
-			return M.ZoneComp.get(zone);
-		}
-		
 		public ZoneComp get(ZonePositionComp zp) {
 			Entity zone = M.Entity.get(zp.zoneID);
 			return M.ZoneComp.get(zone);
@@ -197,10 +191,6 @@ public class M {
 			M.Comp.getOrAdd(RemoveComp.class, entity);
 		}
 		
-		/*public Entity get(ZoneType zoneType) {
-			return get(ZoneComp.getID(zoneType));
-		}*/
-		
 	}
 	
 	public static class ComponentMapperComp {
@@ -232,34 +222,6 @@ public class M {
 			return ComponentMapper.getFor(klass).has(entity);
 		}
 	
-	}
-	
-	public static class ComponentMapperTurnEntity {
-		
-		private ComponentMapperTurnEntity() {}
-		
-		public Entity Entity() {
-			return M.Entity.get(IDUtil.getTurnEntityID());
-		}
-		
-		public TurnTimerComp TurnTimerComp() {
-			return M.TurnTimerComp.get(Entity());
-		}
-		
-		public TurnPhaseComp TurnPhaseComp() {
-			return M.TurnPhaseComp.get(Entity());
-		}
-		
-		public boolean isTurnPhaseStartBattle() { return ComponentMapper.getFor(TurnPhaseStartBattleComp.class).has(Entity()); }
-		public boolean isTurnPhaseStartTurn() { return ComponentMapper.getFor(TurnPhaseStartTurnComp.class).has(Entity()); }
-		public boolean isTurnPhaseSelectEnemyActions() { return ComponentMapper.getFor(TurnPhaseSelectEnemyActionsComp.class).has(Entity()); }
-		public boolean isTurnPhaseSelectFriendActions() { return ComponentMapper.getFor(TurnPhaseSelectFriendActionsComp.class).has(Entity()); }
-		public boolean isTurnPhasePerformFriendActions() { return ComponentMapper.getFor(TurnPhasePerformFriendActionsComp.class).has(Entity()); }
-		public boolean isTurnPhasePerformEnemyActions() { return ComponentMapper.getFor(TurnPhasePerformEnemyActionsComp.class).has(Entity()); }
-		public boolean isTurnPhaseEndTurn() { return ComponentMapper.getFor(TurnPhaseEndTurnComp.class).has(Entity()); }
-		public boolean isTurnPhaseEndBattle() { return ComponentMapper.getFor(TurnPhaseEndBattleComp.class).has(Entity()); }
-		public boolean isTurnPhaseNone() { return ComponentMapper.getFor(TurnPhaseNoneComp.class).has(Entity()); }
-		
 	}
 	
 	public static class ComponentMapperCursorEntity {
@@ -322,11 +284,11 @@ public class M {
 		}
 	}
 	
-	public static final ComponentMapperComp Comp = new ComponentMapperComp();
-	public static final ComponentMapperEntity Entity = new ComponentMapperEntity();
-	public static final ComponentMapperTurnEntity TurnEntity = new ComponentMapperTurnEntity();
 	public static final ComponentMapperCursorEntity CursorEntity = new ComponentMapperCursorEntity();
+	public static final ComponentMapperZoneComp ZoneComp = new ComponentMapperZoneComp();
 	
+	public static final ComponentMapperEntity Entity = new ComponentMapperEntity();
+	public static final ComponentMapperComp Comp = new ComponentMapperComp();
 	public static final ComponentMapper<SpriteComp> SpriteComp = ComponentMapper.getFor(SpriteComp.class);
 	public static final ComponentMapper<BattleAvatarComp> BattleAvatarComp = ComponentMapper.getFor(BattleAvatarComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = ComponentMapper.getFor(FocusComp.class);
@@ -347,7 +309,6 @@ public class M {
 	public static final ComponentMapper<CursorComp> CursorComp = ComponentMapper.getFor(CursorComp.class);
 	public static final ComponentMapper<CursorInputComp> CursorInputComp = ComponentMapper.getFor(CursorInputComp.class);
 	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = ComponentMapper.getFor(CursorInputRegulatorComp.class);
-	public static final ComponentMapperZoneComp ZoneComp = new ComponentMapperZoneComp();
 	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = ComponentMapper.getFor(ZonePositionComp.class);
 	public static final ComponentMapper<CardComp> CardComp = ComponentMapper.getFor(CardComp.class);
 	public static final ComponentMapper<ActiveCardComp> ActiveCardComp = ComponentMapper.getFor(ActiveCardComp.class);

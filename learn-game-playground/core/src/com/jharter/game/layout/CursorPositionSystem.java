@@ -178,7 +178,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		// See if cursor is modifying an action
-		TurnAction t = CompLinker.getTurnAction(c);
+		TurnAction t = CompLinker.CursorComp.getTurnAction(c);
 		if(t == null) {
 			return;
 		}
@@ -264,7 +264,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 
 	private boolean isAll(CursorComp c) {
-		TurnAction ta = CompLinker.getTurnAction(c);
+		TurnAction ta = CompLinker.CursorComp.getTurnAction(c);
 		return ta != null && ta.all;
 	}
 	

@@ -41,7 +41,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 
 		if(ci.accept) {
 			
-			TurnAction t = CompLinker.getTurnAction(c);
+			TurnAction t = CompLinker.CursorComp.getTurnAction(c);
 			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
@@ -88,7 +88,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 			
 		} else if(ci.cancel) {
 
-			TurnAction t = CompLinker.getTurnAction(c);
+			TurnAction t = CompLinker.CursorComp.getTurnAction(c);
 			if(zp.tryRevertToLastCheckpoint()) {
 				entity.remove(ActiveCardComp.class);
 				if(t != null) {

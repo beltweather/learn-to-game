@@ -1,6 +1,7 @@
 package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.PooledEngine;
+import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.render.TurnTimerRenderMethod;
@@ -10,7 +11,7 @@ public class TurnTimerHelper {
 	
 	private TurnTimerHelper() {}
 	
-	public static void addTurnTimer(PooledEngine engine, float maxTurnTimeSec) {
+	public static void addTurnTimer(PooledEngine engine, ZoneComp infoZone, float maxTurnTimeSec) {
 		EntityBuilder b = EntityBuilder.create(engine);
 		b.IDComp().id = Mapper.getTurnEntityID();
 		b.TurnTimerComp().maxTurnTimeSec = maxTurnTimeSec;
@@ -21,6 +22,7 @@ public class TurnTimerHelper {
 		b.SpriteComp().width = 100 / Units.PIXELS_PER_UNIT;
 		b.SpriteComp().height = 100 / Units.PIXELS_PER_UNIT;
 		b.SpriteComp();
+		infoZone.add(b);
 		b.ShapeRenderComp().renderMethod = new TurnTimerRenderMethod();
 		engine.addEntity(b.Entity());
 		b.free();

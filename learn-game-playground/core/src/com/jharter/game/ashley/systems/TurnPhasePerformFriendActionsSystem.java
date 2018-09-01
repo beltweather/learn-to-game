@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
+import com.jharter.game.ashley.components.Components.IDComp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
@@ -11,11 +13,13 @@ import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.util.Units;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.equations.Circ;
 
 public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 
@@ -47,7 +51,12 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		if(performTurnAction) {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = Mapper.IDComp.get(entity).id;
-			TweenUtil.start(id, Tween.to(id, TweenType.ANGLE.asInt(), 3f).target(720), new TweenCallback() {
+			Entity player = Mapper.Entity.get(Mapper.CardComp.get(entity).playerID);
+			Entity battleAvatar = Mapper.PlayerComp.get(player).getBattleAvatarEntity();
+			IDComp idAvatar = Mapper.IDComp.get(battleAvatar);
+			SpriteComp sAvatar = Mapper.SpriteComp.get(battleAvatar);
+			
+			TweenUtil.start(id, Tween.to(id, TweenType.ANGLE.asInt(), 1f).target(720), new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -61,6 +70,9 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 				}
 				
 			});
+			
+			TweenUtil.start(idAvatar.id, Tween.to(sAvatar.position, TweenType.POSITION_X.asInt(), 0.5f).ease(Circ.INOUT).target(Units.u12(-4f)));
+			
 			busy = true;
 		} else {
 			entity.add(Mapper.Comp.get(ActionSpentComp.class));

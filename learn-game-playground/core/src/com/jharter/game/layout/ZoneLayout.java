@@ -4,18 +4,17 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Mapper;
 import com.jharter.game.util.id.ID;
 
 public abstract class ZoneLayout {
 	
 	protected ImmutableArray<ID> ids = null;
-	private ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
-	private boolean tween = true;
+	protected ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
+	protected boolean tween = true;
+	protected boolean allowRelativePositions = true;
 	
 	public ZoneLayout() {}
 	
@@ -33,6 +32,14 @@ public abstract class ZoneLayout {
 	
 	public void disableTween() {
 		tween = false;
+	}
+	
+	public void enableRelativePositions() {
+		allowRelativePositions = true;
+	}
+	
+	public void disableRelativePositions() {
+		allowRelativePositions = false;
 	}
 	
 	public void revalidate() {
@@ -63,11 +70,32 @@ public abstract class ZoneLayout {
 		}
 		
 		TweenTarget target = getTarget(id, index, entity, Pools.get(TweenTarget.class).obtain());
+        boolean hide = false;
+		if(allowRelativePositions) {
+			SpriteComp s = Mapper.SpriteComp.get(entity);
+			if(target != null && s != null && s.isRelative()) {
+				if(!s.setToRelativePosition(target.position)) {
+					hide(entity);
+					hide = true;
+				} else {
+					target.duration = 0f;
+				}
+			}
+		}
+		
 		if(applyModification) {
+			if(!hide) {
+				show(entity);
+			}
 			modifyEntity(id, index, entity, target);
 		}
 		
 		dataById.put(id, target);
+		
+		if(!isTweenEnabled()) {
+			target.duration = 0f;
+		}
+		
 		return target;
 	}
 	
@@ -105,7 +133,7 @@ public abstract class ZoneLayout {
 	protected abstract TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target);
 	
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		show(entity);
+		
 	}
 	
 	public void reset() {

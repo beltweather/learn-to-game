@@ -14,7 +14,7 @@ import uk.co.carelesslabs.Media;
 
 public class EnemyHelper {
 
-	public static void addAtma(PooledEngine engine, ZoneComp enemyZone) {
+	public static void addAtma(PooledEngine engine, ZoneComp enemyZone, ZoneComp infoZone) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.ENEMY, 
 				  new Vector3(Units.u12(-65),0,0), 
@@ -35,10 +35,10 @@ public class EnemyHelper {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		HealthBarHelper.addHealthBar(engine, id);
+		HealthBarHelper.addHealthBar(engine, infoZone, id);
 	}
 	
-	public static void addCactar(PooledEngine engine, ZoneComp enemyZone) {
+	public static void addCactar(PooledEngine engine, ZoneComp enemyZone, ZoneComp infoZone) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.ENEMY, 
 				  new Vector3(Units.u12(-20), Units.u12(-10), 0), 
@@ -59,7 +59,7 @@ public class EnemyHelper {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		HealthBarHelper.addHealthBar(engine, id);
+		HealthBarHelper.addHealthBar(engine, infoZone, id);
 	}
 	
 }

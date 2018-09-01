@@ -33,7 +33,6 @@ import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
-import com.jharter.game.ashley.components.Components.RelativePositionComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.ShapeRenderComp;
@@ -44,6 +43,15 @@ import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseEndBattleComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseEndTurnComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseNoneComp;
+import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
+import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseSelectEnemyActionsComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseStartBattleComp;
+import com.jharter.game.ashley.components.Components.TurnPhaseStartTurnComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
@@ -315,6 +323,16 @@ public class Mapper {
 			return Mapper.TurnPhaseComp.get(Entity());
 		}
 		
+		public boolean isTurnPhaseStartBattle() { return ComponentMapper.getFor(TurnPhaseStartBattleComp.class).has(Entity()); }
+		public boolean isTurnPhaseStartTurn() { return ComponentMapper.getFor(TurnPhaseStartTurnComp.class).has(Entity()); }
+		public boolean isTurnPhaseSelectEnemyActions() { return ComponentMapper.getFor(TurnPhaseSelectEnemyActionsComp.class).has(Entity()); }
+		public boolean isTurnPhaseSelectFriendActions() { return ComponentMapper.getFor(TurnPhaseSelectFriendActionsComp.class).has(Entity()); }
+		public boolean isTurnPhasePerformFriendActions() { return ComponentMapper.getFor(TurnPhasePerformFriendActionsComp.class).has(Entity()); }
+		public boolean isTurnPhasePerformEnemyActions() { return ComponentMapper.getFor(TurnPhasePerformEnemyActionsComp.class).has(Entity()); }
+		public boolean isTurnPhaseEndTurn() { return ComponentMapper.getFor(TurnPhaseEndTurnComp.class).has(Entity()); }
+		public boolean isTurnPhaseEndBattle() { return ComponentMapper.getFor(TurnPhaseEndBattleComp.class).has(Entity()); }
+		public boolean isTurnPhaseNone() { return ComponentMapper.getFor(TurnPhaseNoneComp.class).has(Entity()); }
+		
 	}
 	
 	public static class ComponentMapperCursorEntity {
@@ -424,6 +442,6 @@ public class Mapper {
 	public static final ComponentMapper<PlayerComp> PlayerComp = ComponentMapper.getFor(PlayerComp.class);
 	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = ComponentMapper.getFor(ActivePlayerComp.class);
 	public static final ComponentMapper<ShapeRenderComp> ShapeRenderComp = ComponentMapper.getFor(ShapeRenderComp.class);
-	public static final ComponentMapper<RelativePositionComp> RelativePositionComp = ComponentMapper.getFor(RelativePositionComp.class);
+	//public static final ComponentMapper<RelativePositionComp> RelativePositionComp = ComponentMapper.getFor(RelativePositionComp.class);
 	
 }

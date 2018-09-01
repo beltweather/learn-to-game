@@ -45,8 +45,8 @@ public class Enums {
     	ACTIVE_CARD,
     	DECK,
     	DISCARD,
-    	TIME,
     	FRIEND_ARROW,
+    	INFO,
     	NONE
     }
     
@@ -58,7 +58,7 @@ public class Enums {
     	NONE
     }
     
-    public enum TurnPhase {
+    /*public enum TurnPhase {
     	START_BATTLE,
     	START_TURN,
     	SELECT_ENEMY_ACTIONS,
@@ -68,7 +68,7 @@ public class Enums {
     	END_TURN,
     	END_BATTLE,
     	NONE
-    }
+    }*/
     
     public enum Direction {
     	NORTH,

@@ -72,7 +72,7 @@ public class TweenUtil {
 	}
 	
 	public static void start(ID id, TweenTarget target) {
-		start(id, target, 0.25f);
+		start(id, target, target.duration);
 	}
 	
 	public static void start(ID id, TweenTarget target, float duration) {
@@ -80,7 +80,7 @@ public class TweenUtil {
 	}
 	
 	public static Timeline tween(ID id, TweenTarget target) {
-		return tween(id, target, 0.25f);
+		return tween(id, target, target.duration);
 	}
 	
 	public static Timeline tween(ID id, TweenTarget target, float duration) {
@@ -94,12 +94,14 @@ public class TweenUtil {
 	}
 	
 	public static Timeline set(ID id, TweenTarget target) {
-		target.round();
+		return tween(id, target, 0f);
+		
+		/*target.round();
 		return Timeline.createParallel()
 			.push(Tween.set(id, TweenType.POSITION_XY.asInt()).target(target.position.x, target.position.y))
 			.push(Tween.set(id, TweenType.SCALE_XY.asInt()).target(target.scale.x, target.scale.y))
 			.push(Tween.set(id, TweenType.ALPHA.asInt()).target(target.alpha))
-			.push(Tween.set(id, TweenType.ANGLE.asInt()).target(target.angleDegrees));
+			.push(Tween.set(id, TweenType.ANGLE.asInt()).target(target.angleDegrees));*/
 	}
 	
 }

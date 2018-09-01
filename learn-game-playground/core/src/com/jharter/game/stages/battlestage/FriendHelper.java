@@ -18,7 +18,7 @@ public class FriendHelper {
 
 	private FriendHelper() {}
 	
-	public static ID addFriend(PooledEngine engine, ID playerID, ZoneComp zone, Texture texture, String name) {
+	public static ID addFriend(PooledEngine engine, ZoneComp zone, ZoneComp infoZone, ID playerID, Texture texture, String name) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.FRIEND, 
 				  new Vector3(660,140,0), 
@@ -39,7 +39,7 @@ public class FriendHelper {
 		engine.addEntity(b.Entity());
 		b.free();
 		
-		HealthBarHelper.addHealthBar(engine, id);
+		HealthBarHelper.addHealthBar(engine, infoZone, id);
 		
 		return id;
 	}

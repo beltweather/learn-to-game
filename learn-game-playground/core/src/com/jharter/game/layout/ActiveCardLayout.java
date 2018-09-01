@@ -48,8 +48,6 @@ public class ActiveCardLayout extends ZoneLayout {
 
 	private Vector3 tempPosition = new Vector3();
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		super.modifyEntity(id, index, entity, target);
-		
 		TurnActionComp t = Mapper.TurnActionComp.get(entity);
 		if(t != null && t.turnAction != null && t.turnAction.multiplicity > 1) {
 			MultiSpriteComp m = Mapper.Comp.getOrAdd(MultiSpriteComp.class, entity);

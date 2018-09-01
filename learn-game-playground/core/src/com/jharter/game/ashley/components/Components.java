@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
@@ -19,10 +20,8 @@ import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
-import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
-import uk.co.carelesslabs.Enums.TurnPhase;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public final class Components {
@@ -104,11 +103,10 @@ public final class Components {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
 		public float angleDegrees = 0.0f;
-		
+		public RelativePositionRules relativePositionRules = new RelativePositionRules();
 		public float width;
 		public float height;
 		public Vector2 scale = new Vector2(1.0f, 1.0f);
-		
 		public float alpha = 1f;
 		
 		private SpriteComp() {}
@@ -135,17 +133,24 @@ public final class Components {
 			return scaleY * height;
 		}
 		
+		public boolean isRelative() {
+			return relativePositionRules.relative;
+		}
+		
+		public boolean setToRelativePosition(Vector3 position) {
+			return relativePositionRules.setToRelativePosition(this, position);
+		}
+		
 		@Override 
 		public void reset() {
 			position.set(0, 0, 0);
 			direction.set(0, 0);
 			angleDegrees = 0.0f;
-			
 			width = 0f;
 			height = 0f;
 			scale.set(1.0f, 1.0f);
-			
 			alpha = 1f;
+			relativePositionRules.reset();
 		}
 	}
 	
@@ -174,21 +179,33 @@ public final class Components {
 		}
 	}
 	
-	public static final class RelativePositionComp implements Comp {
+	/*public static final class RelativePositionComp implements Comp {
 		public ID baselineID = null;
-		//public float xMargin = 0;
-		//public float yMargin = 0;
-		//public float z;
+		public Vector3 margin = new Vector3();
 		public Direction xAlign = Direction.CENTER;
 		public Direction yAlign = Direction.CENTER;
+		public boolean spriteAsOffset = true;
 		private Vector3 tempPosition = new Vector3();
 		
 		private RelativePositionComp() {}
 		
 		public Vector3 toPosition(SpriteComp s) {
 			if(baselineID == null) {
-				return null;
+				float xOffset = margin.x;
+				float yOffset = margin.y;
+				float zOffset = margin.z;
+				
+				if(spriteAsOffset && s != null) {
+					xOffset += s.position.x;
+					yOffset += s.position.y;
+					zOffset += s.position.z;
+				}
+				
+				tempPosition.set(xOffset, yOffset, zOffset);
+				Sys.out.println("X: " + tempPosition.x);
+				return tempPosition;
 			}
+			
 			Entity baselineEntity = Mapper.Entity.get(baselineID);
 			SpriteComp sBaseline = Mapper.SpriteComp.get(baselineEntity);
 			if(baselineEntity == null || s == null || sBaseline == null) {
@@ -199,25 +216,21 @@ public final class Components {
 			float y = sBaseline.position.y;
 			float z = sBaseline.position.z;
 			
-			float xMargin = s.position.x;
-			float yMargin = s.position.y;
-			
 			switch(xAlign) {
 				case WEST:
 				case NORTH_WEST:
 				case SOUTH_WEST:
-					x -= s.scaledWidth() + xMargin;
+					x -= s.scaledWidth();
 					break;
 				case EAST:
 				case NORTH_EAST:
 				case SOUTH_EAST:
-					x += sBaseline.scaledWidth() + xMargin;
+					x += sBaseline.scaledWidth();
 					break;
 				case CENTER:
-					x += (sBaseline.scaledWidth() - s.scaledWidth()) / 2f + xMargin;
+					x += (sBaseline.scaledWidth() - s.scaledWidth()) / 2f;
 					break;
 				default:
-					x += xMargin;
 					break;
 			}
 			
@@ -225,36 +238,44 @@ public final class Components {
 				case SOUTH:
 				case SOUTH_WEST:
 				case SOUTH_EAST:
-					y -= s.scaledHeight() + yMargin;
+					y -= s.scaledHeight();
 					break;
 				case NORTH:
 				case NORTH_WEST:
 				case NORTH_EAST:
-					y += sBaseline.scaledHeight() + yMargin;
+					y += sBaseline.scaledHeight();
 					break;
 				case CENTER:
-					y += (sBaseline.scaledHeight() - s.scaledHeight()) / 2f + yMargin;
+					y += (sBaseline.scaledHeight() - s.scaledHeight()) / 2f;
 					break;
 				default:
-					y += yMargin;
 					break;
 			}
 			
-			tempPosition.set(x, y, z);
+			float xOffset = margin.x;
+			float yOffset = margin.y;
+			float zOffset = margin.z;
+			
+			if(spriteAsOffset) {
+				xOffset += s.position.x;
+				yOffset += s.position.y;
+				zOffset += s.position.z;
+			}
+			
+			tempPosition.set(x + xOffset, y + yOffset, z + zOffset);
 			return tempPosition;
 		}
 		
 		@Override
 		public void reset() {
 			baselineID = null;
-			//xMargin = 0;
-			//yMargin = 0;
-			//z = 0;
+			margin.set(0,0,0);
 			xAlign = Direction.CENTER;
 			yAlign = Direction.CENTER;
 			tempPosition.set(0,0,0);
+			spriteAsOffset = true;
 		}
-	}
+	}*/
 	
 	public static final class AnimatingComp implements Comp {
 		
@@ -565,16 +586,10 @@ public final class Components {
 	}
 	
 	public static final class TurnPhaseComp implements Comp {
-		
-		public TurnPhase turnPhase = TurnPhase.SELECT_ENEMY_ACTIONS;
-		
 		private TurnPhaseComp() {}
 		
 		@Override
-		public void reset() {
-			turnPhase = TurnPhase.SELECT_ENEMY_ACTIONS;
-		}
-		
+		public void reset() {}
 	}
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------

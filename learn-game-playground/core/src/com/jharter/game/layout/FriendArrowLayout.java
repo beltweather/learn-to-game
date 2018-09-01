@@ -45,7 +45,6 @@ public class FriendArrowLayout extends ZoneLayout {
 	}
 
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		super.modifyEntity(id, index, entity, target);
 		if(Mapper.CursorEntity.isDisabled()) {
 			hide(entity);
 			return;

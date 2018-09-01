@@ -20,7 +20,7 @@ public class HandLayout extends ZoneLayout {
 		float anchorX = Units.u12(-30);
 		float anchorY = Units.u12(-41);
 		
-		target.position.x = anchorX + (s.scaledWidth() + Units.u12(1)) * index;
+		target.position.x = anchorX + (Math.round(s.scaledWidth()) + Units.u12(1)) * index;
 		target.position.y = anchorY;
 		target.position.z = s.position.z;
 		target.scale.x = 1f;

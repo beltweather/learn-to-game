@@ -27,11 +27,7 @@ public class ZoneLayoutSystem extends IteratingSystem {
 			}
 			TweenTarget target = z.layout.getTarget(id, true);
 			if(!z.layout.matchesTarget(zEntity, target)) {
-				if(z.layout.isTweenEnabled()) {
-					TweenUtil.start(id, target);
-				} else {
-					TweenUtil.set(id, target);
-				}
+				TweenUtil.start(id, target);
 			}
 		}
 	}

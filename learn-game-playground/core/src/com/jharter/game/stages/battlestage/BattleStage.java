@@ -17,8 +17,6 @@ import com.jharter.game.ashley.systems.CursorTargetValidationSystem;
 import com.jharter.game.ashley.systems.QueueTurnActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
-import com.jharter.game.ashley.systems.RenderInitSystem;
-import com.jharter.game.ashley.systems.RenderTimerSystem;
 import com.jharter.game.ashley.systems.RenderWorldGridSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndBattleSystem;
 import com.jharter.game.ashley.systems.TurnPhaseEndTurnSystem;
@@ -47,6 +45,7 @@ import com.jharter.game.layout.CursorPositionSystem;
 import com.jharter.game.layout.FriendArrowLayout;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
+import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
@@ -95,16 +94,18 @@ public class BattleStage extends GameStage {
 		ZoneHelper.addZone(engine, rangerPlayerID, ZoneType.DECK);
 		ZoneHelper.addZone(engine, rangerPlayerID, ZoneType.DISCARD);
 
+		ZoneComp infoZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.INFO, new IdentityLayout());
 		ZoneComp friendZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
 		ZoneComp enemyZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ENEMY);
 		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout());
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND_ARROW, new FriendArrowLayout());
+		
+		//ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND_ARROW, new FriendArrowLayout());
 		
 		// Turn timer
-		TurnTimerHelper.addTurnTimer(engine, 30f);
+		TurnTimerHelper.addTurnTimer(engine, infoZone, 30f);
 		
 		// Arrow
-		ArrowHelper.addArrow(engine);
+		ArrowHelper.addArrow(engine, infoZone);
 		
 		// Other players
 		PlayerComp roguePlayer = PlayerHelper.addPlayer(engine, roguePlayerID);
@@ -113,14 +114,14 @@ public class BattleStage extends GameStage {
 		PlayerComp rangerPlayer = PlayerHelper.addPlayer(engine, rangerPlayerID);
 		
 		// CHARACTERS
-		warriorPlayer.battleAvatarID = FriendHelper.addFriend(engine, warriorPlayerID, friendZone, Media.warrior, "Warrior");
-		sorcererPlayer.battleAvatarID = FriendHelper.addFriend(engine, sorcererPlayerID, friendZone, Media.sorcerer, "Sorcerer");
-		roguePlayer.battleAvatarID = FriendHelper.addFriend(engine, roguePlayerID, friendZone, Media.rogue, "Rogue");
-		rangerPlayer.battleAvatarID = FriendHelper.addFriend(engine, rangerPlayerID, friendZone, Media.ranger, "Ranger");
+		warriorPlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, warriorPlayerID, Media.warrior, "Warrior");
+		sorcererPlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, sorcererPlayerID, Media.sorcerer, "Sorcerer");
+		roguePlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, roguePlayerID, Media.rogue, "Rogue");
+		rangerPlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, rangerPlayerID, Media.ranger, "Ranger");
 
 		// ENEMIES
-		EnemyHelper.addAtma(engine, enemyZone);
-		EnemyHelper.addCactar(engine, enemyZone);
+		EnemyHelper.addAtma(engine, enemyZone, infoZone);
+		EnemyHelper.addCactar(engine, enemyZone, infoZone);
 		
 		// Cards
 		CardHelper.addDrainCard(engine, roguePlayerID, handZone);

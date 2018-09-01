@@ -38,7 +38,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
 		busy = false;
-		return M.TurnEntity.TurnTimerComp().isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
+		return M.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class TurnTimerHelper {
 	public static void addTurnTimer(PooledEngine engine, ZoneComp infoZone, float maxTurnTimeSec) {
 		EntityBuilder b = EntityBuilder.create(engine);
 		b.IDComp().id = M.getTurnEntityID();
-		b.TurnTimerComp().maxTurnTimeSec = maxTurnTimeSec;
+		b.TurnTimerComp().turnTimer.maxTurnTimeSec = maxTurnTimeSec;
 		b.TurnPhaseComp();
 		b.TurnPhaseStartBattleComp();
 		b.SpriteComp().position.x = U.u12(65); //800;

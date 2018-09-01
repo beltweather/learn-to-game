@@ -15,6 +15,7 @@ import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
@@ -177,7 +178,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		// See if cursor is modifying an action
-		TurnAction t = c.getTurnAction();
+		TurnAction t = CompLinker.getTurnAction(c);
 		if(t == null) {
 			return;
 		}
@@ -263,7 +264,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 
 	private boolean isAll(CursorComp c) {
-		TurnAction ta = c.getTurnAction();
+		TurnAction ta = CompLinker.getTurnAction(c);
 		return ta != null && ta.all;
 	}
 	

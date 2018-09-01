@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.TurnTimerComp;
+import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 
 public class TurnTimerRenderMethod extends ShapeRenderMethod {
 	
@@ -15,7 +15,7 @@ public class TurnTimerRenderMethod extends ShapeRenderMethod {
 	
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Entity entity, float deltaTime) {
-		TurnTimerComp t = M.TurnTimerComp.get(entity);
+		TurnTimer t = M.TurnTimerComp.get(entity).turnTimer;
 		if(t.isStopped()) {
 			return;
 		}

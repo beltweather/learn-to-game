@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
@@ -26,6 +27,8 @@ import uk.co.carelesslabs.Enums.ZoneType;
 public final class Components {
 
 	private Components() {}
+	
+	// ------------------- SUPERCLASS COMPONENTS -----------------------------
 	
 	public static interface Comp extends Component, Poolable {
 		
@@ -47,6 +50,7 @@ public final class Components {
 	public static final class InvisibleComp extends BoolComp {}
 	public static final class DisabledComp extends BoolComp {}
 	
+	public static final class TurnPhaseComp extends BoolComp {}
 	public static final class TurnPhaseStartBattleComp extends BoolComp {}
 	public static final class TurnPhaseStartTurnComp extends BoolComp {}
 	public static final class TurnPhaseSelectEnemyActionsComp extends BoolComp {}
@@ -87,7 +91,6 @@ public final class Components {
 	}
 	
 	public static final class DescriptionComp implements Comp {
-		
 		public String name = null;
 		
 		private DescriptionComp() {}
@@ -156,6 +159,10 @@ public final class Components {
 		
 		private MultiSpriteComp() {}
 		
+		/**
+		 * Use this method to restore multi sprite comp to its default
+		 * empyty values, but still keep rules in tact (unlike reset)
+		 */
 		public void clear() {
 			positions.clear();
 			scales.clear();
@@ -173,7 +180,6 @@ public final class Components {
 	}
 	
 	public static final class AnimatingComp implements Comp {
-		
 		public int activeCount = 0;
 		
 		private AnimatingComp() {}
@@ -182,11 +188,9 @@ public final class Components {
 		public void reset() {
 			activeCount = 0;
 		}
-		
 	}
 	
 	public static final class PlayerComp implements Comp {
-		
 		public ID battleAvatarID = null;
 		
 		private PlayerComp() {}
@@ -195,11 +199,9 @@ public final class Components {
 		public void reset() {
 			battleAvatarID = null;
 		}
-		
 	}
 	
 	public static final class ActivePlayerComp implements Comp {
-		
 		public ID activePlayerID = null;
 		
 		private ActivePlayerComp() {}
@@ -208,11 +210,9 @@ public final class Components {
 		public void reset() {
 			activePlayerID = null;
 		}
-		
 	}
 	
 	public static final class BattleAvatarComp implements Comp {
-		
 		public ID playerID;
 		
 		private BattleAvatarComp() {}
@@ -221,7 +221,6 @@ public final class Components {
 		public void reset() {
 			playerID = null;
 		}
-		
 	}
 	
 	public static final class TargetPositionComp implements Comp {
@@ -288,7 +287,6 @@ public final class Components {
 	}
 	
 	public static final class CardComp implements Comp {
-		
 		public ID playerID = null;
 		public CardType cardType = CardType.NONE;
 		public String text = null;
@@ -303,11 +301,9 @@ public final class Components {
 			text = null;
 			tooltipText = null;
 		}
-		
 	}
 	
 	public static final class StatsComp implements Comp {
-		
 		public int level = 0;
 		public int experience = 0;
 		public int power = 0;
@@ -335,7 +331,6 @@ public final class Components {
 	}
 	
 	public static final class VitalsComp implements Comp {
-		
 		public int maxHealth = 0;
 		public int weakHealth = 0;
 		public int health = 0;
@@ -370,11 +365,9 @@ public final class Components {
 			weakHealth = 0;
 			health = 0;
 		}
-		
 	}
 
 	public static final class TurnActionComp implements Comp {
-		
 		public TurnAction turnAction = TurnAction.newInstance();
 		
 		private TurnActionComp() {}
@@ -383,22 +376,12 @@ public final class Components {
 		public void reset() {
 			turnAction.reset();
 		}
-		
 	}
 	
 	public static final class ActiveCardComp implements Comp {
-		
 		public ID activeCardID = null;
 		
 		private ActiveCardComp() {}
-		
-		public boolean hasCard() {
-			return activeCardID != null;
-		}
-		
-		public CardComp getCardComp() {
-			return M.CardComp.get(M.Entity.get(activeCardID));
-		}
 		
 		@Override
 		public void reset() {
@@ -409,20 +392,8 @@ public final class Components {
 	public static final class CursorComp implements Comp {
 		public ID turnActionEntityID = null;
 		public ID lastZoneID = null;
-		//public ID playerID = null;
 		
 		private CursorComp() {}
-		
-		public TurnAction getTurnAction() {
-			if(turnActionEntityID == null) {
-				return null;
-			}
-			TurnActionComp t = M.TurnActionComp.get(M.Entity.get(turnActionEntityID));
-			if(t == null) {
-				return null;
-			}
-			return t.turnAction;
-		}
 		
 		public ID playerID() {
 			return M.getPlayerEntityID();
@@ -432,130 +403,18 @@ public final class Components {
 		public void reset() {
 			turnActionEntityID = null;
 			lastZoneID = null;
-			//playerID = null;
 		}
 	}
 	
 	public static final class TurnTimerComp implements Comp {
-		public float accumulator = 0;
-		public float maxTurnTimeSec = 0;
-		public boolean play = true;
+		public TurnTimer turnTimer = new TurnTimer();
 		
 		private TurnTimerComp() {}
 		
-		public void stop() {
-			play = false;
-			accumulator = 0;
-		}
-		
-		public void start() {
-			play = true;
-			accumulator = 0;
-		}
-		
-		public boolean isStopped() {
-			return !play;
-		}
-		
-		public boolean isOvertime() {
-			return accumulator > maxTurnTimeSec;
-		}
-		
-		public void increment(float deltaTime) {
-			accumulator += deltaTime;
-		}
-		
 		@Override
 		public void reset() {
-			accumulator = 0;
-			maxTurnTimeSec = 0;
-			play = true;
+			turnTimer.reset();
 		}
-	}
-	
-	public static final class TurnPhaseComp implements Comp {
-		private TurnPhaseComp() {}
-		
-		@Override
-		public void reset() {}
-	}
-	
-	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
-	
-	public static final class CursorInputRegulatorComp implements Comp {
-		private boolean processedMove = false;
-		private float processedMoveDelta = 0;
-		private float maxProcessedMoveDelta = 0.2f;
-		
-		private CursorInputRegulatorComp() {}
-		
-		public boolean ignoreMovement(boolean moved, float deltaTime) {
-			if(!moved) {
-				processedMove = false;
-				processedMoveDelta = 0;
-				maxProcessedMoveDelta = 0.2f;
-				return true;
-			} else if(moved && processedMove) {
-				processedMoveDelta += deltaTime;
-				if(processedMoveDelta < maxProcessedMoveDelta) {
-					return true;
-				} else if(maxProcessedMoveDelta > 0.005f){
-					maxProcessedMoveDelta /= 1.5f;
-				}
-			}
-			processedMove = true;
-			processedMoveDelta = 0;
-			return false;
-		}
-		
-		@Override
-		public void reset() {
-			processedMove = false;
-			processedMoveDelta = 0;
-			maxProcessedMoveDelta = 0.2f;
-		}
-	}
-	
-	public static final class CursorInputComp implements Comp {
-		public Vector2 direction = new Vector2(0, 0);
-		public boolean accept = false;
-		public boolean cancel = false;
-		
-		private CursorInputComp() {}
-		
-		public boolean move() {
-			return direction.x != 0 || direction.y != 0;
-		}
-		
-		@Override
-		public void reset() {
-			direction.set(0, 0);
-			accept = false;
-			cancel = false;
-		}
-	}
-	
-	public static final class ChangeZoneComp implements Comp {
-		
-		public boolean instantChange = true;
-		public ID oldZoneID = null;
-		public ID newZoneID = null;
-		public int newIndex = -1;
-		public boolean checkpoint = false;
-		public boolean useNextIndex = false;
-		
-		private ChangeZoneComp() {}
-		
-		@Override
-		public void reset() {
-			instantChange = true;
-			oldZoneID = null;
-			newZoneID = null;
-			newIndex = -1;
-			checkpoint = false;
-			useNextIndex = false;
-		}
-		
 	}
 	
 	public static final class ZoneComp implements Comp {
@@ -656,6 +515,84 @@ public final class Components {
 			zoneID = null;
 			index = -1;
 			history.clear();
+		}
+		
+	}
+	
+	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
+	
+	public static final class CursorInputRegulatorComp implements Comp {
+		private boolean processedMove = false;
+		private float processedMoveDelta = 0;
+		private float maxProcessedMoveDelta = 0.2f;
+		
+		private CursorInputRegulatorComp() {}
+		
+		public boolean ignoreMovement(boolean moved, float deltaTime) {
+			if(!moved) {
+				processedMove = false;
+				processedMoveDelta = 0;
+				maxProcessedMoveDelta = 0.2f;
+				return true;
+			} else if(moved && processedMove) {
+				processedMoveDelta += deltaTime;
+				if(processedMoveDelta < maxProcessedMoveDelta) {
+					return true;
+				} else if(maxProcessedMoveDelta > 0.005f){
+					maxProcessedMoveDelta /= 1.5f;
+				}
+			}
+			processedMove = true;
+			processedMoveDelta = 0;
+			return false;
+		}
+		
+		@Override
+		public void reset() {
+			processedMove = false;
+			processedMoveDelta = 0;
+			maxProcessedMoveDelta = 0.2f;
+		}
+	}
+	
+	public static final class CursorInputComp implements Comp {
+		public Vector2 direction = new Vector2(0, 0);
+		public boolean accept = false;
+		public boolean cancel = false;
+		
+		private CursorInputComp() {}
+		
+		public boolean move() {
+			return direction.x != 0 || direction.y != 0;
+		}
+		
+		@Override
+		public void reset() {
+			direction.set(0, 0);
+			accept = false;
+			cancel = false;
+		}
+	}
+	
+	public static final class ChangeZoneComp implements Comp {
+		
+		public boolean instantChange = true;
+		public ID oldZoneID = null;
+		public ID newZoneID = null;
+		public int newIndex = -1;
+		public boolean checkpoint = false;
+		public boolean useNextIndex = false;
+		
+		private ChangeZoneComp() {}
+		
+		@Override
+		public void reset() {
+			instantChange = true;
+			oldZoneID = null;
+			newZoneID = null;
+			newIndex = -1;
+			checkpoint = false;
+			useNextIndex = false;
 		}
 		
 	}

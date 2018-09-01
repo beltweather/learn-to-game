@@ -11,6 +11,7 @@ import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -40,7 +41,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 
 		if(ci.accept) {
 			
-			TurnAction t = c.getTurnAction();
+			TurnAction t = CompLinker.getTurnAction(c);
 			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
@@ -87,7 +88,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 			
 		} else if(ci.cancel) {
 
-			TurnAction t = c.getTurnAction();
+			TurnAction t = CompLinker.getTurnAction(c);
 			if(zp.tryRevertToLastCheckpoint()) {
 				entity.remove(ActiveCardComp.class);
 				if(t != null) {

@@ -387,7 +387,7 @@ public class M {
 			CursorComp c = M.CursorComp.get(Entity());
 			ZonePositionComp zp = M.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = M.ZoneComp.getID(c.playerID(), ZoneType.HAND);
+			zp.zoneID = M.ZoneComp.getID(M.getPlayerEntityID(), ZoneType.HAND);
 			zp.clearHistory();
 		}
 		

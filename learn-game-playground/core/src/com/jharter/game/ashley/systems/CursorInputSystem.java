@@ -24,7 +24,7 @@ public class CursorInputSystem extends IteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		InputComp in = M.InputComp.get(entity);
-		if(M.TurnEntity.TurnTimerComp().isStopped() || M.AnimatingComp.has(entity)) {
+		if(M.TurnEntity.TurnTimerComp().turnTimer.isStopped() || M.AnimatingComp.has(entity)) {
 			in.input.reset();
 			return;
 		}

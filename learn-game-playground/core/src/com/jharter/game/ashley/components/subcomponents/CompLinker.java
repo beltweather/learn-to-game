@@ -2,6 +2,7 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
@@ -73,6 +74,17 @@ public class CompLinker {
 	
 	public static SpriteComp getActionTargetSprite(TurnActionComp t, int index) {
 		return M.SpriteComp.get(getActionTargetEntity(t, index));
+	}
+	
+	public static TurnAction getTurnAction(CursorComp c) {
+		if(c.turnActionEntityID == null) {
+			return null;
+		}
+		TurnActionComp t = M.TurnActionComp.get(M.Entity.get(c.turnActionEntityID));
+		if(t == null) {
+			return null;
+		}
+		return t.turnAction;
 	}
 
 }

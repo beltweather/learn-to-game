@@ -8,6 +8,7 @@ import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -28,7 +29,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
 		ZoneComp origZ = z;
-		TurnAction t = c.getTurnAction();
+		TurnAction t = CompLinker.getTurnAction(c);
 		
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;

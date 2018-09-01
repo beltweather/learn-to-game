@@ -4,10 +4,10 @@ import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 import com.jharter.game.util.Sys;
 
 public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
@@ -22,7 +22,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		Sys.out.println("------------------------------------------Starting turn");
-		M.TurnEntity.TurnTimerComp().start();
+		M.TurnEntity.TurnTimerComp().turnTimer.start();
 		enableCursor();
 		resetCursor();
 		return true;
@@ -30,8 +30,9 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		M.TurnEntity.TurnTimerComp().increment(deltaTime);
-		if(M.TurnEntity.TurnTimerComp().isOvertime()) {
+		TurnTimer t = M.TurnTimerComp.get(entity).turnTimer;
+		t.increment(deltaTime);
+		if(t.isOvertime()) {
 			return true;
 		}
 		
@@ -51,7 +52,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
-		M.TurnEntity.TurnTimerComp().stop();
+		M.TurnEntity.TurnTimerComp().turnTimer.stop();
 		
 		// Cancel the current turn action if there is one
 		CursorComp c = M.CursorEntity.CursorComp();

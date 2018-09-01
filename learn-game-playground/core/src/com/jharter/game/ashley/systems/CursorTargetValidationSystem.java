@@ -7,6 +7,7 @@ import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.subcomponents.CompLinker;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -25,7 +26,7 @@ public class CursorTargetValidationSystem extends AbstractCursorOperationSystem 
 		CursorComp c = M.CursorComp.get(entity);
 		ZonePositionComp zp = M.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
-		TurnAction t = c.getTurnAction();
+		TurnAction t = CompLinker.getTurnAction(c);
 		
 		ZoneType zoneType = z.zoneType;
 		for(int i = 0; i < z.objectIDs.size(); i++) {

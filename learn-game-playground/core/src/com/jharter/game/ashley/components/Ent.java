@@ -169,7 +169,7 @@ public class Ent {
 			CursorComp c = Comp.CursorComp.get(Entity());
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = Comp.ZoneComp.getID(IDUtil.getPlayerEntityID(), ZoneType.HAND);
+			zp.zoneID = Link.ZoneComp.getID(IDUtil.getPlayerEntityID(), ZoneType.HAND);
 			zp.clearHistory();
 		}
 		

@@ -468,7 +468,7 @@ public final class Components {
 			if(zoneID == null) {
 				return null;
 			}
-			return Comp.ZoneComp.get(this);
+			return Link.ZoneComp.get(this);
 		}
 		
 		public void checkpoint() {

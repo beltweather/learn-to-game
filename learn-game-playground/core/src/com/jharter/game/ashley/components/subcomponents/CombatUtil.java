@@ -1,8 +1,8 @@
 package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.StatsComp;
 
 public class CombatUtil {
 

@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
 

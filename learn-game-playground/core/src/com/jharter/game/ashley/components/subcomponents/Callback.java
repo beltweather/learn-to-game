@@ -1,9 +1,9 @@
 package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Comp;
 
 public abstract class Callback<T, R> {
 

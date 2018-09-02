@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
@@ -16,7 +17,6 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
@@ -94,7 +94,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, entity);
 				mp.clear();
 				
-				int size = Comp.ZoneComp.get(zp).objectIDs.size();
+				int size = Link.ZoneComp.get(zp).objectIDs.size();
 				for(int i = 0; i < size; i++) {
 					position = getCursorPosition(entity, z, i);
 					if(position != null) {
@@ -157,7 +157,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		
 		if(isAll(c)) {
 			MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, entity);
-			for(int i = 0; i < Comp.ZoneComp.get(zp).objectIDs.size(); i++) {
+			for(int i = 0; i < Link.ZoneComp.get(zp).objectIDs.size(); i++) {
 				targetPosition = getCursorPosition(entity, z, i);
 				if(targetPosition != null) {
 					Vector3 targP = new Vector3(targetPosition);

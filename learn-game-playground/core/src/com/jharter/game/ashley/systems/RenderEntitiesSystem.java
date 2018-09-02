@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
@@ -22,7 +23,6 @@ import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.render.ShapeRenderMethod;
 
 public class RenderEntitiesSystem extends SortedIteratingSystem {

@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 
 public class TurnTimerRenderMethod extends ShapeRenderMethod {

@@ -1,13 +1,13 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
 import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 import com.jharter.game.util.Sys;
 

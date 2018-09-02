@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 
 public class TweenTarget implements Poolable {
 	

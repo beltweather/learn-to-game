@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.IDComp;
@@ -11,7 +12,6 @@ import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyAction
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenUtil;

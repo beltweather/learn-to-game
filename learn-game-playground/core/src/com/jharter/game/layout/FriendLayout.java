@@ -1,8 +1,8 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 

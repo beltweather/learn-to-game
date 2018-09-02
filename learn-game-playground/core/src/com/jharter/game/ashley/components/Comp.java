@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
@@ -46,10 +45,6 @@ import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
-
-import uk.co.carelesslabs.Enums.ZoneType;
 
 /**
  * Main mapper class for all components that maps ids to comps and entities directly.
@@ -58,51 +53,6 @@ import uk.co.carelesslabs.Enums.ZoneType;
 public class Comp {
 	
 	private Comp() {}
-	
-	public static class ComponentMapperZoneComp {
-		
-		private ComponentMapperZoneComp() {}
-		
-		public ID getID(ID ownerID, ZoneType type) {
-			return IDUtil.getZoneID(ownerID, type);
-		}
-		
-		public ZoneComp get(Entity entity) {
-			return ComponentMapper.getFor(ZoneComp.class).get(entity);
-		}
-		
-		public ZoneComp get(ZonePositionComp zp) {
-			Entity zone = Ent.Entity.get(zp.zoneID);
-			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
-		}
-		
-		public ZoneComp get(ID zoneID) {
-			return get(Ent.Entity.get(zoneID));
-		}
-		
-		public ZoneComp get(ID ownerID, ZoneType zoneType) {
-			ID zoneID = getID(ownerID, zoneType);
-			if(zoneID == null) {
-				return null;
-			}
-			Entity zone = Ent.Entity.get(zoneID);
-			if(zone == null) {
-				return null;
-			}
-			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
-		}
-		
-		public boolean has(Entity entity) {
-			return ComponentMapper.getFor(ZoneComp.class).has(entity);
-		}
-		
-		public boolean has(ZonePositionComp zp) {
-			return has(Ent.Entity.get(zp.zoneID));
-		}
-		
-	}
-
-	public static final ComponentMapperZoneComp ZoneComp = new ComponentMapperZoneComp();
 	
 	public static PooledEngine engine;
 	
@@ -154,6 +104,7 @@ public class Comp {
 	public static final ComponentMapper<CursorComp> CursorComp = ComponentMapper.getFor(CursorComp.class);
 	public static final ComponentMapper<CursorInputComp> CursorInputComp = ComponentMapper.getFor(CursorInputComp.class);
 	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = ComponentMapper.getFor(CursorInputRegulatorComp.class);
+	public static final ComponentMapper<ZoneComp> ZoneComp = ComponentMapper.getFor(ZoneComp.class);
 	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = ComponentMapper.getFor(ZonePositionComp.class);
 	public static final ComponentMapper<CardComp> CardComp = ComponentMapper.getFor(CardComp.class);
 	public static final ComponentMapper<ActiveCardComp> ActiveCardComp = ComponentMapper.getFor(ActiveCardComp.class);

@@ -3,10 +3,11 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -40,7 +41,7 @@ public abstract class AbstractCursorOperationSystem extends IteratingSystem {
 	}
 	
 	private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
-		ZoneComp z = Comp.ZoneComp.get(ownerID, zoneType);
+		ZoneComp z = Link.ZoneComp.get(ownerID, zoneType);
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			index = findNextIndex(index, direction, z.objectIDs.size());
 			if(!z.hasIndex(index)) {

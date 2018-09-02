@@ -1,8 +1,8 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.SpriteComp;
 
 import aurelienribon.tweenengine.TweenAccessor;
 

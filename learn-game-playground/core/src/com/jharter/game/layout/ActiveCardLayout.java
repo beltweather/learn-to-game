@@ -2,12 +2,12 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;

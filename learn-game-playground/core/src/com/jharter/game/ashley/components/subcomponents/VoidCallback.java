@@ -1,13 +1,13 @@
 package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -40,7 +40,7 @@ public abstract class VoidCallback<T> {
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
-				ZoneComp z = Comp.ZoneComp.get(zp);
+				ZoneComp z = Link.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
@@ -82,7 +82,7 @@ public abstract class VoidCallback<T> {
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
-				ZoneComp z = Comp.ZoneComp.get(zp);
+				ZoneComp z = Link.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
@@ -147,7 +147,7 @@ public abstract class VoidCallback<T> {
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
-				ZoneComp z = Comp.ZoneComp.get(zp);
+				ZoneComp z = Link.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);

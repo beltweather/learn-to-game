@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
@@ -11,7 +12,6 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -76,7 +76,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				// Update our current cursor position based on our next object to select or
 				// wether we should go back to the hand. We don't need to do an extra check
 				// for validity here because we covered that at the top of this menu.
-				ZoneComp targetZone = t.hasAllTargets() ? Comp.ZoneComp.get(playerID, ZoneType.HAND) : Comp.ZoneComp.get(playerID, t.getTargetZoneType());
+				ZoneComp targetZone = t.hasAllTargets() ? Link.ZoneComp.get(playerID, ZoneType.HAND) : Link.ZoneComp.get(playerID, t.getTargetZoneType());
 				int targetIndex = findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
 				
 				ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);

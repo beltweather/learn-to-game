@@ -2,10 +2,10 @@ package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
 import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.systems.network.InterpolatingPacketSystem;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.GameClient;

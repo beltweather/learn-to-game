@@ -1,9 +1,9 @@
 package com.jharter.game.ashley.systems.network.server;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.network.endpoints.GameServer;

@@ -6,9 +6,13 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
+
+import uk.co.carelesslabs.Enums.ZoneType;
 
 /**
  * Class that links components, entities, and ids together. It is a sister class of C, the component mapper.
@@ -16,6 +20,41 @@ import com.jharter.game.util.id.IDUtil;
 public class Link {
 	
 	private Link() {}
+	
+	public static class CompLinkerZoneComp {
+		
+		private CompLinkerZoneComp() {}
+		
+		public ID getID(ID ownerID, ZoneType type) {
+			return IDUtil.getZoneID(ownerID, type);
+		}
+
+		public ZoneComp get(ZonePositionComp zp) {
+			Entity zone = Ent.Entity.get(zp.zoneID);
+			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
+		}
+		
+		public ZoneComp get(ID zoneID) {
+			return Comp.ZoneComp.get(Ent.Entity.get(zoneID));
+		}
+		
+		public ZoneComp get(ID ownerID, ZoneType zoneType) {
+			ID zoneID = getID(ownerID, zoneType);
+			if(zoneID == null) {
+				return null;
+			}
+			Entity zone = Ent.Entity.get(zoneID);
+			if(zone == null) {
+				return null;
+			}
+			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
+		}
+		
+		public boolean has(ZonePositionComp zp) {
+			return Comp.ZoneComp.has(Ent.Entity.get(zp.zoneID));
+		}
+		
+	}
 	
 	public static class CompLinkerCursorComp {
 		
@@ -123,5 +162,6 @@ public class Link {
 	public static final CompLinkerPlayerComp PlayerComp = new CompLinkerPlayerComp();
 	public static final CompLinkerTurnActionComp TurnActionComp = new CompLinkerTurnActionComp();
 	public static final CompLinkerCursorComp CursorComp = new CompLinkerCursorComp();
-
+	public static final CompLinkerZoneComp ZoneComp = new CompLinkerZoneComp();
+	
 }

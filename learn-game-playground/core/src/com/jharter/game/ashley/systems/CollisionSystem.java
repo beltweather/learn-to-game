@@ -3,10 +3,10 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
-import com.jharter.game.ashley.components.Comp;
 
 public class CollisionSystem extends IteratingSystem {
 

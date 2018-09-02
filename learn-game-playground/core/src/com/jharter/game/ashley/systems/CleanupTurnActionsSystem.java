@@ -3,6 +3,7 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.CardComp;
@@ -14,7 +15,7 @@ import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Link;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -58,7 +59,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
 					cz.useNextIndex = true;
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Comp.ZoneComp.getID(ca.playerID, ZoneType.HAND);
+					cz.newZoneID = Link.ZoneComp.getID(ca.playerID, ZoneType.HAND);
 					entity.add(cz);
 					break;
 				default:

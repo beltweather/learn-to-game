@@ -2,13 +2,13 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -45,7 +45,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		if(!valid) {
 			zoneType = ZoneType.HAND;
-			z = Comp.ZoneComp.get(playerID, zoneType);
+			z = Link.ZoneComp.get(playerID, zoneType);
 			index = -1;
 			
 			// We need to be sure to cleanup our selection if we end up in an invalid state

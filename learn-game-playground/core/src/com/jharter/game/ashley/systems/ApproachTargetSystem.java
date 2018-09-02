@@ -6,10 +6,10 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
-import com.jharter.game.ashley.components.Comp;
 
 public class ApproachTargetSystem extends IteratingSystem {
 	

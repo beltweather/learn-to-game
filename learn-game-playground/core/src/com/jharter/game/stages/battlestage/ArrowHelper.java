@@ -2,10 +2,10 @@ package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;

@@ -1,6 +1,7 @@
 package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
@@ -9,6 +10,7 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
 
@@ -72,7 +74,7 @@ public class Link {
 		}		
 		
 		public ID getPlayerID(CursorComp c) {
-			return IDUtil.getPlayerEntityID();
+			return Ent.TurnEntity.ActivePlayerComp().activePlayerID;
 		}
 		
 	}
@@ -158,8 +160,44 @@ public class Link {
 		
 	}
 	
+	public static class CompLinkerActivePlayerComp {
+		
+		private CompLinkerActivePlayerComp() {}
+		
+		public ID getBattleAvatarID(ActivePlayerComp p) {
+			return PlayerComp.getBattleAvatarID(Comp.PlayerComp.get(Ent.Entity.get(p.activePlayerID)));
+		}
+		
+		public Entity getBattleAvatarEntity(ActivePlayerComp p) {
+			return PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(Ent.Entity.get(p.activePlayerID)));
+		}
+	
+		public SpriteComp getBattleAvatarSpriteComp(ActivePlayerComp p) {
+			return PlayerComp.getBattleAvatarSpriteComp(Comp.PlayerComp.get(Ent.Entity.get(p.activePlayerID)));
+		}
+		
+		public void setPlayer(ActivePlayerComp p, int index) {
+			if(!ArrayUtil.has(IDUtil.getPlayerIDs(), index)) {
+				index = 0;
+			}
+			Ent.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(index);
+		}
+		
+		public void nextPlayer(ActivePlayerComp p) {
+			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
+			Ent.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i));
+		}
+		
+		public void prevPlayer(ActivePlayerComp p) {
+			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
+			Ent.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i));
+		}
+
+	}
+	
 	public static final CompLinkerCardComp CardComp = new CompLinkerCardComp();
 	public static final CompLinkerPlayerComp PlayerComp = new CompLinkerPlayerComp();
+	public static final CompLinkerActivePlayerComp ActivePlayerComp = new CompLinkerActivePlayerComp();
 	public static final CompLinkerTurnActionComp TurnActionComp = new CompLinkerTurnActionComp();
 	public static final CompLinkerCursorComp CursorComp = new CompLinkerCursorComp();
 	public static final CompLinkerZoneComp ZoneComp = new CompLinkerZoneComp();

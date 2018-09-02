@@ -6,6 +6,7 @@ import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
@@ -37,7 +38,7 @@ public class ArrowHelper {
 				if(Ent.CursorEntity.isDisabled()) {
 					return null;
 				}
-				return Comp.PlayerComp.get(Ent.Entity.get(IDUtil.getPlayerEntityID())).battleAvatarID;
+				return Comp.PlayerComp.get(Ent.Entity.get(Ent.TurnEntity.ActivePlayerComp().activePlayerID)).battleAvatarID;
 			}
 			
 		});

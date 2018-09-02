@@ -4,12 +4,17 @@ import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
+import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
+import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 import com.jharter.game.util.Sys;
+
+import uk.co.carelesslabs.Enums.ZoneType;
 
 public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	
@@ -23,9 +28,17 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		Sys.out.println("------------------------------------------Starting turn");
-		Ent.TurnEntity.TurnTimerComp().turnTimer.start();
+		/*CursorComp c = Ent.CursorEntity.CursorComp();
+		ChangeZoneComp cz = Comp.getOrAdd(getEngine(), ChangeZoneComp.class, Ent.CursorEntity.Entity());
+		cz.newZoneID = Link.ZoneComp.getID(Ent.TurnEntity.ActivePlayerComp().activePlayerID, ZoneType.HAND);
+		cz.newIndex = 0;
+		ZonePositionComp zp = Comp.ZonePositionComp.get(Ent.CursorEntity.Entity());
+		zp.zoneID = cz.newZoneID;
+		zp.index = 0;*/
+		
 		enableCursor();
 		resetCursor();
+		Ent.TurnEntity.TurnTimerComp().turnTimer.start();
 		return true;
 	}
 

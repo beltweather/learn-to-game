@@ -5,18 +5,20 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.render.TurnTimerRenderMethod;
 import com.jharter.game.util.U;
+import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
 
-public class TurnTimerHelper {
+public class TurnHelper {
 	
-	private TurnTimerHelper() {}
+	private TurnHelper() {}
 	
-	public static void addTurnTimer(PooledEngine engine, ZoneComp infoZone, float maxTurnTimeSec) {
+	public static void addTurnEntity(PooledEngine engine, ZoneComp infoZone, float maxTurnTimeSec) {
 		EntityBuilder b = EntityBuilder.create(engine);
 		b.IDComp().id = IDUtil.getTurnEntityID();
 		b.TurnTimerComp().turnTimer.maxTurnTimeSec = maxTurnTimeSec;
 		b.TurnPhaseComp();
 		b.TurnPhaseStartBattleComp();
+		b.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(0);
 		b.SpriteComp().position.x = U.u12(65); //800;
 		b.SpriteComp().position.y = U.u12(-35); //-400;
 		b.SpriteComp().width = 100 / U.PIXELS_PER_UNIT;

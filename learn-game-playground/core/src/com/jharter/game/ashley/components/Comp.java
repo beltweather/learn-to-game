@@ -60,6 +60,7 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
 /**
  * Main mapper class for all components that maps ids to comps and entities directly.
  * It is the sister class of "L" the linker class which maps relationships accross components.
+ * This class should remain fully stateless.
  */
 public class Comp {
 	

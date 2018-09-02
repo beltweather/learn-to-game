@@ -1,10 +1,11 @@
 package com.jharter.game.ashley.components;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
@@ -30,7 +31,8 @@ public class Ent {
 	private Ent() {}
 
 	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
-	public static int activePlayerIndex = 0;
+	
+	/*public static int activePlayerIndex = 0;
 	
 	public static void resetActivePlayerEntity() {
 		activePlayerIndex = 0;
@@ -46,7 +48,7 @@ public class Ent {
 	
 	public static boolean hasNextActivePlayer() {
 		return activePlayerIndex == IDUtil.getPlayerIDs().size()-1;
-	}
+	}*/
 	
 	public static void addIdListener(Engine engine, final Box2DWorld box2D) {
 		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
@@ -154,10 +156,9 @@ public class Ent {
 		}
 		
 		public void toHand() {
-			CursorComp c = Comp.CursorComp.get(Entity());
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = Link.ZoneComp.getID(IDUtil.getPlayerEntityID(), ZoneType.HAND);
+			zp.zoneID = Link.ZoneComp.getID(Ent.TurnEntity.ActivePlayerComp().activePlayerID, ZoneType.HAND);
 			zp.clearHistory();
 		}
 		
@@ -182,6 +183,10 @@ public class Ent {
 		
 		public TurnPhaseComp TurnPhaseComp() {
 			return Comp.TurnPhaseComp.get(Entity());
+		}
+		
+		public ActivePlayerComp ActivePlayerComp() {
+			return Comp.ActivePlayerComp.get(Entity());
 		}
 		
 		public boolean isTurnPhaseStartBattle() { return Comp.TurnPhaseStartBattleComp.has(Entity()); }

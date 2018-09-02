@@ -2,6 +2,7 @@ package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.entities.EntityUtil;
@@ -15,7 +16,7 @@ public class CursorHelper {
 
 	private CursorHelper() {}
 	
-	public static EntityBuilder buildCursor(PooledEngine engine, ID cursorID, ID playerID, ZoneType zoneType) {
+	public static EntityBuilder buildCursor(PooledEngine engine, ID cursorID, ZoneType zoneType) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.CURSOR, 
@@ -23,11 +24,12 @@ public class CursorHelper {
 				  Media.handPointDown);
 		b.IDComp().id = cursorID;
 		b.CursorComp();
-		b.ChangeZoneComp().newZoneID = Link.ZoneComp.getID(playerID, zoneType);
-		b.ChangeZoneComp().newIndex = 0;
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
+		b.ChangeZoneComp().newZoneID = Link.ZoneComp.getID(Ent.TurnEntity.ActivePlayerComp().activePlayerID, zoneType);
+		b.ChangeZoneComp().newIndex = 0;
 		b.ZonePositionComp().zoneID = b.ChangeZoneComp().newZoneID;
+		b.ZonePositionComp();
 		b.ZonePositionComp().index = 0;
 		b.SpriteComp().position.z = 3;
 		return b;

@@ -75,7 +75,7 @@ public class BattleStage extends GameStage {
 		ID globalPlayerID = IDUtil.getGlobalPlayerEntityID();
 		
 		// Battle entity
-		BattleHelper.addBattle(engine, warriorPlayerID);
+		//BattleHelper.addBattle(engine, warriorPlayerID);
 		
 		// Player Zones
 		ZoneComp handZone = ZoneHelper.addZone(engine, roguePlayerID, ZoneType.HAND, new HandLayout());
@@ -100,7 +100,7 @@ public class BattleStage extends GameStage {
 		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout());
 		
 		// Turn timer
-		TurnTimerHelper.addTurnTimer(engine, infoZone, 30f);
+		TurnHelper.addTurnEntity(engine, infoZone, 30f);
 		
 		// Arrow
 		ArrowHelper.addArrow(engine, infoZone);
@@ -150,7 +150,7 @@ public class BattleStage extends GameStage {
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
-		EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), IDUtil.getPlayerEntityID(), ZoneType.HAND);
+		EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), ZoneType.HAND);
 		if(focus) {
 			b.FocusComp();
 		}

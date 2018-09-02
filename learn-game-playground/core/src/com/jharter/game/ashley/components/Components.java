@@ -19,6 +19,7 @@ import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.EntityType;
@@ -389,10 +390,6 @@ public final class Components {
 		public ID lastZoneID = null;
 		
 		private CursorComp() {}
-		
-		/*public ID playerID() {
-			return IDUtil.getPlayerEntityID();
-		}*/
 		
 		@Override
 		public void reset() {

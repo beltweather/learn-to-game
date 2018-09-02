@@ -13,7 +13,10 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.ArrayUtil;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -64,7 +67,8 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				boolean checkpoint = true;
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
-					Ent.nextActivePlayerEntity();
+					Link.ActivePlayerComp.nextPlayer(Ent.TurnEntity.ActivePlayerComp());
+					playerID = Link.CursorComp.getPlayerID(c);
 					
 					Entity turnActionEntity = Ent.Entity.get(c.turnActionEntityID);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
@@ -85,6 +89,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				cz.newIndex = targetIndex;
 				cz.checkpoint = checkpoint;
 				entity.add(cz);
+			
 			}
 			
 		} else if(ci.cancel) {

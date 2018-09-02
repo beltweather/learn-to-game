@@ -26,6 +26,7 @@ public class IDUtil {
 		return immPlayerIDs;
 	}
 	
+	@Deprecated
 	public static ID getBattleEntityID() {
 		if(battleEntityID == null) {
 			battleEntityID = IDUtil.newID();
@@ -38,10 +39,6 @@ public class IDUtil {
 			turnEntityID = IDUtil.newID();
 		}
 		return turnEntityID;
-	}
-	
-	public static ID getPlayerEntityID() {
-		return getPlayerEntityID(Ent.activePlayerIndex);
 	}
 	
 	public static ID getPlayerEntityID(int activePlayerIndex) {

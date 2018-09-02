@@ -6,7 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 
 public class ClientRandomMovementSystem extends IteratingSystem {
 
@@ -25,7 +25,7 @@ public class ClientRandomMovementSystem extends IteratingSystem {
 			dir = MathUtils.random(5);
 		}
 		
-		InputComp i = M.InputComp.get(entity);
+		InputComp i = Comp.InputComp.get(entity);
 		i.input.reset();
 		switch(dir) {
 			case 0:

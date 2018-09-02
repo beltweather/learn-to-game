@@ -6,8 +6,9 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.components.subcomponents.CompLinker;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Link;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -23,21 +24,22 @@ public class CursorTargetValidationSystem extends AbstractCursorOperationSystem 
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		CursorComp c = M.CursorComp.get(entity);
-		ZonePositionComp zp = M.ZonePositionComp.get(entity);
+		CursorComp c = Comp.CursorComp.get(entity);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
-		TurnAction t = CompLinker.CursorComp.getTurnAction(c);
+		TurnAction t = Link.CursorComp.getTurnAction(c);
+		ID playerID = Link.CursorComp.getPlayerID(c);
 		
 		ZoneType zoneType = z.zoneType;
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			ID id = z.objectIDs.get(i);
-			Entity zoneItem = M.Entity.get(id);
-			if(!isValidTarget(c.playerID(), zoneType, t, i)) {
-				if(!M.UntargetableComp.has(zoneItem)) {
-					zoneItem.add(M.Comp.get(UntargetableComp.class));
+			Entity zoneItem = Ent.Entity.get(id);
+			if(!isValidTarget(playerID, zoneType, t, i)) {
+				if(!Comp.UntargetableComp.has(zoneItem)) {
+					zoneItem.add(Comp.create(UntargetableComp.class));
 				}
 			} else {
-				if(M.UntargetableComp.has(zoneItem)) {
+				if(Comp.UntargetableComp.has(zoneItem)) {
 					zoneItem.remove(UntargetableComp.class);
 				}
 			}

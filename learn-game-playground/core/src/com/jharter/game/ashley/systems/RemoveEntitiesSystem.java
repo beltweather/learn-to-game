@@ -6,7 +6,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
 
@@ -23,14 +23,14 @@ public class RemoveEntitiesSystem extends IteratingSystem {
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
-		RemoveComp r = M.RemoveComp.get(entity);
+		RemoveComp r = Comp.RemoveComp.get(entity);
 		if(client == null && r.requestRemove) {
 			r.remove = true;
 		}
 		if(r.remove) {
 			engine.removeEntity(entity);
 		} else if(client != null && r.requestRemove) {
-			IDComp id = M.IDComp.get(entity);
+			IDComp id = Comp.IDComp.get(entity);
 			if(id != null) {
 				client.send(RemoveEntityPacket.newInstance(id.id));
 			}

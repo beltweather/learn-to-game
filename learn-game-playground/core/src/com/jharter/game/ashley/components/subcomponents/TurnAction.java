@@ -2,21 +2,16 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool.Poolable;
-import com.badlogic.gdx.utils.Pools;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class TurnAction implements Poolable {
-	
-	public static TurnAction newInstance() {
-		return Pools.get(TurnAction.class).obtain();
-	}
+public class TurnAction {
 	
 	public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 	public Array<ID> targetIDs = new Array<ID>();
@@ -31,13 +26,13 @@ public class TurnAction implements Poolable {
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
 	
-	private TurnAction() {}
+	public TurnAction() {}
 	
 	public Entity getEntity(int index) {
 		if(index < 0 || index >= targetIDs.size) {
 			return null;
 		}
-		return M.Entity.get(targetIDs.get(index));
+		return Ent.Entity.get(targetIDs.get(index));
 	}
 	
 	public ZoneType getTargetZoneType() {
@@ -68,7 +63,7 @@ public class TurnAction implements Poolable {
 	
 	public void addTarget(Entity entity) {
 		if(!hasAllTargets()) {
-			targetIDs.add(M.IDComp.get(entity).id);
+			targetIDs.add(Comp.IDComp.get(entity).id);
 		}
 	}
 	
@@ -83,8 +78,8 @@ public class TurnAction implements Poolable {
 		
 		// Special check for cards that modify other cards, we don't
 		// want them to be able to target each other
-		CardComp c = M.CardComp.get(entity);
-		ZonePositionComp zp = M.ZonePositionComp.get(entity);
+		CardComp c = Comp.CardComp.get(entity);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		if(c != null && zp != null) {
 			return c.cardType != CardType.TARGET_CARD || zp.getZoneComp().zoneType != ZoneType.ACTIVE_CARD;
 		}
@@ -125,12 +120,11 @@ public class TurnAction implements Poolable {
 	}
 	
 	public TurnAction freshCopy() {
-		TurnAction t = TurnAction.newInstance();
+		TurnAction t = new TurnAction();
 		freshCopyTo(t);
 		return t;
 	}
 		
-	@Override
 	public void reset() {
 		targetZoneTypes.clear();
 		targetIDs.clear();

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 
 public class TurnTimerRenderMethod extends ShapeRenderMethod {
@@ -15,11 +15,11 @@ public class TurnTimerRenderMethod extends ShapeRenderMethod {
 	
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Entity entity, float deltaTime) {
-		TurnTimer t = M.TurnTimerComp.get(entity).turnTimer;
+		TurnTimer t = Comp.TurnTimerComp.get(entity).turnTimer;
 		if(t.isStopped()) {
 			return;
 		}
-		SpriteComp s = M.SpriteComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
 		
 		int degrees = Math.round(360 * t.accumulator / t.maxTurnTimeSec);
 		

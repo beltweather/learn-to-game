@@ -13,7 +13,8 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -26,8 +27,8 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		IDComp id = M.IDComp.get(entity);
-		TypeComp ty = M.TypeComp.get(entity);
+		IDComp id = Comp.IDComp.get(entity);
+		TypeComp ty = Comp.TypeComp.get(entity);
 		
 		if(ty != null) {
 			switch(ty.type) {
@@ -36,19 +37,19 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					//zp.getZoneComp().remove(id);
 					//ZoneComp z = Mapper.ZoneComp.get(ZoneType.ACTIVE_CARD);
 					
-					CardComp ca = M.CardComp.get(entity);
-					ZonePositionComp zp = M.ZonePositionComp.get(entity);
-					Entity owner = M.Entity.get(ca.playerID);
-					ActiveCardComp ac = M.ActiveCardComp.get(owner);
+					CardComp ca = Comp.CardComp.get(entity);
+					ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
+					Entity owner = Ent.Entity.get(ca.playerID);
+					ActiveCardComp ac = Comp.ActiveCardComp.get(owner);
 					if(ac == null) {
-						ac = M.Comp.get(ActiveCardComp.class);
+						ac = Comp.create(ActiveCardComp.class);
 						owner.add(ac);
 					}
 					
 					ZoneComp z = zp.getZoneComp();
-					ChangeZoneComp cz = M.Comp.get(ChangeZoneComp.class);
+					ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = M.ZoneComp.getID(ca.playerID, ZoneType.ACTIVE_CARD);
+					cz.newZoneID = Comp.ZoneComp.getID(ca.playerID, ZoneType.ACTIVE_CARD);
 					cz.useNextIndex = true;
 					cz.instantChange = false;
 					entity.add(cz);
@@ -57,7 +58,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					
 					ac.activeCardID = id.id;
 					
-					TurnActionComp t = M.TurnActionComp.get(entity);
+					TurnActionComp t = Comp.TurnActionComp.get(entity);
 					if(t != null && t.turnAction.priority > 0) {
 						t.turnAction.performAcceptCallback();
 					}
@@ -68,7 +69,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 			}
 		}
 		entity.remove(ActionQueueableComp.class);
-		entity.add(M.Comp.get(ActionQueuedComp.class));
+		entity.add(Comp.create(ActionQueuedComp.class));
 	}
 	
 }

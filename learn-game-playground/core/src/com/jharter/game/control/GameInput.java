@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
-import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -17,7 +16,6 @@ import com.jharter.game.controller.XboxMapping;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.network.packets.Packets.InputPacket;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 public class GameInput extends InputAdapter implements InputProcessor, ControllerListener {

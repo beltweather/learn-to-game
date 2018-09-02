@@ -6,7 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.debug.Debug;
 
 import uk.co.carelesslabs.Rumble;
@@ -27,7 +27,7 @@ public class FocusCameraSystem extends IteratingSystem {
             Rumble.tick(deltaTime);
             camera.translate(Rumble.getPos());
         } else {
-            camera.position.lerp(Debug.LOCK_CAMERA ? Debug.LOCKED_CAMERA_CENTER : M.SpriteComp.get(entity).position, .2f);
+            camera.position.lerp(Debug.LOCK_CAMERA ? Debug.LOCKED_CAMERA_CENTER : Comp.SpriteComp.get(entity).position, .2f);
         }
 		camera.update();
 	}

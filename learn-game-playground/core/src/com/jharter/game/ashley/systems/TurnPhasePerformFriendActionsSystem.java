@@ -2,7 +2,6 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.IDComp;
@@ -10,19 +9,17 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.components.subcomponents.CompLinker;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Link;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
-import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.equations.Circ;
 
 public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 
@@ -38,7 +35,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
 		busy = false;
-		return CompLinker.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
+		return Ent.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override
@@ -47,17 +44,17 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		
-		TurnActionComp t = M.TurnActionComp.get(entity);
-		boolean performTurnAction = t != null && t.turnAction.priority == 0 && M.CardComp.has(entity);
+		TurnActionComp t = Comp.TurnActionComp.get(entity);
+		boolean performTurnAction = t != null && t.turnAction.priority == 0 && Comp.CardComp.has(entity);
 		
 		entity.remove(ActionQueuedComp.class);
 		if(performTurnAction) {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
-			ID id = M.IDComp.get(entity).id;
-			Entity player = M.Entity.get(M.CardComp.get(entity).playerID);
-			Entity battleAvatar = CompLinker.PlayerComp.getBattleAvatarEntity(M.PlayerComp.get(player));
-			IDComp idAvatar = M.IDComp.get(battleAvatar);
-			SpriteComp sAvatar = M.SpriteComp.get(battleAvatar);
+			ID id = Comp.IDComp.get(entity).id;
+			Entity player = Ent.Entity.get(Comp.CardComp.get(entity).playerID);
+			Entity battleAvatar = Link.PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(player));
+			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
+			SpriteComp sAvatar = Comp.SpriteComp.get(battleAvatar);
 			
 			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(entity);
@@ -76,7 +73,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 						turnAction.performAcceptCallback();
 					}
 					
-					entity.add(M.Comp.get(ActionSpentComp.class));
+					entity.add(Comp.create(ActionSpentComp.class));
 
 					busy = false;
 				}
@@ -93,7 +90,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			
 			busy = true;
 		} else {
-			entity.add(M.Comp.get(ActionSpentComp.class));
+			entity.add(Comp.create(ActionSpentComp.class));
 		}
 		
 		return false;

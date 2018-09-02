@@ -7,9 +7,10 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.components.subcomponents.CompLinker;
+import com.jharter.game.ashley.components.Link;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -24,18 +25,19 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		CursorInputComp ci = M.CursorInputComp.get(entity);
-		CursorComp c = M.CursorComp.get(entity);
-		ZonePositionComp zp = M.ZonePositionComp.get(entity);
+		CursorInputComp ci = Comp.CursorInputComp.get(entity);
+		CursorComp c = Comp.CursorComp.get(entity);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		ZoneComp z = zp.getZoneComp();
 		ZoneComp origZ = z;
-		TurnAction t = CompLinker.CursorComp.getTurnAction(c);
+		TurnAction t = Link.CursorComp.getTurnAction(c);
+		ID playerID = Link.CursorComp.getPlayerID(c);
 		
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;
 		
 		boolean move = ci.move() && (t == null || !t.all);
-		boolean valid = isValidTarget(c.playerID(), zoneType, t, index);
+		boolean valid = isValidTarget(playerID, zoneType, t, index);
 		
 		if(!move && valid) {
 			return;
@@ -43,7 +45,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		
 		if(!valid) {
 			zoneType = ZoneType.HAND;
-			z = M.ZoneComp.get(c.playerID(), zoneType);
+			z = Comp.ZoneComp.get(playerID, zoneType);
 			index = -1;
 			
 			// We need to be sure to cleanup our selection if we end up in an invalid state
@@ -62,13 +64,13 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 			direction = (int) (ci.direction.x != 0 ? ci.direction.x : ci.direction.y);
 		}
 		
-		int newIndex = findNextValidTargetInZone(c.playerID(), zoneType, t, index, direction);
+		int newIndex = findNextValidTargetInZone(playerID, zoneType, t, index, direction);
 		if(!z.hasIndex(newIndex)) {
 			newIndex = -1;
 		}
 		
 		if(zp.index != newIndex || origZ.zoneID != z.zoneID) {
-			ChangeZoneComp cz = M.Comp.get(ChangeZoneComp.class);
+			ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
 			cz.oldZoneID = origZ.zoneID;
 			cz.newZoneID = z.zoneID;
 			cz.newIndex = newIndex;

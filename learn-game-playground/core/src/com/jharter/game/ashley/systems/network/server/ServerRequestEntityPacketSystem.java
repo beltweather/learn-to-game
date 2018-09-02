@@ -3,7 +3,8 @@ package com.jharter.game.ashley.systems.network.server;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.endpoints.GameServer;
@@ -22,19 +23,19 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 	@Override
 	public void update(GameServer server, GameStage stage, float deltaTime, RequestEntityPacket request) {
 		ID id = request.id;
-		Entity entity = M.Entity.get(id); 
+		Entity entity = Ent.Entity.get(id); 
 		if(entity == null) {
 			Sys.err.println("Requested entity with id " + id + " but none exists!");
 			return;
 		}
 		
 		// XXX Right now just add players
-		BattleAvatarComp playerComp = M.BattleAvatarComp.get(entity);
+		BattleAvatarComp playerComp = Comp.BattleAvatarComp.get(entity);
 		if(playerComp != null) {
 			AddPlayersPacket addPlayers = AddPlayersPacket.newInstance();
 			AddPlayer addPlayer = new AddPlayer();
-			SpriteComp s = M.SpriteComp.get(entity);
-			addPlayer.id = M.IDComp.get(entity).id;
+			SpriteComp s = Comp.SpriteComp.get(entity);
+			addPlayer.id = Comp.IDComp.get(entity).id;
 			addPlayer.x = s.position.x;
 			addPlayer.y = s.position.y;
 			addPlayer.z = s.position.z;

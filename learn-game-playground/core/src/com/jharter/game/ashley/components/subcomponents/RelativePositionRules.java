@@ -3,7 +3,8 @@ package com.jharter.game.ashley.components.subcomponents;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.util.id.ID;
 
@@ -52,13 +53,13 @@ public class RelativePositionRules {
 			return false;
 		}
 		
-		Entity baselineEntity = M.Entity.get(relativeToID);
-		SpriteComp sBaseline = M.SpriteComp.get(baselineEntity);
+		Entity baselineEntity = Ent.Entity.get(relativeToID);
+		SpriteComp sBaseline = Comp.SpriteComp.get(baselineEntity);
 		if(baselineEntity == null || sBaseline == null) {
 			return false;
 		}
 		
-		if(M.InvisibleComp.has(baselineEntity)) {
+		if(Comp.InvisibleComp.has(baselineEntity)) {
 			return false;
 		}
 		

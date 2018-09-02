@@ -14,8 +14,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Components.CollisionComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.id.ID;
 
@@ -81,18 +81,18 @@ public class Box2DWorld {
         	return;
         }
         
-        Entity entityA = M.Entity.get(aId);
-        Entity entityB = M.Entity.get(bId);
+        Entity entityA = Ent.Entity.get(aId);
+        Entity entityB = Ent.Entity.get(bId);
         
         if (entityA != null && entityB != null) {
             if (aFixture.isSensor() && !bFixture.isSensor()) {
-            	CollisionComp collisionCompB = M.CollisionComp.get(entityB);
+            	CollisionComp collisionCompB = Comp.CollisionComp.get(entityB);
             	if(collisionCompB != null) {
             		collisionCompB.collisionWithId = aId;
             		collisionCompB.begin = begin;
             	}
             } else if (bFixture.isSensor() && !aFixture.isSensor()) {
-            	CollisionComp collisionCompA = M.CollisionComp.get(entityA);
+            	CollisionComp collisionCompA = Comp.CollisionComp.get(entityA);
             	if(collisionCompA != null) {
             		collisionCompA.collisionWithId = bId;
             		collisionCompA.begin = begin;

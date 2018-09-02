@@ -3,7 +3,7 @@ package com.jharter.game.stages.battlestage;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.id.ID;
 
@@ -23,7 +23,7 @@ public class CursorHelper {
 				  Media.handPointDown);
 		b.IDComp().id = cursorID;
 		b.CursorComp();
-		b.ChangeZoneComp().newZoneID = M.ZoneComp.getID(playerID, zoneType);
+		b.ChangeZoneComp().newZoneID = Comp.ZoneComp.getID(playerID, zoneType);
 		b.ChangeZoneComp().newIndex = 0;
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();

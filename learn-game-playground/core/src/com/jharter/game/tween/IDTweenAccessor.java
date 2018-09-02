@@ -1,7 +1,7 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.TweenAccessor;
@@ -15,7 +15,7 @@ public class IDTweenAccessor implements TweenAccessor<ID> {
 	}
 	
 	protected Entity entity(ID id) {
-		return M.Entity.get(id);
+		return Ent.Entity.get(id);
 	}
 
 	@Override

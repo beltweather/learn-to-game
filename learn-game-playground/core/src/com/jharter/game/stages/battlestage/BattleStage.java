@@ -3,10 +3,11 @@ package com.jharter.game.stages.battlestage;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
@@ -167,7 +168,9 @@ public class BattleStage extends GameStage {
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-		M.addIdListener(engine, getBox2DWorld());
+    	Comp.engine = engine;
+    	
+		Ent.addIdListener(engine, getBox2DWorld());
 		
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());

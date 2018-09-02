@@ -6,8 +6,8 @@ import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.components.subcomponents.CompLinker;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 import com.jharter.game.util.Sys;
 
@@ -23,7 +23,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		Sys.out.println("------------------------------------------Starting turn");
-		CompLinker.TurnEntity.TurnTimerComp().turnTimer.start();
+		Ent.TurnEntity.TurnTimerComp().turnTimer.start();
 		enableCursor();
 		resetCursor();
 		return true;
@@ -31,7 +31,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		TurnTimer t = M.TurnTimerComp.get(entity).turnTimer;
+		TurnTimer t = Comp.TurnTimerComp.get(entity).turnTimer;
 		t.increment(deltaTime);
 		if(t.isOvertime()) {
 			return true;
@@ -53,14 +53,14 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
-		CompLinker.TurnEntity.TurnTimerComp().turnTimer.stop();
+		Ent.TurnEntity.TurnTimerComp().turnTimer.stop();
 		
 		// Cancel the current turn action if there is one
-		CursorComp c = M.CursorEntity.CursorComp();
+		CursorComp c = Ent.CursorEntity.CursorComp();
 		if(c.turnActionEntityID != null) {
-			Entity entity = M.Entity.get(c.turnActionEntityID);
-			if(!M.ActionSpentComp.has(entity)) {
-				entity.add(M.Comp.get(ActionSpentComp.class));
+			Entity entity = Ent.Entity.get(c.turnActionEntityID);
+			if(!Comp.ActionSpentComp.has(entity)) {
+				entity.add(Comp.create(ActionSpentComp.class));
 			}
 		}
 	}

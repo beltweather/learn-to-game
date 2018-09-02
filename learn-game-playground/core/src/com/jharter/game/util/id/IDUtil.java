@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -41,7 +41,7 @@ public class IDUtil {
 	}
 	
 	public static ID getPlayerEntityID() {
-		return getPlayerEntityID(M.activePlayerIndex);
+		return getPlayerEntityID(Ent.activePlayerIndex);
 	}
 	
 	public static ID getPlayerEntityID(int activePlayerIndex) {

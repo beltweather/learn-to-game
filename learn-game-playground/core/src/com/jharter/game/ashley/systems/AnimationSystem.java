@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 
 public class AnimationSystem extends IteratingSystem {
 	
@@ -18,8 +18,8 @@ public class AnimationSystem extends IteratingSystem {
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		AnimationComp a = M.AnimationComp.get(entity);
-		TextureComp v = M.TextureComp.get(entity);
+		AnimationComp a = Comp.AnimationComp.get(entity);
+		TextureComp v = Comp.TextureComp.get(entity);
 		if(!a.looping && a.animation.isAnimationFinished(a.time)) {
 			v.region = v.defaultRegion;
 			entity.remove(AnimationComp.class);

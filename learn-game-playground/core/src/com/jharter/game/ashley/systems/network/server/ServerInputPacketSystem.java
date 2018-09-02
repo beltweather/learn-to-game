@@ -2,8 +2,8 @@ package com.jharter.game.ashley.systems.network.server;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.control.GlobalInputState;
 import com.jharter.game.network.endpoints.GameServer;
@@ -21,9 +21,9 @@ public class ServerInputPacketSystem extends ConsumingPacketSystem<GameServer, I
 	public void update(GameServer server, GameStage stage, float deltaTime, InputPacket packet) {
 		GlobalInputState state = packet.inputState;
 		ID entityId = state.id;
-		Entity entity = M.Entity.get(entityId);
+		Entity entity = Ent.Entity.get(entityId);
 		if(entity != null) {
-			InputComp in = M.InputComp.get(entity);
+			InputComp in = Comp.InputComp.get(entity);
 			if(in != null) {
 				in.input.setInputState(state);
 			}

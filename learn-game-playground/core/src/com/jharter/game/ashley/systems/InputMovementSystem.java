@@ -8,7 +8,7 @@ import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 
 public class InputMovementSystem extends IteratingSystem {
 
@@ -22,10 +22,10 @@ public class InputMovementSystem extends IteratingSystem {
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		SpriteComp s = M.SpriteComp.get(entity);
-		VelocityComp v = M.VelocityComp.get(entity);
-		InputComp in = M.InputComp.get(entity);
-		BodyComp b = M.BodyComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
+		VelocityComp v = Comp.VelocityComp.get(entity);
+		InputComp in = Comp.InputComp.get(entity);
+		BodyComp b = Comp.BodyComp.get(entity);
 		
 		s.direction.x = 0;
 		s.direction.y = 0;

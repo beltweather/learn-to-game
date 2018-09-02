@@ -1,8 +1,8 @@
 package com.jharter.game.ashley.systems.network.server;
 
 import com.jharter.game.ashley.components.Components.SpriteComp;
+import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.endpoints.GameServer;
@@ -23,7 +23,7 @@ public class ServerRegisterPlayerPacketSystem extends ConsumingPacketSystem<Game
 	@Override
 	public void update(GameServer server, GameStage stage, float deltaTime, RegisterPlayerPacket request) {
 		ID id = request.id;
-		if(M.Entity.get(id) != null) {
+		if(Ent.Entity.get(id) != null) {
 			Sys.err.println("Requested new player with id " + id + " but they already exist.");
 			return;
 		}

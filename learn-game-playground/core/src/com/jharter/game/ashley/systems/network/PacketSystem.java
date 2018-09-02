@@ -3,7 +3,7 @@ package com.jharter.game.ashley.systems.network;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ai.msg.PriorityQueue;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.network.endpoints.GameEndPoint;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
@@ -12,13 +12,13 @@ import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.collections.SynchronizedPriorityQueue;
 import com.jharter.game.util.id.ID;
 
-public abstract class PacketSystem<E extends GameEndPoint, T extends Packet<T>> extends EntitySystem {
+public abstract class PacketSystem<EP extends GameEndPoint, T extends Packet<T>> extends EntitySystem {
 
 	protected PacketManager<T> packetManager;
-	protected E endPoint;
+	protected EP endPoint;
 	protected GameStage stage;
 	
-	public PacketSystem(GameStage stage, E endPoint) {
+	public PacketSystem(GameStage stage, EP endPoint) {
 		this.stage = stage;
 		this.packetManager = new PacketManager<T>();
 		this.endPoint = endPoint;
@@ -41,7 +41,7 @@ public abstract class PacketSystem<E extends GameEndPoint, T extends Packet<T>> 
 		update(endPoint, stage, deltaTime);
 	}
 	
-	public abstract void update(E endPoint, GameStage stage, float deltaTime);
+	public abstract void update(EP endPoint, GameStage stage, float deltaTime);
 	
 	// ------------- DELEGATORS ------------------------
 	
@@ -66,7 +66,7 @@ public abstract class PacketSystem<E extends GameEndPoint, T extends Packet<T>> 
 	}
 	
 	public Entity findEntity(ID entityId) {
-		return M.Entity.get(entityId);
+		return Ent.Entity.get(entityId);
 	}
 
 }

@@ -18,7 +18,6 @@ import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.EntityType;
@@ -31,45 +30,39 @@ public final class Components {
 	
 	// ------------------- SUPERCLASS COMPONENTS -----------------------------
 	
-	public static interface Comp extends Component, Poolable {
-		
-	}
+	private static interface C extends Component, Poolable {}
 	
-	public static class BoolComp implements Comp {
-		private BoolComp() {}
-		
-		@Override
-		public void reset() {
-			
-		}
+	private static class B implements C {
+		private B() {}
+		@Override public void reset() {}
 	}
 	
 	// ------------------- BOOL COMPONENTS -----------------------------
 
-	public static final class UntargetableComp extends BoolComp {}
-	public static final class FocusComp extends BoolComp {}
-	public static final class InvisibleComp extends BoolComp {}
-	public static final class DisabledComp extends BoolComp {}
+	public static final class UntargetableComp extends B {}
+	public static final class FocusComp extends B {}
+	public static final class InvisibleComp extends B {}
+	public static final class DisabledComp extends B {}
 	
-	public static final class TurnPhaseComp extends BoolComp {}
-	public static final class TurnPhaseStartBattleComp extends BoolComp {}
-	public static final class TurnPhaseStartTurnComp extends BoolComp {}
-	public static final class TurnPhaseSelectEnemyActionsComp extends BoolComp {}
-	public static final class TurnPhaseSelectFriendActionsComp extends BoolComp {}
-	public static final class TurnPhasePerformFriendActionsComp extends BoolComp {}
-	public static final class TurnPhasePerformEnemyActionsComp extends BoolComp {}
-	public static final class TurnPhaseEndTurnComp extends BoolComp {}
-	public static final class TurnPhaseEndBattleComp extends BoolComp {}
-	public static final class TurnPhaseNoneComp extends BoolComp {}
+	public static final class TurnPhaseComp extends B {}
+	public static final class TurnPhaseStartBattleComp extends B {}
+	public static final class TurnPhaseStartTurnComp extends B {}
+	public static final class TurnPhaseSelectEnemyActionsComp extends B {}
+	public static final class TurnPhaseSelectFriendActionsComp extends B {}
+	public static final class TurnPhasePerformFriendActionsComp extends B {}
+	public static final class TurnPhasePerformEnemyActionsComp extends B {}
+	public static final class TurnPhaseEndTurnComp extends B {}
+	public static final class TurnPhaseEndBattleComp extends B {}
+	public static final class TurnPhaseNoneComp extends B {}
 	
-	public static final class ActionQueueableComp extends BoolComp {}
-	public static final class ActionQueuedComp extends BoolComp {}
-	public static final class ActionReadyComp extends BoolComp {}
-	public static final class ActionSpentComp extends BoolComp {}
+	public static final class ActionQueueableComp extends B {}
+	public static final class ActionQueuedComp extends B {}
+	public static final class ActionReadyComp extends B {}
+	public static final class ActionSpentComp extends B {}
 	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
-	public static final class IDComp implements Comp {
+	public static final class IDComp implements C {
 		public ID id;
 		
 		private IDComp() {}
@@ -80,7 +73,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TypeComp implements Comp {
+	public static final class TypeComp implements C {
 		public EntityType type;
 
 		private TypeComp() {}
@@ -91,7 +84,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class DescriptionComp implements Comp {
+	public static final class DescriptionComp implements C {
 		public String name = null;
 		
 		private DescriptionComp() {}
@@ -102,7 +95,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class SpriteComp implements Comp {
+	public static final class SpriteComp implements C {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
 		public float angleDegrees = 0.0f;
@@ -149,7 +142,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class MultiSpriteComp implements Comp {
+	public static final class MultiSpriteComp implements C {
 		public Array<Vector3> positions = new Array<Vector3>();
 		public Array<Vector2> scales = new Array<Vector2>();
 		public Array<Float> alphas = new Array<Float>();
@@ -180,7 +173,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class AnimatingComp implements Comp {
+	public static final class AnimatingComp implements C {
 		public int activeCount = 0;
 		
 		private AnimatingComp() {}
@@ -191,7 +184,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class PlayerComp implements Comp {
+	public static final class PlayerComp implements C {
 		public ID battleAvatarID = null;
 		
 		private PlayerComp() {}
@@ -202,7 +195,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class ActivePlayerComp implements Comp {
+	public static final class ActivePlayerComp implements C {
 		public ID activePlayerID = null;
 		
 		private ActivePlayerComp() {}
@@ -213,7 +206,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class BattleAvatarComp implements Comp {
+	public static final class BattleAvatarComp implements C {
 		public ID playerID;
 		
 		private BattleAvatarComp() {}
@@ -224,7 +217,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TargetPositionComp implements Comp {
+	public static final class TargetPositionComp implements C {
 		public Vector3 position = null;
 
 		private TargetPositionComp() {}
@@ -235,7 +228,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class VelocityComp implements Comp {
+	public static final class VelocityComp implements C {
 		public float speed = 0.0f;
 		public Vector2 velocity = new Vector2(0, 0);
 
@@ -248,7 +241,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class CollisionComp implements Comp {
+	public static final class CollisionComp implements C {
 		public ID collisionWithId;
 		public boolean begin;
 		
@@ -261,7 +254,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class RemoveComp implements Comp {
+	public static final class RemoveComp implements C {
 		public boolean requestRemove = false;
 		public boolean remove = false;
 		
@@ -274,7 +267,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class InteractComp implements Comp {
+	public static final class InteractComp implements C {
 		public Array<ID> interactables = new Array<ID>();
 		public Interaction interaction;
 
@@ -287,7 +280,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class CardComp implements Comp {
+	public static final class CardComp implements C {
 		public ID playerID = null;
 		public CardType cardType = CardType.NONE;
 		public String text = null;
@@ -304,7 +297,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class StatsComp implements Comp {
+	public static final class StatsComp implements C {
 		public int level = 0;
 		public int experience = 0;
 		public int power = 0;
@@ -331,7 +324,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class VitalsComp implements Comp {
+	public static final class VitalsComp implements C {
 		public int maxHealth = 0;
 		public int weakHealth = 0;
 		public int health = 0;
@@ -368,8 +361,8 @@ public final class Components {
 		}
 	}
 
-	public static final class TurnActionComp implements Comp {
-		public TurnAction turnAction = TurnAction.newInstance();
+	public static final class TurnActionComp implements C {
+		public TurnAction turnAction = new TurnAction();
 		
 		private TurnActionComp() {}
 		
@@ -379,7 +372,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class ActiveCardComp implements Comp {
+	public static final class ActiveCardComp implements C {
 		public ID activeCardID = null;
 		
 		private ActiveCardComp() {}
@@ -390,15 +383,15 @@ public final class Components {
 		}
 	}
 	
-	public static final class CursorComp implements Comp {
+	public static final class CursorComp implements C {
 		public ID turnActionEntityID = null;
 		public ID lastZoneID = null;
 		
 		private CursorComp() {}
 		
-		public ID playerID() {
+		/*public ID playerID() {
 			return IDUtil.getPlayerEntityID();
-		}
+		}*/
 		
 		@Override
 		public void reset() {
@@ -407,7 +400,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TurnTimerComp implements Comp {
+	public static final class TurnTimerComp implements C {
 		public TurnTimer turnTimer = new TurnTimer();
 		
 		private TurnTimerComp() {}
@@ -418,7 +411,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class ZoneComp implements Comp {
+	public static final class ZoneComp implements C {
 		public ID zoneID = null;
 		public ZoneType zoneType = ZoneType.NONE;
 		private Array<ID> internalObjectIDs = new Array<ID>();
@@ -447,8 +440,8 @@ public final class Components {
 			internalObjectIDs.removeValue(id, false);
 			for(int i = 0; i < internalObjectIDs.size; i++) {
 				ID oID = internalObjectIDs.get(i);
-				Entity obj = M.Entity.get(oID);
-				ZonePositionComp zp = M.ZonePositionComp.get(obj);
+				Entity obj = Ent.Entity.get(oID);
+				ZonePositionComp zp = Comp.ZonePositionComp.get(obj);
 				zp.index = i;
 			}
 		}
@@ -463,7 +456,7 @@ public final class Components {
 		
 	}
 	
-	public static final class ZonePositionComp implements Comp {
+	public static final class ZonePositionComp implements C {
 		
 		public ID zoneID = null;
 		public int index = -1;
@@ -475,7 +468,7 @@ public final class Components {
 			if(zoneID == null) {
 				return null;
 			}
-			return M.ZoneComp.get(this);
+			return Comp.ZoneComp.get(this);
 		}
 		
 		public void checkpoint() {
@@ -504,7 +497,7 @@ public final class Components {
 		}
 		
 		private ZonePositionComp copyForHistory() {
-			ZonePositionComp zp = M.Comp.get(ZonePositionComp.class);
+			ZonePositionComp zp = Comp.create(ZonePositionComp.class);
 			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it
@@ -520,7 +513,7 @@ public final class Components {
 		
 	}
 	
-	public static final class ChangeZoneComp implements Comp {
+	public static final class ChangeZoneComp implements C {
 		
 		public boolean instantChange = true;
 		public ID oldZoneID = null;
@@ -545,7 +538,7 @@ public final class Components {
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
-	public static final class CursorInputRegulatorComp implements Comp {
+	public static final class CursorInputRegulatorComp implements C {
 		private boolean processedMove = false;
 		private float processedMoveDelta = 0;
 		private float maxProcessedMoveDelta = 0.2f;
@@ -579,7 +572,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class CursorInputComp implements Comp {
+	public static final class CursorInputComp implements C {
 		public Vector2 direction = new Vector2(0, 0);
 		public boolean accept = false;
 		public boolean cancel = false;
@@ -598,7 +591,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class InputComp implements Comp {
+	public static final class InputComp implements C {
 		public GameInput input; // Can't serialize
 
 		private InputComp() {}
@@ -609,7 +602,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TileComp implements Comp {
+	public static final class TileComp implements C {
 		public TileType type;
 		public int size, row, col;
 		public String code;
@@ -626,7 +619,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class TextureComp implements Comp {
+	public static final class TextureComp implements C {
 		public TextureRegion defaultRegion; // Can't serialize
 		public TextureRegion region; // Can't serialize
 
@@ -639,7 +632,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class ShapeRenderComp implements Comp {
+	public static final class ShapeRenderComp implements C {
 		public ShapeRenderMethod renderMethod = null;
 		
 		private ShapeRenderComp() {}
@@ -650,7 +643,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class AnimationComp implements Comp {
+	public static final class AnimationComp implements C {
 		public Animation animation; // Can't serialize
 		public boolean looping = true;
 		public float time = 0;
@@ -665,7 +658,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class BodyComp implements Comp {
+	public static final class BodyComp implements C {
 		public Body body; // Can't serialize
 
 		private BodyComp() {}
@@ -676,7 +669,7 @@ public final class Components {
 		}
 	}
 	
-	public static final class SensorComp implements Comp {
+	public static final class SensorComp implements C {
 		public Body sensor; // Can't serialize
 		
 		private SensorComp() {}

@@ -6,8 +6,8 @@ import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.components.subcomponents.CompLinker;
+import com.jharter.game.ashley.components.Link;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;
@@ -25,27 +25,27 @@ public class ActiveCardLayout extends ZoneLayout {
 
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
-		SpriteComp s = M.SpriteComp.get(entity);
-		CardComp c = M.CardComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
+		CardComp c = Comp.CardComp.get(entity);
 		
 		s.relativePositionRules.relative = true;
-		s.relativePositionRules.setRelativeToID(CompLinker.CardComp.getBattleAvatarID(c));
+		s.relativePositionRules.setRelativeToID(Link.CardComp.getBattleAvatarID(c));
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);
 		
 		target.scale.y = 0.25f;
 		target.scale.x = 0.25f;
-		target.alpha = M.UntargetableComp.has(entity) ? 0.25f : 1f;
+		target.alpha = Comp.UntargetableComp.has(entity) ? 0.25f : 1f;
 		
 		return target;
 	}
 
 	private Vector3 tempPosition = new Vector3();
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		TurnActionComp t = M.TurnActionComp.get(entity);
+		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		if(t != null && t.turnAction != null && t.turnAction.multiplicity > 1) {
-			MultiSpriteComp m = M.Comp.getOrAdd(MultiSpriteComp.class, entity);
+			MultiSpriteComp m = Comp.getOrAdd(MultiSpriteComp.class, entity);
 			if(m.size == t.turnAction.multiplicity) {
 				return;
 			}
@@ -65,7 +65,7 @@ public class ActiveCardLayout extends ZoneLayout {
 			TweenUtil.start(null, timeline);
 			
 		} else {
-			M.Comp.remove(MultiSpriteComp.class, entity);
+			Comp.remove(MultiSpriteComp.class, entity);
 		}
 	}
 	

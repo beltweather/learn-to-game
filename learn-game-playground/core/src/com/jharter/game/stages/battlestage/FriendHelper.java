@@ -6,12 +6,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.render.HealthBarRenderMethod;
-import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
-import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.EntityType;
 
 public class FriendHelper {

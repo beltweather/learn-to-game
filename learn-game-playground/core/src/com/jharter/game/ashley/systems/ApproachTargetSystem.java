@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 
 public class ApproachTargetSystem extends IteratingSystem {
 	
@@ -22,8 +22,8 @@ public class ApproachTargetSystem extends IteratingSystem {
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
-		SpriteComp s = M.SpriteComp.get(entity);
-		TargetPositionComp t = M.TargetPositionComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
+		TargetPositionComp t = Comp.TargetPositionComp.get(entity);
 		
 		if(t.position != null) {
 			float alpha = ALPHA;
@@ -34,7 +34,7 @@ public class ApproachTargetSystem extends IteratingSystem {
 	    		t.position = null;
 	    		// Optionally, could just remove target comp here
 			} else {
-				BodyComp b = M.BodyComp.get(entity);
+				BodyComp b = Comp.BodyComp.get(entity);
 				setPosition(b.body, newX, newY, s.width, s.height, s.position);
 			}
 		}

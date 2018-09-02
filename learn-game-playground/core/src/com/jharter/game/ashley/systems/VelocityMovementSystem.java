@@ -6,7 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 
 public class VelocityMovementSystem extends IteratingSystem {
 
@@ -16,8 +16,8 @@ public class VelocityMovementSystem extends IteratingSystem {
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
-		SpriteComp s = M.SpriteComp.get(entity);
-		VelocityComp v = M.VelocityComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
+		VelocityComp v = Comp.VelocityComp.get(entity);
 		
 		s.position.x += v.velocity.x * deltaTime;
 		s.position.y += v.velocity.y * deltaTime;

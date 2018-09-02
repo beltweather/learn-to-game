@@ -6,7 +6,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.util.id.ID;
 
 public abstract class ZoneLayout {
@@ -64,7 +65,7 @@ public abstract class ZoneLayout {
 		if(index < 0) {
 			return null;
 		}
-		Entity entity = M.Entity.get(id);
+		Entity entity = Ent.Entity.get(id);
 		if(entity == null) {
 			return null;
 		}
@@ -72,7 +73,7 @@ public abstract class ZoneLayout {
 		TweenTarget target = getTarget(id, index, entity, TweenTarget.newInstance());
         boolean hide = false;
 		if(allowRelativePositions) {
-			SpriteComp s = M.SpriteComp.get(entity);
+			SpriteComp s = Comp.SpriteComp.get(entity);
 			if(target != null && s != null && s.relativePositionRules.relative) {
 				if(!s.relativePositionRules.setToRelativePosition(s, target)) {
 					hide(entity);
@@ -104,7 +105,7 @@ public abstract class ZoneLayout {
 		if(target == null) {
 			return false;
 		}
-		Entity entity = M.Entity.get(id);
+		Entity entity = Ent.Entity.get(id);
 		if(entity == null) {
 			return false;
 		}
@@ -115,18 +116,18 @@ public abstract class ZoneLayout {
 		if(target == null) {
 			return false;
 		}
-		return target.matchesTarget(M.SpriteComp.get(entity));
+		return target.matchesTarget(Comp.SpriteComp.get(entity));
 	}
 	
 	public void show(Entity entity) {
-		if(M.InvisibleComp.has(entity)) {
+		if(Comp.InvisibleComp.has(entity)) {
 			entity.remove(InvisibleComp.class);
 		}
 	}
 	
 	public void hide(Entity entity) {
-		if(!M.InvisibleComp.has(entity)) {
-			entity.add(M.Comp.get(InvisibleComp.class));
+		if(!Comp.InvisibleComp.has(entity)) {
+			entity.add(Comp.create(InvisibleComp.class));
 		}
 	}
 	

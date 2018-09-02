@@ -2,7 +2,7 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -14,7 +14,7 @@ public class FriendLayout extends ZoneLayout {
 
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
-		SpriteComp s = M.SpriteComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
 		
 		float anchorX = U.u12(60);
 		float anchorY = U.u12(6);
@@ -25,7 +25,7 @@ public class FriendLayout extends ZoneLayout {
 		target.scale.y = 1f;
 		target.angleDegrees = 0;
 		
-		if(M.UntargetableComp.has(entity)) {
+		if(Comp.UntargetableComp.has(entity)) {
 			target.alpha = 0.25f;
 		} else {
 			target.alpha = 1f;

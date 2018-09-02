@@ -17,7 +17,6 @@ package com.jharter.game.controller;
  ******************************************************************************/
 
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 /**

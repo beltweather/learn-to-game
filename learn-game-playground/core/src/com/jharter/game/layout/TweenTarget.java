@@ -3,10 +3,10 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.M;
+import com.jharter.game.ashley.components.Comp;
 
 public class TweenTarget implements Poolable {
 	
@@ -40,7 +40,7 @@ public class TweenTarget implements Poolable {
 	private TweenTarget() {}
 	
 	public void setFromEntity(Entity entity) {
-		setFromEntity(M.SpriteComp.get(entity));
+		setFromEntity(Comp.SpriteComp.get(entity));
 	}
 	
 	public void setFromEntity(SpriteComp s) {

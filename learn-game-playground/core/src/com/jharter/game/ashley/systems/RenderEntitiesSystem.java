@@ -22,8 +22,8 @@ import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.render.ShapeRenderMethod;
-import com.jharter.game.ashley.components.M;
 
 public class RenderEntitiesSystem extends SortedIteratingSystem {
 	
@@ -55,9 +55,9 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		TextureComp t = M.TextureComp.get(entity);
-		ShapeRenderComp r = M.ShapeRenderComp.get(entity);
-		SpriteComp s = M.SpriteComp.get(entity);
+		TextureComp t = Comp.TextureComp.get(entity);
+		ShapeRenderComp r = Comp.ShapeRenderComp.get(entity);
+		SpriteComp s = Comp.SpriteComp.get(entity);
 		
 		if(t != null && t.region == null) {
 			t.region = t.defaultRegion;
@@ -76,8 +76,8 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 		float originY = s.height/2;
 		
 		boolean drawSingle = true;
-		if(M.MultiSpriteComp.has(entity)) {
-			MultiSpriteComp ms = M.MultiSpriteComp.get(entity);
+		if(Comp.MultiSpriteComp.has(entity)) {
+			MultiSpriteComp ms = Comp.MultiSpriteComp.get(entity);
 			for(int i = 0; i < ms.size; i++) {
 				if(isTexture) {
 					batchDraw(ms, i, s, t, offsetX, offsetY, originX, originY);

@@ -1,9 +1,9 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.M;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseStartTurnComp;
+import com.jharter.game.ashley.components.Ent;
 
 public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
@@ -18,7 +18,7 @@ public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		M.resetActivePlayerEntity();
+		Ent.resetActivePlayerEntity();
 		return true;
 	}
 

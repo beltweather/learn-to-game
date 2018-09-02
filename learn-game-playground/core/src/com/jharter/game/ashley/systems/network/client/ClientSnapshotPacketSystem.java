@@ -4,8 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
-import com.jharter.game.ashley.components.M;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.systems.network.InterpolatingPacketSystem;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.GameClient;
@@ -37,10 +37,10 @@ public class ClientSnapshotPacketSystem extends InterpolatingPacketSystem<Snapsh
 			
 			ID entityId = pastEntityData.id;
 			
-			Entity entity = M.Entity.get(entityId);
+			Entity entity = Ent.Entity.get(entityId);
 			if(entity != null) {
-				InputComp inputComp = M.InputComp.get(entity);
-				boolean focus = M.FocusComp.has(entity);
+				InputComp inputComp = Comp.InputComp.get(entity);
+				boolean focus = Comp.FocusComp.has(entity);
 				if(inputComp != null) {
 					GameInput in = inputComp.input;
 					if(pastEntityData.input != null && !focus) {
@@ -51,7 +51,7 @@ public class ClientSnapshotPacketSystem extends InterpolatingPacketSystem<Snapsh
 					}
 				}
 				
-				TargetPositionComp t = M.TargetPositionComp.get(entity);
+				TargetPositionComp t = Comp.TargetPositionComp.get(entity);
 				if(t.position == null) {
 					t.position = new Vector3();
 				}

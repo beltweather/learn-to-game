@@ -83,10 +83,10 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		entity.remove(phaseClass);
 		
 		if(alternativeNextPhaseClass != null) {
-			entity.add(Comp.create(alternativeNextPhaseClass));
+			entity.add(Comp.create(getEngine(), alternativeNextPhaseClass));
 			alternativeNextPhaseClass = null;
 		} else {
-			entity.add(Comp.create(nextPhaseClass));
+			entity.add(Comp.create(getEngine(), nextPhaseClass));
 		}
 		
 		phaseStarted = false;
@@ -122,7 +122,7 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	}
 	
 	protected void disableCursor() {
-		Ent.CursorEntity.disable();
+		Ent.CursorEntity.disable(getEngine());
 	}
 	
 	protected boolean has(Class<? extends Component> klass) {

@@ -91,7 +91,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				Timeline multiB = Timeline.createParallel();
 				
 				float centerY = 0;
-				MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, entity);
+				MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
 				mp.clear();
 				
 				int size = Link.ZoneComp.get(zp).objectIDs.size();
@@ -123,7 +123,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				tween = TweenUtil.tween(id.id, tt);
 			}
 			
-			TweenUtil.start(id.id, tween);
+			TweenUtil.start(getEngine(), id.id, tween);
 		} else if(isAll(c)) {
 			hasMulti = true;
 		}
@@ -153,10 +153,10 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		Sys.out.println("Tweening");
-		TweenUtil.start(entity, tt);
+		TweenUtil.start(getEngine(), entity, tt);
 		
 		if(isAll(c)) {
-			MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, entity);
+			MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
 			for(int i = 0; i < Link.ZoneComp.get(zp).objectIDs.size(); i++) {
 				targetPosition = getCursorPosition(entity, z, i);
 				if(targetPosition != null) {
@@ -209,7 +209,7 @@ public class CursorPositionSystem extends IteratingSystem {
 					// If the last pairs have an "all connection", find all targets within that zone and
 					// render lines to them.
 					if((turnAction.all || forceAll) && j == turnAction.targetIDs.size - 2) {
-						MultiSpriteComp ms = Comp.getOrAdd(MultiSpriteComp.class, cursor);
+						MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 						ms.drawSingle = true;
 						if(!hasMulti) {
 							ms.clear();
@@ -239,7 +239,7 @@ public class CursorPositionSystem extends IteratingSystem {
 					} else if(j == turnAction.targetIDs.size - 2) {
 						//SpriteComp sTargetB = Mapper.SpriteComp.get(subTargetEntity);
 						
-						MultiSpriteComp ms = Comp.getOrAdd(MultiSpriteComp.class, cursor);
+						MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 						ms.drawSingle = true;
 						if(!hasMulti) {
 							ms.clear();

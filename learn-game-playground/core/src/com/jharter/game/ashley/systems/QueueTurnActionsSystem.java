@@ -43,12 +43,12 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					Entity owner = Ent.Entity.get(ca.playerID);
 					ActiveCardComp ac = Comp.ActiveCardComp.get(owner);
 					if(ac == null) {
-						ac = Comp.create(ActiveCardComp.class);
+						ac = Comp.create(getEngine(), ActiveCardComp.class);
 						owner.add(ac);
 					}
 					
 					ZoneComp z = zp.getZoneComp();
-					ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
+					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 					cz.oldZoneID = z.zoneID;
 					cz.newZoneID = Link.ZoneComp.getID(ca.playerID, ZoneType.ACTIVE_CARD);
 					cz.useNextIndex = true;
@@ -70,7 +70,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 			}
 		}
 		entity.remove(ActionQueueableComp.class);
-		entity.add(Comp.create(ActionQueuedComp.class));
+		entity.add(Comp.create(getEngine(), ActionQueuedComp.class));
 	}
 	
 }

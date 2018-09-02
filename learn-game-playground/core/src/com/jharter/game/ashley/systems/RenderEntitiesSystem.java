@@ -138,12 +138,10 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 	}
 	
 	private static class PositionSort implements Comparator<Entity> {
-		private ComponentMapper<SpriteComp> sm = ComponentMapper.getFor(SpriteComp.class);
-		
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
-			Vector3 posA = sm.get(entityA).position;
-			Vector3 posB = sm.get(entityB).position;
+			Vector3 posA = Comp.SpriteComp.get(entityA).position;
+			Vector3 posB = Comp.SpriteComp.get(entityB).position;
 			if(posA.z == posB.z) {
 				return (int) (posB.y - posA.y);
 			}

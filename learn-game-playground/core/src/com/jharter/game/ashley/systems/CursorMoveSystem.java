@@ -70,7 +70,7 @@ public class CursorMoveSystem extends AbstractCursorOperationSystem {
 		}
 		
 		if(zp.index != newIndex || origZ.zoneID != z.zoneID) {
-			ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
+			ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 			cz.oldZoneID = origZ.zoneID;
 			cz.newZoneID = z.zoneID;
 			cz.newIndex = newIndex;

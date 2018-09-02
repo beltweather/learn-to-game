@@ -60,7 +60,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		if(c.turnActionEntityID != null) {
 			Entity entity = Ent.Entity.get(c.turnActionEntityID);
 			if(!Comp.ActionSpentComp.has(entity)) {
-				entity.add(Comp.create(ActionSpentComp.class));
+				entity.add(Comp.create(getEngine(), ActionSpentComp.class));
 			}
 		}
 	}

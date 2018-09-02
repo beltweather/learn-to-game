@@ -21,6 +21,7 @@ public class ZoneLayoutSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		ZoneComp z = Comp.ZoneComp.get(entity);
 		for(ID id : z.objectIDs) {
+			z.layout.setSystem(this);
 			z.layout.revalidate();
 			Entity zEntity = Ent.Entity.get(id);
 			if(Comp.AnimatingComp.has(zEntity)) {
@@ -28,8 +29,12 @@ public class ZoneLayoutSystem extends IteratingSystem {
 			}
 			TweenTarget target = z.layout.getTarget(id, true);
 			if(!z.layout.matchesTarget(zEntity, target)) {
-				TweenUtil.start(id, target);
+				TweenUtil.start(getEngine(), id, target);
 			}
+			
+			// Clear out the system since this should only be
+			// a temporary reference.
+			z.layout.setSystem(null);
 		}
 	}
 

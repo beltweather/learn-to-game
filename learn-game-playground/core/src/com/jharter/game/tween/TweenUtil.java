@@ -1,5 +1,6 @@
 package com.jharter.game.tween;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -39,11 +40,11 @@ public class TweenUtil {
 		}
 	}
 	
-	public static void start(ID id, BaseTween<?> baseTween) {
-		start(id, baseTween, null);
+	public static void start(Engine engine, ID id, BaseTween<?> baseTween) {
+		start(engine, id, baseTween, null);
 	}
 	
-	public static void start(ID id, BaseTween<?> baseTween, TweenCallback callback) {
+	public static void start(Engine engine, ID id, BaseTween<?> baseTween, TweenCallback callback) {
 		if(manager == null) {
 			return;
 		}
@@ -51,7 +52,7 @@ public class TweenUtil {
 		if(id != null) {
 			Entity entity = Ent.Entity.get(id);
 			if(!Comp.AnimatingComp.has(entity)) {
-				entity.add(Comp.create(AnimatingComp.class));
+				entity.add(Comp.create(engine, AnimatingComp.class));
 			}
 			AnimatingComp a = Comp.AnimatingComp.get(entity);
 			a.activeCount++;
@@ -71,16 +72,16 @@ public class TweenUtil {
 		baseTween.start(manager);
 	}
 	
-	public static void start(Entity entity, TweenTarget target) {
-		start(Comp.IDComp.get(entity).id, target);
+	public static void start(Engine engine, Entity entity, TweenTarget target) {
+		start(engine, Comp.IDComp.get(entity).id, target);
 	}
 	
-	public static void start(ID id, TweenTarget target) {
-		start(id, target, target.duration);
+	public static void start(Engine engine, ID id, TweenTarget target) {
+		start(engine, id, target, target.duration);
 	}
 	
-	public static void start(ID id, TweenTarget target, float duration) {
-		start(id, tween(id, target, duration));
+	public static void start(Engine engine, ID id, TweenTarget target, float duration) {
+		start(engine, id, tween(id, target, duration));
 	}
 	
 	public static Timeline tween(ID id, TweenTarget target) {

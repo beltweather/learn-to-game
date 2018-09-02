@@ -1,5 +1,6 @@
 package com.jharter.game.layout;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -8,6 +9,7 @@ import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.util.id.ID;
 
 public abstract class ZoneLayout {
@@ -16,8 +18,17 @@ public abstract class ZoneLayout {
 	protected ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
 	protected boolean tween = true;
 	protected boolean allowRelativePositions = true;
+	protected transient ZoneLayoutSystem system = null;
 	
 	public ZoneLayout() {}
+	
+	public Engine getEngine() {
+		return system.getEngine();
+	}
+	
+	public void setSystem(ZoneLayoutSystem system) {
+		this.system = system;
+	}
 	
 	public void setIds(ImmutableArray<ID> ids) {
 		this.ids = ids;
@@ -127,7 +138,7 @@ public abstract class ZoneLayout {
 	
 	public void hide(Entity entity) {
 		if(!Comp.InvisibleComp.has(entity)) {
-			entity.add(Comp.create(InvisibleComp.class));
+			entity.add(Comp.create(getEngine(), InvisibleComp.class));
 		}
 	}
 	

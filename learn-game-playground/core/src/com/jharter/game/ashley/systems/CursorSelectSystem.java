@@ -67,7 +67,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 					Ent.nextActivePlayerEntity();
 					
 					Entity turnActionEntity = Ent.Entity.get(c.turnActionEntityID);
-					turnActionEntity.add(Comp.create(ActionQueueableComp.class));
+					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
 					c.turnActionEntityID = null;
 					zp.clearHistory();
 					checkpoint = false;
@@ -79,7 +79,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				ZoneComp targetZone = t.hasAllTargets() ? Link.ZoneComp.get(playerID, ZoneType.HAND) : Link.ZoneComp.get(playerID, t.getTargetZoneType());
 				int targetIndex = findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
 				
-				ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
+				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 				cz.oldZoneID = z.zoneID;
 				cz.newZoneID = targetZone.zoneID;
 				cz.newIndex = targetIndex;
@@ -98,7 +98,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 						c.turnActionEntityID = null;
 					}
 				}
-				ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
+				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 				entity.add(cz);
 			}			
 		}

@@ -58,7 +58,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 				break;
 			case CURSOR:
 				if(cz.checkpoint) {
-					zp.checkpoint();
+					zp.checkpoint(getEngine());
 				}
 				CursorComp c = Comp.CursorComp.get(entity);
 				c.lastZoneID = cz.oldZoneID;

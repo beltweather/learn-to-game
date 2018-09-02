@@ -1,6 +1,7 @@
 package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -471,8 +472,8 @@ public final class Components {
 			return Link.ZoneComp.get(this);
 		}
 		
-		public void checkpoint() {
-			history.add(copyForHistory());
+		public void checkpoint(Engine engine) {
+			history.add(copyForHistory(engine));
 		}
 		
 		public void undoCheckpoint() {
@@ -496,8 +497,8 @@ public final class Components {
 			history.clear();
 		}
 		
-		private ZonePositionComp copyForHistory() {
-			ZonePositionComp zp = Comp.create(ZonePositionComp.class);
+		private ZonePositionComp copyForHistory(Engine engine) {
+			ZonePositionComp zp = Comp.create(engine, ZonePositionComp.class);
 			zp.zoneID = zoneID;
 			zp.index = index;
 			// Intentionally ignoring history for copies since we don't use it

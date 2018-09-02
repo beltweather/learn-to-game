@@ -56,7 +56,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					}
 					
 					ZoneComp z = zp.getZoneComp();
-					ChangeZoneComp cz = Comp.create(ChangeZoneComp.class);
+					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 					cz.useNextIndex = true;
 					cz.oldZoneID = z.zoneID;
 					cz.newZoneID = Link.ZoneComp.getID(ca.playerID, ZoneType.HAND);

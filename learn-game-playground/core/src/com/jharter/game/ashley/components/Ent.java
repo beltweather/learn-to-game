@@ -1,10 +1,9 @@
 package com.jharter.game.ashley.components;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -15,15 +14,6 @@ import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseEndBattleComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseEndTurnComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseNoneComp;
-import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
-import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseSelectEnemyActionsComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseStartBattleComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseStartTurnComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.util.id.ID;
@@ -58,14 +48,12 @@ public class Ent {
 		return activePlayerIndex == IDUtil.getPlayerIDs().size()-1;
 	}
 	
-	public static void addIdListener(PooledEngine engine, final Box2DWorld box2D) {
+	public static void addIdListener(Engine engine, final Box2DWorld box2D) {
 		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
-			
-			private ComponentMapper<IDComp> im = ComponentMapper.getFor(IDComp.class);
 			
 			@Override
 			public void entityAdded(Entity entity) {
-				IDComp idComp = im.get(entity);
+				IDComp idComp = Comp.IDComp.get(entity);
 				if(idComp.id != null) {
 					entitiesById.put(idComp.id, entity);
 				}
@@ -73,7 +61,7 @@ public class Ent {
 
 			@Override
 			public void entityRemoved(Entity entity) {
-				IDComp idComp = im.get(entity);
+				IDComp idComp = Comp.IDComp.get(entity);
 				BodyComp b = Comp.BodyComp.get(entity);
 				SensorComp s = Comp.SensorComp.get(entity);
 				if(b != null && b.body != null) {
@@ -107,15 +95,15 @@ public class Ent {
 			return null;
 		}
 		
-		public void remove(ID id) {
-			remove(get(id));
+		public void remove(Engine engine, ID id) {
+			remove(engine, get(id));
 		}
 		
-		public void remove(Entity entity) {
+		public void remove(Engine engine, Entity entity) {
 			if(entity == null) {
 				return;
 			}
-			Comp.getOrAdd(RemoveComp.class, entity);
+			Comp.getOrAdd(engine, RemoveComp.class, entity);
 		}
 		
 	}
@@ -141,10 +129,10 @@ public class Ent {
 			in.input.reset();
 		}
 		
-		public void disable() {
+		public void disable(Engine engine) {
 			Entity entity = Entity();
 			if(!Comp.DisabledComp.has(entity)) {
-				entity.add(Comp.create(DisabledComp.class));
+				entity.add(Comp.create(engine, DisabledComp.class));
 			}
 			InputComp in = Comp.InputComp.get(entity);
 			in.input.reset();
@@ -196,15 +184,15 @@ public class Ent {
 			return Comp.TurnPhaseComp.get(Entity());
 		}
 		
-		public boolean isTurnPhaseStartBattle() { return ComponentMapper.getFor(TurnPhaseStartBattleComp.class).has(Entity()); }
-		public boolean isTurnPhaseStartTurn() { return ComponentMapper.getFor(TurnPhaseStartTurnComp.class).has(Entity()); }
-		public boolean isTurnPhaseSelectEnemyActions() { return ComponentMapper.getFor(TurnPhaseSelectEnemyActionsComp.class).has(Entity()); }
-		public boolean isTurnPhaseSelectFriendActions() { return ComponentMapper.getFor(TurnPhaseSelectFriendActionsComp.class).has(Entity()); }
-		public boolean isTurnPhasePerformFriendActions() { return ComponentMapper.getFor(TurnPhasePerformFriendActionsComp.class).has(Entity()); }
-		public boolean isTurnPhasePerformEnemyActions() { return ComponentMapper.getFor(TurnPhasePerformEnemyActionsComp.class).has(Entity()); }
-		public boolean isTurnPhaseEndTurn() { return ComponentMapper.getFor(TurnPhaseEndTurnComp.class).has(Entity()); }
-		public boolean isTurnPhaseEndBattle() { return ComponentMapper.getFor(TurnPhaseEndBattleComp.class).has(Entity()); }
-		public boolean isTurnPhaseNone() { return ComponentMapper.getFor(TurnPhaseNoneComp.class).has(Entity()); }
+		public boolean isTurnPhaseStartBattle() { return Comp.TurnPhaseStartBattleComp.has(Entity()); }
+		public boolean isTurnPhaseStartTurn() { return Comp.TurnPhaseStartTurnComp.has(Entity()); }
+		public boolean isTurnPhaseSelectEnemyActions() { return Comp.TurnPhaseSelectEnemyActionsComp.has(Entity()); }
+		public boolean isTurnPhaseSelectFriendActions() { return Comp.TurnPhaseSelectFriendActionsComp.has(Entity()); }
+		public boolean isTurnPhasePerformFriendActions() { return Comp.TurnPhasePerformFriendActionsComp.has(Entity()); }
+		public boolean isTurnPhasePerformEnemyActions() { return Comp.TurnPhasePerformEnemyActionsComp.has(Entity()); }
+		public boolean isTurnPhaseEndTurn() { return Comp.TurnPhaseEndTurnComp.has(Entity()); }
+		public boolean isTurnPhaseEndBattle() { return Comp.TurnPhaseEndBattleComp.has(Entity()); }
+		public boolean isTurnPhaseNone() { return Comp.TurnPhaseNoneComp.has(Entity()); }
 		
 	}
 	

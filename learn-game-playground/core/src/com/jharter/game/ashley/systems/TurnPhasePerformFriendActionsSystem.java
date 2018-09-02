@@ -65,7 +65,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.position.x = U.u12(160);
 			tt.position.y = U.u12(60);
 			
-			TweenUtil.start(id, TweenUtil.tween(id, tt, 1f), new TweenCallback() {
+			TweenUtil.start(getEngine(), id, TweenUtil.tween(id, tt, 1f), new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -73,7 +73,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 						turnAction.performAcceptCallback();
 					}
 					
-					entity.add(Comp.create(ActionSpentComp.class));
+					entity.add(Comp.create(getEngine(), ActionSpentComp.class));
 
 					busy = false;
 				}
@@ -86,11 +86,11 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.position.y += U.u12(4);
 			tt.angleDegrees = 20;
 			
-			TweenUtil.start(idAvatar.id, TweenUtil.tween(idAvatar.id, tt, 0.25f).repeatYoyo(1, 0f));
+			TweenUtil.start(getEngine(), idAvatar.id, TweenUtil.tween(idAvatar.id, tt, 0.25f).repeatYoyo(1, 0f));
 			
 			busy = true;
 		} else {
-			entity.add(Comp.create(ActionSpentComp.class));
+			entity.add(Comp.create(getEngine(), ActionSpentComp.class));
 		}
 		
 		return false;

@@ -26,8 +26,6 @@ public class FloatTweenAccessor implements TweenAccessor<Float> {
 	public void setValues(Float f, int tweenType, float[] newValues) {
 		switch(TweenType.get(tweenType)) {
 			case ALPHA:
-				f = newValues[0];
-				break;
 			case ANGLE:
 				f = newValues[0];
 				break;

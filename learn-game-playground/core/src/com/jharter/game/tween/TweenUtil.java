@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.layout.TweenTarget;
@@ -31,6 +32,7 @@ public class TweenUtil {
 		Tween.registerAccessor(Vector3.class, new Vector3TweenAccessor());
 		Tween.registerAccessor(Vector2.class, new Vector2TweenAccessor());
 		Tween.registerAccessor(Float.class, new FloatTweenAccessor());
+		Tween.registerAccessor(Array.class, new FloatArrayTweenAccessor());
 	}
 	
 	public static void update(float deltaTime) {

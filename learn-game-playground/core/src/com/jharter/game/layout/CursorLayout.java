@@ -57,7 +57,7 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		if(c.lastZoneID == z.zoneID) {
-			tt.duration = 0.03f;
+			tt.duration = 0.10f;
 		}
 		
 		return tt;
@@ -173,8 +173,8 @@ public class CursorLayout extends ZoneLayout {
 		
 		// Get the last target in the list and find its zone
 		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.peek());
-		ZonePositionComp targetZone = Comp.ZonePositionComp.get(targetEntity);
-		ZoneComp zone = targetZone.getZoneComp();
+		ZonePositionComp targetZonePosition = Comp.ZonePositionComp.get(targetEntity);
+		ZoneComp targetZone = targetZonePosition.getZoneComp();
 		
 		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 		ms.drawSingle = true;
@@ -186,29 +186,36 @@ public class CursorLayout extends ZoneLayout {
 		// If the last target has an "all connection", find all targets within that zone and
 		// add multiplicity to them.
 		if((turnAction.all || forceAll)) {
-			for(int i = 0; i < zone.objectIDs.size(); i++) {
-				addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(Comp.Entity.get(zone.objectIDs.get(i))).id);
+			for(int i = 0; i < targetZone.objectIDs.size(); i++) {
+				addMultiPositions(ms, multiplicity, cursor, s, targetZone, Comp.IDComp.get(Comp.Entity.get(targetZone.objectIDs.get(i))).id);
 			}
-
+			
 		// Otherwise, just add multiplicity
 		} else {
-			addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(targetEntity).id);
+			addMultiPositions(ms, multiplicity, cursor, s, targetZone, Comp.IDComp.get(targetEntity).id);
 		}
 		ms.size = ms.positions.size;
 		hasMulti = true;
 	}
 	
 	private void addMultiPositions(MultiSpriteComp ms, int multiplicity, Entity cursor, SpriteComp s, ZoneComp zone, ID targetID) {
+		Vector3 cursorPosition = getCursorPosition(cursor, zone, targetID);
 		for(int m = 0; m < multiplicity; m++) {
-			Vector3 pos = getCursorPosition(cursor, zone, targetID);
-			pos.x -= U.u1(25)*m;
-			pos.y -= U.u1(10)*m;
+			Vector3 pos = new Vector3(cursorPosition);
+			pos.x -= U.u12(2)*m;
+			pos.y -= U.u12(1)*m;
+			if(zone.zoneType == ZoneType.FRIEND) {
+				pos.x += U.u12(4);
+			}
 			ms.positions.add(pos);
 			ms.scales.add(new Vector2(0.5f*s.scale.x, 0.5f*s.scale.y));
+			ms.alphas.add(0f);
 			if(zone.zoneType == ZoneType.ENEMY) {
 				ms.reflectAngle = true;
 			}
 		}
+		
+		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
 	}
 
 	private boolean isAll(CursorComp c) {

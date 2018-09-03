@@ -1,16 +1,18 @@
 package com.jharter.game.ashley.systems;
 
+import java.util.Comparator;
+
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 
-public abstract class TurnPhaseSystem extends IteratingSystem {
+public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 
 	private Class<? extends Component> phaseClass;
 	private Class<? extends Component> nextPhaseClass;
@@ -29,7 +31,12 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass, Family family) {
-		super(family == null ? Family.all(TurnPhaseComp.class, phaseClass).get() : family);
+		this(phaseClass, nextPhaseClass, family, new NoSort());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass, Family family, Comparator<Entity> comparator) {
+		super(family == null ? Family.all(TurnPhaseComp.class, phaseClass).get() : family, comparator);
 		this.phaseIsFamily = family == null;
 		this.phaseClass = phaseClass;
 		this.nextPhaseClass = nextPhaseClass;
@@ -47,6 +54,7 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 			}
 		}
 		hasEntities = false;
+		forceSort();
 		super.update(deltaTime);
 		if(!hasEntities && endPhaseWhenEntitiesGone) {
 			phaseShouldEnd = true;
@@ -143,5 +151,11 @@ public abstract class TurnPhaseSystem extends IteratingSystem {
 		return getEngine().getEntitiesFor(families.get(klass));
 	}
 	
+	private static class NoSort implements Comparator<Entity> {
+		@Override
+		public int compare(Entity entityA, Entity entityB) {
+			return 0;
+		}
+	}
 	
 }

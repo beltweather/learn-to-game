@@ -57,7 +57,12 @@ public final class Components {
 	public static final class TurnPhaseNoneComp extends B {}
 	
 	public static final class ActionQueueableComp extends B {}
-	public static final class ActionQueuedComp extends B {}
+	public static final class ActionQueuedComp implements C {
+		public static int QUEUE_INDEX = 0;
+		public int queueIndex = -1;
+		private ActionQueuedComp() {}
+		@Override public void reset() { queueIndex = -1; }
+	}
 	public static final class ActionReadyComp extends B {}
 	public static final class ActionSpentComp extends B {}
 	

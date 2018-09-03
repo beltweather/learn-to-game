@@ -18,7 +18,7 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public class QueueTurnActionsSystem  extends IteratingSystem {
-
+	
 	@SuppressWarnings("unchecked")
 	public QueueTurnActionsSystem() {
 		super(Family.all(ActionQueueableComp.class, TypeComp.class, IDComp.class).get());
@@ -39,11 +39,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					CardComp ca = Comp.CardComp.get(entity);
 					ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 					Entity owner = Comp.Entity.get(ca.playerID);
-					ActiveCardComp ac = Comp.ActiveCardComp.get(owner);
-					if(ac == null) {
-						ac = Comp.create(getEngine(), ActiveCardComp.class);
-						owner.add(ac);
-					}
+					ActiveCardComp ac = Comp.getOrAdd(getEngine(), ActiveCardComp.class, owner);
 					
 					ZoneComp z = zp.getZoneComp();
 					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
@@ -68,7 +64,10 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 			}
 		}
 		entity.remove(ActionQueueableComp.class);
-		entity.add(Comp.create(getEngine(), ActionQueuedComp.class));
+		
+		ActionQueuedComp aq = Comp.create(getEngine(), ActionQueuedComp.class);
+		aq.queueIndex = ActionQueuedComp.QUEUE_INDEX++;
+		entity.add(aq);
 	}
 	
 }

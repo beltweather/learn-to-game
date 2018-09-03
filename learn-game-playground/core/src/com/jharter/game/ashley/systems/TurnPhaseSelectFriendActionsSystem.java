@@ -27,6 +27,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		resetCursor();
 		Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.start();
 		Media.startTurnBeep.play();
+		ActionQueuedComp.QUEUE_INDEX = 0;
 		return true;
 	}
 

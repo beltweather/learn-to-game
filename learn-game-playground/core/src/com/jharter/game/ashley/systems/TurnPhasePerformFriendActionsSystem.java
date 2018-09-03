@@ -1,5 +1,7 @@
 package com.jharter.game.ashley.systems;
 
+import java.util.Comparator;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
@@ -32,7 +34,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@SuppressWarnings("unchecked")
 	public TurnPhasePerformFriendActionsSystem() {
 		super(TurnPhasePerformFriendActionsComp.class, TurnPhasePerformEnemyActionsComp.class,
-			  Family.all(ActionQueuedComp.class, TurnActionComp.class).get());
+			  Family.all(ActionQueuedComp.class, TurnActionComp.class).get(), new QueueSort());
 		endIfNoMoreEntities();
 	}
 
@@ -137,6 +139,13 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected void processEntityPhaseEnd(Entity entity, float deltaTime) {
 		busy = false;
+	}
+	
+	private static class QueueSort implements Comparator<Entity> {
+		@Override
+		public int compare(Entity entityA, Entity entityB) {
+			return Comp.ActionQueuedComp.get(entityA).queueIndex - Comp.ActionQueuedComp.get(entityB).queueIndex;
+		}
 	}
 	
 }

@@ -71,16 +71,16 @@ public class TurnAction {
 			return false;
 		}
 		
-		if(validTargetCallback != null) {
-			return validTargetCallback.call(entity);
-		}
-		
 		// Special check for cards that modify other cards, we don't
 		// want them to be able to target each other
 		CardComp c = Comp.CardComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		if(c != null && zp != null) {
-			return c.cardType != CardType.TARGET_CARD || zp.getZoneComp().zoneType != ZoneType.ACTIVE_CARD;
+		if(c != null && zp != null && c.cardType == CardType.TARGET_CARD && zp.getZoneComp().zoneType == ZoneType.ACTIVE_CARD) {
+			return false;
+		}
+		
+		if(validTargetCallback != null) {
+			return validTargetCallback.call(entity);
 		}
 		
 		return true;

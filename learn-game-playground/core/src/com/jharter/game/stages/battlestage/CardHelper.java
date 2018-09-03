@@ -9,6 +9,7 @@ import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.components.subcomponents.Callback.DoesntHaveAllCallback;
 import com.jharter.game.ashley.components.subcomponents.CombatUtil;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.CardCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
@@ -155,6 +156,7 @@ public class CardHelper {
 	public static void addAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
 		EntityBuilder b = buildCard(engine, playerID, zone, Media.all, "All");
 		b.TurnActionComp().turnAction.makesTargetAll = true;
+		new DoesntHaveAllCallback(b);
 		new CardCallback(b) {
 
 			@Override

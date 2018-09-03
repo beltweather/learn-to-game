@@ -85,6 +85,14 @@ public class Comp {
 		return ((PooledEngine) engine).createComponent(klass);
 	}
 	
+	public static <T extends Component> void add(Engine engine, Class<T> klass, Entity entity) {
+		if(getFor(klass).has(entity)) {
+			return;
+		}
+		T comp = create(engine, klass);
+		entity.add(comp);
+	}
+	
 	public static <T extends Component> T getOrAdd(Engine engine, Class<T> klass, Entity entity) {
 		if(getFor(klass).has(entity)) {
 			return getFor(klass).get(entity);

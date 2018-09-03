@@ -13,7 +13,6 @@ import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -172,26 +171,26 @@ public class CursorLayout extends ZoneLayout {
 		
 		int multiplicity = forceMultiplicity * turnAction.multiplicity;
 		
-		// Iterate through all targets of this card, looking in particular for the last two pairs
-		// of targets so we can handle their "all" status or lack thereof
-		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.get(turnAction.targetIDs.size-1));
+		// Get the last target in the list and find its zone
+		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.peek());
 		ZonePositionComp targetZone = Comp.ZonePositionComp.get(targetEntity);
 		ZoneComp zone = targetZone.getZoneComp();
 		
 		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 		ms.drawSingle = true;
+		ms.reflectAngle = false;
 		if(!hasMulti) {
 			ms.clear();
 		}
 		
-		// If the last pairs have an "all connection", find all targets within that zone and
-		// render lines to them.
+		// If the last target has an "all connection", find all targets within that zone and
+		// add multiplicity to them.
 		if((turnAction.all || forceAll)) {
 			for(int i = 0; i < zone.objectIDs.size(); i++) {
 				addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(Comp.Entity.get(zone.objectIDs.get(i))).id);
 			}
 
-		// Otherwise, connect the pairs as usual
+		// Otherwise, just add multiplicity
 		} else {
 			addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(targetEntity).id);
 		}
@@ -245,10 +244,14 @@ public class CursorLayout extends ZoneLayout {
 			return null;
 		}
 		
-		TweenTarget lTarget = z.layout.getTarget(cursorTargetID);
-		SpriteComp sTarget = Comp.SpriteComp.get(target);
+		// Could use this if you always wanted the cursor to point to the target
+		// layout location as opposed to the target actual location. These two
+		// would be different if the target entity was currently moving back in
+		// to place or something like that.
+		//TweenTarget lTarget = z.layout.getTarget(cursorTargetID);
 		
-		if(lTarget == null || sTarget == null) {
+		SpriteComp sTarget = Comp.SpriteComp.get(target);
+		if(sTarget == null) {
 			return null;
 		}
 		

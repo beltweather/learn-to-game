@@ -19,7 +19,6 @@ import com.jharter.game.control.GameInput;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.EntityType;
@@ -438,7 +437,7 @@ public final class Components {
 			internalObjectIDs.removeValue(id, false);
 			for(int i = 0; i < internalObjectIDs.size; i++) {
 				ID oID = internalObjectIDs.get(i);
-				Entity obj = Ent.Entity.get(oID);
+				Entity obj = Comp.Entity.get(oID);
 				ZonePositionComp zp = Comp.ZonePositionComp.get(obj);
 				zp.index = i;
 			}
@@ -466,7 +465,7 @@ public final class Components {
 			if(zoneID == null) {
 				return null;
 			}
-			return Link.ZoneComp.get(this);
+			return Comp.Method.ZoneComp.get(this);
 		}
 		
 		public void checkpoint(Engine engine) {

@@ -15,8 +15,6 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
@@ -94,7 +92,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
 				mp.clear();
 				
-				int size = Link.ZoneComp.get(zp).objectIDs.size();
+				int size = Comp.Method.ZoneComp.get(zp).objectIDs.size();
 				for(int i = 0; i < size; i++) {
 					position = getCursorPosition(entity, z, i);
 					if(position != null) {
@@ -157,7 +155,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		
 		if(isAll(c)) {
 			MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
-			for(int i = 0; i < Link.ZoneComp.get(zp).objectIDs.size(); i++) {
+			for(int i = 0; i < Comp.Method.ZoneComp.get(zp).objectIDs.size(); i++) {
 				targetPosition = getCursorPosition(entity, z, i);
 				if(targetPosition != null) {
 					Vector3 targP = new Vector3(targetPosition);
@@ -179,7 +177,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		// See if cursor is modifying an action
-		TurnAction t = Link.CursorComp.getTurnAction(c);
+		TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
 		if(t == null) {
 			return;
 		}
@@ -190,7 +188,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		int forceMultiplicity = t.makesTargetMultiplicity;
 		
 		// Get the card that the cursor is above and verify it has a turn action associated with it
-		Entity activeCard = Ent.Entity.get(z.objectIDs.get(zp.index));
+		Entity activeCard = Comp.Entity.get(z.objectIDs.get(zp.index));
 		if(Comp.TurnActionComp.has(activeCard)) {
 			
 			TurnAction turnAction = Comp.TurnActionComp.get(activeCard).turnAction;
@@ -201,7 +199,7 @@ public class CursorPositionSystem extends IteratingSystem {
 				// Iterate through all targets of this card, looking in particular for the last two pairs
 				// of targets so we can handle their "all" status or lack thereof
 				for(int j = 0; j < turnAction.targetIDs.size - 1; j++) {
-					Entity subTargetEntity = Ent.Entity.get(turnAction.targetIDs.get(j+1));
+					Entity subTargetEntity = Comp.Entity.get(turnAction.targetIDs.get(j+1));
 					IDComp subTargetID = Comp.IDComp.get(subTargetEntity);
 					ZonePositionComp subTargetZone = Comp.ZonePositionComp.get(subTargetEntity);
 					ZoneComp zone = subTargetZone.getZoneComp();
@@ -215,7 +213,7 @@ public class CursorPositionSystem extends IteratingSystem {
 							ms.clear();
 						}
 						for(int k = 0; k < zone.objectIDs.size(); k++) {
-							IDComp sTargetBID = Comp.IDComp.get(Ent.Entity.get(zone.objectIDs.get(k)));
+							IDComp sTargetBID = Comp.IDComp.get(Comp.Entity.get(zone.objectIDs.get(k)));
 
 							for(int m = 0; m < multiplicity; m++) {
 								
@@ -265,7 +263,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 
 	private boolean isAll(CursorComp c) {
-		TurnAction ta = Link.CursorComp.getTurnAction(c);
+		TurnAction ta = Comp.Method.CursorComp.getTurnAction(c);
 		return ta != null && ta.all;
 	}
 	
@@ -292,7 +290,7 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 	
 	private Vector3 getCursorPosition(Entity entity, ZoneComp z, ID cursorTargetID) {
-		Entity target = Ent.Entity.get(cursorTargetID);
+		Entity target = Comp.Entity.get(cursorTargetID);
 		if(target == null) {
 			return null;
 		}

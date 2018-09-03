@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -32,7 +31,7 @@ public class TurnAction {
 		if(index < 0 || index >= targetIDs.size) {
 			return null;
 		}
-		return Ent.Entity.get(targetIDs.get(index));
+		return Comp.Entity.get(targetIDs.get(index));
 	}
 	
 	public ZoneType getTargetZoneType() {

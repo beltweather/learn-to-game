@@ -10,7 +10,6 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.util.id.ID;
 
 public class ZoneChangeSystem extends IteratingSystem {
@@ -33,7 +32,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 			targetZoneID = zp.getZoneComp().zoneID;
 		}
 		
-		ZoneComp z = Link.ZoneComp.get(targetZoneID);
+		ZoneComp z = Comp.Method.ZoneComp.get(targetZoneID);
 		
 		int targetIndex;
 		if(cz.useNextIndex) {
@@ -50,7 +49,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 		
 		switch(ty.type) {
 			case CARD:
-				ZoneComp zOld = Link.ZoneComp.get(zp);
+				ZoneComp zOld = Comp.Method.ZoneComp.get(zp);
 				zOld.remove(id.id);
 				z.add(id.id, zp);
 				zp.index = targetIndex;

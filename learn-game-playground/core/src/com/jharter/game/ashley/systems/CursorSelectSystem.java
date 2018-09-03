@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
@@ -10,17 +11,12 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.util.ArrayUtil;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class CursorSelectSystem extends AbstractCursorOperationSystem {
+public class CursorSelectSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorSelectSystem() {
@@ -30,12 +26,12 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 	}
 
 	@Override
-	public void processEntity(Entity entity, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(entity);
-		CursorInputComp ci = Comp.CursorInputComp.get(entity);
-		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
+	public void processEntity(Entity cursor, float deltaTime) {
+		CursorComp c = Comp.CursorComp.get(cursor);
+		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = zp.getZoneComp();
-		ID playerID = Link.CursorComp.getPlayerID(c);
+		ID playerID = Comp.Method.CursorComp.getPlayerID(c);
 		
 		// A little failsafe here for when zones are empty
 		if(!z.hasIndex(zp.index)) {
@@ -45,13 +41,13 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 
 		if(ci.accept) {
 			
-			TurnAction t = Link.CursorComp.getTurnAction(c);
+			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
 			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
-			if(isValidTarget(playerID, z.zoneType, t, index)) {
+			if(Comp.Method.CursorComp.isValidTarget(cursor)) {
 				ID targetEntityID = z.objectIDs.get(index);
-				Entity targetEntity = Ent.Entity.get(targetEntityID);
+				Entity targetEntity = Comp.Entity.get(targetEntityID);
 				
 				// If this is our first target, make them the turn action entity
 				if(t == null) {
@@ -67,10 +63,10 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				boolean checkpoint = true;
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
-					Link.ActivePlayerComp.nextPlayer(Ent.TurnEntity.ActivePlayerComp());
-					playerID = Link.CursorComp.getPlayerID(c);
+					Comp.Method.ActivePlayerComp.nextPlayer(Comp.Entity.TurnEntity.ActivePlayerComp());
+					playerID = Comp.Method.CursorComp.getPlayerID(c);
 					
-					Entity turnActionEntity = Ent.Entity.get(c.turnActionEntityID);
+					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
 					c.turnActionEntityID = null;
 					zp.clearHistory();
@@ -80,23 +76,23 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 				// Update our current cursor position based on our next object to select or
 				// wether we should go back to the hand. We don't need to do an extra check
 				// for validity here because we covered that at the top of this menu.
-				ZoneComp targetZone = t.hasAllTargets() ? Link.ZoneComp.get(playerID, ZoneType.HAND) : Link.ZoneComp.get(playerID, t.getTargetZoneType());
-				int targetIndex = findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
+				ZoneComp targetZone = t.hasAllTargets() ? Comp.Method.ZoneComp.get(playerID, ZoneType.HAND) : Comp.Method.ZoneComp.get(playerID, t.getTargetZoneType());
+				int targetIndex = Comp.Method.CursorComp.findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
 				
 				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 				cz.oldZoneID = z.zoneID;
 				cz.newZoneID = targetZone.zoneID;
 				cz.newIndex = targetIndex;
 				cz.checkpoint = checkpoint;
-				entity.add(cz);
+				cursor.add(cz);
 			
 			}
 			
 		} else if(ci.cancel) {
 
-			TurnAction t = Link.CursorComp.getTurnAction(c);
+			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
 			if(zp.tryRevertToLastCheckpoint()) {
-				entity.remove(ActiveCardComp.class);
+				cursor.remove(ActiveCardComp.class);
 				if(t != null) {
 					t.targetIDs.pop();
 					if(t.targetIDs.size == 0) {
@@ -104,7 +100,7 @@ public class CursorSelectSystem extends AbstractCursorOperationSystem {
 					}
 				}
 				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
-				entity.add(cz);
+				cursor.add(cz);
 			}			
 		}
 		

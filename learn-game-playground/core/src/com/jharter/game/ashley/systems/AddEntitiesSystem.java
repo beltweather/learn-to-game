@@ -2,7 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
@@ -30,7 +30,7 @@ public class AddEntitiesSystem extends EntitySystem {
 		
 		boolean addedFocus = false;
 		for(AddPlayer addPlayer : addPlayers.players) {
-			if(Ent.Entity.get(addPlayer.id) != null) {
+			if(Comp.Entity.get(addPlayer.id) != null) {
 				Sys.out.println("Client " + client.getId() + " skipping player " + addPlayer.id);
 				continue;
 			}

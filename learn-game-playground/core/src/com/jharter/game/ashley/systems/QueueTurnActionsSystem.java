@@ -14,8 +14,6 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -40,7 +38,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					
 					CardComp ca = Comp.CardComp.get(entity);
 					ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-					Entity owner = Ent.Entity.get(ca.playerID);
+					Entity owner = Comp.Entity.get(ca.playerID);
 					ActiveCardComp ac = Comp.ActiveCardComp.get(owner);
 					if(ac == null) {
 						ac = Comp.create(getEngine(), ActiveCardComp.class);
@@ -50,7 +48,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					ZoneComp z = zp.getZoneComp();
 					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Link.ZoneComp.getID(ca.playerID, ZoneType.ACTIVE_CARD);
+					cz.newZoneID = Comp.Method.ZoneComp.getID(ca.playerID, ZoneType.ACTIVE_CARD);
 					cz.useNextIndex = true;
 					cz.instantChange = false;
 					entity.add(cz);

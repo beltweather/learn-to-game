@@ -3,7 +3,7 @@ package com.jharter.game.ashley.systems.network;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ai.msg.PriorityQueue;
-import com.jharter.game.ashley.components.Ent;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.network.endpoints.GameEndPoint;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
@@ -66,7 +66,7 @@ public abstract class PacketSystem<EP extends GameEndPoint, T extends Packet<T>>
 	}
 	
 	public Entity findEntity(ID entityId) {
-		return Ent.Entity.get(entityId);
+		return Comp.Entity.get(entityId);
 	}
 
 }

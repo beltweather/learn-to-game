@@ -2,21 +2,15 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
-import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
-import uk.co.carelesslabs.Enums.ZoneType;
-
-public class CursorTargetValidationSystem extends AbstractCursorOperationSystem {
+public class CursorTargetValidationSystem extends IteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorTargetValidationSystem() {
@@ -25,18 +19,12 @@ public class CursorTargetValidationSystem extends AbstractCursorOperationSystem 
 	}
 
 	@Override
-	public void processEntity(Entity entity, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(entity);
-		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		ZoneComp z = zp.getZoneComp();
-		TurnAction t = Link.CursorComp.getTurnAction(c);
-		ID playerID = Link.CursorComp.getPlayerID(c);
-		
-		ZoneType zoneType = z.zoneType;
+	public void processEntity(Entity cursor, float deltaTime) {
+		ZoneComp z = Comp.Method.ZoneComp.get(cursor);
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			ID id = z.objectIDs.get(i);
-			Entity zoneItem = Ent.Entity.get(id);
-			if(!isValidTarget(playerID, zoneType, t, i)) {
+			Entity zoneItem = Comp.Entity.get(id);
+			if(!Comp.Method.CursorComp.isValidTarget(cursor, i)) {
 				if(!Comp.UntargetableComp.has(zoneItem)) {
 					zoneItem.add(Comp.create(getEngine(), UntargetableComp.class));
 				}

@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks.CompositeCallback;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
@@ -50,7 +49,7 @@ public class TweenUtil {
 		}
 		
 		if(id != null) {
-			Entity entity = Ent.Entity.get(id);
+			Entity entity = Comp.Entity.get(id);
 			if(!Comp.AnimatingComp.has(entity)) {
 				entity.add(Comp.create(engine, AnimatingComp.class));
 			}

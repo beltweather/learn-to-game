@@ -5,7 +5,6 @@ import java.util.UUID;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Ent;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 

@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.endpoints.GameServer;
@@ -23,7 +22,7 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 	@Override
 	public void update(GameServer server, GameStage stage, float deltaTime, RequestEntityPacket request) {
 		ID id = request.id;
-		Entity entity = Ent.Entity.get(id); 
+		Entity entity = Comp.Entity.get(id); 
 		if(entity == null) {
 			Sys.err.println("Requested entity with id " + id + " but none exists!");
 			return;

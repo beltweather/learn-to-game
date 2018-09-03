@@ -4,10 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 public class HandLayout extends ZoneLayout {
 
@@ -42,7 +40,7 @@ public class HandLayout extends ZoneLayout {
 	@Override
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
 		CardComp c = Comp.CardComp.get(entity);
-		if(c.playerID != Ent.TurnEntity.ActivePlayerComp().activePlayerID) {
+		if(c.playerID != Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID) {
 			hide(entity);
 		} else {
 			show(entity);

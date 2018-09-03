@@ -7,7 +7,6 @@ import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;
@@ -29,7 +28,7 @@ public class ActiveCardLayout extends ZoneLayout {
 		CardComp c = Comp.CardComp.get(entity);
 		
 		s.relativePositionRules.relative = true;
-		s.relativePositionRules.setRelativeToID(Link.CardComp.getBattleAvatarID(c));
+		s.relativePositionRules.setRelativeToID(Comp.Method.CardComp.getBattleAvatarID(c));
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);

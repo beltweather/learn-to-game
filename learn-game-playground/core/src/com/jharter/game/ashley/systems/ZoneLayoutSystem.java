@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.id.ID;
@@ -23,7 +22,7 @@ public class ZoneLayoutSystem extends IteratingSystem {
 		for(ID id : z.objectIDs) {
 			z.layout.setSystem(this);
 			z.layout.revalidate();
-			Entity zEntity = Ent.Entity.get(id);
+			Entity zEntity = Comp.Entity.get(id);
 			if(Comp.AnimatingComp.has(zEntity)) {
 				continue;
 			}

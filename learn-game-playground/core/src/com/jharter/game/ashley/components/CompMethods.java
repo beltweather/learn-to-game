@@ -19,11 +19,11 @@ import uk.co.carelesslabs.Enums.ZoneType;
 /**
  * Class that links components, entities, and ids together. It is a sister class of C, the component mapper.
  */
-public class Link {
+public class CompMethods {
 	
-	private Link() {}
+	public CompMethods() {}
 	
-	public static class CompLinkerZoneComp {
+	public class CompLinkerZoneComp {
 		
 		private CompLinkerZoneComp() {}
 		
@@ -31,13 +31,17 @@ public class Link {
 			return IDUtil.getZoneID(ownerID, type);
 		}
 
+		public ZoneComp get(Entity entity) {
+			return get(Comp.ZonePositionComp.get(entity));
+		}
+		
 		public ZoneComp get(ZonePositionComp zp) {
-			Entity zone = Ent.Entity.get(zp.zoneID);
+			Entity zone = Comp.Entity.get(zp.zoneID);
 			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
 		}
 		
 		public ZoneComp get(ID zoneID) {
-			return Comp.ZoneComp.get(Ent.Entity.get(zoneID));
+			return Comp.ZoneComp.get(Comp.Entity.get(zoneID));
 		}
 		
 		public ZoneComp get(ID ownerID, ZoneType zoneType) {
@@ -45,7 +49,7 @@ public class Link {
 			if(zoneID == null) {
 				return null;
 			}
-			Entity zone = Ent.Entity.get(zoneID);
+			Entity zone = Comp.Entity.get(zoneID);
 			if(zone == null) {
 				return null;
 			}
@@ -53,12 +57,12 @@ public class Link {
 		}
 		
 		public boolean has(ZonePositionComp zp) {
-			return Comp.ZoneComp.has(Ent.Entity.get(zp.zoneID));
+			return Comp.ZoneComp.has(Comp.Entity.get(zp.zoneID));
 		}
 		
 	}
 	
-	public static class CompLinkerCursorComp {
+	public class CompLinkerCursorComp {
 		
 		private CompLinkerCursorComp() {}
 		
@@ -66,7 +70,7 @@ public class Link {
 			if(c.turnActionEntityID == null) {
 				return null;
 			}
-			TurnActionComp t = Comp.TurnActionComp.get(Ent.Entity.get(c.turnActionEntityID));
+			TurnActionComp t = Comp.TurnActionComp.get(Comp.Entity.get(c.turnActionEntityID));
 			if(t == null) {
 				return null;
 			}
@@ -74,12 +78,62 @@ public class Link {
 		}		
 		
 		public ID getPlayerID(CursorComp c) {
-			return Ent.TurnEntity.ActivePlayerComp().activePlayerID;
+			return Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID;
+		}
+		
+		public boolean isValidTarget(Entity cursor) {
+			return isValidTarget(cursor, Comp.ZonePositionComp.get(cursor).index);
+		}
+		
+		public boolean isValidTarget(Entity cursor, int index) {
+			CursorComp c = Comp.CursorComp.get(cursor);
+			return hasValidTarget(CursorComp.getPlayerID(c), ZoneComp.get(cursor).zoneType, CursorComp.getTurnAction(c), index, 0, 0);
+		}
+		
+		public int findFirstValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t) {
+			return findNextValidTarget(ownerID, zoneType, t, -1, 1, 0);
+		}
+		
+		public int findNextValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction) {
+			return findNextValidTarget(ownerID, zoneType, t, index, direction, 0);
+		}
+		
+		private boolean hasValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+			return findNextValidTarget(ownerID, zoneType, t, index, direction, depth) >= 0;
+		}
+		
+		private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+			ZoneComp z = ZoneComp.get(ownerID, zoneType);
+			for(int i = 0; i < z.objectIDs.size(); i++) {
+				index = ArrayUtil.findNextIndex(index, direction, z.objectIDs.size());
+				if(!z.hasIndex(index)) {
+					return -1;
+				}
+				Entity entity = Comp.Entity.get(z.objectIDs.get(index));
+				if(entity != null && (t == null || t.isValidTarget(entity))) {
+					if(t == null) {
+						TurnActionComp taComp = Comp.TurnActionComp.get(entity);
+						if(taComp != null) {
+							TurnAction ta = taComp.turnAction;
+							ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
+							if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerID, nextZoneType, ta, 0, 1, depth+1)) {
+								return index;
+							}
+						}
+					} else {
+						return index;
+					}
+				}
+				if(direction == 0) {
+					break;
+				}
+			}			
+			return -1;
 		}
 		
 	}
 	
-	public static class CompLinkerTurnActionComp {
+	public class CompLinkerTurnActionComp {
 		
 		private CompLinkerTurnActionComp() {}
 		
@@ -95,11 +149,11 @@ public class Link {
 		}
 		
 		public Entity getActionTargetEntity(TurnActionComp t) {
-			return Ent.Entity.get(getActionTargetID(t));
+			return Comp.Entity.get(getActionTargetID(t));
 		}
 		
 		public Entity getActionTargetEntity(TurnActionComp t, int index) {
-			return Ent.Entity.get(getActionTargetID(t, index));
+			return Comp.Entity.get(getActionTargetID(t, index));
 		}
 		
 		public SpriteComp getActionTargetSprite(TurnActionComp t) {
@@ -112,7 +166,7 @@ public class Link {
 		
 	}
 	
-	public static class CompLinkerCardComp {
+	public class CompLinkerCardComp {
 		
 		private CompLinkerCardComp() {}
 		
@@ -121,7 +175,7 @@ public class Link {
 		}
 		
 		public Entity getPlayerEntity(CardComp c) {
-			return Ent.Entity.get(getPlayerID(c));
+			return Comp.Entity.get(getPlayerID(c));
 		}
 		
 		public PlayerComp getPlayerComp(CardComp c) {
@@ -142,7 +196,7 @@ public class Link {
 		
 	}
 	
-	public static class CompLinkerPlayerComp {
+	public class CompLinkerPlayerComp {
 		
 		private CompLinkerPlayerComp() {}
 		
@@ -151,7 +205,7 @@ public class Link {
 		}
 		
 		public Entity getBattleAvatarEntity(PlayerComp p) {
-			return Ent.Entity.get(getBattleAvatarID(p));
+			return Comp.Entity.get(getBattleAvatarID(p));
 		}
 		
 		public SpriteComp getBattleAvatarSpriteComp(PlayerComp p) {
@@ -160,46 +214,46 @@ public class Link {
 		
 	}
 	
-	public static class CompLinkerActivePlayerComp {
+	public class CompLinkerActivePlayerComp {
 		
 		private CompLinkerActivePlayerComp() {}
 		
 		public ID getBattleAvatarID(ActivePlayerComp p) {
-			return PlayerComp.getBattleAvatarID(Comp.PlayerComp.get(Ent.Entity.get(p.activePlayerID)));
+			return PlayerComp.getBattleAvatarID(Comp.PlayerComp.get(Comp.Entity.get(p.activePlayerID)));
 		}
 		
 		public Entity getBattleAvatarEntity(ActivePlayerComp p) {
-			return PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(Ent.Entity.get(p.activePlayerID)));
+			return PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(Comp.Entity.get(p.activePlayerID)));
 		}
 	
 		public SpriteComp getBattleAvatarSpriteComp(ActivePlayerComp p) {
-			return PlayerComp.getBattleAvatarSpriteComp(Comp.PlayerComp.get(Ent.Entity.get(p.activePlayerID)));
+			return PlayerComp.getBattleAvatarSpriteComp(Comp.PlayerComp.get(Comp.Entity.get(p.activePlayerID)));
 		}
 		
 		public void setPlayer(ActivePlayerComp p, int index) {
 			if(!ArrayUtil.has(IDUtil.getPlayerIDs(), index)) {
 				index = 0;
 			}
-			Ent.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(index);
+			Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(index);
 		}
 		
 		public void nextPlayer(ActivePlayerComp p) {
 			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
-			Ent.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i));
+			Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i));
 		}
 		
 		public void prevPlayer(ActivePlayerComp p) {
 			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
-			Ent.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i));
+			Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i));
 		}
 
 	}
 	
-	public static final CompLinkerCardComp CardComp = new CompLinkerCardComp();
-	public static final CompLinkerPlayerComp PlayerComp = new CompLinkerPlayerComp();
-	public static final CompLinkerActivePlayerComp ActivePlayerComp = new CompLinkerActivePlayerComp();
-	public static final CompLinkerTurnActionComp TurnActionComp = new CompLinkerTurnActionComp();
-	public static final CompLinkerCursorComp CursorComp = new CompLinkerCursorComp();
-	public static final CompLinkerZoneComp ZoneComp = new CompLinkerZoneComp();
+	public final CompLinkerCardComp CardComp = new CompLinkerCardComp();
+	public final CompLinkerPlayerComp PlayerComp = new CompLinkerPlayerComp();
+	public final CompLinkerActivePlayerComp ActivePlayerComp = new CompLinkerActivePlayerComp();
+	public final CompLinkerTurnActionComp TurnActionComp = new CompLinkerTurnActionComp();
+	public final CompLinkerCursorComp CursorComp = new CompLinkerCursorComp();
+	public final CompLinkerZoneComp ZoneComp = new CompLinkerZoneComp();
 	
 }

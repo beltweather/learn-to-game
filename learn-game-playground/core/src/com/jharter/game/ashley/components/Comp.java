@@ -68,6 +68,9 @@ public class Comp {
 	
 	private Comp() {}
 	
+	public static final CompMethods Method = new CompMethods();
+	public static final CompEntities Entity = new CompEntities();
+	
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> klass) {
 		if(!componentMappersByClass.containsKey(klass)) {
 			componentMappersByClass.put(klass, ComponentMapper.getFor(klass));

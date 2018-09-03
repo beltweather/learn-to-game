@@ -14,8 +14,6 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -49,7 +47,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					}
 					
 					CardComp ca = Comp.CardComp.get(entity);
-					Entity owner = Ent.Entity.get(ca.playerID);
+					Entity owner = Comp.Entity.get(ca.playerID);
 					ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 					if(Comp.ActiveCardComp.has(owner)) {
 						owner.remove(ActiveCardComp.class);
@@ -59,7 +57,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 					cz.useNextIndex = true;
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Link.ZoneComp.getID(ca.playerID, ZoneType.HAND);
+					cz.newZoneID = Comp.Method.ZoneComp.getID(ca.playerID, ZoneType.HAND);
 					entity.add(cz);
 					break;
 				default:

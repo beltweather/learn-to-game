@@ -10,7 +10,6 @@ import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Ent;
 
 public class CursorInputSystem extends IteratingSystem {
 
@@ -25,7 +24,7 @@ public class CursorInputSystem extends IteratingSystem {
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		InputComp in = Comp.InputComp.get(entity);
-		if(Ent.TurnEntity.TurnTimerComp().turnTimer.isStopped() || Comp.AnimatingComp.has(entity)) {
+		if(Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.isStopped() || Comp.AnimatingComp.has(entity)) {
 			in.input.reset();
 			return;
 		}

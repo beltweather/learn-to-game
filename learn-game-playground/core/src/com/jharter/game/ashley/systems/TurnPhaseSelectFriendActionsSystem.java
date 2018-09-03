@@ -4,18 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
-import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
-import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.IDUtil;
-
-import uk.co.carelesslabs.Enums.ZoneType;
 
 public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	
@@ -30,7 +23,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		}
 		enableCursor();
 		resetCursor();
-		Ent.TurnEntity.TurnTimerComp().turnTimer.start();
+		Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.start();
 		return true;
 	}
 
@@ -51,12 +44,12 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
-		Ent.TurnEntity.TurnTimerComp().turnTimer.stop();
+		Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.stop();
 		
 		// Cancel the current turn action if there is one
-		CursorComp c = Ent.CursorEntity.CursorComp();
+		CursorComp c = Comp.Entity.CursorEntity.CursorComp();
 		if(c.turnActionEntityID != null) {
-			Entity entity = Ent.Entity.get(c.turnActionEntityID);
+			Entity entity = Comp.Entity.get(c.turnActionEntityID);
 			if(!Comp.ActionSpentComp.has(entity)) {
 				entity.add(Comp.create(getEngine(), ActionSpentComp.class));
 			}

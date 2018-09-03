@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.util.id.ID;
 
@@ -76,7 +75,7 @@ public abstract class ZoneLayout {
 		if(index < 0) {
 			return null;
 		}
-		Entity entity = Ent.Entity.get(id);
+		Entity entity = Comp.Entity.get(id);
 		if(entity == null) {
 			return null;
 		}
@@ -116,7 +115,7 @@ public abstract class ZoneLayout {
 		if(target == null) {
 			return false;
 		}
-		Entity entity = Ent.Entity.get(id);
+		Entity entity = Comp.Entity.get(id);
 		if(entity == null) {
 			return false;
 		}

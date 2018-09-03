@@ -5,9 +5,7 @@ import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.Ent;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -35,16 +33,16 @@ public abstract class VoidCallback<T> {
 			Entity friend = t.getEntity(1);
 			Entity enemy = t.getEntity(2);
 			CardComp c = Comp.CardComp.get(card);
-			Entity character = Link.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
 			call(character, card, friend, enemy);
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
-				ZoneComp z = Link.ZoneComp.get(zp);
+				ZoneComp z = Comp.Method.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
-					Entity entity = Ent.Entity.get(id);
+					Entity entity = Comp.Entity.get(id);
 					if(Comp.CursorComp.has(entity)) {
 						continue;
 					}
@@ -78,15 +76,15 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			CardComp c = Comp.CardComp.get(card);
 			Entity friend = t.getEntity(1);
-			Entity character = Link.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
-				ZoneComp z = Link.ZoneComp.get(zp);
+				ZoneComp z = Comp.Method.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
-					Entity entity = Ent.Entity.get(id);
+					Entity entity = Comp.Entity.get(id);
 					if(Comp.CursorComp.has(entity)) {
 						continue;
 					}
@@ -120,7 +118,7 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			CardComp c = Comp.CardComp.get(card);
 			Entity activeCard = t.getEntity(1); 
-			Entity character = Link.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
 			
 			call(character, card, activeCard);
 		}
@@ -143,15 +141,15 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getEntity(0);
 			CardComp c = Comp.CardComp.get(card);
 			Entity enemy = t.getEntity(1);
-			Entity character = Link.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
-				ZoneComp z = Link.ZoneComp.get(zp);
+				ZoneComp z = Comp.Method.ZoneComp.get(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
-					Entity entity = Ent.Entity.get(id);
+					Entity entity = Comp.Entity.get(id);
 					if(Comp.CursorComp.has(entity)) {
 						continue;
 					}

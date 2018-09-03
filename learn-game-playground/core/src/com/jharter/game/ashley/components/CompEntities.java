@@ -26,31 +26,13 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 /**
  * Used to retrieve entities directly, the sibling of "C" the mapper and "L" the linker
  */
-public class Ent {
+public class CompEntities {
 	
-	private Ent() {}
+	public CompEntities() {}
 
-	private static final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
+	private final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
-	/*public static int activePlayerIndex = 0;
-	
-	public static void resetActivePlayerEntity() {
-		activePlayerIndex = 0;
-	}
-	
-	public static void nextActivePlayerEntity() {
-		activePlayerIndex = (activePlayerIndex+1) % IDUtil.getPlayerIDs().size();
-	}
-	
-	public static int getActivePlayerIndex() {
-		return activePlayerIndex;
-	}
-	
-	public static boolean hasNextActivePlayer() {
-		return activePlayerIndex == IDUtil.getPlayerIDs().size()-1;
-	}*/
-	
-	public static void addIdListener(Engine engine, final Box2DWorld box2D) {
+	public void addIdListener(Engine engine, final Box2DWorld box2D) {
 		engine.addEntityListener(Family.all(IDComp.class).get(), new EntityListener() {
 			
 			@Override
@@ -80,46 +62,41 @@ public class Ent {
 		});
 	}
 	
-	/**
-	 * Convenience class so that we can retrieve entities in the same form as components.
-	 */
-	public static class EntityMapperEntity {
-		
-		private EntityMapperEntity() {}
-		
-		public Entity get(ID id) {
-			if(id == null) {
-				return null;
-			}
-			if(entitiesById.containsKey(id)) {
-				return entitiesById.get(id);
-			}
+	public Entity get(ID id) {
+		if(id == null) {
 			return null;
 		}
-		
-		public void remove(Engine engine, ID id) {
-			remove(engine, get(id));
+		if(entitiesById.containsKey(id)) {
+			return entitiesById.get(id);
 		}
-		
-		public void remove(Engine engine, Entity entity) {
-			if(entity == null) {
-				return;
-			}
-			Comp.getOrAdd(engine, RemoveComp.class, entity);
-		}
-		
+		return null;
 	}
 	
-	public static class EntityMapperCursorEntity {
+	public void remove(Engine engine, ID id) {
+		remove(engine, get(id));
+	}
+	
+	public void remove(Engine engine, Entity entity) {
+		if(entity == null) {
+			return;
+		}
+		Comp.getOrAdd(engine, RemoveComp.class, entity);
+	}
+		
+	public class EntityMapperCursorEntity {
 		
 		private EntityMapperCursorEntity() {}
 		
 		public Entity Entity() {
-			return Ent.Entity.get(IDUtil.getCursorEntityID());
+			return get(IDUtil.getCursorEntityID());
 		}
 		
 		public CursorComp CursorComp() {
 			return Comp.CursorComp.get(Entity());
+		}
+		
+		public ZonePositionComp ZonePositionComp() {
+			return Comp.ZonePositionComp.get(Entity());
 		}
 		
 		public void enable() {
@@ -158,8 +135,16 @@ public class Ent {
 		public void toHand() {
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = Link.ZoneComp.getID(Ent.TurnEntity.ActivePlayerComp().activePlayerID, ZoneType.HAND);
+			zp.zoneID = Comp.Method.ZoneComp.getID(TurnEntity.ActivePlayerComp().activePlayerID, ZoneType.HAND);
 			zp.clearHistory();
+		}
+		
+		public boolean isValidTarget() {
+			return Comp.Method.CursorComp.isValidTarget(Entity());
+		}
+		
+		public boolean isValidTarget(int index) {
+			return Comp.Method.CursorComp.isValidTarget(Entity(), index);
 		}
 		
 		public void reset() {
@@ -169,12 +154,12 @@ public class Ent {
 		}
 	}
 	
-	public static class EntityMapperTurnEntity {
+	public class EntityMapperTurnEntity {
 		
 		private EntityMapperTurnEntity() {}
 		
 		public Entity Entity() {
-			return Ent.Entity.get(IDUtil.getTurnEntityID());
+			return get(IDUtil.getTurnEntityID());
 		}
 		
 		public TurnTimerComp TurnTimerComp() {
@@ -201,8 +186,7 @@ public class Ent {
 		
 	}
 	
-	public static final EntityMapperEntity Entity = new EntityMapperEntity();
-	public static final EntityMapperCursorEntity CursorEntity = new EntityMapperCursorEntity();
-	public static final EntityMapperTurnEntity TurnEntity = new EntityMapperTurnEntity();
+	public final EntityMapperCursorEntity CursorEntity = new EntityMapperCursorEntity();
+	public final EntityMapperTurnEntity TurnEntity = new EntityMapperTurnEntity();
 	
 }

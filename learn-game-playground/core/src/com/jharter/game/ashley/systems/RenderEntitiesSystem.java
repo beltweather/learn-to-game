@@ -2,7 +2,6 @@ package com.jharter.game.ashley.systems;
 
 import java.util.Comparator;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;

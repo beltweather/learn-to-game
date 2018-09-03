@@ -10,8 +10,6 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
-import com.jharter.game.ashley.components.Ent;
-import com.jharter.game.ashley.components.Link;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenUtil;
@@ -35,7 +33,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
 		busy = false;
-		return Ent.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
+		return Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override
@@ -51,8 +49,8 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		if(performTurnAction) {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = Comp.IDComp.get(entity).id;
-			Entity player = Ent.Entity.get(Comp.CardComp.get(entity).playerID);
-			Entity battleAvatar = Link.PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(player));
+			Entity player = Comp.Entity.get(Comp.CardComp.get(entity).playerID);
+			Entity battleAvatar = Comp.Method.PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(player));
 			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
 			SpriteComp sAvatar = Comp.SpriteComp.get(battleAvatar);
 			

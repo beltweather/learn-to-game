@@ -43,4 +43,25 @@ public class ArrayUtil {
 		return index - 1;
 	}
 	
+	public static int findNextIndex(int currentIndex, int direction, Array array) {
+		return findNextIndex(currentIndex, direction, array.size);
+	}
+	
+	public static int findNextIndex(int currentIndex, int direction, ImmutableArray array) {
+		return findNextIndex(currentIndex, direction, array.size());
+	}
+	
+	public static int findNextIndex(int currentIndex, int direction, int size) {
+		if(direction == 0) {
+			return currentIndex;
+		}
+		int index = currentIndex + direction;
+		if(index < 0) {
+			index = size - 1;
+		} else if(index >= size) {
+			index = 0;
+		}
+		return index;
+	}
+	
 }

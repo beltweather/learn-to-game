@@ -81,6 +81,10 @@ public abstract class ZoneLayout {
 		}
 		
 		TweenTarget target = getTarget(id, index, entity, TweenTarget.newInstance());
+		if(target == null) {
+			return null;
+		}
+		
         boolean hide = false;
 		if(allowRelativePositions) {
 			SpriteComp s = Comp.SpriteComp.get(entity);

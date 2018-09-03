@@ -31,6 +31,7 @@ public class CursorHelper {
 		b.ZonePositionComp();
 		b.ZonePositionComp().index = 0;
 		b.SpriteComp().position.z = 3;
+		Comp.Method.ZoneComp.get(null, ZoneType.CURSOR).add(cursorID, null);;
 		return b;
 	}
 	

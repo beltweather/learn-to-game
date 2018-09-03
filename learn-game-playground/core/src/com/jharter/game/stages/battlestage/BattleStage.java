@@ -41,6 +41,7 @@ import com.jharter.game.ashley.systems.network.server.ServerRequestEntityPacketS
 import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.debug.Debug;
 import com.jharter.game.layout.ActiveCardLayout;
+import com.jharter.game.layout.CursorLayout;
 import com.jharter.game.layout.CursorPositionSystem;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
@@ -100,6 +101,7 @@ public class BattleStage extends GameStage {
 		ZoneComp friendZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
 		ZoneComp enemyZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ENEMY);
 		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout());
+		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.CURSOR, new CursorLayout());
 		
 		// Turn timer
 		TurnHelper.addTurnEntity(engine, infoZone, 30f);
@@ -236,7 +238,7 @@ public class BattleStage extends GameStage {
 		// Heady systems
 		if(!endPointHelper.isHeadless()) {
 			engine.addSystem(new ZoneLayoutSystem());
-			engine.addSystem(new CursorPositionSystem());
+			//engine.addSystem(new CursorPositionSystem());
 			engine.addSystem(new AnimationSystem());
 			//engine.addSystem(new RenderInitSystem());
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));

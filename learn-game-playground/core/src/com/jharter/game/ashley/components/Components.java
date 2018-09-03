@@ -428,9 +428,11 @@ public final class Components {
 		}
 		
 		public void add(ID id, ZonePositionComp zp) {
-			zp.index = internalObjectIDs.size;
 			internalObjectIDs.add(id);
-			zp.zoneID = zoneID;
+			if(zp != null) {
+				zp.index = internalObjectIDs.size;
+				zp.zoneID = zoneID;
+			}
 		}
 		
 		public void remove(ID id) {

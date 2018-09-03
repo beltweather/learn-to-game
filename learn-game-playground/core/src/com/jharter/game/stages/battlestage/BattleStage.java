@@ -64,9 +64,11 @@ public class BattleStage extends GameStage {
 	@Override
 	public void addEntities(PooledEngine engine) {
 		BackgroundHelper.addBackground(engine, Media.background);
-		//BackgroundHelper.addBackground(engine, Media.bgField);
-		//BackgroundHelper.addBackground(engine, Media.bgLightYellow, 0.5f);
-		
+		//BackgroundHelper.addBackground(engine, Media.bgField2);
+		//BackgroundHelper.addBackground(engine, Media.bgLightYellow, 5f);
+		//BackgroundHelper.addBackground(engine, Media.bgField2bg);
+		//BackgroundHelper.addBackground(engine, Media.bgField2fg, 5f);
+
 		// Player IDs
 		ID warriorPlayerID = IDUtil.buildPlayerEntityID();
 		ID sorcererPlayerID = IDUtil.buildPlayerEntityID();

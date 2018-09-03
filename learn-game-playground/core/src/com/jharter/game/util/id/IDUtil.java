@@ -18,14 +18,28 @@ public class IDUtil {
 	private static ID turnEntityID;
 	private static ID cursorEntityID;
 	
+	/**
+	 * Should really hang these player IDS off of the Game instead of static
+	 */
 	private static final Array<ID> playerIDs = new Array<ID>();
 	private static final ImmutableArray<ID> immPlayerIDs = new ImmutableArray(playerIDs);
+	
+	/**
+	 * I think this is ok to leave static since its just a cache for ids
+	 */
 	private static final ObjectMap<ID, ObjectMap<ZoneType, ID>> zoneIDsByOwnerIDAndType = new ObjectMap<ID, ObjectMap<ZoneType, ID>>();
 	
 	public static ImmutableArray<ID> getPlayerIDs() {
 		return immPlayerIDs;
 	}
 	
+	/**
+	 * Actually, can probably still use this to hang the turn entity and cursor entity
+	 * off of, it would just have an id for each of them. Turn timer would need to be its
+	 * own entity I would think, turn phase could live off of battle though. Have to see
+	 * if this is easy or hard to move these components around.
+	 * @return
+	 */
 	@Deprecated
 	public static ID getBattleEntityID() {
 		if(battleEntityID == null) {

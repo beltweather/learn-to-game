@@ -23,6 +23,7 @@ public class BackgroundHelper {
 				  new Vector3(U.u12(-80),U.u12(-45),z), // XXX
 					 //new Vector3(-1920/2,-1080/2,-1), 
 				  texture);
+		b.SpriteComp().alpha = 1f;
 		engine.addEntity(b.Entity());
 		b.free();
 	}

@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
@@ -10,18 +11,19 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks;
-import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
+import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
+import uk.co.carelesslabs.Enums.ZoneType;
 
 public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 
@@ -93,9 +95,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			Timeline tweenBa = TweenUtil.tween(idAvatar.id, tt, 0.25f);
 			
 			Timeline tweenBb = Timeline.createParallel();
-			for(int i = 0; i < turnAction.targetIDs.size; i++) {
-				ID enemyID = turnAction.targetIDs.get(i);
+			Array<ID> allTargetIDs = turnAction.getAllTargetIDs();
+			for(int i = 0; i < allTargetIDs.size; i++) {
+				ID enemyID = allTargetIDs.get(i);
 				Entity enemy = Comp.Entity.get(enemyID);
+				ZoneComp z = Comp.Method.ZoneComp.get(enemy);
+				if(z.zoneType != ZoneType.ENEMY) {
+					continue;
+				}
+				
 				TweenTarget enemyTT = TweenTarget.newInstance();
 				enemyTT.setFromEntity(enemy);
 				enemyTT.position.x -= U.u12(10);

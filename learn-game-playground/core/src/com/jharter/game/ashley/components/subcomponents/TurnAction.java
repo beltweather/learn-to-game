@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.util.id.ID;
 
@@ -113,6 +114,31 @@ public class TurnAction {
 				multiplicity = defaultMultiplicity;
 			}
 		}
+	}
+	
+	private Array<ID> temp = new Array<ID>();
+
+	public Array<ID> getAllTargetIDs() {
+		return getAllTargetIDs(true);
+	}
+	
+	public Array<ID> getAllTargetIDs(boolean inFinalZoneOnly) {
+		if(!all || targetIDs.size == 0) {
+			return targetIDs;
+		}
+		
+		temp.clear();
+		temp.addAll(targetIDs);
+		ZoneComp z = Comp.Method.ZoneComp.get(Comp.Entity.get(targetIDs.peek()));
+		for(ID id : z.objectIDs) {
+			if(inFinalZoneOnly && Comp.Method.ZoneComp.get(Comp.Entity.get(id)).zoneType != z.zoneType) {
+				continue;
+			}
+			if(!temp.contains(id, false)) {
+				temp.add(id);
+			}
+		}
+		return temp;
 	}
 	
 	public void cleanUp() {

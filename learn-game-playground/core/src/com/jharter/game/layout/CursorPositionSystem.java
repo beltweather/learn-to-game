@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
-import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
@@ -18,7 +18,6 @@ import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -98,9 +97,10 @@ public class CursorPositionSystem extends IteratingSystem {
 		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
 		mp.clear();
 		
-		int size = z.objectIDs.size();
+		Array<ID> allTargetIDs = getAllTargetIDs(c);
+		int size = allTargetIDs.size;
 		for(int i = 0; i < size; i++) {
-			Vector3 position = getCursorPosition(entity, z, i);
+			Vector3 position = getCursorPosition(entity, z, allTargetIDs.get(i));
 			if(position != null) {
 				centerY += position.y;
 			}
@@ -108,7 +108,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		centerY /= (float) size;
 		
 		for(int i = 0; i < size; i++) {
-			Vector3 position = getCursorPosition(entity, z, i);
+			Vector3 position = getCursorPosition(entity, z, allTargetIDs.get(i));
 			if(position != null) {
 				Vector3 currP = new Vector3(s.position);
 				mp.positions.add(currP);
@@ -130,8 +130,9 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
-		for(int i = 0; i < Comp.Method.ZoneComp.get(zp).objectIDs.size(); i++) {
-			Vector3 position = getCursorPosition(entity, z, i);
+		Array<ID> allTargetIDs = getAllTargetIDs(c);
+		for(int i = 0; i < allTargetIDs.size; i++) {
+			Vector3 position = getCursorPosition(entity, z, allTargetIDs.get(i));
 			if(position != null) {
 				mp.positions.add(new Vector3(position));
 			}
@@ -185,8 +186,9 @@ public class CursorPositionSystem extends IteratingSystem {
 		// If the last pairs have an "all connection", find all targets within that zone and
 		// render lines to them.
 		if((turnAction.all || forceAll)) {
-			for(int i = 0; i < zone.objectIDs.size(); i++) {
-				addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(Comp.Entity.get(zone.objectIDs.get(i))).id);
+			Array<ID> allTargetIDs = getAllTargetIDs(c);
+			for(int i = 0; i < allTargetIDs.size; i++) {
+				addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(Comp.Entity.get(allTargetIDs.get(i))).id);
 			}
 
 		// Otherwise, connect the pairs as usual
@@ -213,6 +215,10 @@ public class CursorPositionSystem extends IteratingSystem {
 	private boolean isAll(CursorComp c) {
 		TurnAction ta = Comp.Method.CursorComp.getTurnAction(c);
 		return ta != null && ta.all;
+	}
+	
+	private Array<ID> getAllTargetIDs(CursorComp c) {
+		return Comp.Method.CursorComp.getTurnAction(c).getAllTargetIDs();
 	}
 	
 	private float getCursorAngle(Entity entity, ZoneType zoneType) {

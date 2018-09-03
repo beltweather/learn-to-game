@@ -5,9 +5,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
@@ -15,6 +14,7 @@ import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
@@ -25,23 +25,24 @@ import com.jharter.game.util.id.ID;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Circ;
+import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public class CursorPositionSystem extends IteratingSystem {
 
 	private boolean hasMulti = false;
+	private RelativePositionRules rpr;
 	
 	@SuppressWarnings("unchecked")
 	public CursorPositionSystem() {
-		super(Family.all(CursorComp.class, ZonePositionComp.class, SpriteComp.class, TextureComp.class).get());
+		super(Family.all(CursorComp.class, ZonePositionComp.class, SpriteComp.class, TextureComp.class).exclude(AnimatingComp.class).get());
+		rpr = new RelativePositionRules();
+		rpr.enabled = true;
+		rpr.tween = true;
 	}
 
 	@Override
 	protected void processEntity(final Entity entity, float deltaTime) {
-		if(Comp.AnimatingComp.has(entity)) {
-			return;
-		}
-		
 		CursorComp c = Comp.CursorComp.get(entity);
 		SpriteComp s = Comp.SpriteComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
@@ -59,7 +60,6 @@ public class CursorPositionSystem extends IteratingSystem {
 		if(!hasMulti) {
 			Comp.remove(MultiSpriteComp.class, entity);
 		}
-		
 	}
 	
 	private void handleChangeZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, float targetAngle) {
@@ -76,57 +76,60 @@ public class CursorPositionSystem extends IteratingSystem {
 		tt.position.y = position.y;
 		tt.angleDegrees = targetAngle;
 		
-		if(!tt.matchesTarget(s)) {
-			
-			Timeline tween;
+		if(tt.matchesTarget(s)) {
 			if(isAll(c)) {
-				
-				float convergeX = s.position.x + (position.x - s.position.x) * 0.75f;
-				float duration = 0.25f;
-				
-				Timeline single = TweenUtil.tween(id.id, tt, duration);
-				Timeline multiA = Timeline.createParallel();
-				Timeline multiB = Timeline.createParallel();
-				
-				float centerY = 0;
-				MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
-				mp.clear();
-				
-				int size = Comp.Method.ZoneComp.get(zp).objectIDs.size();
-				for(int i = 0; i < size; i++) {
-					position = getCursorPosition(entity, z, i);
-					if(position != null) {
-						centerY += position.y;
-					}
-				}
-				centerY /= (float) size;
-				
-				for(int i = 0; i < size; i++) {
-					position = getCursorPosition(entity, z, i);
-					if(position != null) {
-						Vector3 currP = new Vector3(s.position);
-						mp.positions.add(currP);
-						Vector3 targP = new Vector3(position);
-								
-						multiA.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(convergeX, centerY));
-						multiB.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(targP.x, targP.y));
-					}
-				}
-				mp.size = mp.positions.size;
 				hasMulti = true;
-				
-				tween = Timeline.createParallel().push(single).push(Timeline.createSequence().push(multiA).push(multiB));
-				
-			} else {
-				tween = TweenUtil.tween(id.id, tt);
 			}
-			
-			TweenUtil.start(getEngine(), id.id, tween);
-		} else if(isAll(c)) {
-			hasMulti = true;
+			tt.free();
+			return;
 		}
 		
-		Pools.free(tt);
+		Timeline tween;
+		if(isAll(c)) {
+			
+			float convergeX = s.position.x + (position.x - s.position.x) * 0.75f;
+			float duration = 0.25f;
+			
+			Timeline single = TweenUtil.tween(id.id, tt, duration);
+			Timeline multiA = Timeline.createParallel();
+			Timeline multiB = Timeline.createParallel();
+			
+			float centerY = 0;
+			MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
+			mp.clear();
+			
+			int size = Comp.Method.ZoneComp.get(zp).objectIDs.size();
+			for(int i = 0; i < size; i++) {
+				position = getCursorPosition(entity, z, i);
+				if(position != null) {
+					centerY += position.y;
+				}
+			}
+			centerY /= (float) size;
+			
+			for(int i = 0; i < size; i++) {
+				position = getCursorPosition(entity, z, i);
+				if(position != null) {
+					Vector3 currP = new Vector3(s.position);
+					mp.positions.add(currP);
+					Vector3 targP = new Vector3(position);
+							
+					multiA.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(convergeX, centerY));
+					multiB.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(targP.x, targP.y));
+				}
+			}
+			mp.size = mp.positions.size;
+			hasMulti = true;
+			
+			tween = Timeline.createParallel().push(single).push(Timeline.createSequence().push(multiA).push(multiB));
+			
+		} else {
+			tween = TweenUtil.tween(id.id, tt);
+		}
+		
+		TweenUtil.start(getEngine(), id.id, tween);
+		
+		tt.free();
 	}
 	
 	private void handleStayInZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, float targetAngle) {
@@ -144,7 +147,7 @@ public class CursorPositionSystem extends IteratingSystem {
 		tt.position.x = targetPosition.x;
 		tt.position.y = targetPosition.y;
 		tt.angleDegrees = targetAngle;
-		tt.duration = 0.0f;
+		tt.duration = 0.03f;
 		
 		if(tt.matchesTarget(s)) {
 			return;
@@ -166,7 +169,7 @@ public class CursorPositionSystem extends IteratingSystem {
 			hasMulti = true;
 		}
 		
-		Pools.free(tt);
+		tt.free();
 	}
 	
 	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
@@ -189,75 +192,53 @@ public class CursorPositionSystem extends IteratingSystem {
 		
 		// Get the card that the cursor is above and verify it has a turn action associated with it
 		Entity activeCard = Comp.Entity.get(z.objectIDs.get(zp.index));
-		if(Comp.TurnActionComp.has(activeCard)) {
-			
-			TurnAction turnAction = Comp.TurnActionComp.get(activeCard).turnAction;
-			if(turnAction.targetIDs.size > 1) {
-				
-				int multiplicity = forceMultiplicity * turnAction.multiplicity; //Math.max(forceMultiplicity, turnAction.multiplicity);
-				
-				// Iterate through all targets of this card, looking in particular for the last two pairs
-				// of targets so we can handle their "all" status or lack thereof
-				for(int j = 0; j < turnAction.targetIDs.size - 1; j++) {
-					Entity subTargetEntity = Comp.Entity.get(turnAction.targetIDs.get(j+1));
-					IDComp subTargetID = Comp.IDComp.get(subTargetEntity);
-					ZonePositionComp subTargetZone = Comp.ZonePositionComp.get(subTargetEntity);
-					ZoneComp zone = subTargetZone.getZoneComp();
-					
-					// If the last pairs have an "all connection", find all targets within that zone and
-					// render lines to them.
-					if((turnAction.all || forceAll) && j == turnAction.targetIDs.size - 2) {
-						MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
-						ms.drawSingle = true;
-						if(!hasMulti) {
-							ms.clear();
-						}
-						for(int k = 0; k < zone.objectIDs.size(); k++) {
-							IDComp sTargetBID = Comp.IDComp.get(Comp.Entity.get(zone.objectIDs.get(k)));
+		if(!Comp.TurnActionComp.has(activeCard)) {
+			return;
+		}
+		
+		TurnAction turnAction = Comp.TurnActionComp.get(activeCard).turnAction;
+		if(turnAction.targetIDs.size <= 1) {
+			return;
+		}
+		
+		int multiplicity = forceMultiplicity * turnAction.multiplicity;
+		
+		// Iterate through all targets of this card, looking in particular for the last two pairs
+		// of targets so we can handle their "all" status or lack thereof
+		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.get(turnAction.targetIDs.size-1));
+		ZonePositionComp targetZone = Comp.ZonePositionComp.get(targetEntity);
+		ZoneComp zone = targetZone.getZoneComp();
+		
+		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
+		ms.drawSingle = true;
+		if(!hasMulti) {
+			ms.clear();
+		}
+		
+		// If the last pairs have an "all connection", find all targets within that zone and
+		// render lines to them.
+		if((turnAction.all || forceAll)) {
+			for(int i = 0; i < zone.objectIDs.size(); i++) {
+				addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(Comp.Entity.get(zone.objectIDs.get(i))).id);
+			}
 
-							for(int m = 0; m < multiplicity; m++) {
-								
-								//ms.positions.add(new Vector3(sTargetB.position.x - Units.u1(25) * m, sTargetB.position.y - Units.u1(10) * m, 0));
-								Vector3 pos = getCursorPosition(cursor, zone, sTargetBID.id);
-								pos.x -= U.u1(25)*m;
-								pos.y -= U.u1(10)*m;
-								ms.positions.add(pos);
-								ms.scales.add(new Vector2(0.5f*s.scale.x, 0.5f*s.scale.y));
-								//ms.anglesDegrees.add(getCursorAngle(cursor, zone.zoneType));
-								if(zone.zoneType == ZoneType.ENEMY) {
-									ms.reflectAngle = true;
-								}
-							}
-							
-						}
-						ms.size = ms.positions.size;
-						hasMulti = true;
-						
-					// Otherwise, connect the pairs as usual
-					} else if(j == turnAction.targetIDs.size - 2) {
-						//SpriteComp sTargetB = Mapper.SpriteComp.get(subTargetEntity);
-						
-						MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
-						ms.drawSingle = true;
-						if(!hasMulti) {
-							ms.clear();
-						}
-						for(int m = 0; m < multiplicity; m++) {
-							//ms.positions.add(new Vector3(sTargetB.position.x - Units.u1(30) * m, sTargetB.position.y - Units.u1(10) * m, 0));
-							Vector3 pos = getCursorPosition(cursor, zone, subTargetID.id);
-							pos.x -= U.u1(25)*m;
-							pos.y -= U.u1(10)*m;
-							ms.positions.add(pos);
-							ms.scales.add(new Vector2(0.5f*s.scale.x, 0.5f*s.scale.y));
-							//ms.anglesDegrees.add(getCursorAngle(cursor, zone.zoneType));
-							if(zone.zoneType == ZoneType.ENEMY) {
-								ms.reflectAngle = true;
-							}
-						}
-						ms.size = ms.positions.size;
-						hasMulti = true;
-					}
-				}
+		// Otherwise, connect the pairs as usual
+		} else {
+			addMultiPositions(ms, multiplicity, cursor, s, zone, Comp.IDComp.get(targetEntity).id);
+		}
+		ms.size = ms.positions.size;
+		hasMulti = true;
+	}
+	
+	private void addMultiPositions(MultiSpriteComp ms, int multiplicity, Entity cursor, SpriteComp s, ZoneComp zone, ID targetID) {
+		for(int m = 0; m < multiplicity; m++) {
+			Vector3 pos = getCursorPosition(cursor, zone, targetID);
+			pos.x -= U.u1(25)*m;
+			pos.y -= U.u1(10)*m;
+			ms.positions.add(pos);
+			ms.scales.add(new Vector2(0.5f*s.scale.x, 0.5f*s.scale.y));
+			if(zone.zoneType == ZoneType.ENEMY) {
+				ms.reflectAngle = true;
 			}
 		}
 	}
@@ -303,41 +284,35 @@ public class CursorPositionSystem extends IteratingSystem {
 		}
 		
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		
 		Vector3 cursorPosition = new Vector3();
+		
+		rpr.setRelativeToID(cursorTargetID);
 		switch(z.zoneType) {
 			case HAND:
-				cursorPosition.x = lTarget.position.x + (sTarget.scaledWidth() - s.scaledWidth()) /2;
-				cursorPosition.y = lTarget.position.y + sTarget.scaledHeight() - (int) (s.scaledHeight() * 0.25);
+				rpr.xAlign = Direction.CENTER;
+				rpr.yAlign = Direction.NORTH;
+				rpr.offset.y = -U.u12(2);
 				break;
 			case FRIEND:
-				ActiveCardComp ac = Comp.ActiveCardComp.get(target);
-				float cardOffset = 0;
-				
-				/*if(Mapper.ZoneComp.get(null, ZoneType.ACTIVE_CARD).hasIndex(index)) { //ac != null && ac.activeCardID != null) {
-					Entity card = Mapper.Entity.get(ac.activeCardID);
-					if(card != null) {
-						SpriteComp sCard = Mapper.SpriteComp.get(card);
-						cardOffset = sCard.scaledWidth(0.25f) + 20;
-					}
-					//cardOffset = 70; // XXX Fix all this!!!
-				}*/
-		
-				cursorPosition.x = lTarget.position.x - s.scaledWidth() - U.u12(1) - cardOffset;
-				cursorPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
+				rpr.xAlign = Direction.WEST;
+				rpr.yAlign = Direction.CENTER;
+				rpr.offset.x = -U.u12(2);
 				break;
 			case ACTIVE_CARD:
-				cursorPosition.x = lTarget.position.x - s.scaledWidth() - U.u12(2);
-				cursorPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
+				rpr.xAlign = Direction.WEST;
+				rpr.yAlign = Direction.CENTER;
+				rpr.offset.x = -U.u12(2);
 				break;
 			case ENEMY:
-				cursorPosition.x = lTarget.position.x + sTarget.scaledWidth() + U.u12(2);  
-				cursorPosition.y = lTarget.position.y + (sTarget.scaledHeight() - s.scaledHeight()) / 2;
+				rpr.xAlign = Direction.EAST;
+				rpr.yAlign = Direction.CENTER;
+				rpr.offset.x = U.u12(2);
 				break;
 			default:
 				break;
 		}
 		
+		rpr.setToRelativePosition(s, cursorPosition);
 		return cursorPosition;
 	}
 }

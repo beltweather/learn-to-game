@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -20,7 +21,7 @@ public class CursorMoveSystem extends IteratingSystem {
 	public CursorMoveSystem() {
 		super(Family.all(CursorComp.class,
 				 CursorInputComp.class,
-				 ZonePositionComp.class).get());
+				 ZonePositionComp.class).exclude(AnimatingComp.class).get());
 	}
 
 	@Override
@@ -77,14 +78,6 @@ public class CursorMoveSystem extends IteratingSystem {
 			cursor.add(cz);
 		}
 		
-		/*if(z.hasIndex(newIndex)) {
-			if(zp.zoneType != zoneType) {
-				zp.zoneType(zoneType);
-			}
-			zp.index(newIndex);
-		} else {
-			zp.index(-1);
-		}*/
 	}
 
 }

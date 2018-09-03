@@ -16,7 +16,7 @@ public class HandLayout extends ZoneLayout {
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		s.relativePositionRules.relative = false;
+		s.relativePositionRules.enabled = false;
 		
 		float anchorX = U.u12(-30);
 		float anchorY = U.u12(-41);

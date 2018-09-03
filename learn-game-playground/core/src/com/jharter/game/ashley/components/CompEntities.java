@@ -28,7 +28,7 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
  */
 public class CompEntities {
 	
-	public CompEntities() {}
+	CompEntities() {}
 
 	private final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	

@@ -54,8 +54,8 @@ public abstract class ZoneLayout {
 	}
 	
 	public void revalidate() {
-		for(TweenTarget t : dataById.values()) {
-			Pools.free(t);
+		for(TweenTarget tt : dataById.values()) {
+			tt.free();
 		}
 		dataById.clear();
 	}
@@ -84,7 +84,7 @@ public abstract class ZoneLayout {
         boolean hide = false;
 		if(allowRelativePositions) {
 			SpriteComp s = Comp.SpriteComp.get(entity);
-			if(target != null && s != null && s.relativePositionRules.relative) {
+			if(target != null && s != null && s.relativePositionRules.enabled) {
 				if(!s.relativePositionRules.setToRelativePosition(s, target)) {
 					hide(entity);
 					hide = true;
@@ -148,8 +148,8 @@ public abstract class ZoneLayout {
 	}
 	
 	public void reset() {
-		for(TweenTarget d : dataById.values()) {
-			Pools.free(d);
+		for(TweenTarget tt : dataById.values()) {
+			tt.free();
 		}
 		dataById.clear();
 		ids = null;

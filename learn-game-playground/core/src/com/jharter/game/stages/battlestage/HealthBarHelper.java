@@ -22,7 +22,7 @@ public class HealthBarHelper {
 		b.SpriteComp().position.z = 2;
 		b.SpriteComp().width = U.u12(6);
 		b.SpriteComp().height = U.u12(1f);
-		b.SpriteComp().relativePositionRules.relative = true;
+		b.SpriteComp().relativePositionRules.enabled = true;
 		b.SpriteComp().relativePositionRules.setRelativeToID(relativeToID);
 		b.SpriteComp().relativePositionRules.xAlign = Direction.EAST;
 		b.SpriteComp().relativePositionRules.yAlign = Direction.CENTER;

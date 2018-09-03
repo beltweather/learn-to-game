@@ -27,7 +27,7 @@ public class ActiveCardLayout extends ZoneLayout {
 		SpriteComp s = Comp.SpriteComp.get(entity);
 		CardComp c = Comp.CardComp.get(entity);
 		
-		s.relativePositionRules.relative = true;
+		s.relativePositionRules.enabled = true;
 		s.relativePositionRules.setRelativeToID(Comp.Method.CardComp.getBattleAvatarID(c));
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;

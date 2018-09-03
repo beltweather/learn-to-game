@@ -84,4 +84,8 @@ public class TweenTarget implements Poolable {
 		duration = defaultDuration;
 	}
 	
+	public void free() {
+		Pools.free(this);
+	}
+	
 }

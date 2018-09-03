@@ -21,7 +21,7 @@ import uk.co.carelesslabs.Enums.ZoneType;
  */
 public class CompMethods {
 	
-	public CompMethods() {}
+	CompMethods() {}
 	
 	public class CompLinkerZoneComp {
 		

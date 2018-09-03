@@ -11,7 +11,7 @@ import uk.co.carelesslabs.Enums.Direction;
 
 public class RelativePositionRules {
 	
-	public boolean relative = false;
+	public boolean enabled = false;
 	public boolean tween = true;
 	private ID relativeToID = null;
 	private RelativeToIDGetter relativeToIDGetter = null;
@@ -46,9 +46,13 @@ public class RelativePositionRules {
 		return setToRelativePosition(s, target.scale.x, target.scale.y, target.position);
 	}
 	
+	public boolean setToRelativePosition(SpriteComp s, Vector3 positionToSet) {
+		return setToRelativePosition(s, 1f, 1f, positionToSet);
+	}
+	
 	public boolean setToRelativePosition(SpriteComp s, float scaleX, float scaleY, Vector3 positionToSet) {
 		ID relativeToID = getRelativeToID();
-		if(s == null || !relative || relativeToID == null) {
+		if(s == null || !enabled || relativeToID == null) {
 			return false;
 		}
 		
@@ -107,7 +111,7 @@ public class RelativePositionRules {
 	}
 	
 	public void reset() {
-		relative = false;
+		enabled = false;
 		relativeToID = null;
 		relativeToIDGetter = null;
 		offset.set(0,0,0);

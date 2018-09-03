@@ -55,10 +55,10 @@ public class CursorSelectSystem extends IteratingSystem {
 				if(t == null) {
 					c.turnActionEntityID = targetEntityID;
 					t = Comp.TurnActionComp.get(targetEntity).turnAction;
+				} else {
+					// Always add every object we select as we go to our turn action entity
+					t.addTarget(targetEntity);
 				}
-				
-				// Always add every object we select as we go to our turn action entity
-				t.addTarget(targetEntity);
 				
 				// If we're done selecting objects, do some clean up and pass our turn action
 				// entity on to the next step
@@ -98,7 +98,9 @@ public class CursorSelectSystem extends IteratingSystem {
 				Media.cancelBeep.play();	
 				cursor.remove(ActiveCardComp.class);
 				if(t != null) {
-					t.targetIDs.pop();
+					if(t.targetIDs.size > 0) {
+						t.targetIDs.pop();
+					}
 					if(t.targetIDs.size == 0) {
 						c.turnActionEntityID = null;
 					}

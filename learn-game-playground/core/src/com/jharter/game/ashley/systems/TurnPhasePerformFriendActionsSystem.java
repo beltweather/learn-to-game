@@ -93,7 +93,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			Timeline tweenBa = TweenUtil.tween(idAvatar.id, tt, 0.25f);
 			
 			Timeline tweenBb = Timeline.createParallel();
-			for(int i = 1; i < turnAction.targetIDs.size; i++) {
+			for(int i = 0; i < turnAction.targetIDs.size; i++) {
 				ID enemyID = turnAction.targetIDs.get(i);
 				Entity enemy = Comp.Entity.get(enemyID);
 				TweenTarget enemyTT = TweenTarget.newInstance();

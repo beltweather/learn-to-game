@@ -21,11 +21,27 @@ public class TurnAction {
 	public boolean defaultAll = false;
 	public boolean all = false;
 	public int priority = 0;
+	public ID performerID = null;
 	
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
 	
 	public TurnAction() {}
+	
+	public Entity getPerformer() {
+		if(performerID == null) {
+			return null;
+		}
+		return Comp.Entity.get(performerID);
+	}
+	
+	public ID getPerformerID() {
+		return performerID;
+	}
+	
+	public void setPerformerID(ID performerID) {
+		this.performerID = performerID;
+	}
 	
 	public Entity getEntity(int index) {
 		if(index < 0 || index >= targetIDs.size) {
@@ -38,7 +54,7 @@ public class TurnAction {
 		if(hasAllTargets()) {
 			return ZoneType.NONE;
 		}
-		return targetZoneTypes.get(targetIDs.size-1);
+		return targetZoneTypes.get(targetIDs.size);
 	}
 	
 	public ZoneType getNextTargetZoneType() {
@@ -57,7 +73,7 @@ public class TurnAction {
 	}
 	
 	public boolean hasAllTargets() {
-		return targetZoneTypes.size == targetIDs.size - 1;
+		return targetZoneTypes.size == targetIDs.size;
 	}
 	
 	public void addTarget(Entity entity) {
@@ -136,6 +152,7 @@ public class TurnAction {
 		priority = 0;
 		makesTargetAll = false;
 		makesTargetMultiplicity = 1;
+		performerID = null;
 	}
 	
 }

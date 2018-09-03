@@ -38,6 +38,7 @@ public class CardHelper {
 		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
+		b.TurnActionComp().turnAction.setPerformerID(b.IDComp().id);
 		zone.add(b);
 		return b;
 	}

@@ -52,10 +52,7 @@ public class TweenUtil {
 		
 		if(id != null) {
 			Entity entity = Comp.Entity.get(id);
-			if(!Comp.AnimatingComp.has(entity)) {
-				entity.add(Comp.create(engine, AnimatingComp.class));
-			}
-			AnimatingComp a = Comp.AnimatingComp.get(entity);
+			AnimatingComp a = Comp.getOrAdd(engine, AnimatingComp.class, entity);
 			a.activeCount++;
 			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(FinishedAnimatingCallback.class);
 			finishedCallback.setID(id);

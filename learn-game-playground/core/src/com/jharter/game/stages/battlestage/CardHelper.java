@@ -48,6 +48,8 @@ public class CardHelper {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity friend, Entity enemy) {
+				Media.weaponSwing.play();
+				
 				int damage = CombatUtil.getDamage(owner, enemy, 13);
 				
 				VitalsComp vEnemy = Comp.VitalsComp.get(enemy);
@@ -90,6 +92,8 @@ public class CardHelper {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity enemy) {
+				Media.weaponSwing.play();
+				
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
 				Comp.VitalsComp.get(enemy).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
@@ -108,6 +112,8 @@ public class CardHelper {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity enemy) {
+				Media.weaponSwing.play();
+				
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
 				Comp.VitalsComp.get(enemy).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");

@@ -53,7 +53,7 @@ public class Media {
     public static Animation<TextureRegion> arrowAnim;
     
     // Sounds
-    public static Sound acceptBeep, cancelBeep, moveBeep, startTurnBeep;
+    public static Sound acceptBeep, cancelBeep, moveBeep, startTurnBeep, weaponSwing;
     
     public static void load_assets(){
         // HERO
@@ -160,6 +160,8 @@ public class Media {
         moveBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/beep-23.ogg"));
         cancelBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/beep-22.ogg"));
         startTurnBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/button-37.ogg"));
+        weaponSwing = Gdx.audio.newSound(Gdx.files.internal("sound/weapon/swing-29.ogg"));
+        
     }
     
     public void dispose(){

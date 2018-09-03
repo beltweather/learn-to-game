@@ -5,18 +5,22 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.IDComp;
-import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
+import com.jharter.game.tween.TweenCallbacks;
 import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 
 public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
@@ -52,7 +56,6 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			Entity player = Comp.Entity.get(Comp.CardComp.get(entity).playerID);
 			Entity battleAvatar = Comp.Method.PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(player));
 			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
-			SpriteComp sAvatar = Comp.SpriteComp.get(battleAvatar);
 			
 			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(entity);
@@ -63,7 +66,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.position.x = U.u12(160);
 			tt.position.y = U.u12(60);
 			
-			TweenUtil.start(getEngine(), id, TweenUtil.tween(id, tt, 1f), new TweenCallback() {
+			TweenUtil.start(getEngine(), id, TweenUtil.tween(id, tt, 1f));
+			
+			tt = TweenTarget.newInstance();
+			tt.setFromEntity(battleAvatar);
+			tt.position.x -= U.u12(10);
+			tt.position.y += U.u12(4);
+			tt.angleDegrees = 20;
+				
+			Timeline tweenA = TweenUtil.tween(idAvatar.id, tt, 0.25f).setCallback(new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -72,19 +83,40 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 					}
 					
 					entity.add(Comp.create(getEngine(), ActionSpentComp.class));
+				}
+				
+			}); 
+			
+			tt.position.x += U.u12(10);
+			tt.position.y -= U.u12(4);
+			tt.angleDegrees = 0;
+			Timeline tweenBa = TweenUtil.tween(idAvatar.id, tt, 0.25f);
+			
+			Timeline tweenBb = Timeline.createParallel();
+			for(int i = 1; i < turnAction.targetIDs.size; i++) {
+				ID enemyID = turnAction.targetIDs.get(i);
+				Entity enemy = Comp.Entity.get(enemyID);
+				TweenTarget enemyTT = TweenTarget.newInstance();
+				enemyTT.setFromEntity(enemy);
+				enemyTT.position.x -= U.u12(10);
+				enemyTT.position.y += U.u12(1);
+				enemyTT.angleDegrees += 20;
+				
+				AnimatingComp a = Comp.getOrAdd(getEngine(), AnimatingComp.class, enemy);
+				a.activeCount++;
+				FinishedAnimatingCallback enemyFAC = TweenCallbacks.newInstance(FinishedAnimatingCallback.class);
+				enemyFAC.setID(enemyID);
+				tweenBb.push(TweenUtil.tween(enemyID, enemyTT, 0.1f).setCallback(enemyFAC).repeatYoyo(1, 0f));
+			}
+			
+			TweenUtil.start(getEngine(), idAvatar.id, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
 
+				@Override
+				public void onEvent(int type, BaseTween<?> source) {
 					busy = false;
 				}
 				
 			});
-			
-			tt = TweenTarget.newInstance();
-			tt.setFromEntity(battleAvatar);
-			tt.position.x -= U.u12(10);
-			tt.position.y += U.u12(4);
-			tt.angleDegrees = 20;
-			
-			TweenUtil.start(getEngine(), idAvatar.id, TweenUtil.tween(idAvatar.id, tt, 0.25f).repeatYoyo(1, 0f));
 			
 			busy = true;
 		} else {

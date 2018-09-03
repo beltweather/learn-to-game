@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
@@ -18,11 +17,21 @@ public abstract class ZoneLayout {
 	protected boolean tween = true;
 	protected boolean allowRelativePositions = true;
 	protected transient ZoneLayoutSystem system = null;
+	protected int priority = 0;
 	
 	public ZoneLayout() {}
 	
 	public Engine getEngine() {
 		return system.getEngine();
+	}
+	
+	public int getPriority() {
+		return priority;
+	}
+	
+	public ZoneLayout setPriority(int priority) {
+		this.priority = priority;
+		return this;
 	}
 	
 	public void setSystem(ZoneLayoutSystem system) {
@@ -157,6 +166,7 @@ public abstract class ZoneLayout {
 		}
 		dataById.clear();
 		ids = null;
+		priority = 0;
 	}
 
 }

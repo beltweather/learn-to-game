@@ -42,7 +42,6 @@ import com.jharter.game.ashley.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.debug.Debug;
 import com.jharter.game.layout.ActiveCardLayout;
 import com.jharter.game.layout.CursorLayout;
-import com.jharter.game.layout.CursorPositionSystem;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
 import com.jharter.game.layout.IdentityLayout;
@@ -100,8 +99,8 @@ public class BattleStage extends GameStage {
 		ZoneComp infoZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.INFO, new IdentityLayout());
 		ZoneComp friendZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
 		ZoneComp enemyZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ENEMY);
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout());
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.CURSOR, new CursorLayout());
+		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout().setPriority(-1));
+		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.CURSOR, new CursorLayout().setPriority(-2));
 		
 		// Turn timer
 		TurnHelper.addTurnEntity(engine, infoZone, 30f);
@@ -175,7 +174,7 @@ public class BattleStage extends GameStage {
 		Comp.Entity.addIdListener(engine, getBox2DWorld());
 		
 		addNetworkSystems(engine);
-		addSupportSystems(engine);
+		addDependencySystems(engine);
 		addTurnPhaseSystems(engine);
 		addCursorSystems(engine);
 		
@@ -222,7 +221,7 @@ public class BattleStage extends GameStage {
 		}
 	}
 	
-	private void addSupportSystems(PooledEngine engine) {
+	private void addDependencySystems(PooledEngine engine) {
 		engine.addSystem(new TweenSystem());
 	}
 	

@@ -1,19 +1,22 @@
 package com.jharter.game.ashley.systems;
 
+import java.util.Comparator;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.layout.TweenTarget;
+import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.id.ID;
 
-public class ZoneLayoutSystem extends IteratingSystem {
+public class ZoneLayoutSystem extends SortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public ZoneLayoutSystem() {
-		super(Family.all(ZoneComp.class).get());
+		super(Family.all(ZoneComp.class).get(), new PrioritySort());
 	}
 
 	@Override
@@ -34,6 +37,22 @@ public class ZoneLayoutSystem extends IteratingSystem {
 			// Clear out the system since this should only be
 			// a temporary reference.
 			z.layout.setSystem(null);
+		}
+	}
+	
+	private static class PrioritySort implements Comparator<Entity> {
+		@Override
+		public int compare(Entity entityA, Entity entityB) {
+			ZoneLayout layoutA = Comp.ZoneComp.get(entityA).layout;
+			ZoneLayout layoutB = Comp.ZoneComp.get(entityB).layout;
+			if(layoutA == null && layoutB != null) {
+				return -1;
+			} else if(layoutA != null && layoutB == null) {
+				return 1;
+			} else if(layoutA == null && layoutB == null) {
+				return 0;
+			}
+			return (int) (layoutB.getPriority() - layoutA.getPriority());
 		}
 	}
 

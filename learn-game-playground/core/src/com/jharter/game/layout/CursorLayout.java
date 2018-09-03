@@ -13,6 +13,7 @@ import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -255,6 +256,7 @@ public class CursorLayout extends ZoneLayout {
 		Vector3 cursorPosition = new Vector3();
 		
 		rpr.setRelativeToID(cursorTargetID);
+		rpr.offset.set(0,0,0);
 		switch(z.zoneType) {
 			case HAND:
 				rpr.xAlign = Direction.CENTER;

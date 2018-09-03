@@ -13,6 +13,7 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
+import uk.co.carelesslabs.Media;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public class CursorMoveSystem extends IteratingSystem {
@@ -63,6 +64,7 @@ public class CursorMoveSystem extends IteratingSystem {
 			direction = 1;
 		} else {
 			direction = (int) (ci.direction.x != 0 ? ci.direction.x : ci.direction.y);
+			Media.moveBeep.play();
 		}
 		
 		int newIndex = Comp.Method.CursorComp.findNextValidTargetInZone(playerID, zoneType, t, index, direction);

@@ -10,6 +10,8 @@ import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendAction
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 import com.jharter.game.util.id.IDUtil;
 
+import uk.co.carelesslabs.Media;
+
 public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseSelectFriendActionsSystem() {
@@ -24,6 +26,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		enableCursor();
 		resetCursor();
 		Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.start();
+		Media.startTurnBeep.play();
 		return true;
 	}
 

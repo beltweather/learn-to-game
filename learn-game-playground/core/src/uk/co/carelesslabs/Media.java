@@ -1,6 +1,7 @@
 package uk.co.carelesslabs;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -50,6 +51,9 @@ public class Media {
     
     public static TextureRegion[] arrowFrames;
     public static Animation<TextureRegion> arrowAnim;
+    
+    // Sounds
+    public static Sound acceptBeep, cancelBeep, moveBeep, startTurnBeep;
     
     public static void load_assets(){
         // HERO
@@ -150,6 +154,12 @@ public class Media {
         iconSettings = new Texture(Gdx.files.internal("gui/icons/settings.png"));
         iconResources = new Texture(Gdx.files.internal("gui/icons/resources.png"));
         close_menu = new Texture(Gdx.files.internal("gui/icons/close_menu.png"));
+        
+        // Sounds
+        acceptBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/beep-21.ogg"));
+        moveBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/beep-23.ogg"));
+        cancelBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/beep-22.ogg"));
+        startTurnBeep = Gdx.audio.newSound(Gdx.files.internal("sound/beep/button-37.ogg"));
     }
     
     public void dispose(){

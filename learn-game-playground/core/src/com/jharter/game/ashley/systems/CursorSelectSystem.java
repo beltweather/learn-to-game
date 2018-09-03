@@ -15,6 +15,7 @@ import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
+import uk.co.carelesslabs.Media;
 
 public class CursorSelectSystem extends IteratingSystem {
 
@@ -40,6 +41,7 @@ public class CursorSelectSystem extends IteratingSystem {
 		}
 
 		if(ci.accept) {
+			Media.acceptBeep.play();
 			
 			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
 			int index = zp.index;
@@ -89,9 +91,11 @@ public class CursorSelectSystem extends IteratingSystem {
 			}
 			
 		} else if(ci.cancel) {
+			
 
 			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
 			if(zp.tryRevertToLastCheckpoint()) {
+				Media.cancelBeep.play();	
 				cursor.remove(ActiveCardComp.class);
 				if(t != null) {
 					t.targetIDs.pop();

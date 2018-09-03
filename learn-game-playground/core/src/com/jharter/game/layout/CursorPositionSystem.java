@@ -42,134 +42,101 @@ public class CursorPositionSystem extends IteratingSystem {
 	}
 
 	@Override
-	protected void processEntity(final Entity entity, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(entity);
-		SpriteComp s = Comp.SpriteComp.get(entity);
-		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
+	protected void processEntity(final Entity cursor, float deltaTime) {
+		CursorComp c = Comp.CursorComp.get(cursor);
+		SpriteComp s = Comp.SpriteComp.get(cursor);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = zp.getZoneComp();
-		float targetAngle = getCursorAngle(entity, z.zoneType);
+		float targetAngle = getCursorAngle(cursor, z.zoneType);
+		boolean stayInZone = c.lastZoneID != z.zoneID; 
+		hasMulti = stayInZone && isAll(c);
 		
-		hasMulti = false;
-		if(c.lastZoneID != z.zoneID) {
-			handleChangeZone(entity, c, zp, z, s, targetAngle);
-		} else {
-			handleStayInZone(entity, c, zp, z, s, targetAngle);
-		}
-		handleTargetingTurnAction(entity, c, zp, z, s, s.position);
-	
-		if(!hasMulti) {
-			Comp.remove(MultiSpriteComp.class, entity);
-		}
-	}
-	
-	private void handleChangeZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, float targetAngle) {
-		IDComp id = Comp.IDComp.get(entity);
-		Vector3 position = getCursorPosition(entity, z, zp.index);
-		
-		if(position == null) {
-			return;
-		}
-		
-		TweenTarget tt = TweenTarget.newInstance();
-		tt.setFromEntity(entity);
-		tt.position.x = position.x;
-		tt.position.y = position.y;
-		tt.angleDegrees = targetAngle;
-		
-		if(tt.matchesTarget(s)) {
-			if(isAll(c)) {
-				hasMulti = true;
-			}
-			tt.free();
-			return;
-		}
-		
-		Timeline tween;
-		if(isAll(c)) {
-			
-			float convergeX = s.position.x + (position.x - s.position.x) * 0.75f;
-			float duration = 0.25f;
-			
-			Timeline single = TweenUtil.tween(id.id, tt, duration);
-			Timeline multiA = Timeline.createParallel();
-			Timeline multiB = Timeline.createParallel();
-			
-			float centerY = 0;
-			MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
-			mp.clear();
-			
-			int size = Comp.Method.ZoneComp.get(zp).objectIDs.size();
-			for(int i = 0; i < size; i++) {
-				position = getCursorPosition(entity, z, i);
-				if(position != null) {
-					centerY += position.y;
-				}
-			}
-			centerY /= (float) size;
-			
-			for(int i = 0; i < size; i++) {
-				position = getCursorPosition(entity, z, i);
-				if(position != null) {
-					Vector3 currP = new Vector3(s.position);
-					mp.positions.add(currP);
-					Vector3 targP = new Vector3(position);
-							
-					multiA.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(convergeX, centerY));
-					multiB.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(targP.x, targP.y));
-				}
-			}
-			mp.size = mp.positions.size;
-			hasMulti = true;
-			
-			tween = Timeline.createParallel().push(single).push(Timeline.createSequence().push(multiA).push(multiB));
-			
-		} else {
-			tween = TweenUtil.tween(id.id, tt);
-		}
-		
-		TweenUtil.start(getEngine(), id.id, tween);
-		
-		tt.free();
-	}
-	
-	private void handleStayInZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, float targetAngle) {
-		Vector3 targetPosition = getCursorPosition(entity, z, zp.index);
-		
+		Vector3 targetPosition = getCursorPosition(cursor, z, zp.index);
 		if(targetPosition == null) {
 			return;
 		}
-		
-		//s.position.x = targetPosition.x;
-		//s.position.y = targetPosition.y;
-		//s.angleDegrees = targetAngle;
 		
 		TweenTarget tt = TweenTarget.newInstance(s);
 		tt.position.x = targetPosition.x;
 		tt.position.y = targetPosition.y;
 		tt.angleDegrees = targetAngle;
-		tt.duration = 0.03f;
 		
 		if(tt.matchesTarget(s)) {
+			tt.free();
 			return;
 		}
 		
-		Sys.out.println("Tweening");
-		TweenUtil.start(getEngine(), entity, tt);
-		
-		if(isAll(c)) {
-			MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
-			for(int i = 0; i < Comp.Method.ZoneComp.get(zp).objectIDs.size(); i++) {
-				targetPosition = getCursorPosition(entity, z, i);
-				if(targetPosition != null) {
-					Vector3 targP = new Vector3(targetPosition);
-					mp.positions.add(targP);
-				}
-			}
-			mp.size = mp.positions.size;
-			hasMulti = true;
+		if(stayInZone) {
+			handleChangeZone(cursor, c, zp, z, s, tt);
+		} else {
+			tt.duration = 0.03f;
+			handleStayInZone(cursor, c, zp, z, s, tt);
+		}
+		handleTargetingTurnAction(cursor, c, zp, z, s, s.position);
+	
+		if(!hasMulti) {
+			Comp.remove(MultiSpriteComp.class, cursor);
 		}
 		
-		tt.free();
+		if(tt != null) {
+			TweenUtil.start(getEngine(), cursor, tt);
+		}
+	}
+	
+	private void handleChangeZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
+		if(!isAll(c)) {
+			return;
+		}
+			
+		float convergeX = s.position.x + (tt.position.x - s.position.x) * 0.75f;
+		float duration = 0.25f;
+		
+		Timeline multiA = Timeline.createParallel();
+		Timeline multiB = Timeline.createParallel();
+		
+		float centerY = 0;
+		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
+		mp.clear();
+		
+		int size = z.objectIDs.size();
+		for(int i = 0; i < size; i++) {
+			Vector3 position = getCursorPosition(entity, z, i);
+			if(position != null) {
+				centerY += position.y;
+			}
+		}
+		centerY /= (float) size;
+		
+		for(int i = 0; i < size; i++) {
+			Vector3 position = getCursorPosition(entity, z, i);
+			if(position != null) {
+				Vector3 currP = new Vector3(s.position);
+				mp.positions.add(currP);
+				Vector3 targP = new Vector3(position);
+						
+				multiA.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(convergeX, centerY));
+				multiB.push(Tween.to(currP, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(targP.x, targP.y));
+			}
+		}
+		mp.size = mp.positions.size;
+		
+		Timeline tween = Timeline.createSequence().push(multiA).push(multiB);
+		TweenUtil.start(getEngine(), Comp.IDComp.get(entity).id, tween);
+	}
+	
+	private void handleStayInZone(Entity entity, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
+		if(!isAll(c)) {
+			return;
+		}
+		
+		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, entity);
+		for(int i = 0; i < Comp.Method.ZoneComp.get(zp).objectIDs.size(); i++) {
+			Vector3 position = getCursorPosition(entity, z, i);
+			if(position != null) {
+				mp.positions.add(new Vector3(position));
+			}
+		}
+		mp.size = mp.positions.size;
 	}
 	
 	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {

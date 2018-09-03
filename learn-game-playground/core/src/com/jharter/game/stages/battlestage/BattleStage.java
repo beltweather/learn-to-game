@@ -174,6 +174,30 @@ public class BattleStage extends GameStage {
     	
 		Comp.Entity.addIdListener(engine, getBox2DWorld());
 		
+		addNetworkSystems(engine);
+		addSupportSystems(engine);
+		addTurnPhaseSystems(engine);
+		addCursorSystems(engine);
+		
+		// Other systems
+		engine.addSystem(new QueueTurnActionsSystem());
+		engine.addSystem(new CleanupTurnActionsSystem());
+		engine.addSystem(new ZoneChangeSystem());
+		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+		/*if(endPointHelper.isClient()) {
+			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
+		}*/
+		engine.addSystem(new CleanupInputSystem(this));
+		
+		// Add visual systems
+		if(!endPointHelper.isHeadless()) {
+			addVisualSystems(engine);
+		}
+		
+		return engine;
+    }
+	
+	private void addNetworkSystems(PooledEngine engine) {
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());
 		}
@@ -196,57 +220,35 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new ClientRemoveEntityPacketSystem(this, client));
 		
 		}
-		
-		// START OF ACTIVE SYSTEMS
-		
-		// Supporting engine systems
+	}
+	
+	private void addSupportSystems(PooledEngine engine) {
 		engine.addSystem(new TweenSystem());
-		
-		// Turn phase systems
+	}
+	
+	private void addTurnPhaseSystems(PooledEngine engine) {
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 			engine.addSystem(new TurnPhaseStartTurnSystem());
 				engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
 				engine.addSystem(new TurnPhaseSelectFriendActionsSystem());
-					// ADD - Turn phase select new player
 				engine.addSystem(new TurnPhasePerformFriendActionsSystem());
 				engine.addSystem(new TurnPhasePerformEnemyActionsSystem());
 			engine.addSystem(new TurnPhaseEndTurnSystem());
 		engine.addSystem(new TurnPhaseEndBattleSystem());
-		
-		// Cursor systems
+	}
+	
+	private void addCursorSystems(PooledEngine engine) {
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorTargetValidationSystem());
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorSelectSystem());
-		
-		// Turn action systems
-		engine.addSystem(new QueueTurnActionsSystem());
-		engine.addSystem(new CleanupTurnActionsSystem());
-		
-		// Zone entity systems
-		engine.addSystem(new ZoneChangeSystem());
-		
-		// General cleanup systems
-		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
-		
-		/*if(endPointHelper.isClient()) {
-			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
-		}*/
-		
-		engine.addSystem(new CleanupInputSystem(this));
-		
-		// Heady systems
-		if(!endPointHelper.isHeadless()) {
-			engine.addSystem(new ZoneLayoutSystem());
-			//engine.addSystem(new CursorPositionSystem());
-			engine.addSystem(new AnimationSystem());
-			//engine.addSystem(new RenderInitSystem());
-			engine.addSystem(new RenderEntitiesSystem(getCamera()));
-			//engine.addSystem(new RenderTimerSystem(getCamera()));
-			engine.addSystem(new RenderWorldGridSystem(getCamera()));
-		}
-		
-		return engine;
-    }
+	}
+	
+	private void addVisualSystems(PooledEngine engine) {
+		engine.addSystem(new ZoneLayoutSystem());
+		engine.addSystem(new AnimationSystem());
+		engine.addSystem(new RenderEntitiesSystem(getCamera()));
+		engine.addSystem(new RenderWorldGridSystem(getCamera()));
+	}
 
 }

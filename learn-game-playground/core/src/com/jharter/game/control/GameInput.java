@@ -23,7 +23,7 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 	private static final int CONTROL_FRAME_DELAY = 3;
 	
 	private static boolean isActive(GlobalInputState inputState) {
-		return inputState.up || inputState.down || inputState.left || inputState.right || inputState.accept || inputState.cancel; 
+		return inputState.up || inputState.down || inputState.left || inputState.right || inputState.accept || inputState.cancel || inputState.prev || inputState.next; 
 	}
 	
 	private static GlobalInputState copy(GlobalInputState inputState) {
@@ -35,6 +35,8 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 		copy.right = inputState.right;
 		copy.accept = inputState.accept;
 		copy.cancel = inputState.cancel;
+		copy.prev = inputState.prev;
+		copy.next = inputState.next;
 		copy.time = inputState.time;
 		return copy;
 	}
@@ -222,6 +224,12 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
             case Keys.Q:
             	realtimeState.cancel = true;
                 break;
+            case Keys.Z:
+            	realtimeState.prev = true;
+            	break;
+            case Keys.C:
+            	realtimeState.next = true;
+            	break;
             case Keys.ESCAPE:
                 Gdx.app.exit();
                 break;
@@ -249,6 +257,8 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
     	realtimeState.right = false;
     	realtimeState.accept = false;
     	realtimeState.cancel = false;
+    	realtimeState.prev = false;
+    	realtimeState.next = false;
     	localRenderState.reset = false;
     	localRenderState.inventory = false;
     }
@@ -330,6 +340,14 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 		return renderState.cancel;
 	}
 	
+	public boolean isPrev() {
+		return renderState.prev;
+	}
+	
+	public boolean isNext() {
+		return renderState.next;
+	}
+	
 	public boolean isInventory() {
 		return localRenderState.inventory;
 	}
@@ -394,6 +412,14 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 		realtimeState.cancel = cancel;
 	}
 	
+	public void setPrev(boolean prev) {
+		realtimeState.prev = prev;
+	}
+	
+	public void setNext(boolean next) {
+		realtimeState.next = next;
+	}
+	
 	public void setInventory(boolean inventory) {
 		localRenderState.inventory = inventory;
 	}
@@ -447,6 +473,10 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
 			return Keys.E;
 		} else if(buttonCode == XboxMapping.B) {
 			return Keys.Q;
+		} else if(buttonCode == XboxMapping.L_BUMPER) {
+			return Keys.Z;
+		} else if(buttonCode == XboxMapping.R_BUMPER) {
+			return Keys.C;
 		}
 		return -1;
 	}

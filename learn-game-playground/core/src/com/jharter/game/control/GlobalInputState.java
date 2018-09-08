@@ -13,6 +13,6 @@ import com.jharter.game.util.id.ID;
  */
 public class GlobalInputState {
 	public ID id;
-	public boolean up, down, left, right, accept, cancel;
+	public boolean up, down, left, right, accept, cancel, prev, next;
 	public long time;
 }

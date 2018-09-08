@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -39,8 +40,20 @@ public class CursorSelectSystem extends IteratingSystem {
 			ci.reset();
 			return;
 		}
+		
+		if(ci.prev) {
+			
+			if(Comp.Method.ActivePlayerComp.prevPlayer(Comp.Entity.TurnEntity.ActivePlayerComp())) {
+				Comp.Entity.CursorEntity.toHand();
+			}
+			
+		} else if(ci.next) {
 
-		if(ci.accept) {
+			if(Comp.Method.ActivePlayerComp.nextPlayer(Comp.Entity.TurnEntity.ActivePlayerComp())) {
+				Comp.Entity.CursorEntity.toHand();
+			}
+			
+		} else if(ci.accept) {
 			Media.acceptBeep.play();
 			
 			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
@@ -66,6 +79,7 @@ public class CursorSelectSystem extends IteratingSystem {
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
 					Comp.Method.ActivePlayerComp.nextPlayer(Comp.Entity.TurnEntity.ActivePlayerComp());
+					Comp.Entity.TurnEntity.ActivePlayerComp().spentPlayers.add(playerID);
 					playerID = Comp.Method.CursorComp.getPlayerID(c);
 					
 					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
@@ -91,7 +105,6 @@ public class CursorSelectSystem extends IteratingSystem {
 			}
 			
 		} else if(ci.cancel) {
-			
 
 			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
 			if(zp.tryRevertToLastCheckpoint()) {

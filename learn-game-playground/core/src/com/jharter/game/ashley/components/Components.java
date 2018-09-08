@@ -203,12 +203,14 @@ public final class Components {
 	
 	public static final class ActivePlayerComp implements C {
 		public ID activePlayerID = null;
+		public Array<ID> spentPlayers = new Array<ID>();
 		
 		private ActivePlayerComp() {}
 		
 		@Override
 		public void reset() {
 			activePlayerID = null;
+			spentPlayers.clear();
 		}
 	}
 	
@@ -580,6 +582,8 @@ public final class Components {
 		public Vector2 direction = new Vector2(0, 0);
 		public boolean accept = false;
 		public boolean cancel = false;
+		public boolean next = false;
+		public boolean prev = false;
 		
 		private CursorInputComp() {}
 		
@@ -592,6 +596,8 @@ public final class Components {
 			direction.set(0, 0);
 			accept = false;
 			cancel = false;
+			next = false;
+			prev = false;
 		}
 	}
 	

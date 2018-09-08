@@ -59,6 +59,16 @@ public class CursorInputSystem extends IteratingSystem {
 			ci.cancel = true;
 			in.input.setCancel(false);
 		}
+		
+		if(in.input.isPrev()) {
+			ci.prev = true;
+			in.input.setPrev(false);
+		}
+		
+		if(in.input.isNext()) {
+			ci.next = true;
+			in.input.setNext(false);
+		}
 	}
 	
 }

@@ -237,14 +237,52 @@ public class CompMethods {
 			Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(index);
 		}
 		
-		public void nextPlayer(ActivePlayerComp p) {
-			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
-			Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i));
+		public boolean nextPlayer(ActivePlayerComp p) {
+			return nextPlayer(p, false);
 		}
 		
-		public void prevPlayer(ActivePlayerComp p) {
+		public boolean prevPlayer(ActivePlayerComp p) {
+			return prevPlayer(p, false);
+		}
+		
+		public boolean nextPlayer(ActivePlayerComp p, boolean includeSpent) {
 			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
-			Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i));
+			if(includeSpent) {
+				Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i));
+				return true;
+			}
+			
+			int counter = 0;
+			while(counter < IDUtil.getPlayerIDs().size()) {
+				i = ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i);
+				ID playerID = IDUtil.getPlayerIDs().get(i);
+				if(!Comp.Entity.TurnEntity.ActivePlayerComp().spentPlayers.contains(playerID, false)) {
+					Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = playerID;
+					return true;
+				}
+				counter++;
+			}
+			return false;
+		}
+		
+		public boolean prevPlayer(ActivePlayerComp p, boolean includeSpent) {
+			int i = IDUtil.getPlayerIDs().indexOf(p.activePlayerID, false);
+			if(includeSpent) {
+				Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i));
+				return true;
+			}
+			
+			int counter = 0;
+			while(counter < IDUtil.getPlayerIDs().size()) {
+				i = ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i);
+				ID playerID = IDUtil.getPlayerIDs().get(i);
+				if(!Comp.Entity.TurnEntity.ActivePlayerComp().spentPlayers.contains(playerID, false)) {
+					Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID = playerID;
+					return true;
+				}
+				counter++;
+			}
+			return false;
 		}
 
 	}

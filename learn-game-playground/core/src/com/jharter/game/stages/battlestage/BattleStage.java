@@ -183,6 +183,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CleanupTurnActionsSystem());
 		engine.addSystem(new ZoneChangeSystem());
 		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+
 		/*if(endPointHelper.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
 		}*/

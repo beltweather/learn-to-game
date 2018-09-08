@@ -70,7 +70,8 @@ public class CompMethods {
 			if(c.turnActionEntityID == null) {
 				return null;
 			}
-			TurnActionComp t = Comp.TurnActionComp.get(Comp.Entity.get(c.turnActionEntityID));
+			Entity entity = Comp.Entity.get(c.turnActionEntityID);
+			TurnActionComp t = Comp.TurnActionComp.get(entity);
 			if(t == null) {
 				return null;
 			}

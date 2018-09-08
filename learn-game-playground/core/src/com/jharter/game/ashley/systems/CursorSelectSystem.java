@@ -44,13 +44,13 @@ public class CursorSelectSystem extends IteratingSystem {
 		if(ci.prev) {
 			
 			if(Comp.Method.ActivePlayerComp.prevPlayer(Comp.Entity.TurnEntity.ActivePlayerComp())) {
-				Comp.Entity.CursorEntity.toHand();
+				Comp.Entity.CursorEntity.toHand(getEngine());
 			}
 			
 		} else if(ci.next) {
 
 			if(Comp.Method.ActivePlayerComp.nextPlayer(Comp.Entity.TurnEntity.ActivePlayerComp())) {
-				Comp.Entity.CursorEntity.toHand();
+				Comp.Entity.CursorEntity.toHand(getEngine());
 			}
 			
 		} else if(ci.accept) {

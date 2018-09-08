@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -99,6 +100,18 @@ public class CompEntities {
 			return Comp.ZonePositionComp.get(Entity());
 		}
 		
+		public Entity TurnActionEntity() {
+			return Comp.Entity.get(CursorComp().turnActionEntityID);
+		}
+		
+		public void cancelTurnAction(Engine engine) {
+			Entity entity = TurnActionEntity();
+			if(entity != null) {
+				Comp.add(engine, ActionSpentComp.class, entity);
+			}
+			CursorComp().turnActionEntityID = null;
+		}
+		
 		public void enable() {
 			Entity entity = Entity();
 			if(Comp.DisabledComp.has(entity)) {
@@ -132,7 +145,8 @@ public class CompEntities {
 			}
 		}
 		
-		public void toHand() {
+		public void toHand(Engine engine) {
+			Comp.Entity.CursorEntity.cancelTurnAction(engine);
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			zp.index = 0;
 			zp.zoneID = Comp.Method.ZoneComp.getID(TurnEntity.ActivePlayerComp().activePlayerID, ZoneType.HAND);
@@ -147,9 +161,9 @@ public class CompEntities {
 			return Comp.Method.CursorComp.isValidTarget(Entity(), index);
 		}
 		
-		public void reset() {
+		public void reset(Engine engine) {
 			single();
-			toHand();
+			toHand(engine);
 			CursorComp().turnActionEntityID = null;
 		}
 	}

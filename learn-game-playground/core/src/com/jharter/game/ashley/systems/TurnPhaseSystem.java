@@ -44,11 +44,11 @@ public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 	
 	@Override
 	public void update (float deltaTime) {
-		if(!Comp.has(phaseClass, Comp.Entity.TurnEntity.Entity())) {
+		if(!Comp.has(phaseClass, Comp.Entity.DefaultTurn().Entity())) {
 			return;
 		}
 		if(!phaseStarted) {
-			startPhase(Comp.Entity.TurnEntity.Entity(), deltaTime);
+			startPhase(Comp.Entity.DefaultTurn().Entity(), deltaTime);
 			if(!phaseStarted) {
 				return;
 			}
@@ -61,7 +61,7 @@ public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 		}
 		
 		if(phaseShouldEnd) {
-			endPhase(Comp.Entity.TurnEntity.Entity(), deltaTime);
+			endPhase(Comp.Entity.DefaultTurn().Entity(), deltaTime);
 		}
 	}
 	
@@ -121,15 +121,15 @@ public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 	}
 	
 	protected void resetCursor() {
-		Comp.Entity.CursorEntity.reset(getEngine());
+		Comp.Entity.DefaultCursor().reset(getEngine());
 	}
 	
 	protected void enableCursor() {
-		Comp.Entity.CursorEntity.enable();
+		Comp.Entity.DefaultCursor().enable();
 	}
 	
 	protected void disableCursor() {
-		Comp.Entity.CursorEntity.disable(getEngine());
+		Comp.Entity.DefaultCursor().disable(getEngine());
 	}
 	
 	protected boolean has(Class<? extends Component> klass) {

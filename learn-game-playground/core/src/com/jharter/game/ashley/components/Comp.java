@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapper;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
@@ -68,8 +69,9 @@ public class Comp {
 	
 	private Comp() {}
 	
-	public static final CompMethods Method = new CompMethods();
+	public static final CompWrappers Wrap = new CompWrappers();
 	public static final CompEntities Entity = new CompEntities();
+	public static final CompFinders Find = new CompFinders();
 	
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> klass) {
 		if(!componentMappersByClass.containsKey(klass)) {
@@ -152,7 +154,6 @@ public class Comp {
 	public static final ComponentMapper<AnimatingComp> AnimatingComp = getFor(AnimatingComp.class);
 	public static final ComponentMapper<ChangeZoneComp> ChangeZoneComp = getFor(ChangeZoneComp.class);
 	public static final ComponentMapper<PlayerComp> PlayerComp = getFor(PlayerComp.class);
-	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
 	public static final ComponentMapper<ShapeRenderComp> ShapeRenderComp = getFor(ShapeRenderComp.class);
 	public static final ComponentMapper<TurnPhaseComp> TurnPhaseComp = getFor(TurnPhaseComp.class);
 	public static final ComponentMapper<TurnPhaseStartBattleComp> TurnPhaseStartBattleComp = getFor(TurnPhaseStartBattleComp.class);
@@ -164,5 +165,6 @@ public class Comp {
 	public static final ComponentMapper<TurnPhaseEndTurnComp> TurnPhaseEndTurnComp = getFor(TurnPhaseEndTurnComp.class);
 	public static final ComponentMapper<TurnPhaseEndBattleComp> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleComp.class);
 	public static final ComponentMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
-	
+	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
+
 }

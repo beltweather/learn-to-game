@@ -40,7 +40,7 @@ public class HandLayout extends ZoneLayout {
 	@Override
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
 		CardComp c = Comp.CardComp.get(entity);
-		if(c.playerID != Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID) {
+		if(c.playerID != Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID) {
 			hide(entity);
 		} else {
 			show(entity);

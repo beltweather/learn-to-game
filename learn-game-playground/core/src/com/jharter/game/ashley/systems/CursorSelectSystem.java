@@ -6,7 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActiveCardComp;
-import com.jharter.game.ashley.components.Components.AnimatingComp;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -33,7 +33,7 @@ public class CursorSelectSystem extends IteratingSystem {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = zp.getZoneComp();
-		ID playerID = Comp.Method.CursorComp.getPlayerID(c);
+		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 		
 		// A little failsafe here for when zones are empty
 		if(!z.hasIndex(zp.index)) {
@@ -41,26 +41,28 @@ public class CursorSelectSystem extends IteratingSystem {
 			return;
 		}
 		
+		ActivePlayerComp a = Comp.Entity.DefaultTurn().ActivePlayerComp();
+		
 		if(ci.prev) {
 			
-			if(Comp.Method.ActivePlayerComp.prevPlayer(Comp.Entity.TurnEntity.ActivePlayerComp())) {
-				Comp.Entity.CursorEntity.toHand(getEngine());
+			if(Comp.Wrap.ActivePlayerComp(a).prevPlayer()) {
+				Comp.Entity.Cursor(cursor).toHand(getEngine());
 			}
 			
 		} else if(ci.next) {
 
-			if(Comp.Method.ActivePlayerComp.nextPlayer(Comp.Entity.TurnEntity.ActivePlayerComp())) {
-				Comp.Entity.CursorEntity.toHand(getEngine());
+			if(Comp.Wrap.ActivePlayerComp(a).nextPlayer()) {
+				Comp.Entity.Cursor(cursor).toHand(getEngine());
 			}
 			
 		} else if(ci.accept) {
 			Media.acceptBeep.play();
 			
-			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
+			TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
 			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
-			if(Comp.Method.CursorComp.isValidTarget(cursor)) {
+			if(Comp.Entity.Cursor(cursor).isValidTarget()) {
 				ID targetEntityID = z.objectIDs.get(index);
 				Entity targetEntity = Comp.Entity.get(targetEntityID);
 				
@@ -78,9 +80,9 @@ public class CursorSelectSystem extends IteratingSystem {
 				boolean checkpoint = true;
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
-					Comp.Method.ActivePlayerComp.nextPlayer(Comp.Entity.TurnEntity.ActivePlayerComp());
-					Comp.Entity.TurnEntity.ActivePlayerComp().spentPlayers.add(playerID);
-					playerID = Comp.Method.CursorComp.getPlayerID(c);
+					Comp.Wrap.ActivePlayerComp(a).nextPlayer();
+					a.spentPlayers.add(playerID);
+					playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 					
 					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
@@ -92,8 +94,8 @@ public class CursorSelectSystem extends IteratingSystem {
 				// Update our current cursor position based on our next object to select or
 				// wether we should go back to the hand. We don't need to do an extra check
 				// for validity here because we covered that at the top of this menu.
-				ZoneComp targetZone = t.hasAllTargets() ? Comp.Method.ZoneComp.get(playerID, ZoneType.HAND) : Comp.Method.ZoneComp.get(playerID, t.getTargetZoneType());
-				int targetIndex = Comp.Method.CursorComp.findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
+				ZoneComp targetZone = t.hasAllTargets() ? Comp.Find.ZoneComp.findZone(playerID, ZoneType.HAND) : Comp.Find.ZoneComp.findZone(playerID, t.getTargetZoneType());
+				int targetIndex = Comp.Entity.Cursor(cursor).findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
 				
 				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 				cz.oldZoneID = z.zoneID;
@@ -106,7 +108,7 @@ public class CursorSelectSystem extends IteratingSystem {
 			
 		} else if(ci.cancel) {
 
-			TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
+			TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
 			if(zp.tryRevertToLastCheckpoint()) {
 				Media.cancelBeep.play();	
 				cursor.remove(ActiveCardComp.class);

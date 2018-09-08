@@ -44,7 +44,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 					ZoneComp z = zp.getZoneComp();
 					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Comp.Method.ZoneComp.getID(ca.playerID, ZoneType.ACTIVE_CARD);
+					cz.newZoneID = Comp.Find.ZoneComp.findZoneID(ca.playerID, ZoneType.ACTIVE_CARD);
 					cz.useNextIndex = true;
 					cz.instantChange = false;
 					entity.add(cz);

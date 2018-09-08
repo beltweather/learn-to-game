@@ -25,7 +25,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		}
 		enableCursor();
 		resetCursor();
-		Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.start();
+		Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.start();
 		Media.startTurnBeep.play();
 		ActionQueuedComp.QUEUE_INDEX = 0;
 		return true;
@@ -48,10 +48,10 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
-		Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.stop();
+		Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.stop();
 		
 		// Cancel the current turn action if there is one
-		CursorComp c = Comp.Entity.CursorEntity.CursorComp();
+		CursorComp c = Comp.Entity.DefaultCursor().CursorComp();
 		if(c.turnActionEntityID != null) {
 			Entity entity = Comp.Entity.get(c.turnActionEntityID);
 			if(!Comp.ActionSpentComp.has(entity)) {

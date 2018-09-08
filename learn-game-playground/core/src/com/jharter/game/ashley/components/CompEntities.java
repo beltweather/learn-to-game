@@ -15,9 +15,13 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
 
@@ -84,12 +88,34 @@ public class CompEntities {
 		Comp.getOrAdd(engine, RemoveComp.class, entity);
 	}
 		
-	public class EntityMapperCursorEntity {
+	private abstract class EntityMapper {
+		
+		protected Entity entity;
+		
+		private EntityMapper() {}
+		
+		void setEntity(Entity entity) {
+			this.entity = entity;
+		}
+		
+		protected abstract ID getDefaultEntityID();
+
+		public Entity Entity() {
+			if(entity != null) {
+				return entity;
+			}
+			return get(getDefaultEntityID());
+		}
+		
+	}
+	
+	public class EntityMapperCursorEntity extends EntityMapper {
 		
 		private EntityMapperCursorEntity() {}
 		
-		public Entity Entity() {
-			return get(IDUtil.getCursorEntityID());
+		@Override
+		protected ID getDefaultEntityID() {
+			return IDUtil.getCursorEntityID();
 		}
 		
 		public CursorComp CursorComp() {
@@ -146,19 +172,11 @@ public class CompEntities {
 		}
 		
 		public void toHand(Engine engine) {
-			Comp.Entity.CursorEntity.cancelTurnAction(engine);
+			cancelTurnAction(engine);
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			zp.index = 0;
-			zp.zoneID = Comp.Method.ZoneComp.getID(TurnEntity.ActivePlayerComp().activePlayerID, ZoneType.HAND);
+			zp.zoneID = Comp.Find.ZoneComp.findZoneID(DefaultTurn().ActivePlayerComp().activePlayerID, ZoneType.HAND);
 			zp.clearHistory();
-		}
-		
-		public boolean isValidTarget() {
-			return Comp.Method.CursorComp.isValidTarget(Entity());
-		}
-		
-		public boolean isValidTarget(int index) {
-			return Comp.Method.CursorComp.isValidTarget(Entity(), index);
 		}
 		
 		public void reset(Engine engine) {
@@ -166,14 +184,81 @@ public class CompEntities {
 			toHand(engine);
 			CursorComp().turnActionEntityID = null;
 		}
+		
+		public TurnAction getTurnAction() {
+			CursorComp c = CursorComp();
+			if(c.turnActionEntityID == null) {
+				return null;
+			}
+			Entity entity = Comp.Entity.get(c.turnActionEntityID);
+			TurnActionComp t = Comp.TurnActionComp.get(entity);
+			if(t == null) {
+				return null;
+			}
+			return t.turnAction;
+		}		
+		
+		public ID getPlayerID() {
+			return DefaultTurn().ActivePlayerComp().activePlayerID;
+		}
+		
+		public boolean isValidTarget() {
+			return isValidTarget(Comp.ZonePositionComp.get(Entity()).index);
+		}
+		
+		public boolean isValidTarget(int index) {
+			return hasValidTarget(getPlayerID(), Comp.Find.ZoneComp.findZone(Entity()).zoneType, getTurnAction(), index, 0, 0);
+		}
+		
+		public int findFirstValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t) {
+			return findNextValidTarget(ownerID, zoneType, t, -1, 1, 0);
+		}
+		
+		public int findNextValidTargetInZone(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction) {
+			return findNextValidTarget(ownerID, zoneType, t, index, direction, 0);
+		}
+		
+		private boolean hasValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+			return findNextValidTarget(ownerID, zoneType, t, index, direction, depth) >= 0;
+		}
+		
+		private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+			ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
+			for(int i = 0; i < z.objectIDs.size(); i++) {
+				index = ArrayUtil.findNextIndex(index, direction, z.objectIDs.size());
+				if(!z.hasIndex(index)) {
+					return -1;
+				}
+				Entity entity = Comp.Entity.get(z.objectIDs.get(index));
+				if(entity != null && (t == null || t.isValidTarget(entity))) {
+					if(t == null) {
+						TurnActionComp taComp = Comp.TurnActionComp.get(entity);
+						if(taComp != null) {
+							TurnAction ta = taComp.turnAction;
+							ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
+							if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerID, nextZoneType, ta, 0, 1, depth+1)) {
+								return index;
+							}
+						}
+					} else {
+						return index;
+					}
+				}
+				if(direction == 0) {
+					break;
+				}
+			}			
+			return -1;
+		}
 	}
 	
-	public class EntityMapperTurnEntity {
+	public class EntityMapperTurnEntity extends EntityMapper {
 		
 		private EntityMapperTurnEntity() {}
 		
-		public Entity Entity() {
-			return get(IDUtil.getTurnEntityID());
+		@Override
+		protected ID getDefaultEntityID() {
+			return IDUtil.getTurnEntityID();
 		}
 		
 		public TurnTimerComp TurnTimerComp() {
@@ -197,10 +282,28 @@ public class CompEntities {
 		public boolean isTurnPhaseEndTurn() { return Comp.TurnPhaseEndTurnComp.has(Entity()); }
 		public boolean isTurnPhaseEndBattle() { return Comp.TurnPhaseEndBattleComp.has(Entity()); }
 		public boolean isTurnPhaseNone() { return Comp.TurnPhaseNoneComp.has(Entity()); }
-		
+
 	}
 	
-	public final EntityMapperCursorEntity CursorEntity = new EntityMapperCursorEntity();
-	public final EntityMapperTurnEntity TurnEntity = new EntityMapperTurnEntity();
+	private final EntityMapperCursorEntity entityMapperCursor = new EntityMapperCursorEntity();
+	private final EntityMapperTurnEntity entityMapperTurn = new EntityMapperTurnEntity();
+	
+	public EntityMapperCursorEntity Cursor(Entity cursorEntity) {
+		entityMapperCursor.setEntity(cursorEntity);
+		return entityMapperCursor;
+	}
+	
+	public EntityMapperCursorEntity DefaultCursor() {
+		return Cursor(null);
+	}
+	
+	public EntityMapperTurnEntity Turn(Entity turnEntity) {
+		entityMapperTurn.setEntity(turnEntity);
+		return entityMapperTurn;
+	}
+	
+	public EntityMapperTurnEntity DefaultTurn() {
+		return Turn(null);
+	}
 	
 }

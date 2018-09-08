@@ -101,6 +101,7 @@ public final class Components {
 		}
 	}
 	
+	// XXX Move methods into wrapper or system	
 	public static final class SpriteComp implements C {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
@@ -332,6 +333,7 @@ public final class Components {
 		}
 	}
 	
+	// XXX Move methods into wrapper or system
 	public static final class VitalsComp implements C {
 		public int maxHealth = 0;
 		public int weakHealth = 0;
@@ -415,6 +417,7 @@ public final class Components {
 		}
 	}
 	
+	// XXX Move methods into wrapper or system
 	public static final class ZoneComp implements C {
 		public ID zoneID = null;
 		public ZoneType zoneType = ZoneType.NONE;
@@ -462,6 +465,7 @@ public final class Components {
 		
 	}
 	
+	// XXX Move methods into wrapper or system
 	public static final class ZonePositionComp implements C {
 		
 		public ID zoneID = null;
@@ -474,7 +478,7 @@ public final class Components {
 			if(zoneID == null) {
 				return null;
 			}
-			return Comp.Method.ZoneComp.get(this);
+			return Comp.Find.ZoneComp.findZone(this);
 		}
 		
 		public void checkpoint(Engine engine) {
@@ -544,6 +548,7 @@ public final class Components {
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
+	// XXX Move methods into wrapper or system
 	public static final class CursorInputRegulatorComp implements C {
 		private boolean processedMove = false;
 		private float processedMoveDelta = 0;
@@ -578,6 +583,7 @@ public final class Components {
 		}
 	}
 	
+	// XXX Move methods into wrapper or system
 	public static final class CursorInputComp implements C {
 		public Vector2 direction = new Vector2(0, 0);
 		public boolean accept = false;

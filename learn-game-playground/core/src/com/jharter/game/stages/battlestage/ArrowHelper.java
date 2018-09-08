@@ -33,10 +33,10 @@ public class ArrowHelper {
 
 			@Override
 			public ID getRelativeToID() {
-				if(Comp.Entity.CursorEntity.isDisabled()) {
+				if(Comp.Entity.DefaultCursor().isDisabled()) {
 					return null;
 				}
-				return Comp.PlayerComp.get(Comp.Entity.get(Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID)).battleAvatarID;
+				return Comp.PlayerComp.get(Comp.Entity.get(Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID)).battleAvatarID;
 			}
 			
 		});

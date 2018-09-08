@@ -32,14 +32,14 @@ public class CursorMoveSystem extends IteratingSystem {
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = zp.getZoneComp();
 		ZoneComp origZ = z;
-		TurnAction t = Comp.Method.CursorComp.getTurnAction(c);
-		ID playerID = Comp.Method.CursorComp.getPlayerID(c);
+		TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
+		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 		
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;
 		
 		boolean move = ci.move() && (t == null || !t.all);
-		boolean valid = Comp.Method.CursorComp.isValidTarget(cursor);
+		boolean valid = Comp.Entity.Cursor(cursor).isValidTarget();
 		
 		if(!move && valid) {
 			return;
@@ -47,7 +47,7 @@ public class CursorMoveSystem extends IteratingSystem {
 		
 		if(!valid) {
 			zoneType = ZoneType.HAND;
-			z = Comp.Method.ZoneComp.get(playerID, zoneType);
+			z = Comp.Find.ZoneComp.findZone(playerID, zoneType);
 			index = -1;
 			
 			// We need to be sure to cleanup our selection if we end up in an invalid state
@@ -67,7 +67,7 @@ public class CursorMoveSystem extends IteratingSystem {
 			Media.moveBeep.play();
 		}
 		
-		int newIndex = Comp.Method.CursorComp.findNextValidTargetInZone(playerID, zoneType, t, index, direction);
+		int newIndex = Comp.Entity.Cursor(cursor).findNextValidTargetInZone(playerID, zoneType, t, index, direction);
 		if(!z.hasIndex(newIndex)) {
 			newIndex = -1;
 		}

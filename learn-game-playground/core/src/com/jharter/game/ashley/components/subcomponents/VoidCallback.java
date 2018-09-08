@@ -33,12 +33,12 @@ public abstract class VoidCallback<T> {
 			Entity friend = t.getEntity(0);
 			Entity enemy = t.getEntity(1);
 			CardComp c = Comp.CardComp.get(card);
-			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Wrap.CardComp(c).getBattleAvatarEntity();
 			call(character, card, friend, enemy);
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
-				ZoneComp z = Comp.Method.ZoneComp.get(zp);
+				ZoneComp z = Comp.Find.ZoneComp.findZone(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
@@ -76,11 +76,11 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getPerformer();
 			CardComp c = Comp.CardComp.get(card);
 			Entity friend = t.getEntity(0);
-			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Wrap.CardComp(c).getBattleAvatarEntity();
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
-				ZoneComp z = Comp.Method.ZoneComp.get(zp);
+				ZoneComp z = Comp.Find.ZoneComp.findZone(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);
@@ -118,7 +118,7 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getPerformer();
 			CardComp c = Comp.CardComp.get(card);
 			Entity activeCard = t.getEntity(0); 
-			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Wrap.CardComp(c).getBattleAvatarEntity();
 			
 			call(character, card, activeCard);
 		}
@@ -141,11 +141,11 @@ public abstract class VoidCallback<T> {
 			Entity card = t.getPerformer();
 			CardComp c = Comp.CardComp.get(card);
 			Entity enemy = t.getEntity(0);
-			Entity character = Comp.Method.CardComp.getBattleAvatarEntity(c);
+			Entity character = Comp.Wrap.CardComp(c).getBattleAvatarEntity();
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
-				ZoneComp z = Comp.Method.ZoneComp.get(zp);
+				ZoneComp z = Comp.Find.ZoneComp.findZone(zp);
 				ID id;
 				for(int i = 0; i < z.objectIDs.size(); i++) {
 					id = z.objectIDs.get(i);

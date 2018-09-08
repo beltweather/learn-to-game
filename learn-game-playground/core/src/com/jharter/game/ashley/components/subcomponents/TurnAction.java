@@ -129,9 +129,9 @@ public class TurnAction {
 		
 		temp.clear();
 		temp.addAll(targetIDs);
-		ZoneComp z = Comp.Method.ZoneComp.get(Comp.Entity.get(targetIDs.peek()));
+		ZoneComp z = Comp.Find.ZoneComp.findZone(Comp.Entity.get(targetIDs.peek()));
 		for(ID id : z.objectIDs) {
-			if(inFinalZoneOnly && Comp.Method.ZoneComp.get(Comp.Entity.get(id)).zoneType != z.zoneType) {
+			if(inFinalZoneOnly && Comp.Find.ZoneComp.findZone(Comp.Entity.get(id)).zoneType != z.zoneType) {
 				continue;
 			}
 			if(!temp.contains(id, false)) {

@@ -25,13 +25,13 @@ public class CursorHelper {
 		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
-		b.ChangeZoneComp().newZoneID = Comp.Method.ZoneComp.getID(Comp.Entity.TurnEntity.ActivePlayerComp().activePlayerID, zoneType);
+		b.ChangeZoneComp().newZoneID = Comp.Find.ZoneComp.findZoneID(Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID, zoneType);
 		b.ChangeZoneComp().newIndex = 0;
 		b.ZonePositionComp().zoneID = b.ChangeZoneComp().newZoneID;
 		b.ZonePositionComp();
 		b.ZonePositionComp().index = 0;
 		b.SpriteComp().position.z = 3;
-		Comp.Method.ZoneComp.get(null, ZoneType.CURSOR).add(cursorID, null);;
+		Comp.Find.ZoneComp.findZone(null, ZoneType.CURSOR).add(cursorID, null);;
 		return b;
 	}
 	

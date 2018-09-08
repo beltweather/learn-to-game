@@ -21,7 +21,7 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 	
 	@Override
 	public void update(float deltaTime) {
-		zCursor = Comp.Entity.CursorEntity.ZonePositionComp().getZoneComp();
+		zCursor = Comp.Entity.DefaultCursor().ZonePositionComp().getZoneComp();
 		super.update(deltaTime);
 	}
 
@@ -36,10 +36,9 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 	}
 	
 	public void handleZoneWithCursor(ZoneComp z) {
-		Entity cursor = Comp.Entity.CursorEntity.Entity();
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			Entity zoneItem = Comp.Entity.get(z.objectIDs.get(i));
-			if(!Comp.Method.CursorComp.isValidTarget(cursor, i)) {
+			if(!Comp.Entity.DefaultCursor().isValidTarget(i)) {
 				Comp.add(getEngine(), UntargetableComp.class, zoneItem);
 			} else {
 				Comp.remove(UntargetableComp.class, zoneItem);

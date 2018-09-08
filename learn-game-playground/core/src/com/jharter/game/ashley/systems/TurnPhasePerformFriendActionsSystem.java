@@ -41,7 +41,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@Override
 	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
 		busy = false;
-		return Comp.Entity.TurnEntity.TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
+		return Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = Comp.IDComp.get(entity).id;
 			Entity player = Comp.Entity.get(Comp.CardComp.get(entity).playerID);
-			Entity battleAvatar = Comp.Method.PlayerComp.getBattleAvatarEntity(Comp.PlayerComp.get(player));
+			Entity battleAvatar = Comp.Wrap.PlayerComp(Comp.PlayerComp.get(player)).getBattleAvatarEntity();
 			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
 			
 			TweenTarget tt = TweenTarget.newInstance();
@@ -101,7 +101,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			for(int i = 0; i < allTargetIDs.size; i++) {
 				ID enemyID = allTargetIDs.get(i);
 				Entity enemy = Comp.Entity.get(enemyID);
-				ZoneComp z = Comp.Method.ZoneComp.get(enemy);
+				ZoneComp z = Comp.Find.ZoneComp.findZone(enemy);
 				if(z.zoneType != ZoneType.ENEMY) {
 					continue;
 				}

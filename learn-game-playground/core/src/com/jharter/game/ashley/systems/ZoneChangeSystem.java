@@ -32,7 +32,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 			targetZoneID = zp.getZoneComp().zoneID;
 		}
 		
-		ZoneComp z = Comp.Method.ZoneComp.get(targetZoneID);
+		ZoneComp z = Comp.ZoneComp.get(Comp.Entity.get(targetZoneID));
 		
 		int targetIndex;
 		if(cz.useNextIndex) {
@@ -49,7 +49,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 		
 		switch(ty.type) {
 			case CARD:
-				ZoneComp zOld = Comp.Method.ZoneComp.get(zp);
+				ZoneComp zOld = Comp.Find.ZoneComp.findZone(zp);
 				zOld.remove(id.id);
 				z.add(id.id, zp);
 				zp.index = targetIndex;

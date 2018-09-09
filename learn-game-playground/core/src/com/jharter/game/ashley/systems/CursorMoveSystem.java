@@ -31,9 +31,10 @@ public class CursorMoveSystem extends IteratingSystem {
 
 	@Override
 	public void processEntity(Entity cursor, float deltaTime) {
-		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		CursorComp c = Comp.CursorComp.get(cursor);
+		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
+		
 		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		ZoneComp origZ = z;
 		TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();

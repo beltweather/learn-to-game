@@ -165,7 +165,7 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		TurnAction turnAction = Comp.TurnActionComp.get(activeCard).turnAction;
-		if(turnAction.targetIDs.size <= 1) {
+		if(turnAction.targetIDs.size < 1) {
 			return;
 		}
 		

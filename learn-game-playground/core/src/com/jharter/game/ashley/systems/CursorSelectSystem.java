@@ -32,11 +32,11 @@ public class CursorSelectSystem extends IteratingSystem {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = zp.getZoneComp();
+		ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
 		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 		
 		// A little failsafe here for when zones are empty
-		if(!z.hasIndex(zp.index)) {
+		if(!Comp.Wrap.ZoneComp(z).hasIndex(zp.index)) {
 			ci.reset();
 			return;
 		}
@@ -87,7 +87,7 @@ public class CursorSelectSystem extends IteratingSystem {
 					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
 					c.turnActionEntityID = null;
-					zp.clearHistory();
+					Comp.Wrap.ZonePositionComp(zp).clearHistory();
 					checkpoint = false;
 				}
 				
@@ -109,7 +109,7 @@ public class CursorSelectSystem extends IteratingSystem {
 		} else if(ci.cancel) {
 
 			TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
-			if(zp.tryRevertToLastCheckpoint()) {
+			if(Comp.Wrap.ZonePositionComp(zp).tryRevertToLastCheckpoint()) {
 				Media.cancelBeep.play();	
 				cursor.remove(ActiveCardComp.class);
 				if(t != null) {

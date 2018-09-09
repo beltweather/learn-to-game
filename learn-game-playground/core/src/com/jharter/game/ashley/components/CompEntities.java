@@ -176,7 +176,7 @@ public class CompEntities {
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			zp.index = 0;
 			zp.zoneID = Comp.Find.ZoneComp.findZoneID(DefaultTurn().ActivePlayerComp().activePlayerID, ZoneType.HAND);
-			zp.clearHistory();
+			Comp.Wrap.ZonePositionComp(zp).clearHistory();
 		}
 		
 		public void reset(Engine engine) {
@@ -226,7 +226,7 @@ public class CompEntities {
 			ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
 			for(int i = 0; i < z.objectIDs.size(); i++) {
 				index = ArrayUtil.findNextIndex(index, direction, z.objectIDs.size());
-				if(!z.hasIndex(index)) {
+				if(!Comp.Wrap.ZoneComp(z).hasIndex(index)) {
 					return -1;
 				}
 				Entity entity = Comp.Entity.get(z.objectIDs.get(index));

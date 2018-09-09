@@ -21,7 +21,7 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 	
 	@Override
 	public void update(float deltaTime) {
-		zCursor = Comp.Entity.DefaultCursor().ZonePositionComp().getZoneComp();
+		zCursor = Comp.Wrap.ZonePositionComp(Comp.Entity.DefaultCursor().ZonePositionComp()).getZoneComp();
 		super.update(deltaTime);
 	}
 

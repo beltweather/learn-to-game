@@ -21,6 +21,10 @@ public class CursorInputSystem extends IteratingSystem {
 						 CursorInputRegulatorComp.class,
 						 InputComp.class).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
 	}
+	
+	private boolean hasMovement(CursorInputComp ci) {
+		return ci.direction.x != 0 || ci.direction.y != 0;
+	}
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
@@ -46,7 +50,7 @@ public class CursorInputSystem extends IteratingSystem {
 			ci.direction.x++;
 		}
 		
-		if(cir.ignoreMovement(ci.move(), deltaTime)) {
+		if(Comp.Wrap.CursorInputRegulatorComp(cir).ignoreMovement(hasMovement(ci), deltaTime)) {
 			ci.reset();
 		}
 		

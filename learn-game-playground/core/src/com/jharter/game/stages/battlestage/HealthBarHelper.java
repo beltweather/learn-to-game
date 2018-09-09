@@ -2,6 +2,7 @@ package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.render.HealthBarRenderMethod;
 import com.jharter.game.util.U;
@@ -29,7 +30,7 @@ public class HealthBarHelper {
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(5);
 		b.SpriteComp().relativePositionRules.tween = false;
 		b.ShapeRenderComp().renderMethod = new HealthBarRenderMethod();
-		infoZone.add(b);
+		Comp.Wrap.ZoneComp(infoZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 	}

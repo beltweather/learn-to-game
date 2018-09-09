@@ -24,13 +24,17 @@ public class CursorMoveSystem extends IteratingSystem {
 				 CursorInputComp.class,
 				 ZonePositionComp.class).exclude(AnimatingComp.class).get());
 	}
+	
+	private boolean hasMovement(CursorInputComp ci) {
+		return ci.direction.x != 0 || ci.direction.y != 0;
+	}
 
 	@Override
 	public void processEntity(Entity cursor, float deltaTime) {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		CursorComp c = Comp.CursorComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = zp.getZoneComp();
+		ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
 		ZoneComp origZ = z;
 		TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
 		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
@@ -38,7 +42,7 @@ public class CursorMoveSystem extends IteratingSystem {
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;
 		
-		boolean move = ci.move() && (t == null || !t.all);
+		boolean move = hasMovement(ci) && (t == null || !t.all);
 		boolean valid = Comp.Entity.Cursor(cursor).isValidTarget();
 		
 		if(!move && valid) {
@@ -68,7 +72,7 @@ public class CursorMoveSystem extends IteratingSystem {
 		}
 		
 		int newIndex = Comp.Entity.Cursor(cursor).findNextValidTargetInZone(playerID, zoneType, t, index, direction);
-		if(!z.hasIndex(newIndex)) {
+		if(!Comp.Wrap.ZoneComp(z).hasIndex(newIndex)) {
 			newIndex = -1;
 		}
 		

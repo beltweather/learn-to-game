@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.U;
@@ -31,7 +32,7 @@ public class EnemyHelper {
 		b.StatsComp().mPower = 10;
 		b.StatsComp().mDefense = 10;
 		b.SpriteComp().scale = new Vector2(2f,2f);
-		enemyZone.add(b);
+		Comp.Wrap.ZoneComp(enemyZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -55,7 +56,7 @@ public class EnemyHelper {
 		b.StatsComp().mPower = 5;
 		b.StatsComp().mDefense = 7;
 		//b.SpriteComp().scale = new Vector2(2f,2f);
-		enemyZone.add(b);
+		Comp.Wrap.ZoneComp(enemyZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		

@@ -341,28 +341,6 @@ public final class Components {
 		
 		private VitalsComp() {}
 		
-		public void heal(int hp) {
-			health += hp;
-			if(health > maxHealth) {
-				health = maxHealth;
-			}
-		}
-		
-		public void damage(int hp) {
-			health -= hp;
-			if(health < 0) {
-				health = 0;
-			}
-		}
-		
-		public boolean isDead() {
-			return health == 0;
-		}
-		
-		public boolean isNearDeath() {
-			return health <= weakHealth && !isDead();
-		}
-		
 		@Override
 		public void reset() {
 			maxHealth = 0;
@@ -417,42 +395,15 @@ public final class Components {
 		}
 	}
 	
-	// XXX Move methods into wrapper or system
 	public static final class ZoneComp implements C {
 		public ID zoneID = null;
 		public ZoneType zoneType = ZoneType.NONE;
-		private Array<ID> internalObjectIDs = new Array<ID>();
+		Array<ID> internalObjectIDs = new Array<ID>();
 		public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
 		public ZoneLayout layout = null;
 		
 		private ZoneComp() {
 			
-		}
-		
-		public boolean hasIndex(int index) {
-			return index >= 0 && index < internalObjectIDs.size;
-		}
-		
-		public void add(EntityBuilder b) {
-			add(b.IDComp().id, b.ZonePositionComp());
-		}
-		
-		public void add(ID id, ZonePositionComp zp) {
-			internalObjectIDs.add(id);
-			if(zp != null) {
-				zp.index = internalObjectIDs.size;
-				zp.zoneID = zoneID;
-			}
-		}
-		
-		public void remove(ID id) {
-			internalObjectIDs.removeValue(id, false);
-			for(int i = 0; i < internalObjectIDs.size; i++) {
-				ID oID = internalObjectIDs.get(i);
-				Entity obj = Comp.Entity.get(oID);
-				ZonePositionComp zp = Comp.ZonePositionComp.get(obj);
-				zp.index = i;
-			}
 		}
 		
 		@Override
@@ -465,54 +416,13 @@ public final class Components {
 		
 	}
 	
-	// XXX Move methods into wrapper or system
 	public static final class ZonePositionComp implements C {
 		
 		public ID zoneID = null;
 		public int index = -1;
-		private transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
+		transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
 		
 		private ZonePositionComp() {}
-		
-		public ZoneComp getZoneComp() {
-			if(zoneID == null) {
-				return null;
-			}
-			return Comp.Find.ZoneComp.findZone(this);
-		}
-		
-		public void checkpoint(Engine engine) {
-			history.add(copyForHistory(engine));
-		}
-		
-		public void undoCheckpoint() {
-			if(history.size == 0) {
-				return;
-			}
-			history.pop();
-		}
-		
-		public boolean tryRevertToLastCheckpoint() {
-			if(history.size == 0) {
-				return false;
-			}
-			ZonePositionComp copy = history.pop();
-			zoneID = copy.zoneID;
-			index = copy.index;
-			return true;
-		}
-		
-		public void clearHistory() {
-			history.clear();
-		}
-		
-		private ZonePositionComp copyForHistory(Engine engine) {
-			ZonePositionComp zp = Comp.create(engine, ZonePositionComp.class);
-			zp.zoneID = zoneID;
-			zp.index = index;
-			// Intentionally ignoring history for copies since we don't use it
-			return zp;
-		}
 		
 		@Override
 		public void reset() {
@@ -548,32 +458,12 @@ public final class Components {
 	
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
-	// XXX Move methods into wrapper or system
 	public static final class CursorInputRegulatorComp implements C {
-		private boolean processedMove = false;
-		private float processedMoveDelta = 0;
-		private float maxProcessedMoveDelta = 0.2f;
+		boolean processedMove = false;
+		float processedMoveDelta = 0;
+		float maxProcessedMoveDelta = 0.2f;
 		
 		private CursorInputRegulatorComp() {}
-		
-		public boolean ignoreMovement(boolean moved, float deltaTime) {
-			if(!moved) {
-				processedMove = false;
-				processedMoveDelta = 0;
-				maxProcessedMoveDelta = 0.2f;
-				return true;
-			} else if(moved && processedMove) {
-				processedMoveDelta += deltaTime;
-				if(processedMoveDelta < maxProcessedMoveDelta) {
-					return true;
-				} else if(maxProcessedMoveDelta > 0.005f){
-					maxProcessedMoveDelta /= 1.5f;
-				}
-			}
-			processedMove = true;
-			processedMoveDelta = 0;
-			return false;
-		}
 		
 		@Override
 		public void reset() {
@@ -583,7 +473,6 @@ public final class Components {
 		}
 	}
 	
-	// XXX Move methods into wrapper or system
 	public static final class CursorInputComp implements C {
 		public Vector2 direction = new Vector2(0, 0);
 		public boolean accept = false;
@@ -592,10 +481,6 @@ public final class Components {
 		public boolean prev = false;
 		
 		private CursorInputComp() {}
-		
-		public boolean move() {
-			return direction.x != 0 || direction.y != 0;
-		}
 		
 		@Override
 		public void reset() {

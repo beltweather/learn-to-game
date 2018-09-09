@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.id.ID;
@@ -31,7 +32,7 @@ public class FriendHelper {
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
 		ID id = b.IDComp().id;
-		zone.add(b);
+		Comp.Wrap.ZoneComp(zone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		

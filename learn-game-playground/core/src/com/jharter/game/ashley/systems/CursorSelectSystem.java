@@ -32,11 +32,11 @@ public class CursorSelectSystem extends IteratingSystem {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 		
 		// A little failsafe here for when zones are empty
-		if(!Comp.Wrap.ZoneComp(z).hasIndex(zp.index)) {
+		if(!Comp.ZoneComp(z).hasIndex(zp.index)) {
 			ci.reset();
 			return;
 		}
@@ -45,13 +45,13 @@ public class CursorSelectSystem extends IteratingSystem {
 		
 		if(ci.prev) {
 			
-			if(Comp.Wrap.ActivePlayerComp(a).prevPlayer()) {
+			if(Comp.ActivePlayerComp(a).prevPlayer()) {
 				Comp.Entity.Cursor(cursor).toHand(getEngine());
 			}
 			
 		} else if(ci.next) {
 
-			if(Comp.Wrap.ActivePlayerComp(a).nextPlayer()) {
+			if(Comp.ActivePlayerComp(a).nextPlayer()) {
 				Comp.Entity.Cursor(cursor).toHand(getEngine());
 			}
 			
@@ -80,14 +80,14 @@ public class CursorSelectSystem extends IteratingSystem {
 				boolean checkpoint = true;
 				if(t.hasAllTargets()) {
 					// Handle logic for next active player given cursor selection
-					Comp.Wrap.ActivePlayerComp(a).nextPlayer();
+					Comp.ActivePlayerComp(a).nextPlayer();
 					a.spentPlayers.add(playerID);
 					playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 					
 					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
 					c.turnActionEntityID = null;
-					Comp.Wrap.ZonePositionComp(zp).clearHistory();
+					Comp.ZonePositionComp(zp).clearHistory();
 					checkpoint = false;
 				}
 				
@@ -109,7 +109,7 @@ public class CursorSelectSystem extends IteratingSystem {
 		} else if(ci.cancel) {
 
 			TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
-			if(Comp.Wrap.ZonePositionComp(zp).tryRevertToLastCheckpoint()) {
+			if(Comp.ZonePositionComp(zp).tryRevertToLastCheckpoint()) {
 				Media.cancelBeep.play();	
 				cursor.remove(ActiveCardComp.class);
 				if(t != null) {

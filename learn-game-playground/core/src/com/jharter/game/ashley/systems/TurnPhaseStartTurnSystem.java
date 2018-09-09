@@ -18,7 +18,7 @@ public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		Comp.Wrap.ActivePlayerComp(Comp.Entity.DefaultTurn().ActivePlayerComp()).setPlayer(0);
+		Comp.ActivePlayerComp(Comp.Entity.DefaultTurn().ActivePlayerComp()).setPlayer(0);
 		Comp.Entity.DefaultTurn().ActivePlayerComp().spentPlayers.clear();
 		return true;
 	}

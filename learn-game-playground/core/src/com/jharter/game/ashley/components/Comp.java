@@ -6,7 +6,14 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.CompWrappers.CompWrapper;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperActivePlayerComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperCardComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorInputRegulatorComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperPlayerComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperSpriteComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperVitalsComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperZoneComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperZonePositionComp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActionSpentComp;
@@ -69,7 +76,7 @@ public class Comp {
 	
 	private Comp() {}
 	
-	public static final CompWrappers Wrap = new CompWrappers();
+	private static final CompWrappers Wrap = new CompWrappers();
 	public static final CompEntities Entity = new CompEntities();
 	public static final CompFinders Find = new CompFinders();
 	
@@ -116,6 +123,7 @@ public class Comp {
 		return getFor(klass).has(entity);
 	}
 	
+	// Standard Component Mappers
 	public static final ComponentMapper<SpriteComp> SpriteComp = getFor(SpriteComp.class);
 	public static final ComponentMapper<BattleAvatarComp> BattleAvatarComp = getFor(BattleAvatarComp.class);
 	public static final ComponentMapper<FocusComp> FocusComp = getFor(FocusComp.class);
@@ -166,5 +174,16 @@ public class Comp {
 	public static final ComponentMapper<TurnPhaseEndBattleComp> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleComp.class);
 	public static final ComponentMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
 	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
+	
+	// Special Component Wrappers for Added Methods
+	public static CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }
+	public static CompWrapperPlayerComp PlayerComp(PlayerComp comp) { return Wrap.get(CompWrapperPlayerComp.class, comp); }
+	public static CompWrapperCardComp CardComp(CardComp comp) { return Wrap.get(CompWrapperCardComp.class, comp); }
+	public static CompWrapperActivePlayerComp ActivePlayerComp(ActivePlayerComp comp) { return Wrap.get(CompWrapperActivePlayerComp.class, comp); }
+	public static CompWrapperZoneComp ZoneComp(ZoneComp comp) { return Wrap.get(CompWrapperZoneComp.class, comp); }
+	public static CompWrapperZonePositionComp ZonePositionComp(ZonePositionComp comp) { return Wrap.get(CompWrapperZonePositionComp.class, comp); }
+	public static CompWrapperCursorInputRegulatorComp CursorInputRegulatorComp(CursorInputRegulatorComp comp) { return Wrap.get(CompWrapperCursorInputRegulatorComp.class, comp); }
+	public static CompWrapperVitalsComp VitalsComp(VitalsComp comp) { return Wrap.get(CompWrapperVitalsComp.class, comp); }
+	public static CompWrapperVitalsComp VitalsComp(Entity entity) { return Wrap.get(CompWrapperVitalsComp.class, VitalsComp.class, entity); }
 
 }

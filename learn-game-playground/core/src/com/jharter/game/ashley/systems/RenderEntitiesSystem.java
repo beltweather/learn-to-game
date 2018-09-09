@@ -69,8 +69,8 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 		}
 		
 		Color c = batch.getColor();
-		float offsetX = (s.scaledWidth() - s.width)/2;
-		float offsetY = (s.scaledHeight() - s.height)/2;
+		float offsetX = (Comp.SpriteComp(s).scaledWidth() - s.width)/2;
+		float offsetY = (Comp.SpriteComp(s).scaledHeight() - s.height)/2;
 		float originX = s.width/2;
 		float originY = s.height/2;
 		

@@ -30,7 +30,7 @@ public class HealthBarHelper {
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(5);
 		b.SpriteComp().relativePositionRules.tween = false;
 		b.ShapeRenderComp().renderMethod = new HealthBarRenderMethod();
-		Comp.Wrap.ZoneComp(infoZone).add(b);
+		Comp.ZoneComp(infoZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 	}

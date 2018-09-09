@@ -1,5 +1,8 @@
 package com.jharter.game.ashley.components;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -22,84 +25,38 @@ import com.jharter.game.util.id.IDUtil;
  */
 public class CompWrappers {
 	
-	private final CompWrapperPlayerComp CompLinkerPlayerComp = new CompWrapperPlayerComp();
-	public CompWrapperPlayerComp PlayerComp(PlayerComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerPlayerComp.setComponent(comp);
-		return CompLinkerPlayerComp;
-	}
-	
-	private final CompWrapperCardComp CompLinkerCardComp = new CompWrapperCardComp();
-	public CompWrapperCardComp CardComp(CardComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerCardComp.setComponent(comp);
-		return CompLinkerCardComp;
-	}
-	
-	private final CompWrapperTurnActionComp CompLinkerTurnActionComp = new CompWrapperTurnActionComp();
-	public CompWrapperTurnActionComp TurnActionComp(TurnActionComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerTurnActionComp.setComponent(comp);
-		return CompLinkerTurnActionComp;
-	}
-	
-	private final CompWrapperActivePlayerComp CompLinkerActivePlayerComp = new CompWrapperActivePlayerComp();
-	public CompWrapperActivePlayerComp ActivePlayerComp(ActivePlayerComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerActivePlayerComp.setComponent(comp);
-		return CompLinkerActivePlayerComp;
-	}
-	
-	private final CompWrapperZoneComp CompLinkerZoneComp = new CompWrapperZoneComp();
-	public CompWrapperZoneComp ZoneComp(ZoneComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerZoneComp.setComponent(comp);
-		return CompLinkerZoneComp;
-	}
-	
-	private final CompWrapperZonePositionComp CompLinkerZonePositionComp = new CompWrapperZonePositionComp();
-	public CompWrapperZonePositionComp ZonePositionComp(ZonePositionComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerZonePositionComp.setComponent(comp);
-		return CompLinkerZonePositionComp;
-	}
-	
-	private final CompWrapperCursorInputRegulatorComp CompLinkerCursorInputRegulatorComp = new CompWrapperCursorInputRegulatorComp();
-	public CompWrapperCursorInputRegulatorComp CursorInputRegulatorComp(CursorInputRegulatorComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerCursorInputRegulatorComp.setComponent(comp);
-		return CompLinkerCursorInputRegulatorComp;
-	}
-	
-	private final CompWrapperVitalsComp CompLinkerVitalsComp = new CompWrapperVitalsComp();
-	public CompWrapperVitalsComp VitalsComp(VitalsComp comp) {
-		if(!isAllowed(comp.getClass())) {
-			return null;
-		}
-		CompLinkerVitalsComp.setComponent(comp);
-		return CompLinkerVitalsComp;
-	}
-	public CompWrapperVitalsComp VitalsComp(Entity entity) {
-		return VitalsComp(Comp.VitalsComp.get(entity));
-	}
-	
+	private ObjectMap<Class<?>, CompWrapper<?>> wrappersByClass = new ObjectMap<Class<?>, CompWrapper<?>>();
 	private ObjectMap<Class<? extends Component>, Boolean> permissionsByClass = new ObjectMap<Class<? extends Component>, Boolean>();
 	
 	CompWrappers() {}
+	
+	public <W extends CompWrapper<C>, C extends Component> W get(Class<W> wrapperClass, C comp) {
+		if(!isAllowed(comp.getClass())) {
+			return null;
+		}
+		if(!wrappersByClass.containsKey(comp.getClass())) {
+			try {
+				Constructor c = wrapperClass.getDeclaredConstructors()[0];
+				c.setAccessible(true);
+				wrappersByClass.put(comp.getClass(), (W) c.newInstance());
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		W wrapper = (W) wrappersByClass.get(comp.getClass());
+		wrapper.setComponent(comp);
+		return wrapper;
+	}
+	
+	public <W extends CompWrapper<C>, C extends Component> W get(Class<W> wrapperClass, Class<C> compClass, Entity entity) {
+		return get(wrapperClass, Comp.getFor(compClass).get(entity));
+	}
 	
 	void clearPermissions() {
 		permissionsByClass.clear();
@@ -121,11 +78,9 @@ public class CompWrappers {
 		return permissionsByClass.get(klass);
 	}
 	
-	public class CompWrapper<T extends Component> {
+	private static class CompWrapper<T extends Component> {
 		
 		private T comp;
-		
-		private CompWrapper() {}
 		
 		void setComponent(T comp) {
 			this.comp = comp;
@@ -137,7 +92,36 @@ public class CompWrappers {
 		
 	}
 	
-	public class CompWrapperVitalsComp extends CompWrapper<VitalsComp> {
+	// ----------------------- BEGIN COMP WRAPPERS ----------------------------
+	
+	public static class CompWrapperSpriteComp extends CompWrapper<SpriteComp> {
+		
+		private CompWrapperSpriteComp() {}
+		
+		public float scaledWidth() {
+			return scaledWidth(comp().scale.x);
+		}
+		
+		public float scaledWidth(float scaleX) {
+			if(scaleX == 1) {
+				return comp().width;
+			}
+			return scaleX * comp().width;
+		}
+		
+		public float scaledHeight() {
+			return scaledHeight(comp().scale.y);
+		}
+		
+		public float scaledHeight(float scaleY) {
+			if(scaleY == 1) {
+				return comp().height;
+			}
+			return scaleY * comp().height;
+		}
+	}
+	
+	public static class CompWrapperVitalsComp extends CompWrapper<VitalsComp> {
 		
 		private CompWrapperVitalsComp() {}
 		
@@ -165,7 +149,7 @@ public class CompWrappers {
 		
 	}
 	
-	public class CompWrapperCursorInputRegulatorComp extends CompWrapper<CursorInputRegulatorComp> {
+	public static class CompWrapperCursorInputRegulatorComp extends CompWrapper<CursorInputRegulatorComp> {
 		
 		private CompWrapperCursorInputRegulatorComp() {}
 	
@@ -190,7 +174,7 @@ public class CompWrappers {
 		
 	}
 	
-	public class CompWrapperZonePositionComp extends CompWrapper<ZonePositionComp> {
+	public static class CompWrapperZonePositionComp extends CompWrapper<ZonePositionComp> {
 		
 		private CompWrapperZonePositionComp() {}
 		
@@ -236,7 +220,7 @@ public class CompWrappers {
 		
 	}
 	
-	public class CompWrapperZoneComp extends CompWrapper<ZoneComp> {
+	public static class CompWrapperZoneComp extends CompWrapper<ZoneComp> {
 		
 		private CompWrapperZoneComp() {}
 		
@@ -273,7 +257,7 @@ public class CompWrappers {
 	 * wrong with this class, it's just not referenced anywhere right now.
 	 */
 	@Deprecated
-	public class CompWrapperTurnActionComp extends CompWrapper<TurnActionComp> {
+	public static class CompWrapperTurnActionComp extends CompWrapper<TurnActionComp> {
 		
 		private CompWrapperTurnActionComp() {}
 		
@@ -306,7 +290,7 @@ public class CompWrappers {
 		
 	}
 	
-	public class CompWrapperCardComp extends CompWrapper<CardComp> {
+	public static class CompWrapperCardComp extends CompWrapper<CardComp> {
 		
 		private CompWrapperCardComp() {}
 		
@@ -327,16 +311,16 @@ public class CompWrappers {
 		}
 		
 		public Entity getBattleAvatarEntity() {
-			return PlayerComp(getPlayerComp()).getBattleAvatarEntity();
+			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarEntity();
 		}
 		
 		public SpriteComp getBattleAvatarSpriteComp() {
-			return PlayerComp(getPlayerComp()).getBattleAvatarSpriteComp();
+			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarSpriteComp();
 		}
 		
 	}
 	
-	public class CompWrapperPlayerComp extends CompWrapper<PlayerComp> {
+	public static class CompWrapperPlayerComp extends CompWrapper<PlayerComp> {
 		
 		private CompWrapperPlayerComp() {}
 		
@@ -354,7 +338,7 @@ public class CompWrappers {
 		
 	}
 	
-	public class CompWrapperActivePlayerComp extends CompWrapper<ActivePlayerComp> {
+	public static class CompWrapperActivePlayerComp extends CompWrapper<ActivePlayerComp> {
 		
 		private CompWrapperActivePlayerComp() {}
 		
@@ -363,15 +347,15 @@ public class CompWrappers {
 		}
 		
 		public ID getBattleAvatarID() {
-			return PlayerComp(getPlayerComp()).getBattleAvatarID();
+			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarID();
 		}
 		
 		public Entity getBattleAvatarEntity() {
-			return PlayerComp(getPlayerComp()).getBattleAvatarEntity();
+			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarEntity();
 		}
 	
 		public SpriteComp getBattleAvatarSpriteComp() {
-			return PlayerComp(getPlayerComp()).getBattleAvatarSpriteComp();
+			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarSpriteComp();
 		}
 		
 		public void setPlayer(int index) {

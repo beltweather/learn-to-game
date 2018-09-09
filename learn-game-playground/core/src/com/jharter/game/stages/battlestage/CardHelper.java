@@ -39,7 +39,7 @@ public class CardHelper {
 		b.VelocityComp();
 		b.BodyComp();
 		b.TurnActionComp().turnAction.setPerformerID(b.IDComp().id);
-		Comp.Wrap.ZoneComp(zone).add(b);
+		Comp.ZoneComp(zone).add(b);
 		return b;
 	}
 	
@@ -58,8 +58,8 @@ public class CardHelper {
 				int origHealthFriend = vFriend.health;
 				int origHealthEnemy = vEnemy.health;
 				
-				Comp.Wrap.VitalsComp(vEnemy).damage(damage);
-				Comp.Wrap.VitalsComp(vFriend).heal(damage);
+				Comp.VitalsComp(vEnemy).damage(damage);
+				Comp.VitalsComp(vFriend).heal(damage);
 				
 				// DEBUG PRINTING
 				int healed = vFriend.health - origHealthFriend;
@@ -75,9 +75,9 @@ public class CardHelper {
 				Sys.out.println(nameEnemy + " hp: " + vEnemy.health);
 				Sys.out.println(nameFriend + " hp: " + vFriend.health);
 				
-				if(Comp.Wrap.VitalsComp(vEnemy).isNearDeath()) {
+				if(Comp.VitalsComp(vEnemy).isNearDeath()) {
 					Sys.out.println(nameEnemy + " is near death.");
-				} else if(Comp.Wrap.VitalsComp(vEnemy).isDead()) {
+				} else if(Comp.VitalsComp(vEnemy).isDead()) {
 					Sys.out.println(nameEnemy + " is dead.");
 				}
 			}
@@ -96,7 +96,7 @@ public class CardHelper {
 				Media.weaponSwing.play();
 				
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
-				Comp.Wrap.VitalsComp(enemy).damage(damage);
+				Comp.VitalsComp(enemy).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
@@ -116,7 +116,7 @@ public class CardHelper {
 				Media.weaponSwing.play();
 				
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
-				Comp.Wrap.VitalsComp(enemy).damage(damage);
+				Comp.VitalsComp(enemy).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
@@ -134,7 +134,7 @@ public class CardHelper {
 			@Override
 			public void call(Entity owner, Entity card, Entity friend) {
 				int hp = 50;
-				Comp.Wrap.VitalsComp(friend).heal(hp);
+				Comp.VitalsComp(friend).heal(hp);
 				Sys.out.println("Healed " + hp + " hp to " + Comp.DescriptionComp.get(friend).name);
 			}
 			

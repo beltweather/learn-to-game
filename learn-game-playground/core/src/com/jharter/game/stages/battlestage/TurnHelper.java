@@ -24,7 +24,7 @@ public class TurnHelper {
 		b.SpriteComp().width = 100 / U.PIXELS_PER_UNIT;
 		b.SpriteComp().height = 100 / U.PIXELS_PER_UNIT;
 		b.SpriteComp();
-		Comp.Wrap.ZoneComp(infoZone).add(b);
+		Comp.ZoneComp(infoZone).add(b);
 		b.ShapeRenderComp().renderMethod = new TurnTimerRenderMethod();
 		engine.addEntity(b.Entity());
 		b.free();

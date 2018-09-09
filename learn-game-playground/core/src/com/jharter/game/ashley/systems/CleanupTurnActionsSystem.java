@@ -53,7 +53,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 						owner.remove(ActiveCardComp.class);
 					}
 					
-					ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
+					ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 					cz.useNextIndex = true;
 					cz.oldZoneID = z.zoneID;

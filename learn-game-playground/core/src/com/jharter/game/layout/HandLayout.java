@@ -21,7 +21,7 @@ public class HandLayout extends ZoneLayout {
 		float anchorX = U.u12(-30);
 		float anchorY = U.u12(-41);
 		
-		target.position.x = anchorX + (Math.round(s.scaledWidth()) + U.u12(1)) * index;
+		target.position.x = anchorX + (Math.round(Comp.SpriteComp(s).scaledWidth()) + U.u12(1)) * index;
 		target.position.y = anchorY;
 		target.position.z = s.position.z;
 		target.scale.x = 1f;

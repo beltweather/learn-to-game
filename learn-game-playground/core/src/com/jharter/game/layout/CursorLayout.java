@@ -39,7 +39,7 @@ public class CursorLayout extends ZoneLayout {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		float targetAngle = getCursorAngle(cursor, z.zoneType);
 		
 		Vector3 targetPosition = getCursorPosition(cursor, z, zp.index);
@@ -68,7 +68,7 @@ public class CursorLayout extends ZoneLayout {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		boolean changeZone = c.lastZoneID != z.zoneID; 
 		hasMulti = changeZone && isAll(cursor);
 		
@@ -143,7 +143,7 @@ public class CursorLayout extends ZoneLayout {
 	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
 		
 		// Make sure cursor is in a valid place
-		if(!Comp.Wrap.ZoneComp(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
+		if(!Comp.ZoneComp(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
 			return;
 		}
 		
@@ -174,7 +174,7 @@ public class CursorLayout extends ZoneLayout {
 		// Get the last target in the list and find its zone
 		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.peek());
 		ZonePositionComp targetZonePosition = Comp.ZonePositionComp.get(targetEntity);
-		ZoneComp targetZone = Comp.Wrap.ZonePositionComp(targetZonePosition).getZoneComp();
+		ZoneComp targetZone = Comp.ZonePositionComp(targetZonePosition).getZoneComp();
 		
 		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 		ms.drawSingle = true;
@@ -237,7 +237,7 @@ public class CursorLayout extends ZoneLayout {
 	}
 	
 	private Vector3 getCursorPosition(Entity entity, ZoneComp z, int index) {
-		if(!Comp.Wrap.ZoneComp(z).hasIndex(index)) {
+		if(!Comp.ZoneComp(z).hasIndex(index)) {
 			return null;
 		}
 		

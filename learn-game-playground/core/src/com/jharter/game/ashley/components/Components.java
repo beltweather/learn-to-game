@@ -101,7 +101,6 @@ public final class Components {
 		}
 	}
 	
-	// XXX Move methods into wrapper or system	
 	public static final class SpriteComp implements C {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
@@ -113,28 +112,6 @@ public final class Components {
 		public float alpha = 1f;
 		
 		private SpriteComp() {}
-		
-		public float scaledWidth() {
-			return scaledWidth(scale.x);
-		}
-		
-		public float scaledWidth(float scaleX) {
-			if(scaleX == 1) {
-				return width;
-			}
-			return scaleX * width;
-		}
-		
-		public float scaledHeight() {
-			return scaledHeight(scale.y);
-		}
-		
-		public float scaledHeight(float scaleY) {
-			if(scaleY == 1) {
-				return height;
-			}
-			return scaleY * height;
-		}
 		
 		@Override 
 		public void reset() {
@@ -333,7 +310,6 @@ public final class Components {
 		}
 	}
 	
-	// XXX Move methods into wrapper or system
 	public static final class VitalsComp implements C {
 		public int maxHealth = 0;
 		public int weakHealth = 0;

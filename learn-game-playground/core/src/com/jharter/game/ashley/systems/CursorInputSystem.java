@@ -50,7 +50,7 @@ public class CursorInputSystem extends IteratingSystem {
 			ci.direction.x++;
 		}
 		
-		if(Comp.Wrap.CursorInputRegulatorComp(cir).ignoreMovement(hasMovement(ci), deltaTime)) {
+		if(Comp.CursorInputRegulatorComp(cir).ignoreMovement(hasMovement(ci), deltaTime)) {
 			ci.reset();
 		}
 		

@@ -44,7 +44,7 @@ public class ArrowHelper {
 		b.AnimationComp().animation = Media.arrowAnim;
 		b.AnimationComp().animation.setPlayMode(PlayMode.LOOP);
 		b.TextureComp();
-		Comp.Wrap.ZoneComp(infoZone).add(b);
+		Comp.ZoneComp(infoZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 	}

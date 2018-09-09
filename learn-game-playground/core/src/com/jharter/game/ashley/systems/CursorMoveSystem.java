@@ -34,7 +34,7 @@ public class CursorMoveSystem extends IteratingSystem {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		CursorComp c = Comp.CursorComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.Wrap.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		ZoneComp origZ = z;
 		TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
 		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
@@ -72,7 +72,7 @@ public class CursorMoveSystem extends IteratingSystem {
 		}
 		
 		int newIndex = Comp.Entity.Cursor(cursor).findNextValidTargetInZone(playerID, zoneType, t, index, direction);
-		if(!Comp.Wrap.ZoneComp(z).hasIndex(newIndex)) {
+		if(!Comp.ZoneComp(z).hasIndex(newIndex)) {
 			newIndex = -1;
 		}
 		

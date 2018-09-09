@@ -58,7 +58,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = Comp.IDComp.get(entity).id;
 			Entity player = Comp.Entity.get(Comp.CardComp.get(entity).playerID);
-			Entity battleAvatar = Comp.Wrap.PlayerComp(Comp.PlayerComp.get(player)).getBattleAvatarEntity();
+			Entity battleAvatar = Comp.PlayerComp(Comp.PlayerComp.get(player)).getBattleAvatarEntity();
 			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
 			
 			TweenTarget tt = TweenTarget.newInstance();

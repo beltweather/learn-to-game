@@ -32,7 +32,7 @@ public class EnemyHelper {
 		b.StatsComp().mPower = 10;
 		b.StatsComp().mDefense = 10;
 		b.SpriteComp().scale = new Vector2(2f,2f);
-		Comp.Wrap.ZoneComp(enemyZone).add(b);
+		Comp.ZoneComp(enemyZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		
@@ -56,7 +56,7 @@ public class EnemyHelper {
 		b.StatsComp().mPower = 5;
 		b.StatsComp().mDefense = 7;
 		//b.SpriteComp().scale = new Vector2(2f,2f);
-		Comp.Wrap.ZoneComp(enemyZone).add(b);
+		Comp.ZoneComp(enemyZone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		

@@ -32,7 +32,7 @@ public class FriendHelper {
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
 		ID id = b.IDComp().id;
-		Comp.Wrap.ZoneComp(zone).add(b);
+		Comp.ZoneComp(zone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
 		

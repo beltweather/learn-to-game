@@ -58,11 +58,11 @@ public class CursorSelectSystem extends IteratingSystem {
 		} else if(ci.accept) {
 			Media.acceptBeep.play();
 			
-			TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
+			TurnAction t = Comp.CursorComp(c).turnAction();
 			int index = zp.index;
 			
 			// Make sure we're accepting a valid target
-			if(Comp.Entity.Cursor(cursor).isValidTarget()) {
+			if(isTargetable(z, index)) {
 				ID targetEntityID = z.objectIDs.get(index);
 				Entity targetEntity = Comp.Entity.get(targetEntityID);
 				
@@ -95,7 +95,7 @@ public class CursorSelectSystem extends IteratingSystem {
 				// wether we should go back to the hand. We don't need to do an extra check
 				// for validity here because we covered that at the top of this menu.
 				ZoneComp targetZone = t.hasAllTargets() ? Comp.Find.ZoneComp.findZone(playerID, ZoneType.HAND) : Comp.Find.ZoneComp.findZone(playerID, t.getTargetZoneType());
-				int targetIndex = Comp.Entity.Cursor(cursor).findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
+				int targetIndex = 0; // Comp.Entity.Cursor(cursor).findFirstValidTargetInZone(playerID, targetZone.zoneType, t);
 				
 				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 				cz.oldZoneID = z.zoneID;
@@ -108,16 +108,15 @@ public class CursorSelectSystem extends IteratingSystem {
 			
 		} else if(ci.cancel) {
 
-			TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
+			TurnAction t = Comp.CursorComp(c).turnAction();
 			if(Comp.ZonePositionComp(zp).tryRevertToLastCheckpoint()) {
 				Media.cancelBeep.play();	
 				cursor.remove(ActiveCardComp.class);
 				if(t != null) {
-					if(t.targetIDs.size > 0) {
-						t.targetIDs.pop();
-					}
 					if(t.targetIDs.size == 0) {
-						c.turnActionEntityID = null;
+						Comp.CursorComp(c).cancelTurnAction(getEngine());
+					} else if(t.targetIDs.size > 0) {
+						t.targetIDs.pop();
 					}
 				}
 				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
@@ -126,6 +125,10 @@ public class CursorSelectSystem extends IteratingSystem {
 		}
 		
 		ci.reset();
+	}
+	
+	private boolean isTargetable(ZoneComp zone, int index) {
+		return index >= 0 && index < zone.objectIDs.size() && !Comp.UntargetableComp.has(zone.objectIDs.get(index));
 	}
 	
 }

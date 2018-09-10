@@ -4,9 +4,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.ArrayUtil;
+import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -21,7 +24,7 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 	
 	@Override
 	public void update(float deltaTime) {
-		zCursor = Comp.ZonePositionComp(Comp.Entity.DefaultCursor().ZonePositionComp()).getZoneComp();
+		zCursor = Comp.ZonePositionComp(Comp.ZonePositionComp.get(Comp.Entity.DefaultCursor().Entity())).getZoneComp();
 		super.update(deltaTime);
 	}
 
@@ -38,7 +41,7 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 	public void handleZoneWithCursor(ZoneComp z) {
 		for(int i = 0; i < z.objectIDs.size(); i++) {
 			Entity zoneItem = Comp.Entity.get(z.objectIDs.get(i));
-			if(!Comp.Entity.DefaultCursor().isValidTarget(i)) {
+			if(!isValidTarget(i)) {
 				Comp.add(getEngine(), UntargetableComp.class, zoneItem);
 			} else {
 				Comp.remove(UntargetableComp.class, zoneItem);
@@ -87,5 +90,71 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 			Comp.add(getEngine(), UntargetableComp.class, Comp.Entity.get(z.objectIDs.get(i)));
 		}
 	}
+	
+	public boolean isValidTarget(int index) {
+		Entity cursor = Comp.Entity.DefaultCursor().Entity();
+		return hasValidTarget(Comp.Entity.Cursor(cursor).getPlayerID(), Comp.Find.ZoneComp.findZone(cursor).zoneType, Comp.CursorComp(Comp.CursorComp.get(cursor)).turnAction(), index, 0, 0);
+	}
+	
+	private boolean hasValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+		return findNextValidTarget(ownerID, zoneType, t, index, direction, depth) >= 0;
+	}
+	
+	private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction turnAction, int index, int direction, int depth) {
+		ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
+		return ArrayUtil.findNextIndex(z.objectIDs, index, direction, (id, args) -> {
+			
+			ID ownerIDArg = (ID) args[0];
+			TurnAction tArg = (TurnAction) args[1];
+			int depthArg = (int) args[2];
+			
+			Entity entity = Comp.Entity.get(id);
+			if(entity != null && (tArg == null || tArg.isValidTarget(entity))) {
+				if(tArg == null) {
+					TurnActionComp taComp = Comp.TurnActionComp.get(entity);
+					if(taComp != null) {
+						TurnAction ta = taComp.turnAction;
+						ZoneType nextZoneType = ta.getNextTargetZoneType(depthArg);
+						if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerIDArg, nextZoneType, ta, 0, 1, depthArg+1)) {
+							return true;
+						}
+					}
+				} else {
+					return true;
+				}
+			}
+			return false;
+		
+		}, ownerID, turnAction, depth);
+	}
+	
+	/*private int findNextValidTargetOld(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
+		ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
+		for(int i = 0; i < z.objectIDs.size(); i++) {
+			index = ArrayUtil.findNextIndex(z.objectIDs, index, direction);
+			if(!Comp.ZoneComp(z).hasIndex(index)) {
+				return -1;
+			}
+			Entity entity = Comp.Entity.get(z.objectIDs.get(index));
+			if(entity != null && (t == null || t.isValidTarget(entity))) {
+				if(t == null) {
+					TurnActionComp taComp = Comp.TurnActionComp.get(entity);
+					if(taComp != null) {
+						TurnAction ta = taComp.turnAction;
+						ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
+						if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerID, nextZoneType, ta, 0, 1, depth+1)) {
+							return index;
+						}
+					}
+				} else {
+					return index;
+				}
+			}
+			if(direction == 0) {
+				break;
+			}
+		}			
+		return -1;
+	}*/
 
 }

@@ -1,21 +1,23 @@
 package com.jharter.game.ashley.systems;
 
-import com.badlogic.ashley.core.EntitySystem;
-import com.jharter.game.stages.GameStage;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.InputComp;
 
-public class CleanupInputSystem extends EntitySystem {
+public class CleanupInputSystem extends IteratingSystem {
 
-	private GameStage stage;
-	
-	public CleanupInputSystem(GameStage stage) {
-		this.stage = stage;
+	public CleanupInputSystem() {
+		super(Family.all(InputComp.class).get());
 	}
-	
+
 	@Override
-	public void update (float deltaTime) {
-		if(stage.getInput() != null) {
-			stage.getInput().setProcessedClick(true);
+	protected void processEntity(Entity entity, float deltaTime) {
+		InputComp in = Comp.InputComp.get(entity);
+		if(in.input != null) {
+			in.input.reset();
 		}
 	}
-	
+
 }

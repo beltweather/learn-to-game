@@ -23,12 +23,11 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public CleanupTurnActionsSystem() {
-		super(Family.all(ActionSpentComp.class, IDComp.class, TypeComp.class).get());
+		super(Family.all(ActionSpentComp.class, TypeComp.class).get());
 	}
 	
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		IDComp id = Comp.IDComp.get(entity);
 		TypeComp ty = Comp.TypeComp.get(entity);
 		
 		TurnActionComp t = Comp.TurnActionComp.get(entity);
@@ -54,11 +53,13 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 					}
 					
 					ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
-					ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
-					cz.useNextIndex = true;
-					cz.oldZoneID = z.zoneID;
-					cz.newZoneID = Comp.Find.ZoneComp.findZoneID(ca.playerID, ZoneType.HAND);
-					entity.add(cz);
+					if(z.zoneType != ZoneType.HAND) {
+						ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
+						cz.useNextIndex = true;
+						cz.oldZoneID = z.zoneID;
+						cz.newZoneID = Comp.Find.ZoneComp.findZoneID(ca.playerID, ZoneType.HAND);
+						entity.add(cz);
+					}
 					break;
 				default:
 					break;

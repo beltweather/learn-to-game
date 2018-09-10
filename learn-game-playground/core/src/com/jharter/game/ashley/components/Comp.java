@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperActivePlayerComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCardComp;
+import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorInputRegulatorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperPlayerComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperSpriteComp;
@@ -64,6 +65,7 @@ import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.util.id.ID;
 
 /**
  * Main mapper class for all components that maps ids to comps and entities directly.
@@ -72,7 +74,7 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
  */
 public class Comp {
 	
-	private static final ObjectMap<Class, ComponentMapper> componentMappersByClass = new ObjectMap<Class, ComponentMapper>();
+	private static final ObjectMap<Class, CompMapper> componentMappersByClass = new ObjectMap<Class, CompMapper>();
 	
 	private Comp() {}
 	
@@ -80,9 +82,35 @@ public class Comp {
 	public static final CompEntities Entity = new CompEntities();
 	public static final CompFinders Find = new CompFinders();
 	
-	public static <T extends Component> ComponentMapper<T> getFor(Class<T> klass) {
+	public static class CompMapper<T extends Component> {
+		
+		private ComponentMapper<T> mapper;
+		
+		private CompMapper(Class<T> klass) {
+			mapper = ComponentMapper.getFor(klass);
+		}
+		
+		public boolean has(ID entityID) {
+			return has(Comp.Entity.get(entityID));
+		}
+		
+		public boolean has(Entity entity) {
+			return mapper.has(entity);
+		}
+		
+		public T get(ID entityID) {
+			return get(Comp.Entity.get(entityID));
+		}
+		
+		public T get(Entity entity) {
+			return mapper.get(entity);
+		}
+		
+	}
+	
+	public static <T extends Component> CompMapper<T> getFor(Class<T> klass) {
 		if(!componentMappersByClass.containsKey(klass)) {
-			componentMappersByClass.put(klass, ComponentMapper.getFor(klass));
+			componentMappersByClass.put(klass, new CompMapper<T>(klass));
 		}
 		return componentMappersByClass.get(klass);
 	}
@@ -95,11 +123,9 @@ public class Comp {
 	}
 	
 	public static <T extends Component> void add(Engine engine, Class<T> klass, Entity entity) {
-		if(getFor(klass).has(entity)) {
-			return;
+		if(entity != null && !getFor(klass).has(entity)) {
+			entity.add(create(engine, klass));
 		}
-		T comp = create(engine, klass);
-		entity.add(comp);
 	}
 	
 	public static <T extends Component> T getOrAdd(Engine engine, Class<T> klass, Entity entity) {
@@ -112,7 +138,7 @@ public class Comp {
 	}
 	
 	public static <T extends Component> boolean remove(Class<T> klass, Entity entity) {
-		if(!getFor(klass).has(entity)) {
+		if(entity == null || !getFor(klass).has(entity)) {
 			return false;
 		}
 		entity.remove(klass);
@@ -124,56 +150,56 @@ public class Comp {
 	}
 	
 	// Standard Component Mappers
-	public static final ComponentMapper<SpriteComp> SpriteComp = getFor(SpriteComp.class);
-	public static final ComponentMapper<BattleAvatarComp> BattleAvatarComp = getFor(BattleAvatarComp.class);
-	public static final ComponentMapper<FocusComp> FocusComp = getFor(FocusComp.class);
-	public static final ComponentMapper<IDComp> IDComp = getFor(IDComp.class);
-	public static final ComponentMapper<TypeComp> TypeComp = getFor(TypeComp.class);
-	public static final ComponentMapper<TileComp> TileComp = getFor(TileComp.class);
-	public static final ComponentMapper<TextureComp> TextureComp = getFor(TextureComp.class);
-	public static final ComponentMapper<AnimationComp> AnimationComp = getFor(AnimationComp.class);
-	public static final ComponentMapper<BodyComp> BodyComp = getFor(BodyComp.class);
-	public static final ComponentMapper<SensorComp> SensorComp = getFor(SensorComp.class);
-	public static final ComponentMapper<TargetPositionComp> TargetPositionComp = getFor(TargetPositionComp.class);
-	public static final ComponentMapper<VelocityComp> VelocityComp = getFor(VelocityComp.class);
-	public static final ComponentMapper<CollisionComp> CollisionComp = getFor(CollisionComp.class);
-	public static final ComponentMapper<RemoveComp> RemoveComp = getFor(RemoveComp.class);
-	public static final ComponentMapper<InputComp> InputComp = getFor(InputComp.class);
-	public static final ComponentMapper<InvisibleComp> InvisibleComp = getFor(InvisibleComp.class);
-	public static final ComponentMapper<InteractComp> InteractComp = getFor(InteractComp.class);
-	public static final ComponentMapper<CursorComp> CursorComp = getFor(CursorComp.class);
-	public static final ComponentMapper<CursorInputComp> CursorInputComp = getFor(CursorInputComp.class);
-	public static final ComponentMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = getFor(CursorInputRegulatorComp.class);
-	public static final ComponentMapper<ZoneComp> ZoneComp = getFor(ZoneComp.class);
-	public static final ComponentMapper<ZonePositionComp> ZonePositionComp = getFor(ZonePositionComp.class);
-	public static final ComponentMapper<CardComp> CardComp = getFor(CardComp.class);
-	public static final ComponentMapper<ActiveCardComp> ActiveCardComp = getFor(ActiveCardComp.class);
-	public static final ComponentMapper<TurnActionComp> TurnActionComp = getFor(TurnActionComp.class);
-	public static final ComponentMapper<DescriptionComp> DescriptionComp = getFor(DescriptionComp.class);
-	public static final ComponentMapper<VitalsComp> VitalsComp = getFor(VitalsComp.class);
-	public static final ComponentMapper<StatsComp> StatsComp = getFor(StatsComp.class);
-	public static final ComponentMapper<MultiSpriteComp> MultiSpriteComp = getFor(MultiSpriteComp.class);
-	public static final ComponentMapper<ActionReadyComp> ActionReadyComp = getFor(ActionReadyComp.class);
-	public static final ComponentMapper<ActionQueuedComp> ActionQueuedComp = getFor(ActionQueuedComp.class);
-	public static final ComponentMapper<ActionSpentComp> ActionSpentComp = getFor(ActionSpentComp.class);
-	public static final ComponentMapper<TurnTimerComp> TurnTimerComp = getFor(TurnTimerComp.class);
-	public static final ComponentMapper<UntargetableComp> UntargetableComp = getFor(UntargetableComp.class);
-	public static final ComponentMapper<DisabledComp> DisabledComp = getFor(DisabledComp.class);
-	public static final ComponentMapper<AnimatingComp> AnimatingComp = getFor(AnimatingComp.class);
-	public static final ComponentMapper<ChangeZoneComp> ChangeZoneComp = getFor(ChangeZoneComp.class);
-	public static final ComponentMapper<PlayerComp> PlayerComp = getFor(PlayerComp.class);
-	public static final ComponentMapper<ShapeRenderComp> ShapeRenderComp = getFor(ShapeRenderComp.class);
-	public static final ComponentMapper<TurnPhaseComp> TurnPhaseComp = getFor(TurnPhaseComp.class);
-	public static final ComponentMapper<TurnPhaseStartBattleComp> TurnPhaseStartBattleComp = getFor(TurnPhaseStartBattleComp.class);
-	public static final ComponentMapper<TurnPhaseStartTurnComp> TurnPhaseStartTurnComp = getFor(TurnPhaseStartTurnComp.class);
-	public static final ComponentMapper<TurnPhaseSelectEnemyActionsComp> TurnPhaseSelectEnemyActionsComp = getFor(TurnPhaseSelectEnemyActionsComp.class);
-	public static final ComponentMapper<TurnPhaseSelectFriendActionsComp> TurnPhaseSelectFriendActionsComp = getFor(TurnPhaseSelectFriendActionsComp.class);
-	public static final ComponentMapper<TurnPhasePerformFriendActionsComp> TurnPhasePerformFriendActionsComp = getFor(TurnPhasePerformFriendActionsComp.class);
-	public static final ComponentMapper<TurnPhasePerformEnemyActionsComp> TurnPhasePerformEnemyActionsComp = getFor(TurnPhasePerformEnemyActionsComp.class);
-	public static final ComponentMapper<TurnPhaseEndTurnComp> TurnPhaseEndTurnComp = getFor(TurnPhaseEndTurnComp.class);
-	public static final ComponentMapper<TurnPhaseEndBattleComp> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleComp.class);
-	public static final ComponentMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
-	public static final ComponentMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
+	public static final CompMapper<SpriteComp> SpriteComp = getFor(SpriteComp.class);
+	public static final CompMapper<BattleAvatarComp> BattleAvatarComp = getFor(BattleAvatarComp.class);
+	public static final CompMapper<FocusComp> FocusComp = getFor(FocusComp.class);
+	public static final CompMapper<IDComp> IDComp = getFor(IDComp.class);
+	public static final CompMapper<TypeComp> TypeComp = getFor(TypeComp.class);
+	public static final CompMapper<TileComp> TileComp = getFor(TileComp.class);
+	public static final CompMapper<TextureComp> TextureComp = getFor(TextureComp.class);
+	public static final CompMapper<AnimationComp> AnimationComp = getFor(AnimationComp.class);
+	public static final CompMapper<BodyComp> BodyComp = getFor(BodyComp.class);
+	public static final CompMapper<SensorComp> SensorComp = getFor(SensorComp.class);
+	public static final CompMapper<TargetPositionComp> TargetPositionComp = getFor(TargetPositionComp.class);
+	public static final CompMapper<VelocityComp> VelocityComp = getFor(VelocityComp.class);
+	public static final CompMapper<CollisionComp> CollisionComp = getFor(CollisionComp.class);
+	public static final CompMapper<RemoveComp> RemoveComp = getFor(RemoveComp.class);
+	public static final CompMapper<InputComp> InputComp = getFor(InputComp.class);
+	public static final CompMapper<InvisibleComp> InvisibleComp = getFor(InvisibleComp.class);
+	public static final CompMapper<InteractComp> InteractComp = getFor(InteractComp.class);
+	public static final CompMapper<CursorComp> CursorComp = getFor(CursorComp.class);
+	public static final CompMapper<CursorInputComp> CursorInputComp = getFor(CursorInputComp.class);
+	public static final CompMapper<CursorInputRegulatorComp> CursorInputRegulatorComp = getFor(CursorInputRegulatorComp.class);
+	public static final CompMapper<ZoneComp> ZoneComp = getFor(ZoneComp.class);
+	public static final CompMapper<ZonePositionComp> ZonePositionComp = getFor(ZonePositionComp.class);
+	public static final CompMapper<CardComp> CardComp = getFor(CardComp.class);
+	public static final CompMapper<ActiveCardComp> ActiveCardComp = getFor(ActiveCardComp.class);
+	public static final CompMapper<TurnActionComp> TurnActionComp = getFor(TurnActionComp.class);
+	public static final CompMapper<DescriptionComp> DescriptionComp = getFor(DescriptionComp.class);
+	public static final CompMapper<VitalsComp> VitalsComp = getFor(VitalsComp.class);
+	public static final CompMapper<StatsComp> StatsComp = getFor(StatsComp.class);
+	public static final CompMapper<MultiSpriteComp> MultiSpriteComp = getFor(MultiSpriteComp.class);
+	public static final CompMapper<ActionReadyComp> ActionReadyComp = getFor(ActionReadyComp.class);
+	public static final CompMapper<ActionQueuedComp> ActionQueuedComp = getFor(ActionQueuedComp.class);
+	public static final CompMapper<ActionSpentComp> ActionSpentComp = getFor(ActionSpentComp.class);
+	public static final CompMapper<TurnTimerComp> TurnTimerComp = getFor(TurnTimerComp.class);
+	public static final CompMapper<UntargetableComp> UntargetableComp = getFor(UntargetableComp.class);
+	public static final CompMapper<DisabledComp> DisabledComp = getFor(DisabledComp.class);
+	public static final CompMapper<AnimatingComp> AnimatingComp = getFor(AnimatingComp.class);
+	public static final CompMapper<ChangeZoneComp> ChangeZoneComp = getFor(ChangeZoneComp.class);
+	public static final CompMapper<PlayerComp> PlayerComp = getFor(PlayerComp.class);
+	public static final CompMapper<ShapeRenderComp> ShapeRenderComp = getFor(ShapeRenderComp.class);
+	public static final CompMapper<TurnPhaseComp> TurnPhaseComp = getFor(TurnPhaseComp.class);
+	public static final CompMapper<TurnPhaseStartBattleComp> TurnPhaseStartBattleComp = getFor(TurnPhaseStartBattleComp.class);
+	public static final CompMapper<TurnPhaseStartTurnComp> TurnPhaseStartTurnComp = getFor(TurnPhaseStartTurnComp.class);
+	public static final CompMapper<TurnPhaseSelectEnemyActionsComp> TurnPhaseSelectEnemyActionsComp = getFor(TurnPhaseSelectEnemyActionsComp.class);
+	public static final CompMapper<TurnPhaseSelectFriendActionsComp> TurnPhaseSelectFriendActionsComp = getFor(TurnPhaseSelectFriendActionsComp.class);
+	public static final CompMapper<TurnPhasePerformFriendActionsComp> TurnPhasePerformFriendActionsComp = getFor(TurnPhasePerformFriendActionsComp.class);
+	public static final CompMapper<TurnPhasePerformEnemyActionsComp> TurnPhasePerformEnemyActionsComp = getFor(TurnPhasePerformEnemyActionsComp.class);
+	public static final CompMapper<TurnPhaseEndTurnComp> TurnPhaseEndTurnComp = getFor(TurnPhaseEndTurnComp.class);
+	public static final CompMapper<TurnPhaseEndBattleComp> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleComp.class);
+	public static final CompMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
+	public static final CompMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
 	
 	// Special Component Wrappers for Added Methods
 	public static CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }
@@ -185,5 +211,6 @@ public class Comp {
 	public static CompWrapperCursorInputRegulatorComp CursorInputRegulatorComp(CursorInputRegulatorComp comp) { return Wrap.get(CompWrapperCursorInputRegulatorComp.class, comp); }
 	public static CompWrapperVitalsComp VitalsComp(VitalsComp comp) { return Wrap.get(CompWrapperVitalsComp.class, comp); }
 	public static CompWrapperVitalsComp VitalsComp(Entity entity) { return Wrap.get(CompWrapperVitalsComp.class, VitalsComp.class, entity); }
+	public static CompWrapperCursorComp CursorComp(CursorComp comp) { return Wrap.get(CompWrapperCursorComp.class, comp); }
 
 }

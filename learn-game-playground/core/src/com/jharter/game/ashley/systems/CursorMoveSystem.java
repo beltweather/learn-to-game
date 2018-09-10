@@ -11,10 +11,11 @@ import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
 
-import uk.co.carelesslabs.Media;
 import uk.co.carelesslabs.Enums.ZoneType;
+import uk.co.carelesslabs.Media;
 
 public class CursorMoveSystem extends IteratingSystem {
 
@@ -37,14 +38,15 @@ public class CursorMoveSystem extends IteratingSystem {
 		
 		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		ZoneComp origZ = z;
-		TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
+		
+		TurnAction t = Comp.CursorComp(c).turnAction();
 		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 		
 		ZoneType zoneType = z.zoneType;
 		int index = zp.index;
 		
 		boolean move = hasMovement(ci) && (t == null || !t.all);
-		boolean valid = Comp.Entity.Cursor(cursor).isValidTarget();
+		boolean valid = isTargetable(z, index);
 		
 		if(!move && valid) {
 			return;
@@ -72,11 +74,10 @@ public class CursorMoveSystem extends IteratingSystem {
 			Media.moveBeep.play();
 		}
 		
-		int newIndex = Comp.Entity.Cursor(cursor).findNextValidTargetInZone(playerID, zoneType, t, index, direction);
-		if(!Comp.ZoneComp(z).hasIndex(newIndex)) {
-			newIndex = -1;
+		if(index == -1) {
+			index = 0;
 		}
-		
+		int newIndex = findNextTargetable(z, direction, index);
 		if(zp.index != newIndex || origZ.zoneID != z.zoneID) {
 			ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 			cz.oldZoneID = origZ.zoneID;
@@ -86,5 +87,12 @@ public class CursorMoveSystem extends IteratingSystem {
 		}
 		
 	}
-
+	
+	private boolean isTargetable(ZoneComp zone, int index) {
+		return index >= 0 && index < zone.objectIDs.size() && !Comp.UntargetableComp.has(zone.objectIDs.get(index));
+	}
+	
+	private int findNextTargetable(ZoneComp zone, int direction, int index) {
+		return ArrayUtil.findNextIndex(zone.objectIDs, index, direction, (id) -> !Comp.UntargetableComp.has(id));
+	}
 }

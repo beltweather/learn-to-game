@@ -167,36 +167,6 @@ public class BattleStage extends GameStage {
 		return new Vector3(0,0,0);
 	}
 	
-	@Override
-	protected PooledEngine buildEngine() {
-    	PooledEngine engine = new PooledEngine();
-    	
-		Comp.Entity.addIdListener(engine, getBox2DWorld());
-		
-		addNetworkSystems(engine);
-		addDependencySystems(engine);
-		addTurnPhaseSystems(engine);
-		addCursorSystems(engine);
-		
-		// Other systems
-		engine.addSystem(new QueueTurnActionsSystem());
-		engine.addSystem(new CleanupTurnActionsSystem());
-		engine.addSystem(new ZoneChangeSystem());
-		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
-
-		/*if(endPointHelper.isClient()) {
-			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
-		}*/
-		engine.addSystem(new CleanupInputSystem(this));
-		
-		// Add visual systems
-		if(!endPointHelper.isHeadless()) {
-			addVisualSystems(engine);
-		}
-		
-		return engine;
-    }
-	
 	private void addNetworkSystems(PooledEngine engine) {
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());
@@ -251,4 +221,32 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new RenderWorldGridSystem(getCamera()));
 	}
 
+	@Override
+	protected PooledEngine buildEngine() {
+    	PooledEngine engine = new PooledEngine();
+    	
+		Comp.Entity.addIdListener(engine, getBox2DWorld());
+		
+		addNetworkSystems(engine);
+		addDependencySystems(engine);
+		addTurnPhaseSystems(engine);
+		addCursorSystems(engine);
+		
+		// Other systems
+		engine.addSystem(new QueueTurnActionsSystem());
+		engine.addSystem(new CleanupTurnActionsSystem());
+		engine.addSystem(new ZoneChangeSystem());
+		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+
+		/*if(endPointHelper.isClient()) {
+			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
+		}*/
+		
+		// Add visual systems
+		if(!endPointHelper.isHeadless()) {
+			addVisualSystems(engine);
+		}
+		
+		return engine;
+    }
 }

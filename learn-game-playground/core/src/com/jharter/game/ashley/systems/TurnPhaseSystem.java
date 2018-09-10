@@ -121,7 +121,7 @@ public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 	}
 	
 	protected void resetCursor() {
-		Comp.Entity.DefaultCursor().reset(getEngine());
+		Comp.Entity.DefaultCursor().toDefault(getEngine());
 	}
 	
 	protected void enableCursor() {

@@ -21,7 +21,7 @@ import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.ashley.interactions.Interaction;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
-import com.jharter.game.ashley.systems.CleanupInputSystem;
+import com.jharter.game.ashley.systems.CleanupInputSystemOld;
 import com.jharter.game.ashley.systems.FocusCameraSystem;
 import com.jharter.game.ashley.systems.InputMovementSystem;
 import com.jharter.game.ashley.systems.InteractSystem;
@@ -199,7 +199,7 @@ public class TestStageA extends GameStage {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
 		}*/
 		
-		engine.addSystem(new CleanupInputSystem(this));
+		engine.addSystem(new CleanupInputSystemOld(this));
 		
 		return engine;
     }

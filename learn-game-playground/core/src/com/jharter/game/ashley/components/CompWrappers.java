@@ -7,8 +7,10 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
@@ -16,6 +18,7 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
@@ -415,4 +418,29 @@ public class CompWrappers {
 
 	}
 	
+	public static class CompWrapperCursorComp extends CompWrapper<CursorComp> {
+		
+		private CompWrapperCursorComp() {}
+		
+		private Entity TurnActionEntity() {
+			return Comp.Entity.get(comp().turnActionEntityID);
+		}
+		
+		public void cancelTurnAction(Engine engine) {
+			Entity entity = TurnActionEntity();
+			if(entity != null) {
+				Comp.add(engine, ActionSpentComp.class, entity);
+			}
+			comp().turnActionEntityID = null;
+		}
+		
+		public TurnAction turnAction() {
+			Entity entity = TurnActionEntity();
+			if(entity == null) {
+				return null;
+			}
+			return Comp.TurnActionComp.get(entity).turnAction;
+		}		
+		
+	}
 }

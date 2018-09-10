@@ -70,7 +70,7 @@ public class CursorLayout extends ZoneLayout {
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		boolean changeZone = c.lastZoneID != z.zoneID; 
-		hasMulti = changeZone && isAll(cursor);
+		hasMulti = changeZone && isAll(c);
 		
 		if(changeZone) {
 			handleChangeZone(cursor, c, zp, z, s, tt);
@@ -85,7 +85,7 @@ public class CursorLayout extends ZoneLayout {
 	}
 
 	private void handleChangeZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
-		if(!isAll(cursor)) {
+		if(!isAll(c)) {
 			return;
 		}
 			
@@ -126,7 +126,7 @@ public class CursorLayout extends ZoneLayout {
 	}
 	
 	private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
-		if(!isAll(cursor)) {
+		if(!isAll(c)) {
 			return;
 		}
 		
@@ -148,7 +148,7 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		// See if cursor is modifying an action
-		TurnAction t = Comp.Entity.Cursor(cursor).getTurnAction();
+		TurnAction t = Comp.CursorComp(c).turnAction();
 		if(t == null) {
 			return;
 		}
@@ -218,8 +218,8 @@ public class CursorLayout extends ZoneLayout {
 		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
 	}
 
-	private boolean isAll(Entity cursor) {
-		TurnAction ta = Comp.Entity.Cursor(cursor).getTurnAction();
+	private boolean isAll(CursorComp c) {
+		TurnAction ta = Comp.CursorComp(c).turnAction();
 		return ta != null && ta.all;
 	}
 	

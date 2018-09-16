@@ -7,9 +7,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
-import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
+import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.IDComp;
+import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
@@ -34,7 +35,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@SuppressWarnings("unchecked")
 	public TurnPhasePerformFriendActionsSystem() {
 		super(TurnPhasePerformFriendActionsComp.class, TurnPhasePerformEnemyActionsComp.class,
-			  Family.all(ActionQueuedComp.class, TurnActionComp.class).get(), new QueueSort());
+			  Family.all(ActionQueuedComp.class, TurnActionComp.class, OwnerIDComp.class).get(), new QueueSort());
 		endIfNoMoreEntities();
 	}
 
@@ -57,8 +58,11 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		if(performTurnAction) {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = Comp.IDComp.get(entity).id;
-			Entity player = Comp.Entity.get(Comp.CardComp.get(entity).playerID);
-			Entity battleAvatar = Comp.PlayerComp(Comp.PlayerComp.get(player)).getBattleAvatarEntity();
+			Entity owner = Comp.Entity.get(Comp.OwnerIDComp.get(entity).ownerID);
+			
+			// XXX Here we make an assumption about the turn action owner that we shouldn't
+			
+			Entity battleAvatar = Comp.PlayerComp(Comp.PlayerComp.get(owner)).getBattleAvatarEntity();
 			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
 			
 			TweenTarget tt = TweenTarget.newInstance();
@@ -86,7 +90,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 						turnAction.performAcceptCallback();
 					}
 					
-					entity.add(Comp.create(getEngine(), ActionSpentComp.class));
+					entity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
 				}
 				
 			}); 
@@ -130,7 +134,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			
 			busy = true;
 		} else {
-			entity.add(Comp.create(getEngine(), ActionSpentComp.class));
+			entity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
 		}
 		
 		return false;

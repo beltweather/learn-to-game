@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
-import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
@@ -111,7 +111,7 @@ public class CursorSelectSystem extends IteratingSystem {
 			TurnAction t = Comp.CursorComp(c).turnAction();
 			if(Comp.ZonePositionComp(zp).tryRevertToLastCheckpoint()) {
 				Media.cancelBeep.play();	
-				cursor.remove(ActiveCardComp.class);
+				cursor.remove(ActiveTurnActionComp.class);
 				if(t != null) {
 					if(t.targetIDs.size == 0) {
 						Comp.CursorComp(c).cancelTurnAction(getEngine());
@@ -119,8 +119,7 @@ public class CursorSelectSystem extends IteratingSystem {
 						t.targetIDs.pop();
 					}
 				}
-				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
-				cursor.add(cz);
+				Comp.add(getEngine(), ChangeZoneComp.class, cursor);
 			}			
 		}
 		

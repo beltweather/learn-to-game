@@ -3,7 +3,7 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
-import com.jharter.game.ashley.components.Components.ActionSpentComp;
+import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
@@ -55,7 +55,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		if(c.turnActionEntityID != null) {
 			Entity entity = Comp.Entity.get(c.turnActionEntityID);
 			if(!Comp.ActionSpentComp.has(entity)) {
-				entity.add(Comp.create(getEngine(), ActionSpentComp.class));
+				entity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
 			}
 		}
 	}

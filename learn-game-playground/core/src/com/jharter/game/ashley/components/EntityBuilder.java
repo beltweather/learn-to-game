@@ -10,8 +10,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
-import com.jharter.game.ashley.components.Components.ActionSpentComp;
-import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
@@ -19,6 +18,7 @@ import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
+import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -31,6 +31,7 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
+import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -129,7 +130,7 @@ public class EntityBuilder implements Poolable {
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
 	public CardComp CardComp() { return get(CardComp.class); }
-	public ActiveCardComp ActiveCardComp() { return get(ActiveCardComp.class); }
+	public ActiveTurnActionComp ActiveTurnActionComp() { return get(ActiveTurnActionComp.class); }
 	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
 	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
@@ -137,7 +138,7 @@ public class EntityBuilder implements Poolable {
 	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
 	public ActionReadyComp ActionReadyComp() { return get(ActionReadyComp.class); }
 	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
-	public ActionSpentComp ActionSpentComp() { return get(ActionSpentComp.class); }
+	public CleanupTurnActionComp CleanupTurnActionComp() { return get(CleanupTurnActionComp.class); }
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
 	public UntargetableComp UntargetableComp() { return get(UntargetableComp.class); }
 	public TurnPhaseComp TurnPhaseComp() { return get(TurnPhaseComp.class); }
@@ -148,5 +149,6 @@ public class EntityBuilder implements Poolable {
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
+	public OwnerIDComp OwnerIDCompComp() { return get(OwnerIDComp.class); }
 	
 }

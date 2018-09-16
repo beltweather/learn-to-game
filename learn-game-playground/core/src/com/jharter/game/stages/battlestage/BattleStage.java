@@ -214,6 +214,13 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorSelectSystem());
 	}
 	
+	private void addOtherSystems(PooledEngine engine) {
+		engine.addSystem(new QueueTurnActionsSystem());
+		engine.addSystem(new CleanupTurnActionsSystem());
+		engine.addSystem(new ZoneChangeSystem());
+		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+	}
+	
 	private void addVisualSystems(PooledEngine engine) {
 		engine.addSystem(new ZoneLayoutSystem());
 		engine.addSystem(new AnimationSystem());
@@ -231,13 +238,8 @@ public class BattleStage extends GameStage {
 		addDependencySystems(engine);
 		addTurnPhaseSystems(engine);
 		addCursorSystems(engine);
+		addOtherSystems(engine);
 		
-		// Other systems
-		engine.addSystem(new QueueTurnActionsSystem());
-		engine.addSystem(new CleanupTurnActionsSystem());
-		engine.addSystem(new ZoneChangeSystem());
-		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
-
 		/*if(endPointHelper.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
 		}*/

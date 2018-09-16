@@ -2,7 +2,7 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.ActiveCardComp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 
@@ -36,8 +36,8 @@ public abstract class Callback<T, R> {
 
 		@Override
 		public Boolean call(Entity entity) {
-			ActiveCardComp aFriend = Comp.ActiveCardComp.get(entity);
-			return aFriend != null && aFriend.activeCardID != null;
+			ActiveTurnActionComp aFriend = Comp.ActiveTurnActionComp.get(entity);
+			return aFriend != null && aFriend.activeTurnActionID != null;
 		}
 		
 	}

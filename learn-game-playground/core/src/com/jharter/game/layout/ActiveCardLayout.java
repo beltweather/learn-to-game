@@ -3,8 +3,8 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
+import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.tween.TweenType;
@@ -25,10 +25,13 @@ public class ActiveCardLayout extends ZoneLayout {
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		CardComp c = Comp.CardComp.get(entity);
+		OwnerIDComp o = Comp.OwnerIDComp.get(entity);
 		
 		s.relativePositionRules.enabled = true;
-		s.relativePositionRules.setRelativeToID(Comp.CardComp(c).getBattleAvatarID());
+		
+		// XXX Bad assumption here that a card is only owned by a player
+		s.relativePositionRules.setRelativeToID(Comp.PlayerComp.get(Comp.Entity.get(o.ownerID)).battleAvatarID);
+		
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);

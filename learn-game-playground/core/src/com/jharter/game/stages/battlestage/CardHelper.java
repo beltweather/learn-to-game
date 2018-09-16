@@ -33,7 +33,7 @@ public class CardHelper {
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
 				texture);
-		b.CardComp().playerID = playerID;
+		b.OwnerIDCompComp().ownerID = playerID;
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
 		b.VelocityComp();

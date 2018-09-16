@@ -1,8 +1,6 @@
 package com.jharter.game.ashley.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -64,7 +62,7 @@ public final class Components {
 		@Override public void reset() { queueIndex = -1; }
 	}
 	public static final class ActionReadyComp extends B {}
-	public static final class ActionSpentComp extends B {}
+	public static final class CleanupTurnActionComp extends B {}
 	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
@@ -266,8 +264,18 @@ public final class Components {
 		}
 	}
 	
+	public static final class OwnerIDComp implements C {
+		public ID ownerID;
+		
+		private OwnerIDComp() {}
+		
+		@Override
+		public void reset() {
+			ownerID = null;
+		}
+	}
+	
 	public static final class CardComp implements C {
-		public ID playerID = null;
 		public CardType cardType = CardType.NONE;
 		public String text = null;
 		public String tooltipText = null;
@@ -276,7 +284,6 @@ public final class Components {
 		
 		@Override
 		public void reset() {
-			playerID = null;
 			cardType = CardType.NONE;
 			text = null;
 			tooltipText = null;
@@ -336,14 +343,14 @@ public final class Components {
 		}
 	}
 	
-	public static final class ActiveCardComp implements C {
-		public ID activeCardID = null;
+	public static final class ActiveTurnActionComp implements C {
+		public ID activeTurnActionID = null;
 		
-		private ActiveCardComp() {}
+		private ActiveTurnActionComp() {}
 		
 		@Override
 		public void reset() {
-			activeCardID = null;
+			activeTurnActionID = null;
 		}
 	}
 	

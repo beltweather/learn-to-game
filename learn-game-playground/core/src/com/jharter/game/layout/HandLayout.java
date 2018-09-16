@@ -3,6 +3,7 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
@@ -39,8 +40,12 @@ public class HandLayout extends ZoneLayout {
 	
 	@Override
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		CardComp c = Comp.CardComp.get(entity);
-		if(c.playerID != Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID) {
+		OwnerIDComp o = Comp.OwnerIDComp.get(entity);
+		if(o == null) {
+			return;
+		}
+		ID ownerID = o.ownerID;
+		if(ownerID != Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID) {
 			hide(entity);
 		} else {
 			show(entity);

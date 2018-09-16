@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperActivePlayerComp;
-import com.jharter.game.ashley.components.CompWrappers.CompWrapperCardComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorInputRegulatorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperPlayerComp;
@@ -17,15 +16,15 @@ import com.jharter.game.ashley.components.CompWrappers.CompWrapperZoneComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperZonePositionComp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
-import com.jharter.game.ashley.components.Components.ActionSpentComp;
-import com.jharter.game.ashley.components.Components.ActiveCardComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
+import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
@@ -38,6 +37,7 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
+import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -173,7 +173,7 @@ public class Comp {
 	public static final CompMapper<ZoneComp> ZoneComp = getFor(ZoneComp.class);
 	public static final CompMapper<ZonePositionComp> ZonePositionComp = getFor(ZonePositionComp.class);
 	public static final CompMapper<CardComp> CardComp = getFor(CardComp.class);
-	public static final CompMapper<ActiveCardComp> ActiveCardComp = getFor(ActiveCardComp.class);
+	public static final CompMapper<ActiveTurnActionComp> ActiveTurnActionComp = getFor(ActiveTurnActionComp.class);
 	public static final CompMapper<TurnActionComp> TurnActionComp = getFor(TurnActionComp.class);
 	public static final CompMapper<DescriptionComp> DescriptionComp = getFor(DescriptionComp.class);
 	public static final CompMapper<VitalsComp> VitalsComp = getFor(VitalsComp.class);
@@ -181,7 +181,7 @@ public class Comp {
 	public static final CompMapper<MultiSpriteComp> MultiSpriteComp = getFor(MultiSpriteComp.class);
 	public static final CompMapper<ActionReadyComp> ActionReadyComp = getFor(ActionReadyComp.class);
 	public static final CompMapper<ActionQueuedComp> ActionQueuedComp = getFor(ActionQueuedComp.class);
-	public static final CompMapper<ActionSpentComp> ActionSpentComp = getFor(ActionSpentComp.class);
+	public static final CompMapper<CleanupTurnActionComp> ActionSpentComp = getFor(CleanupTurnActionComp.class);
 	public static final CompMapper<TurnTimerComp> TurnTimerComp = getFor(TurnTimerComp.class);
 	public static final CompMapper<UntargetableComp> UntargetableComp = getFor(UntargetableComp.class);
 	public static final CompMapper<DisabledComp> DisabledComp = getFor(DisabledComp.class);
@@ -200,11 +200,11 @@ public class Comp {
 	public static final CompMapper<TurnPhaseEndBattleComp> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleComp.class);
 	public static final CompMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
 	public static final CompMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
+	public static final CompMapper<OwnerIDComp> OwnerIDComp = getFor(OwnerIDComp.class);
 	
 	// Special Component Wrappers for Added Methods
 	public static CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }
 	public static CompWrapperPlayerComp PlayerComp(PlayerComp comp) { return Wrap.get(CompWrapperPlayerComp.class, comp); }
-	public static CompWrapperCardComp CardComp(CardComp comp) { return Wrap.get(CompWrapperCardComp.class, comp); }
 	public static CompWrapperActivePlayerComp ActivePlayerComp(ActivePlayerComp comp) { return Wrap.get(CompWrapperActivePlayerComp.class, comp); }
 	public static CompWrapperZoneComp ZoneComp(ZoneComp comp) { return Wrap.get(CompWrapperZoneComp.class, comp); }
 	public static CompWrapperZonePositionComp ZonePositionComp(ZonePositionComp comp) { return Wrap.get(CompWrapperZonePositionComp.class, comp); }

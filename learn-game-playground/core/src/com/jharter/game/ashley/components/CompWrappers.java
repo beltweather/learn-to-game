@@ -7,9 +7,8 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Components.ActionSpentComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
-import com.jharter.game.ashley.components.Components.CardComp;
+import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
@@ -293,36 +292,6 @@ public class CompWrappers {
 		
 	}
 	
-	public static class CompWrapperCardComp extends CompWrapper<CardComp> {
-		
-		private CompWrapperCardComp() {}
-		
-		public ID getPlayerID() {
-			return comp().playerID;
-		}
-		
-		public Entity getPlayerEntity() {
-			return Comp.Entity.get(getPlayerID());
-		}
-		
-		public PlayerComp getPlayerComp() {
-			return Comp.PlayerComp.get(getPlayerEntity());
-		}
-
-		public ID getBattleAvatarID() {
-			return getPlayerComp().battleAvatarID;
-		}
-		
-		public Entity getBattleAvatarEntity() {
-			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarEntity();
-		}
-		
-		public SpriteComp getBattleAvatarSpriteComp() {
-			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarSpriteComp();
-		}
-		
-	}
-	
 	public static class CompWrapperPlayerComp extends CompWrapper<PlayerComp> {
 		
 		private CompWrapperPlayerComp() {}
@@ -426,14 +395,19 @@ public class CompWrappers {
 			return Comp.Entity.get(comp().turnActionEntityID);
 		}
 		
+		/**
+		 * Purely helper method
+		 */
 		public void cancelTurnAction(Engine engine) {
 			Entity entity = TurnActionEntity();
 			if(entity != null) {
-				Comp.add(engine, ActionSpentComp.class, entity);
+				Comp.add(engine, CleanupTurnActionComp.class, entity);
 			}
 			comp().turnActionEntityID = null;
 		}
 		
+		/**
+		 * Purely helper method		 */
 		public TurnAction turnAction() {
 			Entity entity = TurnActionEntity();
 			if(entity == null) {

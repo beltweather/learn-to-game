@@ -292,42 +292,12 @@ public class CompWrappers {
 		
 	}
 	
-	public static class CompWrapperPlayerComp extends CompWrapper<PlayerComp> {
-		
-		private CompWrapperPlayerComp() {}
-		
-		public ID getBattleAvatarID() {
-			return comp().battleAvatarID;
-		}
-		
-		public Entity getBattleAvatarEntity() {
-			return Comp.Entity.get(getBattleAvatarID());
-		}
-		
-		public SpriteComp getBattleAvatarSpriteComp() {
-			return Comp.SpriteComp.get(getBattleAvatarEntity());
-		}
-		
-	}
-	
 	public static class CompWrapperActivePlayerComp extends CompWrapper<ActivePlayerComp> {
 		
 		private CompWrapperActivePlayerComp() {}
 		
 		public PlayerComp getPlayerComp() {
 			return Comp.PlayerComp.get(Comp.Entity.get(comp().activePlayerID));
-		}
-		
-		public ID getBattleAvatarID() {
-			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarID();
-		}
-		
-		public Entity getBattleAvatarEntity() {
-			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarEntity();
-		}
-	
-		public SpriteComp getBattleAvatarSpriteComp() {
-			return Comp.PlayerComp(getPlayerComp()).getBattleAvatarSpriteComp();
 		}
 		
 		public void setPlayer(int index) {

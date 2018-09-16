@@ -58,12 +58,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		if(performTurnAction) {
 			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
 			ID id = Comp.IDComp.get(entity).id;
-			Entity owner = Comp.Entity.get(Comp.OwnerIDComp.get(entity).ownerID);
-			
-			// XXX Here we make an assumption about the turn action owner that we shouldn't
-			
-			Entity battleAvatar = Comp.PlayerComp(Comp.PlayerComp.get(owner)).getBattleAvatarEntity();
-			IDComp idAvatar = Comp.IDComp.get(battleAvatar);
+			ID ownerID = Comp.OwnerIDComp.get(entity).ownerID;
 			
 			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(entity);
@@ -77,12 +72,12 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			TweenUtil.start(getEngine(), id, TweenUtil.tween(id, tt, 1f));
 			
 			tt = TweenTarget.newInstance();
-			tt.setFromEntity(battleAvatar);
+			tt.setFromEntityID(ownerID);
 			tt.position.x -= U.u12(10);
 			tt.position.y += U.u12(4);
 			tt.angleDegrees = 20;
 				
-			Timeline tweenA = TweenUtil.tween(idAvatar.id, tt, 0.25f).setCallback(new TweenCallback() {
+			Timeline tweenA = TweenUtil.tween(ownerID, tt, 0.25f).setCallback(new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -98,7 +93,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.position.x += U.u12(10);
 			tt.position.y -= U.u12(4);
 			tt.angleDegrees = 0;
-			Timeline tweenBa = TweenUtil.tween(idAvatar.id, tt, 0.25f);
+			Timeline tweenBa = TweenUtil.tween(ownerID, tt, 0.25f);
 			
 			Timeline tweenBb = Timeline.createParallel();
 			Array<ID> allTargetIDs = turnAction.getAllTargetIDs();
@@ -123,7 +118,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 				tweenBb.push(TweenUtil.tween(enemyID, enemyTT, 0.1f).setCallback(enemyFAC).repeatYoyo(1, 0f));
 			}
 			
-			TweenUtil.start(getEngine(), idAvatar.id, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
+			TweenUtil.start(getEngine(), ownerID, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {

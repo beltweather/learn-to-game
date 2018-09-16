@@ -166,15 +166,8 @@ public final class Components {
 		}
 	}
 	
-	public static final class PlayerComp implements C {
-		public ID battleAvatarID = null;
-		
+	public static final class PlayerComp extends B {
 		private PlayerComp() {}
-
-		@Override
-		public void reset() {
-			battleAvatarID = null;
-		}
 	}
 	
 	public static final class ActivePlayerComp implements C {
@@ -190,16 +183,10 @@ public final class Components {
 		}
 	}
 	
-	public static final class BattleAvatarComp implements C {
-		public ID playerID;
-		
+	/*public static final class BattleAvatarComp implements C {
 		private BattleAvatarComp() {}
-		
-		@Override
-		public void reset() {
-			playerID = null;
-		}
-	}
+		@Override public void reset() {}
+	}*/
 	
 	public static final class TargetPositionComp implements C {
 		public Vector3 position = null;
@@ -272,6 +259,17 @@ public final class Components {
 		@Override
 		public void reset() {
 			ownerID = null;
+		}
+	}
+	
+	public static final class ActorIDComp implements C {
+		public ID actorID;
+		
+		private ActorIDComp() {}
+		
+		@Override
+		public void reset() {
+			actorID = null;
 		}
 	}
 	

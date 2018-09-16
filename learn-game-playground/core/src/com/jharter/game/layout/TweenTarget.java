@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
+import com.jharter.game.util.id.ID;
 
 public class TweenTarget implements Poolable {
 	
@@ -16,7 +17,7 @@ public class TweenTarget implements Poolable {
 	
 	public static TweenTarget newInstance(SpriteComp s) {
 		TweenTarget tt = newInstance();
-		tt.setFromEntity(s);
+		tt.setFromSpriteComp(s);
 		return tt;
 	}
 	
@@ -39,11 +40,21 @@ public class TweenTarget implements Poolable {
 	
 	private TweenTarget() {}
 	
-	public void setFromEntity(Entity entity) {
-		setFromEntity(Comp.SpriteComp.get(entity));
+	public void setFromEntityID(ID id) {
+		setFromEntity(Comp.Entity.get(id));
 	}
 	
-	public void setFromEntity(SpriteComp s) {
+	public void setFromEntity(Entity entity) {
+		if(entity == null) {
+			return;
+		}
+		setFromSpriteComp(Comp.SpriteComp.get(entity));
+	}
+	
+	public void setFromSpriteComp(SpriteComp s) {
+		if(s == null) {
+			return;
+		}
 		position.set(s.position);
 		scale.set(s.scale);
 		alpha = s.alpha;

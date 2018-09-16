@@ -27,11 +27,13 @@ public class ActiveCardLayout extends ZoneLayout {
 		SpriteComp s = Comp.SpriteComp.get(entity);
 		OwnerIDComp o = Comp.OwnerIDComp.get(entity);
 		
+		// Only position relative to an owner if we're active.
+		if(o == null) {
+			return null;
+		}
+		
 		s.relativePositionRules.enabled = true;
-		
-		// XXX Bad assumption here that a card is only owned by a player
-		s.relativePositionRules.setRelativeToID(Comp.PlayerComp.get(Comp.Entity.get(o.ownerID)).battleAvatarID);
-		
+		s.relativePositionRules.setRelativeToID(o.ownerID);
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);

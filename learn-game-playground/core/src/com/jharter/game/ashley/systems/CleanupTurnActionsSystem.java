@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
-import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;

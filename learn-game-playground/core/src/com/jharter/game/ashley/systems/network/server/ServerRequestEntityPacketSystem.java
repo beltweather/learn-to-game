@@ -2,7 +2,7 @@ package com.jharter.game.ashley.systems.network.server;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.BattleAvatarComp;
+import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
@@ -29,7 +29,7 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 		}
 		
 		// XXX Right now just add players
-		BattleAvatarComp playerComp = Comp.BattleAvatarComp.get(entity);
+		PlayerComp playerComp = Comp.PlayerComp.get(entity);
 		if(playerComp != null) {
 			AddPlayersPacket addPlayers = AddPlayersPacket.newInstance();
 			AddPlayer addPlayer = new AddPlayer();

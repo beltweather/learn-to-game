@@ -109,16 +109,16 @@ public class BattleStage extends GameStage {
 		ArrowHelper.addArrow(engine, infoZone);
 		
 		// Other players
-		PlayerComp roguePlayer = PlayerHelper.addPlayer(engine, roguePlayerID);
+		/*PlayerComp roguePlayer = PlayerHelper.addPlayer(engine, roguePlayerID);
 		PlayerComp warriorPlayer = PlayerHelper.addPlayer(engine, warriorPlayerID);
 		PlayerComp sorcererPlayer = PlayerHelper.addPlayer(engine, sorcererPlayerID);
-		PlayerComp rangerPlayer = PlayerHelper.addPlayer(engine, rangerPlayerID);
+		PlayerComp rangerPlayer = PlayerHelper.addPlayer(engine, rangerPlayerID);*/
 		
 		// CHARACTERS
-		warriorPlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, warriorPlayerID, Media.warrior, "Warrior");
-		sorcererPlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, sorcererPlayerID, Media.sorcerer, "Sorcerer");
-		roguePlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, roguePlayerID, Media.rogue, "Rogue");
-		rangerPlayer.battleAvatarID = FriendHelper.addFriend(engine, friendZone, infoZone, rangerPlayerID, Media.ranger, "Ranger");
+		PlayerHelper.addPlayer(engine, friendZone, infoZone, warriorPlayerID, Media.warrior, "Warrior");
+		PlayerHelper.addPlayer(engine, friendZone, infoZone, sorcererPlayerID, Media.sorcerer, "Sorcerer");
+		PlayerHelper.addPlayer(engine, friendZone, infoZone, roguePlayerID, Media.rogue, "Rogue");
+		PlayerHelper.addPlayer(engine, friendZone, infoZone, rangerPlayerID, Media.ranger, "Ranger");
 
 		// ENEMIES
 		EnemyHelper.addAtma(engine, enemyZone, infoZone);

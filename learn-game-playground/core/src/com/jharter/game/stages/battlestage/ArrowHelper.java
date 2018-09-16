@@ -36,7 +36,7 @@ public class ArrowHelper {
 				if(Comp.Entity.DefaultCursor().isDisabled()) {
 					return null;
 				}
-				return Comp.PlayerComp.get(Comp.Entity.get(Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID)).battleAvatarID;
+				return Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID;
 			}
 			
 		});

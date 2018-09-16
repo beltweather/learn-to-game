@@ -47,7 +47,7 @@ public class CursorLayout extends ZoneLayout {
 			return null;
 		}
 		
-		tt.setFromEntity(s);
+		tt.setFromSpriteComp(s);
 		tt.position.x = targetPosition.x;
 		tt.position.y = targetPosition.y;
 		tt.angleDegrees = targetAngle;

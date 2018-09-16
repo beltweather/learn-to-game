@@ -1,21 +1,42 @@
 package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.PooledEngine;
-import com.jharter.game.ashley.components.Components.PlayerComp;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.id.ID;
+
+import uk.co.carelesslabs.Enums.EntityType;
 
 public class PlayerHelper {
 
 	private PlayerHelper() {}
 	
-	public static PlayerComp addPlayer(PooledEngine engine, ID playerID) {
-		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = playerID;
-		PlayerComp p = b.PlayerComp();
+	public static void addPlayer(PooledEngine engine, ZoneComp zone, ZoneComp infoZone, ID playerID, Texture texture, String name) {
+		EntityBuilder b = EntityUtil.buildBasicEntity(engine,
+													  playerID,
+				  									  EntityType.FRIEND, 
+				  									  new Vector3(660,140,0), 
+				  									  new TextureRegion(texture));
+		b.PlayerComp();
+		b.VitalsComp().maxHealth = 100;
+		b.VitalsComp().weakHealth = 25;
+		b.VitalsComp().health = 10;
+		b.StatsComp().level = 1;
+		b.StatsComp().power = 10;
+		b.StatsComp().defense = 10;
+		b.StatsComp().mPower = 2;
+		b.StatsComp().mDefense = 2;
+		b.DescriptionComp().name = name;
+		b.SpriteComp();
+		Comp.ZoneComp(zone).add(b);
 		engine.addEntity(b.Entity());
 		b.free();
-		return p;
+		HealthBarHelper.addHealthBar(engine, infoZone, playerID);
 	}
 	
 }

@@ -10,11 +10,10 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
-import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
-import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
@@ -107,8 +106,8 @@ public class EntityBuilder implements Poolable {
 		comps.clear();
 	}
 
+	//public BattleAvatarComp BattleAvatarComp() { return get(BattleAvatarComp.class); }
 	public SpriteComp SpriteComp() { return get(SpriteComp.class); }
-	public BattleAvatarComp BattleAvatarComp() { return get(BattleAvatarComp.class); }
 	public FocusComp FocusComp() { return get(FocusComp.class); }
 	public IDComp IDComp() { return get(IDComp.class); }
 	public TypeComp TypeComp() { return get(TypeComp.class); }

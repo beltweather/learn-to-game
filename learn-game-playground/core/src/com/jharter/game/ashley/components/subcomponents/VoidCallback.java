@@ -18,7 +18,7 @@ public abstract class VoidCallback<T> {
 	public abstract void call(T object);
 	
 	private static Entity getBattleAvatarEntity(Entity ownedEntity) {
-		return Comp.Entity.get(Comp.PlayerComp.get(Comp.OwnerIDComp.get(ownedEntity).ownerID).battleAvatarID);
+		return Comp.Entity.get(Comp.OwnerIDComp.get(ownedEntity).ownerID);
 	}
 	
 	public abstract static class FriendEnemyCallback extends VoidCallback<TurnAction> {

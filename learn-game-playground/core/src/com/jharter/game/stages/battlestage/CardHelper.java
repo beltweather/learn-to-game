@@ -28,12 +28,12 @@ public class CardHelper {
 
 	private CardHelper() {}
 	
-	public static EntityBuilder buildCard(PooledEngine engine, ID playerID, ZoneComp zone, Texture texture, String name) {
+	public static EntityBuilder buildCard(PooledEngine engine, ID ownerID, ZoneComp zone, Texture texture, String name) {
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
 				texture);
-		b.OwnerIDCompComp().ownerID = playerID;
+		b.OwnerIDCompComp().ownerID = ownerID;
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
 		b.VelocityComp();
@@ -43,8 +43,8 @@ public class CardHelper {
 		return b;
 	}
 	
-	public static void addDrainCard(PooledEngine engine, ID playerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, playerID, zone, Media.drainLife, "Drain Life");
+	public static void addDrainCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, ownerID, zone, Media.drainLife, "Drain Life");
 		new FriendEnemyCallback(b) {
 
 			@Override
@@ -87,8 +87,8 @@ public class CardHelper {
 		b.free();
 	}
 	
-	public static void addAttackCard(PooledEngine engine, ID playerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, playerID, zone, Media.attack, "Attack");
+	public static void addAttackCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, ownerID, zone, Media.attack, "Attack");
 		new EnemyCallback(b) {
 
 			@Override
@@ -105,8 +105,8 @@ public class CardHelper {
 		b.free();
 	}
 	
-	public static void addAttackAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, playerID, zone, Media.attackAll, "Attack All");
+	public static void addAttackAllCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, ownerID, zone, Media.attackAll, "Attack All");
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		new EnemyCallback(b) {
@@ -125,8 +125,8 @@ public class CardHelper {
 		b.free();
 	}
 	
-	public static void addHealAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, playerID, zone, Media.healAll, "Heal All");
+	public static void addHealAllCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, ownerID, zone, Media.healAll, "Heal All");
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		new FriendCallback(b) {
@@ -143,8 +143,8 @@ public class CardHelper {
 		b.free();
 	}
 
-	public static void addX2Card(PooledEngine engine, ID playerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, playerID, zone, Media.x2, "x2");
+	public static void addX2Card(PooledEngine engine, ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, ownerID, zone, Media.x2, "x2");
 		b.TurnActionComp().turnAction.makesTargetMultiplicity = 2;
 		new CardCallback(b) {
 
@@ -160,8 +160,8 @@ public class CardHelper {
 		b.free();
 	}
 	
-	public static void addAllCard(PooledEngine engine, ID playerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, playerID, zone, Media.all, "All");
+	public static void addAllCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(engine, ownerID, zone, Media.all, "All");
 		b.TurnActionComp().turnAction.makesTargetAll = true;
 		new DoesntHaveAllCallback(b);
 		new CardCallback(b) {

@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperActivePlayerComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorInputRegulatorComp;
-import com.jharter.game.ashley.components.CompWrappers.CompWrapperPlayerComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperSpriteComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperVitalsComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperZoneComp;
@@ -20,7 +19,6 @@ import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
-import com.jharter.game.ashley.components.Components.BattleAvatarComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
@@ -151,7 +149,6 @@ public class Comp {
 	
 	// Standard Component Mappers
 	public static final CompMapper<SpriteComp> SpriteComp = getFor(SpriteComp.class);
-	public static final CompMapper<BattleAvatarComp> BattleAvatarComp = getFor(BattleAvatarComp.class);
 	public static final CompMapper<FocusComp> FocusComp = getFor(FocusComp.class);
 	public static final CompMapper<IDComp> IDComp = getFor(IDComp.class);
 	public static final CompMapper<TypeComp> TypeComp = getFor(TypeComp.class);
@@ -204,7 +201,6 @@ public class Comp {
 	
 	// Special Component Wrappers for Added Methods
 	public static CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }
-	public static CompWrapperPlayerComp PlayerComp(PlayerComp comp) { return Wrap.get(CompWrapperPlayerComp.class, comp); }
 	public static CompWrapperActivePlayerComp ActivePlayerComp(ActivePlayerComp comp) { return Wrap.get(CompWrapperActivePlayerComp.class, comp); }
 	public static CompWrapperZoneComp ZoneComp(ZoneComp comp) { return Wrap.get(CompWrapperZoneComp.class, comp); }
 	public static CompWrapperZonePositionComp ZonePositionComp(ZonePositionComp comp) { return Wrap.get(CompWrapperZonePositionComp.class, comp); }

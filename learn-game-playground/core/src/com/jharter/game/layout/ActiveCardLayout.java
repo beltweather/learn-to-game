@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
-import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.tween.TweenType;
@@ -25,15 +24,15 @@ public class ActiveCardLayout extends ZoneLayout {
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target) {
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		OwnerIDComp o = Comp.OwnerIDComp.get(entity);
+		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		
-		// Only position relative to an owner if we're active.
-		if(o == null) {
+		// Cards should only be active if they have a turn action
+		if(t == null) {
 			return null;
 		}
 		
 		s.relativePositionRules.enabled = true;
-		s.relativePositionRules.setRelativeToID(o.ownerID);
+		s.relativePositionRules.setRelativeToID(t.turnAction.ownerID);
 		s.relativePositionRules.xAlign = Direction.WEST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
 		s.relativePositionRules.offset.x = -U.u12(1);

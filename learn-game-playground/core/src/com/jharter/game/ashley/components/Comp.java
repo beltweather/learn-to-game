@@ -35,7 +35,6 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
-import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -197,7 +196,6 @@ public class Comp {
 	public static final CompMapper<TurnPhaseEndBattleComp> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleComp.class);
 	public static final CompMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
 	public static final CompMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
-	public static final CompMapper<OwnerIDComp> OwnerIDComp = getFor(OwnerIDComp.class);
 	
 	// Special Component Wrappers for Added Methods
 	public static CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }

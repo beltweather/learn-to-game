@@ -33,12 +33,12 @@ public class CardHelper {
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
 				texture);
-		b.OwnerIDCompComp().ownerID = ownerID;
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
-		b.TurnActionComp().turnAction.setPerformerID(b.IDComp().id);
+		b.TurnActionComp().turnAction.entityID = b.IDComp().id;
+		b.TurnActionComp().turnAction.ownerID = ownerID;
 		Comp.ZoneComp(zone).add(b);
 		return b;
 	}

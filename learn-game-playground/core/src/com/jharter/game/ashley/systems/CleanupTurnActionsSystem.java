@@ -8,11 +8,9 @@ import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
-import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -22,7 +20,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public CleanupTurnActionsSystem() {
-		super(Family.all(OwnerIDComp.class, TurnActionComp.class, CleanupTurnActionComp.class).get());
+		super(Family.all(TurnActionComp.class, CleanupTurnActionComp.class).get());
 	}
 	
 	@Override
@@ -37,8 +35,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 		}
 		
 		// Handling active card comp here for the owner also seems like a weird cross reference we don't want
-		ID ownerID = Comp.OwnerIDComp.get(entity).ownerID;
-		Entity owner = Comp.Entity.get(ownerID);
+		Entity owner = Comp.Entity.get(t.turnAction.ownerID);
 		if(Comp.ActiveTurnActionComp.has(owner)) {
 			owner.remove(ActiveTurnActionComp.class);
 		}
@@ -54,7 +51,7 @@ public class CleanupTurnActionsSystem extends IteratingSystem {
 				ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 				cz.useNextIndex = true;
 				cz.oldZoneID = z.zoneID;
-				cz.newZoneID = Comp.Find.ZoneComp.findZoneID(ownerID, ZoneType.HAND);
+				cz.newZoneID = Comp.Find.ZoneComp.findZoneID(t.turnAction.ownerID, ZoneType.HAND);
 				entity.add(cz);
 			}
 		}

@@ -183,11 +183,6 @@ public final class Components {
 		}
 	}
 	
-	/*public static final class BattleAvatarComp implements C {
-		private BattleAvatarComp() {}
-		@Override public void reset() {}
-	}*/
-	
 	public static final class TargetPositionComp implements C {
 		public Vector3 position = null;
 
@@ -248,28 +243,6 @@ public final class Components {
 		public void reset() {
 			interactables.clear();
 			interaction = null;
-		}
-	}
-	
-	public static final class OwnerIDComp implements C {
-		public ID ownerID;
-		
-		private OwnerIDComp() {}
-		
-		@Override
-		public void reset() {
-			ownerID = null;
-		}
-	}
-	
-	public static final class ActorIDComp implements C {
-		public ID actorID;
-		
-		private ActorIDComp() {}
-		
-		@Override
-		public void reset() {
-			actorID = null;
 		}
 	}
 	

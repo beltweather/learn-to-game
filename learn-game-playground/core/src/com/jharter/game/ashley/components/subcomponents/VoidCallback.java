@@ -17,10 +17,6 @@ public abstract class VoidCallback<T> {
 	
 	public abstract void call(T object);
 	
-	private static Entity getBattleAvatarEntity(Entity ownedEntity) {
-		return Comp.Entity.get(Comp.OwnerIDComp.get(ownedEntity).ownerID);
-	}
-	
 	public abstract static class FriendEnemyCallback extends VoidCallback<TurnAction> {
 		
 		public FriendEnemyCallback(EntityBuilder b) {
@@ -33,10 +29,10 @@ public abstract class VoidCallback<T> {
 		
 		@Override
 		public void call(TurnAction t) {
-			Entity card = t.getPerformer();
-			Entity friend = t.getEntity(0);
-			Entity enemy = t.getEntity(1);
-			Entity character = getBattleAvatarEntity(card);
+			Entity card = t.getEntity();
+			Entity friend = t.getTargetEntity(0);
+			Entity enemy = t.getTargetEntity(1);
+			Entity character = t.getOwnerEntity();
 			call(character, card, friend, enemy);
 			
 			if(t.all) {
@@ -76,9 +72,9 @@ public abstract class VoidCallback<T> {
 		
 		@Override
 		public void call(TurnAction t) {
-			Entity card = t.getPerformer();
-			Entity friend = t.getEntity(0);
-			Entity character = getBattleAvatarEntity(card);
+			Entity card = t.getEntity();
+			Entity friend = t.getTargetEntity(0);
+			Entity character = t.getOwnerEntity();
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
@@ -117,9 +113,9 @@ public abstract class VoidCallback<T> {
 		}
 		
 		public void call(TurnAction t) {
-			Entity card = t.getPerformer();
-			Entity activeCard = t.getEntity(0); 
-			Entity character = getBattleAvatarEntity(card);
+			Entity card = t.getEntity();
+			Entity activeCard = t.getTargetEntity(0); 
+			Entity character = t.getOwnerEntity();
 			
 			call(character, card, activeCard);
 		}
@@ -139,9 +135,9 @@ public abstract class VoidCallback<T> {
 		
 		@Override
 		public void call(TurnAction t) {
-			Entity card = t.getPerformer();
-			Entity enemy = t.getEntity(0);
-			Entity character = getBattleAvatarEntity(card);
+			Entity card = t.getEntity();
+			Entity enemy = t.getTargetEntity(0);
+			Entity character = t.getOwnerEntity();
 			
 			if(t.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);

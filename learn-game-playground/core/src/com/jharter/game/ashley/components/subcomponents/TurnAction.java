@@ -22,29 +22,29 @@ public class TurnAction {
 	public boolean defaultAll = false;
 	public boolean all = false;
 	public int priority = 0;
-	public ID performerID = null;
+	public ID entityID = null;
+	public ID ownerID = null;
 	
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
 	
 	public TurnAction() {}
 	
-	public Entity getPerformer() {
-		if(performerID == null) {
+	public Entity getEntity() {
+		if(entityID == null) {
 			return null;
 		}
-		return Comp.Entity.get(performerID);
+		return Comp.Entity.get(entityID);
 	}
 	
-	public ID getPerformerID() {
-		return performerID;
+	public Entity getOwnerEntity() {
+		if(ownerID == null) {
+			return null;
+		}
+		return Comp.Entity.get(ownerID);
 	}
 	
-	public void setPerformerID(ID performerID) {
-		this.performerID = performerID;
-	}
-	
-	public Entity getEntity(int index) {
+	public Entity getTargetEntity(int index) {
 		if(index < 0 || index >= targetIDs.size) {
 			return null;
 		}
@@ -178,7 +178,7 @@ public class TurnAction {
 		priority = 0;
 		makesTargetAll = false;
 		makesTargetMultiplicity = 1;
-		performerID = null;
+		entityID = null;
 	}
 	
 }

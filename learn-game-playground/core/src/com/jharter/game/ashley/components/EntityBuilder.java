@@ -30,7 +30,6 @@ import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
-import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
@@ -106,7 +105,6 @@ public class EntityBuilder implements Poolable {
 		comps.clear();
 	}
 
-	//public BattleAvatarComp BattleAvatarComp() { return get(BattleAvatarComp.class); }
 	public SpriteComp SpriteComp() { return get(SpriteComp.class); }
 	public FocusComp FocusComp() { return get(FocusComp.class); }
 	public IDComp IDComp() { return get(IDComp.class); }
@@ -148,6 +146,5 @@ public class EntityBuilder implements Poolable {
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
-	public OwnerIDComp OwnerIDCompComp() { return get(OwnerIDComp.class); }
 	
 }

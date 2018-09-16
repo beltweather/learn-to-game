@@ -9,7 +9,6 @@ import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.IDComp;
-import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
@@ -21,29 +20,28 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public QueueTurnActionsSystem() {
-		super(Family.all(TurnActionComp.class, OwnerIDComp.class, ActionQueueableComp.class, IDComp.class, ZonePositionComp.class).get());
+		super(Family.all(TurnActionComp.class, ActionQueueableComp.class, IDComp.class, ZonePositionComp.class).get());
 	}
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		IDComp id = Comp.IDComp.get(entity);
-		ID ownerID = Comp.OwnerIDComp.get(entity).ownerID;
+		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		
-		Entity owner = Comp.Entity.get(ownerID);
+		Entity owner = Comp.Entity.get(t.turnAction.ownerID);
 		ActiveTurnActionComp ac = Comp.getOrAdd(getEngine(), ActiveTurnActionComp.class, owner);
 		
 		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 		cz.oldZoneID = z.zoneID;
-		cz.newZoneID = Comp.Find.ZoneComp.findZoneID(ownerID, ZoneType.ACTIVE_CARD);
+		cz.newZoneID = Comp.Find.ZoneComp.findZoneID(t.turnAction.ownerID, ZoneType.ACTIVE_CARD);
 		cz.useNextIndex = true;
 		cz.instantChange = false;
 		entity.add(cz);
 		
 		ac.activeTurnActionID = id.id;
 		
-		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		if(t != null && t.turnAction.priority > 0) {
 			t.turnAction.performAcceptCallback();
 		}

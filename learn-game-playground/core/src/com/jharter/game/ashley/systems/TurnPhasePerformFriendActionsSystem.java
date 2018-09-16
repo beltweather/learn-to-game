@@ -9,8 +9,6 @@ import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
-import com.jharter.game.ashley.components.Components.IDComp;
-import com.jharter.game.ashley.components.Components.OwnerIDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
@@ -35,7 +33,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 	@SuppressWarnings("unchecked")
 	public TurnPhasePerformFriendActionsSystem() {
 		super(TurnPhasePerformFriendActionsComp.class, TurnPhasePerformEnemyActionsComp.class,
-			  Family.all(ActionQueuedComp.class, TurnActionComp.class, OwnerIDComp.class).get(), new QueueSort());
+			  Family.all(TurnActionComp.class, ActionQueuedComp.class).get(), new QueueSort());
 		endIfNoMoreEntities();
 	}
 
@@ -56,9 +54,9 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		
 		entity.remove(ActionQueuedComp.class);
 		if(performTurnAction) {
-			final TurnAction turnAction = performTurnAction ? t.turnAction : null;
+			final TurnAction turnAction = t.turnAction;
 			ID id = Comp.IDComp.get(entity).id;
-			ID ownerID = Comp.OwnerIDComp.get(entity).ownerID;
+			ID ownerID = turnAction.ownerID;
 			
 			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(entity);

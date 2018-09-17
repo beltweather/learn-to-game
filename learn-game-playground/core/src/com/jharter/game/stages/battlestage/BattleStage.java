@@ -4,11 +4,10 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.systems.AnimationSystem;
-import com.jharter.game.ashley.systems.CleanupInputSystem;
+import com.jharter.game.ashley.systems.DiscardZoneSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
@@ -217,6 +216,7 @@ public class BattleStage extends GameStage {
 	private void addOtherSystems(PooledEngine engine) {
 		engine.addSystem(new QueueTurnActionsSystem());
 		engine.addSystem(new CleanupTurnActionsSystem());
+		engine.addSystem(new DiscardZoneSystem());
 		engine.addSystem(new ZoneChangeSystem());
 		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
 	}

@@ -37,6 +37,7 @@ public class CardHelper {
 		b.SpriteComp();
 		b.VelocityComp();
 		b.BodyComp();
+		b.CardComp().ownerID = ownerID;
 		b.TurnActionComp().turnAction.entityID = b.IDComp().id;
 		b.TurnActionComp().turnAction.ownerID = ownerID;
 		Comp.ZoneComp(zone).add(b);

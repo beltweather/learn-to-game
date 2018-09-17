@@ -3,6 +3,7 @@ package com.jharter.game.ashley.components.subcomponents;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
@@ -145,6 +146,10 @@ public class TurnAction {
 		multiplicity = defaultMultiplicity;
 		all = defaultAll;
 		targetIDs.clear();
+		Entity owner = getOwnerEntity();
+		if(Comp.ActiveTurnActionComp.has(owner)) {
+			owner.remove(ActiveTurnActionComp.class);
+		}
 	}
 	
 	public void freshCopyTo(TurnAction t) {

@@ -64,6 +64,8 @@ public final class Components {
 	public static final class ActionReadyComp extends B {}
 	public static final class CleanupTurnActionComp extends B {}
 	
+	public static final class ToDiscardZoneComp extends B {}
+	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
 	public static final class IDComp implements C {
@@ -250,6 +252,7 @@ public final class Components {
 		public CardType cardType = CardType.NONE;
 		public String text = null;
 		public String tooltipText = null;
+		public ID ownerID = null;
 		
 		private CardComp() {}
 		
@@ -258,6 +261,7 @@ public final class Components {
 			cardType = CardType.NONE;
 			text = null;
 			tooltipText = null;
+			ownerID = null;
 		}
 	}
 	

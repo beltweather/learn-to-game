@@ -2,98 +2,118 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.TargetableComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class CursorTargetValidationSystem extends IteratingSystem {
-
-	private ZoneComp zCursor;
+public class CursorTargetValidationSystem extends CustomIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public CursorTargetValidationSystem() {
 		super(Family.all(ZoneComp.class).get());
+		add(TurnActionComp.class, Family.all(TurnActionComp.class, PendingTurnActionComp.class).get());
+		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
+		add(ZonePositionComp.class, Family.all(CursorComp.class, ZonePositionComp.class).get());
 	}
 	
-	@Override
-	public void update(float deltaTime) {
-		zCursor = Comp.ZonePositionComp(Comp.ZonePositionComp.get(Comp.Entity.DefaultCursor().Entity())).getZoneComp();
-		super.update(deltaTime);
-	}
-
 	@Override
 	public void processEntity(Entity zone, float deltaTime) {
+		TurnAction t = getTurnAction();
+		ZoneType cursorZoneType = getCursorZoneType();
 		ZoneComp z = Comp.ZoneComp.get(zone);
-		if(z.zoneID == zCursor.zoneID) {
-			handleZoneWithCursor(z);
+		boolean isCursorZone = z.zoneType == cursorZoneType;
+		
+		if(!isCursorEnabled()) {
+			for(ID id : z.objectIDs) {
+				clearTargeting(id);
+			}
+		} else if(!isCursorZone) {
+			if(t == null) {
+				for(ID id : z.objectIDs) {
+					clearTargeting(id);
+				}
+			} else {
+				for(ID id : z.objectIDs) {
+					makeUntargetable(id);
+				}
+			}
 		} else {
-			handleZoneWithoutCursor(z);
-		}
-	}
-	
-	public void handleZoneWithCursor(ZoneComp z) {
-		for(int i = 0; i < z.objectIDs.size(); i++) {
-			Entity zoneItem = Comp.Entity.get(z.objectIDs.get(i));
-			if(!isValidTarget(i)) {
-				Comp.add(getEngine(), UntargetableComp.class, zoneItem);
-			} else {
-				Comp.remove(UntargetableComp.class, zoneItem);
+			for(ID id : z.objectIDs) {
+				if(isValid(id, t)) {
+					makeTargetable(id);
+				} else {
+					makeUntargetable(id);
+				}
 			}
 		}
 	}
 	
-	public void handleZoneWithoutCursor(ZoneComp z) {
-		switch(z.zoneType) {
-			case HAND:
-				handleHandZoneWithoutCursor(z);
-				break;
-			case ACTIVE_CARD:
-				handleActiveCardZoneWithoutCursor(z);
-				break;
-			default:
-				handleDefaultZonesWithoutCursor(z);
-				break;
-		}
+	protected boolean isCursorEnabled() {
+		return !Comp.DisabledComp.has(getFirstEntity(ZonePositionComp.class));
 	}
 	
-	public void handleDefaultZonesWithoutCursor(ZoneComp z) {
-		for(int i = 0; i < z.objectIDs.size(); i++) {
-			Comp.remove(UntargetableComp.class, Comp.Entity.get(z.objectIDs.get(i)));
-		}		
+	protected TurnAction getTurnAction() {
+		TurnActionComp t = getFirstComponent(TurnActionComp.class);
+		return t == null ? null : t.turnAction;
 	}
 	
-	public void handleHandZoneWithoutCursor(ZoneComp z) {
-		for(int i = 0; i < z.objectIDs.size(); i++) {
-			Entity card = Comp.Entity.get(z.objectIDs.get(i));
-			TurnAction t = Comp.TurnActionComp.get(card).turnAction;
-			if(t.targetIDs.size > 0) {
-				Comp.remove(UntargetableComp.class, card);
-			} else {
-				Comp.add(getEngine(), UntargetableComp.class, card);
-			}
-		}
+	protected ID getActivePlayerID() {
+		ActivePlayerComp a = getFirstComponent(ActivePlayerComp.class);
+		return a == null ? null : a.activePlayerID;
 	}
 	
-	public void handleActiveCardZoneWithoutCursor(ZoneComp z) {
-		if(zCursor.zoneType != ZoneType.FRIEND) {
-			handleDefaultZonesWithoutCursor(z);
-			return;
-		}
-		for(int i = 0; i < z.objectIDs.size(); i++) {
-			Comp.add(getEngine(), UntargetableComp.class, Comp.Entity.get(z.objectIDs.get(i)));
-		}
+	protected ZoneType getCursorZoneType() {
+		ZonePositionComp zp = getFirstComponent(ZonePositionComp.class);
+		return zp == null ? null : Comp.ZoneComp.get(zp.zoneID).zoneType;
 	}
 	
-	public boolean isValidTarget(int index) {
-		Entity cursor = Comp.Entity.DefaultCursor().Entity();
-		return hasValidTarget(Comp.Entity.Cursor(cursor).getPlayerID(), Comp.Find.ZoneComp.findZone(cursor).zoneType, Comp.CursorComp(Comp.CursorComp.get(cursor)).turnAction(), index, 0, 0);
+	protected ZoneComp getZone(ZoneType zoneType) {
+		return Comp.Find.ZoneComp.findZone(getActivePlayerID(), zoneType);
+	}
+	
+	protected void makeTargetable(ID id) {
+		Entity zoneObject = Comp.Entity.get(id);
+		Comp.add(getEngine(), TargetableComp.class, zoneObject);
+		Comp.remove(UntargetableComp.class, zoneObject);
+	}
+	
+	protected void clearTargeting(ID id) {
+		Entity zoneObject = Comp.Entity.get(id);
+		Comp.remove(TargetableComp.class, zoneObject);
+		Comp.remove(UntargetableComp.class, zoneObject);
+	}
+	
+	protected void makeUntargetable(ID id) {
+		Entity zoneObject = Comp.Entity.get(id);
+		Comp.remove(TargetableComp.class, zoneObject);
+		Comp.add(getEngine(), UntargetableComp.class, zoneObject);
+	}
+	
+	protected boolean isValid(ID id) {
+		return isValid(id, null);
+	}
+	
+	protected boolean isValid(ID id, TurnAction t) {
+		// Check that the this entity's turn action has a valid next target
+		if(t == null) {
+			t = Comp.TurnActionComp.get(Comp.Entity.get(id)).turnAction;
+			return hasValidTarget(getActivePlayerID(), t.getTargetZoneType(), t, 0, 1, 0);
+		}
+		// Otherwise, check if this entity is a valid target for the current turn action
+		ZonePositionComp zp = Comp.ZonePositionComp.get(Comp.Entity.get(id));
+		return hasValidTarget(getActivePlayerID(), t.getTargetZoneType(), t, zp.index, 0, 0);
 	}
 	
 	private boolean hasValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
@@ -102,6 +122,9 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 	
 	private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction turnAction, int index, int direction, int depth) {
 		ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
+		if(z == null) {
+			int j = 0;
+		}
 		return ArrayUtil.findNextIndex(z.objectIDs, index, direction, (id, args) -> {
 			
 			ID ownerIDArg = (ID) args[0];
@@ -128,33 +151,4 @@ public class CursorTargetValidationSystem extends IteratingSystem {
 		}, ownerID, turnAction, depth);
 	}
 	
-	/*private int findNextValidTargetOld(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
-		ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
-		for(int i = 0; i < z.objectIDs.size(); i++) {
-			index = ArrayUtil.findNextIndex(z.objectIDs, index, direction);
-			if(!Comp.ZoneComp(z).hasIndex(index)) {
-				return -1;
-			}
-			Entity entity = Comp.Entity.get(z.objectIDs.get(index));
-			if(entity != null && (t == null || t.isValidTarget(entity))) {
-				if(t == null) {
-					TurnActionComp taComp = Comp.TurnActionComp.get(entity);
-					if(taComp != null) {
-						TurnAction ta = taComp.turnAction;
-						ZoneType nextZoneType = ta.getNextTargetZoneType(depth);
-						if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerID, nextZoneType, ta, 0, 1, depth+1)) {
-							return index;
-						}
-					}
-				} else {
-					return index;
-				}
-			}
-			if(direction == 0) {
-				break;
-			}
-		}			
-		return -1;
-	}*/
-
 }

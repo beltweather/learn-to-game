@@ -53,9 +53,6 @@ public class ArrayUtil {
 	}
 	
 	private static int findNextIndex(int size, int currentIndex, int direction) {
-		if(direction == 0) {
-			return currentIndex;
-		}
 		int index = currentIndex + direction;
 		if(index < 0) {
 			index = size - 1;
@@ -135,6 +132,7 @@ public class ArrayUtil {
 		int index = currentIndex;
 		for(int i = 0; i < array.size(); i++) {
 			index = findNextIndex(array, index, direction);
+			Sys.out.println("Array: " + array.size() + " index " + index);
 			if(indexFinder.isFound(array.get(index), args)) {
 				return index;
 			}

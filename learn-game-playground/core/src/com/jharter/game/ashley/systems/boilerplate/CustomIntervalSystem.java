@@ -24,7 +24,7 @@ import com.badlogic.ashley.systems.IntervalSystem;
  * given interval. The actual logic should be placed in {@link IntervalSystem#updateInterval()}.
  * @author David Saltares
  */
-public abstract class CustomIntervalSystem extends EntitySystem {
+public abstract class CustomIntervalSystem extends CustomEntitySystem {
 	protected float interval;
 	protected float accumulator;
 

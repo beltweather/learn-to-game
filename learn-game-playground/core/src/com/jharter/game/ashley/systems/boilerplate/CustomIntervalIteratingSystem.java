@@ -53,6 +53,7 @@ public abstract class CustomIntervalIteratingSystem extends CustomIntervalSystem
 
 	@Override
 	public void addedToEngine (Engine engine) {
+		super.addedToEngine(engine);
 		entities = engine.getEntitiesFor(family);
 	}
 

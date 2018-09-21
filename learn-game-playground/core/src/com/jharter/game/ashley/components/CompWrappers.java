@@ -14,6 +14,7 @@ import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
@@ -371,6 +372,7 @@ public class CompWrappers {
 		public void cancelTurnAction(Engine engine) {
 			Entity entity = TurnActionEntity();
 			if(entity != null) {
+				Comp.remove(PendingTurnActionComp.class, entity);
 				Comp.add(engine, CleanupTurnActionComp.class, entity);
 			}
 			comp().turnActionEntityID = null;

@@ -18,7 +18,6 @@ package com.jharter.game.ashley.systems.boilerplate;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
@@ -27,9 +26,9 @@ import com.badlogic.ashley.utils.ImmutableArray;
  * updated. This is really just a convenience class as most systems iterate over a list of entities.
  * @author Stefan Bachmann
  */
-public abstract class CustomIteratingSystem extends EntitySystem {
-	private Family family;
-	private ImmutableArray<Entity> entities;
+public abstract class CustomIteratingSystem extends CustomEntitySystem {
+	protected Family family;
+	protected ImmutableArray<Entity> entities;
 
 	/**
 	 * Instantiates a system that will iterate over the entities described by the Family.
@@ -52,11 +51,13 @@ public abstract class CustomIteratingSystem extends EntitySystem {
 
 	@Override
 	public void addedToEngine (Engine engine) {
+		super.addedToEngine(engine);
 		entities = engine.getEntitiesFor(family);
 	}
 
 	@Override
 	public void removedFromEngine (Engine engine) {
+		super.removedFromEngine(engine);
 		entities = null;
 	}
 

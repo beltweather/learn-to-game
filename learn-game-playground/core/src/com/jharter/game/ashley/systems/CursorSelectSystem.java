@@ -5,11 +5,12 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
-import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
+import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
+import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
@@ -70,6 +71,7 @@ public class CursorSelectSystem extends IteratingSystem {
 				if(t == null) {
 					c.turnActionEntityID = targetEntityID;
 					t = Comp.TurnActionComp.get(targetEntity).turnAction;
+					Comp.getOrAdd(getEngine(), PendingTurnActionComp.class, targetEntity);
 				} else {
 					// Always add every object we select as we go to our turn action entity
 					t.addTarget(targetEntity);
@@ -85,6 +87,7 @@ public class CursorSelectSystem extends IteratingSystem {
 					playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 					
 					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
+					Comp.remove(PendingTurnActionComp.class, turnActionEntity);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
 					c.turnActionEntityID = null;
 					Comp.ZonePositionComp(zp).clearHistory();

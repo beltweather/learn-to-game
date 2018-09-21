@@ -38,6 +38,8 @@ public final class Components {
 	
 	// ------------------- BOOL COMPONENTS -----------------------------
 
+	public static final class PendingTurnActionComp extends B {}
+	public static final class TargetableComp extends B {}
 	public static final class UntargetableComp extends B {}
 	public static final class FocusComp extends B {}
 	public static final class InvisibleComp extends B {}

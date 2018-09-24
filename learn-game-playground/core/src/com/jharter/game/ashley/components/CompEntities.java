@@ -154,10 +154,13 @@ public class CompEntities {
 		
 		public void toHand(Engine engine) {
 			Comp.CursorComp(CursorComp()).cancelTurnAction(engine);
+			
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
 			Comp.ZonePositionComp(zp).clearHistory();
 			zp.index = 0;
 			zp.zoneID = Comp.Find.ZoneComp.findZoneID(DefaultTurn().ActivePlayerComp().activePlayerID, ZoneType.HAND);
+		
+			CursorComp().targetID = Comp.Find.ZoneComp.findZone(DefaultTurn().ActivePlayerComp().activePlayerID, ZoneType.HAND).objectIDs.first();
 		}
 		
 		public ID getPlayerID() {

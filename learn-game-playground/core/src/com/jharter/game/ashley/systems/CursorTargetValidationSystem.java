@@ -5,15 +5,17 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.InvisibleComp;
+import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.TargetableComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 import com.jharter.game.util.ArrayUtil;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -22,133 +24,132 @@ public class CursorTargetValidationSystem extends CustomIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public CursorTargetValidationSystem() {
-		super(Family.all(ZoneComp.class).get());
+		super(Family.all(ZoneComp.class).exclude(InvisibleComp.class).get());
 		add(TurnActionComp.class, Family.all(TurnActionComp.class, PendingTurnActionComp.class).get());
 		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
-		add(ZonePositionComp.class, Family.all(CursorComp.class, ZonePositionComp.class).get());
+		add(CursorComp.class, Family.all(CursorComp.class).get());
 	}
 	
 	@Override
 	public void processEntity(Entity zone, float deltaTime) {
-		TurnAction t = getTurnAction();
-		ZoneType cursorZoneType = getCursorZoneType();
 		ZoneComp z = Comp.ZoneComp.get(zone);
-		boolean isCursorZone = z.zoneType == cursorZoneType;
+		TurnAction t = getTurnAction();
+		boolean isTargetZone = z.zoneType == (t == null ? ZoneType.HAND : t.getTargetZoneType());
 		
-		if(!isCursorEnabled()) {
-			for(ID id : z.objectIDs) {
-				clearTargeting(id);
-			}
-		} else if(!isCursorZone) {
+		// If there's no cursor we don't want to reason on targets
+		if(isCursorDisabled()) {
+			for(ID id : z.objectIDs) { clearTargeting(id); }
+			
+		// If we're not in the target zone, see if we're even using a turn action
+		} else if(!isTargetZone) {
+			
+			// If we're not targeting with any turn action, don't reason on targets
 			if(t == null) {
-				for(ID id : z.objectIDs) {
-					clearTargeting(id);
-				}
+				for(ID id : z.objectIDs) { clearTargeting(id); }
+			
+			// Otherwise, make these untargetable because they're not in the target zone
 			} else {
-				for(ID id : z.objectIDs) {
-					makeUntargetable(id);
-				}
+				for(ID id : z.objectIDs) { makeUntargetable(id); }
 			}
+			
 		} else {
-			for(ID id : z.objectIDs) {
-				if(isValid(id, t)) {
-					makeTargetable(id);
-				} else {
-					makeUntargetable(id);
-				}
+			
+			// If we're in the target zone and the cursor is enabled, then make these
+			// targetable if they're actually valid, otherwise, untargetable
+			int targetable = 0;
+			for(ID id : z.objectIDs) { 
+				if(isValid(id, t)) { 
+					makeTargetable(id); 
+					targetable++;
+				} else { 
+					makeUntargetable(id); 
+				} 
 			}
+			Sys.out.println("Made " + targetable + " entities targetable.");
+			
 		}
 	}
 	
-	protected boolean isCursorEnabled() {
-		return !Comp.DisabledComp.has(getFirstEntity(ZonePositionComp.class));
-	}
-	
-	protected TurnAction getTurnAction() {
-		TurnActionComp t = getFirstComponent(TurnActionComp.class);
-		return t == null ? null : t.turnAction;
-	}
-	
-	protected ID getActivePlayerID() {
-		ActivePlayerComp a = getFirstComponent(ActivePlayerComp.class);
-		return a == null ? null : a.activePlayerID;
-	}
-	
-	protected ZoneType getCursorZoneType() {
-		ZonePositionComp zp = getFirstComponent(ZonePositionComp.class);
-		return zp == null ? null : Comp.ZoneComp.get(zp.zoneID).zoneType;
-	}
-	
-	protected ZoneComp getZone(ZoneType zoneType) {
-		return Comp.Find.ZoneComp.findZone(getActivePlayerID(), zoneType);
-	}
-	
-	protected void makeTargetable(ID id) {
+	private void makeTargetable(ID id) {
 		Entity zoneObject = Comp.Entity.get(id);
 		Comp.add(getEngine(), TargetableComp.class, zoneObject);
 		Comp.remove(UntargetableComp.class, zoneObject);
 	}
 	
-	protected void clearTargeting(ID id) {
+	private void clearTargeting(ID id) {
 		Entity zoneObject = Comp.Entity.get(id);
 		Comp.remove(TargetableComp.class, zoneObject);
 		Comp.remove(UntargetableComp.class, zoneObject);
 	}
 	
-	protected void makeUntargetable(ID id) {
+	private void makeUntargetable(ID id) {
 		Entity zoneObject = Comp.Entity.get(id);
 		Comp.remove(TargetableComp.class, zoneObject);
 		Comp.add(getEngine(), UntargetableComp.class, zoneObject);
 	}
 	
-	protected boolean isValid(ID id) {
-		return isValid(id, null);
+	private boolean isCursorDisabled() {
+		return Comp.DisabledComp.has(getFirstEntity(CursorComp.class));
 	}
 	
-	protected boolean isValid(ID id, TurnAction t) {
+	private TurnAction getTurnAction() {
+		TurnActionComp t = getFirstComponent(TurnActionComp.class);
+		return t == null ? null : t.turnAction;
+	}
+	
+	private ID getActivePlayerID() {
+		ActivePlayerComp a = getFirstComponent(ActivePlayerComp.class);
+		return a == null ? null : a.activePlayerID;
+	}
+	
+	private ZoneComp getZone(ZoneType zoneType) {
+		return Comp.Find.ZoneComp.findZone(getActivePlayerID(), zoneType);
+	}
+	
+	private boolean isValid(ID targetID, TurnAction t) {
+		Entity target = Comp.Entity.get(targetID);
+		if(Comp.InvisibleComp.has(target)) {
+			return false;
+		}
+		
 		// Check that the this entity's turn action has a valid next target
 		if(t == null) {
-			t = Comp.TurnActionComp.get(Comp.Entity.get(id)).turnAction;
-			return hasValidTarget(getActivePlayerID(), t.getTargetZoneType(), t, 0, 1, 0);
+			t = Comp.TurnActionComp.get(target).turnAction;
+			return isValid(t.getTargetZoneType(), t, 0, 1, 0);
 		}
 		// Otherwise, check if this entity is a valid target for the current turn action
-		ZonePositionComp zp = Comp.ZonePositionComp.get(Comp.Entity.get(id));
-		return hasValidTarget(getActivePlayerID(), t.getTargetZoneType(), t, zp.index, 0, 0);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(target);
+		return isValid(t.getTargetZoneType(), t, zp.index, 0, 0);
 	}
 	
-	private boolean hasValidTarget(ID ownerID, ZoneType zoneType, TurnAction t, int index, int direction, int depth) {
-		return findNextValidTarget(ownerID, zoneType, t, index, direction, depth) >= 0;
-	}
-	
-	private int findNextValidTarget(ID ownerID, ZoneType zoneType, TurnAction turnAction, int index, int direction, int depth) {
-		ZoneComp z = Comp.Find.ZoneComp.findZone(ownerID, zoneType);
-		if(z == null) {
-			int j = 0;
-		}
-		return ArrayUtil.findNextIndex(z.objectIDs, index, direction, (id, args) -> {
+	private boolean isValid(ZoneType zoneType, TurnAction turnAction, int index, int direction, int depth) {
+		ZoneComp z = getZone(zoneType);
+		return ArrayUtil.findNextIndex(z.objectIDs, index, direction, (id, args) -> { TurnAction _turnAction = (TurnAction) args[0]; int _depth = (int) args[1];
 			
-			ID ownerIDArg = (ID) args[0];
-			TurnAction tArg = (TurnAction) args[1];
-			int depthArg = (int) args[2];
-			
+			// If we can't find the initial entity, it's an invalid target
 			Entity entity = Comp.Entity.get(id);
-			if(entity != null && (tArg == null || tArg.isValidTarget(entity))) {
-				if(tArg == null) {
-					TurnActionComp taComp = Comp.TurnActionComp.get(entity);
-					if(taComp != null) {
-						TurnAction ta = taComp.turnAction;
-						ZoneType nextZoneType = ta.getNextTargetZoneType(depthArg);
-						if(nextZoneType == ZoneType.NONE || hasValidTarget(ownerIDArg, nextZoneType, ta, 0, 1, depthArg+1)) {
-							return true;
-						}
-					}
-				} else {
-					return true;
-				}
+			if(entity == null) {
+				return false;
 			}
-			return false;
+
+			// If we have a turn action, use its validation
+			if(_turnAction != null) {
+				return _turnAction.isValidTarget(entity);
+			}
 		
-		}, ownerID, turnAction, depth);
+			// Otherwise, try to get a turn action from our target.
+			// If our target doesn't have a turn action, there's no validation we
+			// can do, consider ourselves invalid.
+			TurnActionComp t = Comp.TurnActionComp.get(entity);
+			if(t == null) {
+				return false;
+			}
+			
+			// Otherwise, use the turn action's validation
+			ZoneType nextZoneType = t.turnAction.getNextTargetZoneType(_depth);
+			return nextZoneType == ZoneType.NONE || isValid(nextZoneType, t.turnAction, 0, 1, _depth+1);
+		
+		}, turnAction, depth) >= 0;
 	}
 	
 }

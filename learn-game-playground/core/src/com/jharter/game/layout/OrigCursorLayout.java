@@ -13,7 +13,6 @@ import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -23,12 +22,12 @@ import aurelienribon.tweenengine.equations.Circ;
 import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class CursorLayout extends ZoneLayout {
+public class OrigCursorLayout extends ZoneLayout {
 
 	private boolean hasMulti = false;
 	private RelativePositionRules rpr;
 	
-	public CursorLayout() {
+	public OrigCursorLayout() {
 		super();
 		rpr = new RelativePositionRules();
 		rpr.enabled = true;
@@ -39,19 +38,11 @@ public class CursorLayout extends ZoneLayout {
 	protected TweenTarget getTarget(ID id, int index, Entity cursor, TweenTarget tt) {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
-		
-		Sys.out.println("Target ID: " + c.targetID);
-		if(c.targetID == null) {
-			return null;
-		}
-		
-		Entity target = Comp.Entity.get(c.targetID);
-		
-		ZonePositionComp zp = Comp.ZonePositionComp.get(target);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
 		float targetAngle = getCursorAngle(cursor, z.zoneType);
 		
-		Vector3 targetPosition = getCursorPosition(cursor, c.targetID, target, z);
+		Vector3 targetPosition = getCursorPosition(cursor, z, zp.index);
 		if(targetPosition == null) {
 			return null;
 		}
@@ -74,7 +65,7 @@ public class CursorLayout extends ZoneLayout {
 	
 	@Override
 	protected void modifyEntity(ID id, int index, Entity cursor, TweenTarget tt) {
-		/*CursorComp c = Comp.CursorComp.get(cursor);
+		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
 		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
@@ -90,10 +81,10 @@ public class CursorLayout extends ZoneLayout {
 	
 		if(!hasMulti) {
 			Comp.remove(MultiSpriteComp.class, cursor);
-		}*/
+		}
 	}
 
-	/*private void handleChangeZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
+	private void handleChangeZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
 		if(!isAll(c)) {
 			return;
 		}
@@ -132,9 +123,9 @@ public class CursorLayout extends ZoneLayout {
 		
 		Timeline tween = Timeline.createSequence().push(multiA).push(multiB);
 		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, tween);
-	}*/
+	}
 	
-	/*private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
+	private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
 		if(!isAll(c)) {
 			return;
 		}
@@ -147,9 +138,9 @@ public class CursorLayout extends ZoneLayout {
 			}
 		}
 		mp.size = mp.positions.size;
-	}*/
+	}
 	
-	/*private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
+	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
 		
 		// Make sure cursor is in a valid place
 		if(!Comp.ZoneComp(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
@@ -205,9 +196,9 @@ public class CursorLayout extends ZoneLayout {
 		}
 		ms.size = ms.positions.size;
 		hasMulti = true;
-	}*/
+	}
 	
-	/*private void addMultiPositions(MultiSpriteComp ms, int multiplicity, Entity cursor, SpriteComp s, ZoneComp zone, ID targetID) {
+	private void addMultiPositions(MultiSpriteComp ms, int multiplicity, Entity cursor, SpriteComp s, ZoneComp zone, ID targetID) {
 		Vector3 cursorPosition = getCursorPosition(cursor, zone, targetID);
 		for(int m = 0; m < multiplicity; m++) {
 			Vector3 pos = new Vector3(cursorPosition);
@@ -225,12 +216,12 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
-	}*/
+	}
 
-	/*private boolean isAll(CursorComp c) {
+	private boolean isAll(CursorComp c) {
 		TurnAction ta = Comp.CursorComp(c).turnAction();
 		return ta != null && ta.all;
-	}*/
+	}
 	
 	private float getCursorAngle(Entity entity, ZoneType zoneType) {
 		switch(zoneType) {
@@ -245,7 +236,17 @@ public class CursorLayout extends ZoneLayout {
 		}
 	}
 	
-	private Vector3 getCursorPosition(Entity cursor, ID targetID, Entity target, ZoneComp z) {
+	private Vector3 getCursorPosition(Entity entity, ZoneComp z, int index) {
+		if(!Comp.ZoneComp(z).hasIndex(index)) {
+			return null;
+		}
+		
+		ID cursorTargetID = z.objectIDs.get(index);
+		return getCursorPosition(entity, z, cursorTargetID);
+	}
+	
+	private Vector3 getCursorPosition(Entity entity, ZoneComp z, ID cursorTargetID) {
+		Entity target = Comp.Entity.get(cursorTargetID);
 		if(target == null) {
 			return null;
 		}
@@ -261,10 +262,10 @@ public class CursorLayout extends ZoneLayout {
 			return null;
 		}
 		
-		SpriteComp s = Comp.SpriteComp.get(cursor);
+		SpriteComp s = Comp.SpriteComp.get(entity);
 		Vector3 cursorPosition = new Vector3();
 		
-		rpr.setRelativeToID(targetID);
+		rpr.setRelativeToID(cursorTargetID);
 		rpr.offset.set(0,0,0);
 		switch(z.zoneType) {
 			case HAND:

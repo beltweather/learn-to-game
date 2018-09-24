@@ -14,6 +14,7 @@ public abstract class FirstSystem extends CustomIteratingSystem {
 	
 	@Override
 	public void update (float deltaTime) {
+		super.update(deltaTime);
 		if(entities.size() > 0) {
 			processEntity(entities.first(), deltaTime);
 		}

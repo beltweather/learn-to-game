@@ -42,6 +42,7 @@ import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
+import com.jharter.game.ashley.components.Components.TargetableComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
@@ -179,6 +180,7 @@ public class Comp {
 	public static final CompMapper<ActionQueuedComp> ActionQueuedComp = getFor(ActionQueuedComp.class);
 	public static final CompMapper<CleanupTurnActionComp> ActionSpentComp = getFor(CleanupTurnActionComp.class);
 	public static final CompMapper<TurnTimerComp> TurnTimerComp = getFor(TurnTimerComp.class);
+	public static final CompMapper<TargetableComp> TargetableComp = getFor(TargetableComp.class);
 	public static final CompMapper<UntargetableComp> UntargetableComp = getFor(UntargetableComp.class);
 	public static final CompMapper<DisabledComp> DisabledComp = getFor(DisabledComp.class);
 	public static final CompMapper<AnimatingComp> AnimatingComp = getFor(AnimatingComp.class);

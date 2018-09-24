@@ -7,12 +7,12 @@ import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.systems.AnimationSystem;
-import com.jharter.game.ashley.systems.DiscardZoneSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
 import com.jharter.game.ashley.systems.CursorSelectSystem;
 import com.jharter.game.ashley.systems.CursorTargetValidationSystem;
+import com.jharter.game.ashley.systems.DiscardZoneSystem;
 import com.jharter.game.ashley.systems.QueueTurnActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
 import com.jharter.game.ashley.systems.RenderEntitiesSystem;
@@ -237,8 +237,8 @@ public class BattleStage extends GameStage {
 		addNetworkSystems(engine);
 		addDependencySystems(engine);
 		addTurnPhaseSystems(engine);
-		addCursorSystems(engine);
 		addOtherSystems(engine);
+		addCursorSystems(engine);
 		
 		/*if(endPointHelper.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));

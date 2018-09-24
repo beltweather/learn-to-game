@@ -27,34 +27,47 @@ public final class Components {
 
 	private Components() {}
 	
-	// ------------------- SUPERCLASS COMPONENTS -----------------------------
+	// ------------------- SUPERCLASS AND INTERFACe COMPONENTS --------
 	
+	/**
+	 * Convenience class to ensure that our components are all poolable.
+	 */
 	private static interface C extends Component, Poolable {}
 	
+	/**
+	 * Simple boolean component, no data inside.
+	 */
 	private static class B implements C {
 		private B() {}
 		@Override public void reset() {}
 	}
 	
+	/**
+	 * Special interface that denotes a component is supposed to only
+	 * exist on one entity total in the entire engine.
+	 */
+	public static interface Unique {}
+	
 	// ------------------- BOOL COMPONENTS -----------------------------
 
+	public static final class FocusComp extends B implements Unique {}
+	
+	public static final class TurnPhaseComp extends B implements Unique {}
+	public static final class TurnPhaseStartBattleComp extends B implements Unique {}
+	public static final class TurnPhaseStartTurnComp extends B implements Unique {}
+	public static final class TurnPhaseSelectEnemyActionsComp extends B implements Unique {}
+	public static final class TurnPhaseSelectFriendActionsComp extends B implements Unique {}
+	public static final class TurnPhasePerformFriendActionsComp extends B implements Unique {}
+	public static final class TurnPhasePerformEnemyActionsComp extends B implements Unique {}
+	public static final class TurnPhaseEndTurnComp extends B implements Unique {}
+	public static final class TurnPhaseEndBattleComp extends B implements Unique {}
+	public static final class TurnPhaseNoneComp extends B implements Unique {}
+	
 	public static final class PendingTurnActionComp extends B {}
 	public static final class TargetableComp extends B {}
 	public static final class UntargetableComp extends B {}
-	public static final class FocusComp extends B {}
 	public static final class InvisibleComp extends B {}
 	public static final class DisabledComp extends B {}
-	
-	public static final class TurnPhaseComp extends B {}
-	public static final class TurnPhaseStartBattleComp extends B {}
-	public static final class TurnPhaseStartTurnComp extends B {}
-	public static final class TurnPhaseSelectEnemyActionsComp extends B {}
-	public static final class TurnPhaseSelectFriendActionsComp extends B {}
-	public static final class TurnPhasePerformFriendActionsComp extends B {}
-	public static final class TurnPhasePerformEnemyActionsComp extends B {}
-	public static final class TurnPhaseEndTurnComp extends B {}
-	public static final class TurnPhaseEndBattleComp extends B {}
-	public static final class TurnPhaseNoneComp extends B {}
 	
 	public static final class ActionQueueableComp extends B {}
 	public static final class ActionQueuedComp implements C {
@@ -174,7 +187,7 @@ public final class Components {
 		private PlayerComp() {}
 	}
 	
-	public static final class ActivePlayerComp implements C {
+	public static final class ActivePlayerComp implements C, Unique {
 		public ID activePlayerID = null;
 		public Array<ID> spentPlayers = new Array<ID>();
 		
@@ -309,7 +322,7 @@ public final class Components {
 		}
 	}
 
-	public static final class TurnActionComp implements C {
+	public static final class TurnActionComp implements C, Unique {
 		public TurnAction turnAction = new TurnAction();
 		
 		private TurnActionComp() {}
@@ -331,9 +344,11 @@ public final class Components {
 		}
 	}
 	
-	public static final class CursorComp implements C {
+	public static final class CursorComp implements C, Unique {
 		public ID turnActionEntityID = null;
 		public ID lastZoneID = null;
+		public ID targetID = null;
+		public Array<ID> history = new Array<ID>();
 		
 		private CursorComp() {}
 		
@@ -341,10 +356,12 @@ public final class Components {
 		public void reset() {
 			turnActionEntityID = null;
 			lastZoneID = null;
+			targetID = null;
+			history.clear();
 		}
 	}
 	
-	public static final class TurnTimerComp implements C {
+	public static final class TurnTimerComp implements C, Unique {
 		public TurnTimer turnTimer = new TurnTimer();
 		
 		private TurnTimerComp() {}

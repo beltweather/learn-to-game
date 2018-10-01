@@ -8,10 +8,14 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
+import com.jharter.game.ashley.systems.CursorAcceptSystem;
+import com.jharter.game.ashley.systems.CursorCancelSystem;
 import com.jharter.game.ashley.systems.CursorInputSystem;
 import com.jharter.game.ashley.systems.CursorMoveSystem;
-import com.jharter.game.ashley.systems.CursorSelectSystem;
+import com.jharter.game.ashley.systems.CursorPrevNextSystem;
+import com.jharter.game.ashley.systems.CursorQueueTurnActionSystem;
 import com.jharter.game.ashley.systems.CursorTargetValidationSystem;
+import com.jharter.game.ashley.systems.CursorTurnActionValidationSystem;
 import com.jharter.game.ashley.systems.DiscardZoneSystem;
 import com.jharter.game.ashley.systems.QueueTurnActionsSystem;
 import com.jharter.game.ashley.systems.RemoveEntitiesSystem;
@@ -215,7 +219,12 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorTargetValidationSystem());
 		engine.addSystem(new CursorMoveSystem());
-		engine.addSystem(new CursorSelectSystem());
+		//engine.addSystem(new CursorSelectSystem());
+		engine.addSystem(new CursorPrevNextSystem());
+		engine.addSystem(new CursorAcceptSystem());
+		engine.addSystem(new CursorCancelSystem());
+		engine.addSystem(new CursorTurnActionValidationSystem());
+		engine.addSystem(new CursorQueueTurnActionSystem());
 	}
 	
 	private void addOtherSystems(PooledEngine engine) {

@@ -335,18 +335,6 @@ public class CompWrappers {
 		}
 		
 		/**
-		 * Purely helper method
-		 */
-		public void cancelTurnAction(Engine engine) {
-			Entity entity = TurnActionEntity();
-			if(entity != null) {
-				Comp.remove(PendingTurnActionComp.class, entity);
-				Comp.add(engine, CleanupTurnActionComp.class, entity);
-			}
-			comp().turnActionID = null;
-		}
-		
-		/**
 		 * Purely helper method		 */
 		public TurnAction turnAction() {
 			Entity entity = TurnActionEntity();

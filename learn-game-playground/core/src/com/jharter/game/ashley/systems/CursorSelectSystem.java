@@ -16,7 +16,6 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -50,13 +49,13 @@ public class CursorSelectSystem extends FirstSystem {
 		if(ci.prev) {
 			
 			if(Comp.ActivePlayerComp(a).prevPlayer()) {
-				Comp.Entity.Cursor(cursor).toHand(getEngine());
+				c.reset();
 			}
 			
 		} else if(ci.next) {
 
 			if(Comp.ActivePlayerComp(a).nextPlayer()) {
-				Comp.Entity.Cursor(cursor).toHand(getEngine());
+				c.reset();
 			}
 			
 		} else if(ci.accept) {
@@ -108,7 +107,7 @@ public class CursorSelectSystem extends FirstSystem {
 				TurnAction t = Comp.CursorComp(c).turnAction();
 				if(t != null) {
 					if(t.targetIDs.size == 0) {
-						Comp.CursorComp(c).cancelTurnAction(getEngine());
+						c.turnActionID = null;
 					} else if(t.targetIDs.size > 0) {
 						t.targetIDs.pop();
 					}

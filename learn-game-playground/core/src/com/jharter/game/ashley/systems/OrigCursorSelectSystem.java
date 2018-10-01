@@ -47,13 +47,13 @@ public class OrigCursorSelectSystem extends IteratingSystem {
 		if(ci.prev) {
 			
 			if(Comp.ActivePlayerComp(a).prevPlayer()) {
-				Comp.Entity.Cursor(cursor).toHand(getEngine());
+				c.reset();
 			}
 			
 		} else if(ci.next) {
 
 			if(Comp.ActivePlayerComp(a).nextPlayer()) {
-				Comp.Entity.Cursor(cursor).toHand(getEngine());
+				c.reset();
 			}
 			
 		} else if(ci.accept) {
@@ -117,7 +117,7 @@ public class OrigCursorSelectSystem extends IteratingSystem {
 				cursor.remove(ActiveTurnActionComp.class);
 				if(t != null) {
 					if(t.targetIDs.size == 0) {
-						Comp.CursorComp(c).cancelTurnAction(getEngine());
+						c.turnActionID = null;
 					} else if(t.targetIDs.size > 0) {
 						t.targetIDs.pop();
 					}

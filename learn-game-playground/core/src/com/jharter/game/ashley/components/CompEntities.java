@@ -162,48 +162,14 @@ public class CompEntities {
 			Comp.remove(MultiSpriteComp.class, Entity());
 		}
 		
-		public void toHand(Engine engine) {
-			if(CursorComp() == null) {
-				return;
-			}
-			Comp.CursorComp(CursorComp()).cancelTurnAction(engine);
-			
-			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());
-			Comp.ZonePositionComp(zp).clearHistory();
-			zp.index = 0;
-			zp.zoneID = Comp.Find.ZoneComp.findZoneID(DefaultTurn().ActivePlayerComp().activePlayerID, ZoneType.HAND);
-		
-			CursorComp().targetID = Comp.Find.ZoneComp.findZone(DefaultTurn().ActivePlayerComp().activePlayerID, ZoneType.HAND).objectIDs.first();
-		}
-		
 		public ID getPlayerID() {
 			return DefaultTurn().ActivePlayerComp().activePlayerID;
 		}
 		
 		public void toDefault(Engine engine) {
 			single();
-			toHand(engine);
+			CursorComp().reset();
 		}
-
-		/*public void cancelTurnAction(Engine engine) {
-			Entity entity = TurnActionEntity();
-			if(entity != null) {
-				Comp.add(engine, ActionSpentComp.class, entity);
-			}
-			CursorComp().turnActionEntityID = null;
-		}
-		
-		public Entity TurnActionEntity() {
-			return Comp.Entity.get(CursorComp().turnActionEntityID);
-		}
-		
-		public TurnAction TurnAction() {
-			Entity entity = TurnActionEntity();
-			if(entity == null) {
-				return null;
-			}
-			return Comp.TurnActionComp.get(entity).turnAction;
-		}*/		
 
 	}
 	

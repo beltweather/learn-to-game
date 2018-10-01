@@ -22,11 +22,11 @@ import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Media;
 
-public class CursorMoveSystem extends FirstSystem implements Comparator<Entity> {
+public class CursorMoveSystem extends CursorSystem implements Comparator<Entity> {
 	
 	@SuppressWarnings("unchecked")
 	public CursorMoveSystem() {
-		super(Family.all(CursorComp.class, CursorInputComp.class).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
+		super(CursorInputComp.class);
 		add(TargetableComp.class, Family.all(TargetableComp.class, SpriteComp.class, IDComp.class).get(), this);
 	}
 	
@@ -80,7 +80,7 @@ public class CursorMoveSystem extends FirstSystem implements Comparator<Entity> 
 	}
 	
 	private boolean isAll(CursorComp c) {
-		TurnAction t = Comp.CursorComp(c).turnAction();
+		TurnAction t = getTurnAction(c);
 		return t != null && t.all;
 	}
 	

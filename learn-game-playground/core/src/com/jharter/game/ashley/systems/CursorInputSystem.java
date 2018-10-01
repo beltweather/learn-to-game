@@ -13,14 +13,11 @@ import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
 import com.jharter.game.util.Sys;
 
-public class CursorInputSystem extends FirstSystem {
+public class CursorInputSystem extends CursorSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorInputSystem() {
-		super(Family.all(CursorComp.class,
-						 CursorInputComp.class,
-						 CursorInputRegulatorComp.class,
-						 InputComp.class).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
+		super(CursorInputComp.class, CursorInputRegulatorComp.class);
 	}
 	
 	@Override

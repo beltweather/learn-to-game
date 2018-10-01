@@ -142,6 +142,11 @@ public class Comp {
 		return true;
 	}
 	
+	public static <TA extends Component, TB extends Component> void swap(Engine engine, Class<TA> klassOld, Class<TB> klassNew, Entity entity) {
+		remove(klassOld, entity);
+		add(engine, klassNew, entity);
+	}
+	
 	public static boolean has(Class<? extends Component> klass, Entity entity) {
 		return getFor(klass).has(entity);
 	}

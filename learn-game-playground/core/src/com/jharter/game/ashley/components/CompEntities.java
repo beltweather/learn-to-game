@@ -119,11 +119,18 @@ public class CompEntities {
 		}
 		
 		private CursorComp CursorComp() {
-			return Comp.CursorComp.get(Entity());
+			Entity entity = Entity();
+			if(entity == null) {
+				return null;
+			}
+			return Comp.CursorComp.get(entity);
 		}
 		
 		public void enable() {
 			Entity entity = Entity();
+			if(entity == null) {
+				return;
+			}
 			if(Comp.DisabledComp.has(entity)) {
 				entity.remove(DisabledComp.class);
 			}
@@ -133,6 +140,9 @@ public class CompEntities {
 		
 		public void disable(Engine engine) {
 			Entity entity = Entity();
+			if(entity == null) {
+				return;
+			}
 			if(!Comp.DisabledComp.has(entity)) {
 				entity.add(Comp.create(engine, DisabledComp.class));
 			}
@@ -145,7 +155,7 @@ public class CompEntities {
 		}
 		
 		public boolean isDisabled() {
-			return Comp.DisabledComp.has(Entity());
+			return Entity() == null || Comp.DisabledComp.has(Entity());
 		}
 		
 		public void single() {
@@ -153,6 +163,9 @@ public class CompEntities {
 		}
 		
 		public void toHand(Engine engine) {
+			if(CursorComp() == null) {
+				return;
+			}
 			Comp.CursorComp(CursorComp()).cancelTurnAction(engine);
 			
 			ZonePositionComp zp = Comp.ZonePositionComp.get(Entity());

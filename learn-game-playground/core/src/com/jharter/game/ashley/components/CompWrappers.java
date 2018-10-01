@@ -152,31 +152,6 @@ public class CompWrappers {
 		
 	}
 	
-	public static class CompWrapperCursorInputRegulatorComp extends CompWrapper<CursorInputRegulatorComp> {
-		
-		private CompWrapperCursorInputRegulatorComp() {}
-	
-		public boolean ignoreMovement(boolean moved, float deltaTime) {
-			if(!moved) {
-				comp().processedMove = false;
-				comp().processedMoveDelta = 0;
-				comp().maxProcessedMoveDelta = 0.2f;
-				return true;
-			} else if(moved && comp().processedMove) {
-				comp().processedMoveDelta += deltaTime;
-				if(comp().processedMoveDelta < comp().maxProcessedMoveDelta) {
-					return true;
-				} else if(comp().maxProcessedMoveDelta > 0.005f){
-					comp().maxProcessedMoveDelta /= 1.5f;
-				}
-			}
-			comp().processedMove = true;
-			comp().processedMoveDelta = 0;
-			return false;
-		}
-		
-	}
-	
 	public static class CompWrapperZonePositionComp extends CompWrapper<ZonePositionComp> {
 		
 		private CompWrapperZonePositionComp() {}
@@ -297,25 +272,17 @@ public class CompWrappers {
 		
 		private CompWrapperActivePlayerComp() {}
 		
-		public PlayerComp getPlayerComp() {
-			return Comp.PlayerComp.get(Comp.Entity.get(comp().activePlayerID));
-		}
-		
-		public void setPlayer(int index) {
-			if(!ArrayUtil.has(IDUtil.getPlayerIDs(), index)) {
-				index = 0;
-			}
-			Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(index);
-		}
-		
+		@Deprecated
 		public boolean nextPlayer() {
 			return nextPlayer(false);
 		}
 		
+		@Deprecated
 		public boolean prevPlayer() {
 			return prevPlayer(false);
 		}
 		
+		@Deprecated
 		public boolean nextPlayer(boolean includeSpent) {
 			int i = IDUtil.getPlayerIDs().indexOf(comp().activePlayerID, false);
 			if(includeSpent) {
@@ -336,6 +303,7 @@ public class CompWrappers {
 			return false;
 		}
 		
+		@Deprecated
 		public boolean prevPlayer(boolean includeSpent) {
 			int i = IDUtil.getPlayerIDs().indexOf(comp().activePlayerID, false);
 			if(includeSpent) {
@@ -363,7 +331,7 @@ public class CompWrappers {
 		private CompWrapperCursorComp() {}
 		
 		private Entity TurnActionEntity() {
-			return Comp.Entity.get(comp().turnActionEntityID);
+			return Comp.Entity.get(comp().turnActionID);
 		}
 		
 		/**
@@ -375,7 +343,7 @@ public class CompWrappers {
 				Comp.remove(PendingTurnActionComp.class, entity);
 				Comp.add(engine, CleanupTurnActionComp.class, entity);
 			}
-			comp().turnActionEntityID = null;
+			comp().turnActionID = null;
 		}
 		
 		/**

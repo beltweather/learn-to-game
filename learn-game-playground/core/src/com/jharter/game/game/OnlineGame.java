@@ -1,6 +1,7 @@
 package com.jharter.game.game;
 
 import com.badlogic.gdx.Game;
+import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
@@ -44,7 +45,10 @@ public class OnlineGame extends Game {
     	if(endPointHelper.isClient()) {
     		client.send(RegisterPlayerPacket.newInstance(client.getPlayerId()));
     	} else if(endPointHelper.isOffline()) {
-    		getStage().addPlayerEntity(IDUtil.newID(), getStage().getEntryPoint(), true).free();
+    		EntityBuilder b = getStage().addPlayerEntity(IDUtil.newID(), getStage().getEntryPoint(), true);
+    		if(b != null) {
+    			b.free();
+    		}
     		getStage().activate();
     	}
     	

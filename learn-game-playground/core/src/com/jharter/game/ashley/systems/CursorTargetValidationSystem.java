@@ -15,7 +15,6 @@ import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 import com.jharter.game.util.ArrayUtil;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -65,7 +64,7 @@ public class CursorTargetValidationSystem extends CustomIteratingSystem {
 					makeUntargetable(id); 
 				} 
 			}
-			Sys.out.println("Made " + targetable + " entities targetable.");
+			//Sys.out.println("Made " + targetable + " entities targetable.");
 			
 		}
 	}

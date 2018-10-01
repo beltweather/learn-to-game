@@ -40,7 +40,7 @@ public class CursorLayout extends ZoneLayout {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		
-		Sys.out.println("Target ID: " + c.targetID);
+		//Sys.out.println("Target ID: " + c.targetID);
 		if(c.targetID == null) {
 			return null;
 		}
@@ -65,8 +65,15 @@ public class CursorLayout extends ZoneLayout {
 			return null;
 		}
 		
-		if(c.lastZoneID == z.zoneID) {
-			tt.duration = 0.10f;
+		// If we haven't changed zones since our last target, increase our cursor
+		// speed for better responsiveness.
+		Entity lastTarget = Comp.Entity.get(c.lastTargetID);
+		if(lastTarget != null) {
+			ZonePositionComp zpLastTarget = Comp.ZonePositionComp.get(lastTarget);
+			ZoneComp zLastTarget = Comp.ZonePositionComp(zpLastTarget).getZoneComp();
+			if(zLastTarget.zoneID == z.zoneID) {
+				tt.duration = 0.10f;
+			}
 		}
 		
 		return tt;

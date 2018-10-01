@@ -6,14 +6,17 @@ import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
-import com.jharter.game.ashley.components.Components.ChangeZoneComp;
+import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
+import com.jharter.game.ashley.components.Components.DisabledComp;
+import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -23,7 +26,7 @@ public class CursorSelectSystem extends FirstSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorSelectSystem() {
-		super(Family.all(CursorComp.class, CursorInputComp.class).get());
+		super(Family.all(CursorComp.class, CursorInputComp.class).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class CursorSelectSystem extends FirstSystem {
 				
 			// If this is our first target, make them the turn action entity
 			if(t == null) {
-				c.turnActionEntityID = targetEntityID;
+				c.turnActionID = targetEntityID;
 				t = Comp.TurnActionComp.get(target).turnAction;
 				Comp.getOrAdd(getEngine(), PendingTurnActionComp.class, target);
 			} else {
@@ -81,10 +84,10 @@ public class CursorSelectSystem extends FirstSystem {
 				a.spentPlayers.add(playerID);
 				playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 				
-				Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
+				Entity turnActionEntity = Comp.Entity.get(c.turnActionID);
 				Comp.remove(PendingTurnActionComp.class, turnActionEntity);
 				turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
-				c.turnActionEntityID = null;
+				c.turnActionID = null;
 				Comp.ZonePositionComp(zp).clearHistory();
 				c.history.clear();
 				checkpoint = false;
@@ -98,10 +101,11 @@ public class CursorSelectSystem extends FirstSystem {
 			
 		} else if(ci.cancel) {
 
-			TurnAction t = Comp.CursorComp(c).turnAction();
 			if(tryRevertToLastTarget(c)) {
 				Media.cancelBeep.play();	
-				cursor.remove(ActiveTurnActionComp.class);
+				cursor.remove(ActiveTurnActionComp.class); // XXX Highly suspect line of code that probably doesn't do anything
+				
+				TurnAction t = Comp.CursorComp(c).turnAction();
 				if(t != null) {
 					if(t.targetIDs.size == 0) {
 						Comp.CursorComp(c).cancelTurnAction(getEngine());
@@ -109,7 +113,6 @@ public class CursorSelectSystem extends FirstSystem {
 						t.targetIDs.pop();
 					}
 				}
-				Comp.add(getEngine(), ChangeZoneComp.class, cursor);
 			}
 		}
 		

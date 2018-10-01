@@ -46,8 +46,7 @@ public abstract class CustomIntervalSystem extends CustomEntitySystem {
 	}
 
 	@Override
-	public void update (float deltaTime) {
-		super.update(deltaTime);
+	public void performUpdate (float deltaTime) {
 		accumulator += deltaTime;
 
 		while (accumulator >= interval) {

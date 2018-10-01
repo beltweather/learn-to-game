@@ -140,6 +140,11 @@ public class BattleStage extends GameStage {
 		CardHelper.addX2Card(engine, rangerPlayerID, rangerHandZone);
 		CardHelper.addAllCard(engine, rangerPlayerID, rangerHandZone);
 		
+		EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), ZoneType.HAND);
+		b.FocusComp();
+		b.InputComp().input = buildInput(true);
+		getEngine().addEntity(b.Entity());
+		b.free();
 	}
 		
 	@Override
@@ -152,13 +157,13 @@ public class BattleStage extends GameStage {
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
-		EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), ZoneType.HAND);
+		/*EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), ZoneType.HAND);
 		if(focus) {
 			b.FocusComp();
 		}
 		b.InputComp().input = buildInput(focus);
-		engine.addEntity(b.Entity());
-		return b;
+		engine.addEntity(b.Entity());*/
+		return null;
 	}
 
 	@Override

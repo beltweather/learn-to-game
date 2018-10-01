@@ -11,46 +11,40 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.IDComp;
+import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TargetableComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.GenericUtils;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Media;
 
-public class CursorMoveSystem extends FirstSystem {
+public class CursorMoveSystem extends FirstSystem implements Comparator<Entity> {
 	
 	@SuppressWarnings("unchecked")
 	public CursorMoveSystem() {
-		super(Family.all(CursorComp.class, CursorInputComp.class).exclude(AnimatingComp.class, DisabledComp.class).get());
-		add(TargetableComp.class, Family.all(TargetableComp.class, SpriteComp.class, IDComp.class).get(), new Comparator<Entity>() {
-
-			@Override
-			public int compare(Entity entityA, Entity entityB) {
-				System.out.println("sorting");
-				SpriteComp sA = Comp.SpriteComp.get(entityA);
-				SpriteComp sB = Comp.SpriteComp.get(entityB);
-				if(sA.position.y == sB.position.y) {
-					return (int) Math.signum(sA.position.x - sB.position.x);
-				}
-				return (int) Math.signum(sB.position.y - sA.position.y);
-			}
-			
-		});
+		super(Family.all(CursorComp.class, CursorInputComp.class).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
+		add(TargetableComp.class, Family.all(TargetableComp.class, SpriteComp.class, IDComp.class).get(), this);
 	}
 	
 	@Override
 	public void processEntity(Entity cursor, float deltaTime) {
-		Sys.out.println("Found " + getTargets().size + " targets");
 		CursorComp c = Comp.CursorComp.get(cursor);
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		
 		ID origID = c.targetID;
+		c.lastTargetID = c.targetID;
 		c.targetID = getNewTargetID(c, ci);
+		
+		// Do a funny convention here, if our last target was actually
+		// null, then set our current target to be our last as well.
+		if(c.lastTargetID == null) {
+			c.lastTargetID = c.targetID;
+		}
+		
 		if(!GenericUtils.safeEquals(origID, c.targetID)) {
 			Media.moveBeep.play();
 		}
@@ -103,6 +97,16 @@ public class CursorMoveSystem extends FirstSystem {
 			return null;
 		}
 		return Comp.IDComp.get(targets.get(newTargetIndex)).id;
+	}
+
+	@Override
+	public int compare(Entity entityA, Entity entityB) {
+		SpriteComp sA = Comp.SpriteComp.get(entityA);
+		SpriteComp sB = Comp.SpriteComp.get(entityB);
+		if(sA.position.y == sB.position.y) {
+			return (int) Math.signum(sA.position.x - sB.position.x);
+		}
+		return (int) Math.signum(sB.position.y - sA.position.y);
 	}
 	
 }

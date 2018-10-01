@@ -52,8 +52,8 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		
 		// Cancel the current turn action if there is one
 		CursorComp c = Comp.CursorComp.get(Comp.Entity.DefaultCursor().Entity());
-		if(c.turnActionEntityID != null) {
-			Entity entity = Comp.Entity.get(c.turnActionEntityID);
+		if(c.turnActionID != null) {
+			Entity entity = Comp.Entity.get(c.turnActionID);
 			if(!Comp.ActionSpentComp.has(entity)) {
 				entity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
 			}

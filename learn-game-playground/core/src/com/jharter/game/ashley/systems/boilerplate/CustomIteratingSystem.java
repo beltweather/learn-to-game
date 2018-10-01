@@ -62,8 +62,7 @@ public abstract class CustomIteratingSystem extends CustomEntitySystem {
 	}
 
 	@Override
-	public void update (float deltaTime) {
-		super.update(deltaTime);
+	public void performUpdate (float deltaTime) {
 		for (int i = 0; i < entities.size(); ++i) {
 			processEntity(entities.get(i), deltaTime);
 		}

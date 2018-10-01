@@ -113,8 +113,7 @@ public abstract class CustomSortedIteratingSystem extends CustomEntitySystem imp
 	}
 
 	@Override
-	public void update (float deltaTime) {
-		super.update(deltaTime);
+	public void performUpdate (float deltaTime) {
 		sort();
 		for (int i = 0; i < sortedEntities.size; ++i) {
 			processEntity(sortedEntities.get(i), deltaTime);

@@ -5,14 +5,14 @@ import java.util.Comparator;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomSortedIteratingSystem;
 
-public abstract class TurnPhaseSystem extends SortedIteratingSystem {
+public abstract class TurnPhaseSystem extends CustomSortedIteratingSystem {
 
 	private Class<? extends Component> phaseClass;
 	private Class<? extends Component> nextPhaseClass;
@@ -43,7 +43,7 @@ public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 	}
 	
 	@Override
-	public void update (float deltaTime) {
+	public void performUpdate(float deltaTime) {
 		if(!Comp.has(phaseClass, Comp.Entity.DefaultTurn().Entity())) {
 			return;
 		}
@@ -55,7 +55,7 @@ public abstract class TurnPhaseSystem extends SortedIteratingSystem {
 		}
 		hasEntities = false;
 		forceSort();
-		super.update(deltaTime);
+		super.performUpdate(deltaTime);
 		if(!hasEntities && endPhaseWhenEntitiesGone) {
 			phaseShouldEnd = true;
 		}

@@ -60,7 +60,7 @@ public class OrigCursorMoveSystem extends IteratingSystem {
 			// We need to be sure to cleanup our selection if we end up in an invalid state
 			if(t != null) {
 				t.targetIDs.clear();
-				c.turnActionEntityID = null;
+				c.turnActionID = null;
 				t = null;
 			}
 		}

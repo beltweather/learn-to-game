@@ -69,7 +69,7 @@ public class OrigCursorSelectSystem extends IteratingSystem {
 				
 				// If this is our first target, make them the turn action entity
 				if(t == null) {
-					c.turnActionEntityID = targetEntityID;
+					c.turnActionID = targetEntityID;
 					t = Comp.TurnActionComp.get(targetEntity).turnAction;
 					Comp.getOrAdd(getEngine(), PendingTurnActionComp.class, targetEntity);
 				} else {
@@ -86,10 +86,10 @@ public class OrigCursorSelectSystem extends IteratingSystem {
 					a.spentPlayers.add(playerID);
 					playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 					
-					Entity turnActionEntity = Comp.Entity.get(c.turnActionEntityID);
+					Entity turnActionEntity = Comp.Entity.get(c.turnActionID);
 					Comp.remove(PendingTurnActionComp.class, turnActionEntity);
 					turnActionEntity.add(Comp.create(getEngine(), ActionQueueableComp.class));
-					c.turnActionEntityID = null;
+					c.turnActionID = null;
 					Comp.ZonePositionComp(zp).clearHistory();
 					checkpoint = false;
 				}

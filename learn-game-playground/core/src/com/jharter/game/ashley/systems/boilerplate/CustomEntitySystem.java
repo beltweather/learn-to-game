@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Comp;
 
-public class CustomEntitySystem extends EntitySystem {
+public abstract class CustomEntitySystem extends EntitySystem {
 
 	private static final Array<Entity> empty = new Array<Entity>();
 	private static final ImmutableArray<Entity> emptyImm = new ImmutableArray<Entity>(new Array<Entity>());
@@ -34,7 +34,10 @@ public class CustomEntitySystem extends EntitySystem {
 	@Override
 	public void update(float deltaTime) {
 		shouldSort = true;
+		performUpdate(deltaTime);
 	}
+	
+	public abstract void performUpdate(float deltaTime);
 
 	protected void add(Object key, Family family) {
 		add(key, family, null);

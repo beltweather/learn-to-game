@@ -345,19 +345,24 @@ public final class Components {
 	}
 	
 	public static final class CursorComp implements C, Unique {
-		public ID turnActionEntityID = null;
-		public ID lastZoneID = null;
-		public ID targetID = null;
-		public Array<ID> history = new Array<ID>();
+		public ID turnActionID = null;
+		public ID lastTargetID = null; // Remember the ID of the last target, possibly only going to be used for layout purposes
+		public ID targetID = null; // The id of the entity the cursor is pointing to
+		public Array<ID> history = new Array<ID>(); // The history of targets based on cursor "select" events, somewhat redundant with turn action list
+		
+		@Deprecated
+		public ID lastZoneID = null; // XXX Used only by cursor layout to reason on cursor speed, need better way to do this
 		
 		private CursorComp() {}
 		
 		@Override
 		public void reset() {
-			turnActionEntityID = null;
-			lastZoneID = null;
+			turnActionID = null;
 			targetID = null;
+			lastTargetID = null;
 			history.clear();
+
+			lastZoneID = null;
 		}
 	}
 	
@@ -436,9 +441,9 @@ public final class Components {
 	// ---------------- UNSERIALIZABLE COMPONENTS ------------------------------
 	
 	public static final class CursorInputRegulatorComp implements C {
-		boolean processedMove = false;
-		float processedMoveDelta = 0;
-		float maxProcessedMoveDelta = 0.2f;
+		public boolean processedMove = false;
+		public float processedMoveDelta = 0;
+		public float maxProcessedMoveDelta = 0.2f;
 		
 		private CursorInputRegulatorComp() {}
 		

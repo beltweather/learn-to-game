@@ -8,7 +8,6 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperActivePlayerComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorComp;
-import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorInputRegulatorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperSpriteComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperVitalsComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperZoneComp;
@@ -204,7 +203,6 @@ public class Comp {
 	public static CompWrapperActivePlayerComp ActivePlayerComp(ActivePlayerComp comp) { return Wrap.get(CompWrapperActivePlayerComp.class, comp); }
 	public static CompWrapperZoneComp ZoneComp(ZoneComp comp) { return Wrap.get(CompWrapperZoneComp.class, comp); }
 	public static CompWrapperZonePositionComp ZonePositionComp(ZonePositionComp comp) { return Wrap.get(CompWrapperZonePositionComp.class, comp); }
-	public static CompWrapperCursorInputRegulatorComp CursorInputRegulatorComp(CursorInputRegulatorComp comp) { return Wrap.get(CompWrapperCursorInputRegulatorComp.class, comp); }
 	public static CompWrapperVitalsComp VitalsComp(VitalsComp comp) { return Wrap.get(CompWrapperVitalsComp.class, comp); }
 	public static CompWrapperVitalsComp VitalsComp(Entity entity) { return Wrap.get(CompWrapperVitalsComp.class, VitalsComp.class, entity); }
 	public static CompWrapperCursorComp CursorComp(CursorComp comp) { return Wrap.get(CompWrapperCursorComp.class, comp); }

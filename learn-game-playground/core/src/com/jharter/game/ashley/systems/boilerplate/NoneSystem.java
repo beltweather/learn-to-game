@@ -14,8 +14,7 @@ public abstract class NoneSystem extends CustomIteratingSystem {
 	}
 	
 	@Override
-	public void update (float deltaTime) {
-		super.update(deltaTime);
+	public void performUpdate (float deltaTime) {
 		if(entities.size() == 0) {
 			processNone(deltaTime);
 		}

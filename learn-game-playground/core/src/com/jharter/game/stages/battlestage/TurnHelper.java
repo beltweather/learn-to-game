@@ -14,11 +14,11 @@ public class TurnHelper {
 	
 	public static void addTurnEntity(PooledEngine engine, ZoneComp infoZone, float maxTurnTimeSec) {
 		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = IDUtil.getTurnEntityID();
+		b.IDComp().id = IDUtil.newID();
 		b.TurnTimerComp().turnTimer.maxTurnTimeSec = maxTurnTimeSec;
 		b.TurnPhaseComp();
 		b.TurnPhaseStartBattleComp();
-		b.ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(0);
+		b.ActivePlayerComp();
 		b.SpriteComp().position.x = U.u12(65); //800;
 		b.SpriteComp().position.y = U.u12(-35); //-400;
 		b.SpriteComp().width = 100 / U.PIXELS_PER_UNIT;

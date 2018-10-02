@@ -13,6 +13,7 @@ import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks;
@@ -113,7 +114,8 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			for(int i = 0; i < allTargetIDs.size; i++) {
 				ID enemyID = allTargetIDs.get(i);
 				Entity enemy = Comp.Entity.get(enemyID);
-				ZoneComp z = Comp.Find.ZoneComp.findZone(enemy);
+				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
+				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				if(z.zoneType != ZoneType.ENEMY) {
 					continue;
 				}

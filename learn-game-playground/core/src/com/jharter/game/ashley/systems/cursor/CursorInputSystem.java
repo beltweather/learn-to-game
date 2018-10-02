@@ -1,14 +1,11 @@
 package com.jharter.game.ashley.systems.cursor;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.Components.TurnTimerComp;
-import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 
 public class CursorInputSystem extends CursorSystem {
 

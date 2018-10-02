@@ -85,7 +85,7 @@ public class CursorTargetValidationSystem extends CursorSystem {
 	}
 	
 	private ZoneComp getZone(ZoneType zoneType) {
-		return Comp.Find.ZoneComp.findZone(getActivePlayerID(), zoneType);
+		return getZone(getActivePlayerID(), zoneType);
 	}
 	
 	private boolean isValid(ID targetID, TurnAction t) {

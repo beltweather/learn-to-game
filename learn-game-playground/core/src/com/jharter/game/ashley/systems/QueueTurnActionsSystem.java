@@ -2,7 +2,6 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueueableComp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
@@ -12,11 +11,11 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.util.id.ID;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class QueueTurnActionsSystem  extends IteratingSystem {
+public class QueueTurnActionsSystem  extends CustomIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public QueueTurnActionsSystem() {
@@ -35,7 +34,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 		cz.oldZoneID = z.zoneID;
-		cz.newZoneID = Comp.Find.ZoneComp.findZoneID(t.turnAction.ownerID, ZoneType.ACTIVE_CARD);
+		cz.newZoneID = getZoneID(t.turnAction.ownerID, ZoneType.ACTIVE_CARD);
 		cz.useNextIndex = true;
 		cz.instantChange = false;
 		entity.add(cz);

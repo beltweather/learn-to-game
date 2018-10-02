@@ -8,6 +8,7 @@ import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDManager;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -17,29 +18,25 @@ public class CursorHelper {
 
 	private CursorHelper() {}
 	
-	public static EntityBuilder buildCursor(PooledEngine engine, ID cursorID, ZoneType zoneType) {
+	public static EntityBuilder buildCursor(PooledEngine engine, IDManager idManager, ZoneType zoneType) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
 		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
 				  EntityType.CURSOR, 
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);
-		b.IDComp().id = cursorID;
 		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
-		b.ChangeZoneComp().newZoneID = 
-				Comp.Find.ZoneComp.findZoneID(getActivePlayerID(engine), zoneType);
+		b.SpriteComp().position.z = 3;
+		Comp.ZoneComp(Comp.ZoneComp.get(idManager.getZoneID(null, ZoneType.CURSOR))).add(b.IDComp().id, null); 
+		
+		/*b.ChangeZoneComp().newZoneID = idManager.getZoneID(getActivePlayerID(engine), zoneType);
 		b.ChangeZoneComp().newIndex = 0;
 		b.ZonePositionComp().zoneID = b.ChangeZoneComp().newZoneID;
 		b.ZonePositionComp();
-		b.ZonePositionComp().index = 0;
-		b.SpriteComp().position.z = 3;
-		Comp.ZoneComp(Comp.Find.ZoneComp.findZone(null, ZoneType.CURSOR)).add(cursorID, null);;
+		b.ZonePositionComp().index = 0;*/
+		
 		return b;
-	}
-	
-	private static ID getActivePlayerID(PooledEngine engine) {
-		return Comp.ActivePlayerComp.get(engine.getEntitiesFor(Family.all(ActivePlayerComp.class).get()).first()).activePlayerID;
 	}
 	
 }

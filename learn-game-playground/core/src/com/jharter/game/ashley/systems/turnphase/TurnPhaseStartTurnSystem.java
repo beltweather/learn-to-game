@@ -2,6 +2,7 @@ package com.jharter.game.ashley.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectEnemyActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseStartTurnComp;
@@ -34,10 +35,10 @@ public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 	}
 	
 	private void setPlayer(ActivePlayerComp a, int index) {
-		if(!ArrayUtil.has(IDUtil.getPlayerIDs(), index)) {
+		if(!ArrayUtil.has(getPlayerIDs(), index)) {
 			index = 0;
 		}
-		a.activePlayerID = IDUtil.getPlayerIDs().get(index);
+		a.activePlayerID = getPlayerIDs().get(index);
 	}
 	
 }

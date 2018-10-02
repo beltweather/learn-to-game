@@ -6,7 +6,7 @@ import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
+import com.jharter.game.util.id.IDManager;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
@@ -14,13 +14,13 @@ public class ZoneHelper {
 
 	private ZoneHelper() {}
 	
-	public static ZoneComp addZone(PooledEngine engine, ID playerID, ZoneType zoneType) {
-		return addZone(engine, playerID, zoneType, null);
+	public static ZoneComp addZone(PooledEngine engine, IDManager idManager, ID playerID, ZoneType zoneType) {
+		return addZone(engine, idManager, playerID, zoneType, null);
 	}
 	
-	public static ZoneComp addZone(PooledEngine engine, ID playerID, ZoneType zoneType, ZoneLayout layout) {
+	public static ZoneComp addZone(PooledEngine engine, IDManager idManager, ID playerID, ZoneType zoneType, ZoneLayout layout) {
 		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = IDUtil.generateZoneID(playerID, zoneType);
+		b.IDComp().id = idManager.generateZoneID(playerID, zoneType);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = zoneType;
 		if(layout == null) {

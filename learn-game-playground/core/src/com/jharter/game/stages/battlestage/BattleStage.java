@@ -1,5 +1,6 @@
 package com.jharter.game.stages.battlestage;
 
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
@@ -16,12 +17,13 @@ import com.jharter.game.ashley.systems.RenderWorldGridSystem;
 import com.jharter.game.ashley.systems.TweenSystem;
 import com.jharter.game.ashley.systems.ZoneChangeSystem;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
+import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 import com.jharter.game.ashley.systems.cursor.CursorAcceptSystem;
 import com.jharter.game.ashley.systems.cursor.CursorCancelSystem;
+import com.jharter.game.ashley.systems.cursor.CursorFinishSelectionSystem;
 import com.jharter.game.ashley.systems.cursor.CursorInputSystem;
 import com.jharter.game.ashley.systems.cursor.CursorMoveSystem;
 import com.jharter.game.ashley.systems.cursor.CursorPrevNextSystem;
-import com.jharter.game.ashley.systems.cursor.CursorFinishSelectionSystem;
 import com.jharter.game.ashley.systems.cursor.CursorTargetValidationSystem;
 import com.jharter.game.ashley.systems.cursor.CursorTurnActionValidationSystem;
 import com.jharter.game.ashley.systems.network.client.ClientAddPlayersPacketSystem;
@@ -73,37 +75,37 @@ public class BattleStage extends GameStage {
 		//BackgroundHelper.addBackground(engine, Media.bgField2fg, 5f);
 
 		// Player IDs
-		ID warriorPlayerID = IDUtil.buildPlayerEntityID();
-		ID sorcererPlayerID = IDUtil.buildPlayerEntityID();
-		ID roguePlayerID = IDUtil.buildPlayerEntityID();
-		ID rangerPlayerID = IDUtil.buildPlayerEntityID();
-		ID globalPlayerID = IDUtil.getGlobalPlayerEntityID();
+		ID warriorPlayerID = idManager.buildPlayerEntityID();
+		ID sorcererPlayerID = idManager.buildPlayerEntityID();
+		ID roguePlayerID = idManager.buildPlayerEntityID();
+		ID rangerPlayerID = idManager.buildPlayerEntityID();
+		ID globalPlayerID = idManager.getGlobalPlayerEntityID();
 		
 		// Battle entity
 		//BattleHelper.addBattle(engine, warriorPlayerID);
 		
 		// Player Zones
-		ZoneComp handZone = ZoneHelper.addZone(engine, roguePlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, roguePlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, roguePlayerID, ZoneType.DISCARD);
+		ZoneComp handZone = ZoneHelper.addZone(engine, idManager, roguePlayerID, ZoneType.HAND, new HandLayout());
+		ZoneHelper.addZone(engine, idManager, roguePlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(engine, idManager, roguePlayerID, ZoneType.DISCARD);
 		
-		ZoneComp warriorHandZone = ZoneHelper.addZone(engine, warriorPlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, warriorPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, warriorPlayerID, ZoneType.DISCARD);
+		ZoneComp warriorHandZone = ZoneHelper.addZone(engine, idManager, warriorPlayerID, ZoneType.HAND, new HandLayout());
+		ZoneHelper.addZone(engine, idManager, warriorPlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(engine, idManager, warriorPlayerID, ZoneType.DISCARD);
 		
-		ZoneComp sorcererHandZone = ZoneHelper.addZone(engine, sorcererPlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, sorcererPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, sorcererPlayerID, ZoneType.DISCARD);
+		ZoneComp sorcererHandZone = ZoneHelper.addZone(engine, idManager, sorcererPlayerID, ZoneType.HAND, new HandLayout());
+		ZoneHelper.addZone(engine, idManager, sorcererPlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(engine, idManager, sorcererPlayerID, ZoneType.DISCARD);
 		
-		ZoneComp rangerHandZone = ZoneHelper.addZone(engine, rangerPlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, rangerPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, rangerPlayerID, ZoneType.DISCARD);
+		ZoneComp rangerHandZone = ZoneHelper.addZone(engine, idManager, rangerPlayerID, ZoneType.HAND, new HandLayout());
+		ZoneHelper.addZone(engine, idManager, rangerPlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(engine, idManager, rangerPlayerID, ZoneType.DISCARD);
 
-		ZoneComp infoZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.INFO, new IdentityLayout());
-		ZoneComp friendZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
-		ZoneComp enemyZone = ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ENEMY);
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout().setPriority(-1));
-		ZoneHelper.addZone(engine, globalPlayerID, ZoneType.CURSOR, new CursorLayout().setPriority(-2));
+		ZoneComp infoZone = ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.INFO, new IdentityLayout());
+		ZoneComp friendZone = ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
+		ZoneComp enemyZone = ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.ENEMY);
+		ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout().setPriority(-1));
+		ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.CURSOR, new CursorLayout().setPriority(-2));
 		
 		// Turn timer
 		TurnHelper.addTurnEntity(engine, infoZone, 30f);
@@ -144,7 +146,7 @@ public class BattleStage extends GameStage {
 		CardHelper.addX2Card(engine, rangerPlayerID, rangerHandZone);
 		CardHelper.addAllCard(engine, rangerPlayerID, rangerHandZone);
 		
-		EntityBuilder b = CursorHelper.buildCursor(engine, IDUtil.getCursorEntityID(), ZoneType.HAND);
+		EntityBuilder b = CursorHelper.buildCursor(engine, idManager, ZoneType.HAND);
 		b.FocusComp();
 		b.InputComp().input = buildInput(true);
 		getEngine().addEntity(b.Entity());
@@ -240,6 +242,14 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new RenderEntitiesSystem(getCamera()));
 		engine.addSystem(new RenderWorldGridSystem(getCamera()));
 	}
+	
+	private void addIDManager(PooledEngine engine) {
+		for(EntitySystem system : engine.getSystems()) {
+			if(system instanceof CustomEntitySystem) {
+				((CustomEntitySystem) system).setIDManager(idManager);
+			}
+		}
+	}
 
 	@Override
 	protected PooledEngine buildEngine() {
@@ -261,6 +271,8 @@ public class BattleStage extends GameStage {
 		if(!endPointHelper.isHeadless()) {
 			addVisualSystems(engine);
 		}
+		
+		addIDManager(engine);
 		
 		return engine;
     }

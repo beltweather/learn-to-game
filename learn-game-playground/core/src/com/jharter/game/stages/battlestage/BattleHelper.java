@@ -11,7 +11,7 @@ public class BattleHelper {
 	
 	public static void addBattle(PooledEngine engine, ID activePlayerID) {
 		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = IDUtil.getBattleEntityID();
+		b.IDComp().id = IDUtil.newID();
 		//b.ActivePlayerComp().activePlayerID = activePlayerID;
 		engine.addEntity(b.Entity());
 		b.free();

@@ -3,6 +3,7 @@ package com.jharter.game.ashley.systems.cursor;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
@@ -14,7 +15,6 @@ import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 public abstract class CursorSystem extends FirstSystem {
 	
@@ -65,11 +65,12 @@ public abstract class CursorSystem extends FirstSystem {
 	
 	protected boolean changePlayer(boolean next) {
 		ActivePlayerComp a = getActivePlayer();
-		int i = IDUtil.getPlayerIDs().indexOf(a.activePlayerID, false);
+		ImmutableArray<ID> playerIDs = getPlayerIDs();
+		int i = playerIDs.indexOf(a.activePlayerID, false);
 		int counter = 0;
-		while(counter < IDUtil.getPlayerIDs().size()) {
-			i = ArrayUtil.prevOrNextIndex(IDUtil.getPlayerIDs(), i, next);
-			ID playerID = IDUtil.getPlayerIDs().get(i);
+		while(counter < playerIDs.size()) {
+			i = ArrayUtil.prevOrNextIndex(playerIDs, i, next);
+			ID playerID = playerIDs.get(i);
 			if(!a.spentPlayers.contains(playerID, false)) {
 				a.activePlayerID = playerID;
 				return true;

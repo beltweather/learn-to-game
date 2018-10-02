@@ -12,6 +12,7 @@ import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDManager;
 import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
@@ -25,6 +26,7 @@ public abstract class GameStage {
     protected Box2DWorld box2D;
     protected GameInput stageInput;
     protected EndPointHelper endPointHelper;
+    protected IDManager idManager;
     
 	public GameStage(EndPointHelper endPointHelper) {
 		this(IDUtil.newID(), endPointHelper);
@@ -64,7 +66,12 @@ public abstract class GameStage {
 		return engine;
 	}
 	
+	public IDManager getIDManager() {
+		return idManager;
+	}
+	
     protected void create() {
+    	idManager = new IDManager();
     	camera = buildCamera();
     	viewport = buildViewport(camera);
     	viewport.apply();

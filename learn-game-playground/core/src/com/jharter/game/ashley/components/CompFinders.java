@@ -21,16 +21,8 @@ public class CompFinders {
 		
 		private CompFinderZoneComp() {}
 		
-		public ID findZoneID(Entity entity) {
-			return Comp.ZonePositionComp.get(entity).zoneID;
-		}
-		
-		public ID findZoneID(ID ownerID, ZoneType type) {
+		/*public ID findZoneID(ID ownerID, ZoneType type) {
 			return IDUtil.getZoneID(ownerID, type);
-		}
-		
-		public ZoneComp findZone(Entity entity) {
-			return Comp.ZoneComp.get(Comp.ZonePositionComp.get(entity).zoneID);
 		}
 		
 		public ZoneComp findZone(ID ownerID, ZoneType zoneType) {
@@ -43,7 +35,7 @@ public class CompFinders {
 				return null;
 			}
 			return Comp.ZoneComp.get(zone);
-		}
+		}*/
 		
 	}
 	

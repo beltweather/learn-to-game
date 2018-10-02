@@ -11,6 +11,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDManager;
+
+import uk.co.carelesslabs.Enums.ZoneType;
 
 public abstract class CustomEntitySystem extends EntitySystem {
 	
@@ -33,6 +38,7 @@ public abstract class CustomEntitySystem extends EntitySystem {
 	private ObjectMap<Object, ImmutableArray<Entity>> entityArraysByKey = new ObjectMap<Object, ImmutableArray<Entity>>();
 	private ObjectMap<Object, Comparator<Entity>> comparatorsByKey = new ObjectMap<Object, Comparator<Entity>>();
 	private ObjectMap<Object, Array<Entity>> sortedEntityArraysByKey = new ObjectMap<Object, Array<Entity>>();
+	private IDManager idManager;
 	
 	public CustomEntitySystem() {
 		this(0);
@@ -49,6 +55,14 @@ public abstract class CustomEntitySystem extends EntitySystem {
 	}
 	
 	public abstract void performUpdate(float deltaTime);
+	
+	public IDManager getIDManager() {
+		return idManager;
+	}
+	
+	public void setIDManager(IDManager idManager) {
+		this.idManager = idManager;
+	}
 	
 	protected void add(Class<? extends Component> componentClass) {
 		add(componentClass, Family.all(componentClass).get());
@@ -89,6 +103,26 @@ public abstract class CustomEntitySystem extends EntitySystem {
 	
 	protected boolean hasEntities(Object key) {
 		return getEntities(key).size() > 0;
+	}
+	
+	protected ID getZoneID(ID ownerID, ZoneType type) {
+		return getIDManager().getZoneID(ownerID, type);
+ 	}
+	
+	protected ZoneComp getZone(ID ownerID, ZoneType zoneType) {
+		ID zoneID = getZoneID(ownerID, zoneType);
+		if(zoneID == null) {
+			return null;
+		}
+		Entity zone = Comp.Entity.get(zoneID);
+		if(zone == null) {
+			return null;
+		}
+		return Comp.ZoneComp.get(zone);
+	}
+	
+	protected ImmutableArray<ID> getPlayerIDs() {
+		return getIDManager().getPlayerIDs();
 	}
 	
 	/**

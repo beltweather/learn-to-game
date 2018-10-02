@@ -26,7 +26,7 @@ public class TurnHelper extends EntityHandler {
 		b.SpriteComp().width = 100 / U.PIXELS_PER_UNIT;
 		b.SpriteComp().height = 100 / U.PIXELS_PER_UNIT;
 		b.SpriteComp();
-		Comp.ZoneComp(infoZone).add(b);
+		Comp.util(infoZone).add(b);
 		b.ShapeRenderComp().renderMethod = new TurnTimerRenderMethod(this);
 		getEngine().addEntity(b.Entity());
 		b.free();

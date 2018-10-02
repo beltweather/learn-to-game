@@ -39,7 +39,7 @@ public class EnemyHelper extends EntityHandler {
 		b.StatsComp().mPower = 10;
 		b.StatsComp().mDefense = 10;
 		b.SpriteComp().scale = new Vector2(2f,2f);
-		Comp.ZoneComp(enemyZone).add(b);
+		Comp.util(enemyZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
 		
@@ -63,7 +63,7 @@ public class EnemyHelper extends EntityHandler {
 		b.StatsComp().mPower = 5;
 		b.StatsComp().mDefense = 7;
 		//b.SpriteComp().scale = new Vector2(2f,2f);
-		Comp.ZoneComp(enemyZone).add(b);
+		Comp.util(enemyZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
 		

@@ -14,12 +14,11 @@ public class ZoneChangeSystem extends GameIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public ZoneChangeSystem() {
-		super(Family.all(IDComp.class, TypeComp.class, ZonePositionComp.class, ChangeZoneComp.class).get());
+		super(Family.all(IDComp.class, ZonePositionComp.class, ChangeZoneComp.class).get());
 	}
 	
 	public void processEntity(Entity entity, float deltaTime) {
 		IDComp id = Comp.IDComp.get(entity);
-		TypeComp ty = Comp.TypeComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		ChangeZoneComp cz = Comp.ChangeZoneComp.get(entity);
 		
@@ -41,37 +40,15 @@ public class ZoneChangeSystem extends GameIteratingSystem {
 			targetIndex = zp.index;
 		}
 		
-		if(!cz.useNextIndex && !Comp.ZoneComp(z).hasIndex(targetIndex)) {
+		if(!cz.useNextIndex && !Comp.util(z).hasIndex(targetIndex)) {
 			return;
 		}
 		
-		switch(ty.type) {
-			case CARD:
-				ZoneComp zOld = Comp.ZoneComp.get(zp.zoneID);
-				Comp.ZoneComp(zOld).remove(id.id);
-				Comp.ZoneComp(z).add(id.id, zp);
-				zp.index = targetIndex;
-				entity.remove(ChangeZoneComp.class);
-				break;
-			/*case CURSOR:
-				if(cz.checkpoint) {
-					Comp.ZonePositionComp(zp).checkpoint(getEngine());
-				}
-				CursorComp c = Comp.CursorComp.get(entity);
-				c.lastZoneID = cz.oldZoneID;
-				zp.zoneID = targetZoneID;
-				zp.index = targetIndex;
-				entity.remove(ChangeZoneComp.class);
-				break;*/
-			case FRIEND:
-				
-				break;
-			case ENEMY:
-				
-				break;
-			default:
-				break;
-		}
+		ZoneComp zOld = Comp.ZoneComp.get(zp.zoneID);
+		Comp.util(zOld).remove(id.id);
+		Comp.util(z).add(id.id, zp);
+		zp.index = targetIndex;
+		entity.remove(ChangeZoneComp.class);
 	}
 	
 }

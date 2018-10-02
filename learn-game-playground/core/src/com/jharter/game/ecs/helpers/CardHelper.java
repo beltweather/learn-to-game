@@ -46,7 +46,7 @@ public class CardHelper extends EntityHandler {
 		b.TurnActionComp().turnAction = new TurnAction(this);
 		b.TurnActionComp().turnAction.entityID = b.IDComp().id;
 		b.TurnActionComp().turnAction.ownerID = ownerID;
-		Comp.ZoneComp(zone).add(b);
+		Comp.util(zone).add(b);
 		return b;
 	}
 	
@@ -65,8 +65,8 @@ public class CardHelper extends EntityHandler {
 				int origHealthFriend = vFriend.health;
 				int origHealthEnemy = vEnemy.health;
 				
-				Comp.VitalsComp(vEnemy).damage(damage);
-				Comp.VitalsComp(vFriend).heal(damage);
+				Comp.util(vEnemy).damage(damage);
+				Comp.util(vFriend).heal(damage);
 				
 				// DEBUG PRINTING
 				int healed = vFriend.health - origHealthFriend;
@@ -82,9 +82,9 @@ public class CardHelper extends EntityHandler {
 				Sys.out.println(nameEnemy + " hp: " + vEnemy.health);
 				Sys.out.println(nameFriend + " hp: " + vFriend.health);
 				
-				if(Comp.VitalsComp(vEnemy).isNearDeath()) {
+				if(Comp.util(vEnemy).isNearDeath()) {
 					Sys.out.println(nameEnemy + " is near death.");
-				} else if(Comp.VitalsComp(vEnemy).isDead()) {
+				} else if(Comp.util(vEnemy).isDead()) {
 					Sys.out.println(nameEnemy + " is dead.");
 				}
 			}
@@ -103,7 +103,7 @@ public class CardHelper extends EntityHandler {
 				Media.weaponSwing.play();
 				
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
-				Comp.VitalsComp(enemy).damage(damage);
+				Comp.util(enemy, VitalsComp.class).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
@@ -123,7 +123,7 @@ public class CardHelper extends EntityHandler {
 				Media.weaponSwing.play();
 				
 				int damage = CombatUtil.getDamage(owner, enemy, 20);
-				Comp.VitalsComp(enemy).damage(damage);
+				Comp.util(enemy, VitalsComp.class).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
 			
@@ -141,7 +141,7 @@ public class CardHelper extends EntityHandler {
 			@Override
 			public void call(Entity owner, Entity card, Entity friend) {
 				int hp = 50;
-				Comp.VitalsComp(friend).heal(hp);
+				Comp.util(friend, VitalsComp.class).heal(hp);
 				Sys.out.println("Healed " + hp + " hp to " + Comp.DescriptionComp.get(friend).name);
 			}
 			

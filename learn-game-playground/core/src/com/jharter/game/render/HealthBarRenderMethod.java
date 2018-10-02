@@ -25,8 +25,8 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 		
 		float x = s.position.x;
 	    float y = s.position.y;
-		float w = Comp.SpriteComp(s).scaledWidth();
-		float h = Comp.SpriteComp(s).scaledHeight();
+		float w = Comp.util(s).scaledWidth();
+		float h = Comp.util(s).scaledHeight();
 	    
 		Color color = shapeRenderer.getColor();
 		shapeRenderer.begin(ShapeType.Filled);

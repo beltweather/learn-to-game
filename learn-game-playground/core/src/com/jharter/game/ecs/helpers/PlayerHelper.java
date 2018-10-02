@@ -38,7 +38,7 @@ public class PlayerHelper extends EntityHandler {
 		b.StatsComp().mDefense = 2;
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
-		Comp.ZoneComp(zone).add(b);
+		Comp.util(zone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
 		healthBarHelper.addHealthBar(infoZone, playerID);

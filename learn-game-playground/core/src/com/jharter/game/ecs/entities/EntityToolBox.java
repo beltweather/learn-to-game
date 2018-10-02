@@ -14,7 +14,7 @@ public class EntityToolBox implements IEntityHandler {
 	
 	public EntityToolBox(PooledEngine engine) {
 		this.engine = engine;
-		this.compManager = new CompManager();
+		this.compManager = new CompManager(this);
 		this.idManager = new IDManager();
 		this.tweenManager = new GameTweenManager(this);
 	}

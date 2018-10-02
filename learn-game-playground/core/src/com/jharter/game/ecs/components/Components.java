@@ -1,6 +1,7 @@
 package com.jharter.game.ecs.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,10 +11,15 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.control.GameInput;
+import com.jharter.game.ecs.components.Components.SpriteComp;
+import com.jharter.game.ecs.components.Components.VitalsComp;
+import com.jharter.game.ecs.components.Components.ZoneComp;
+import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
+import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
@@ -138,6 +144,31 @@ public final class Components {
 			scale.set(1.0f, 1.0f);
 			alpha = 1f;
 			relativePositionRules.reset();
+		}
+	}
+	
+	public static class SpriteCompUtil extends CompUtil<SpriteComp> {
+		
+		public float scaledWidth() {
+			return scaledWidth(c.scale.x);
+		}
+		
+		public float scaledWidth(float scaleX) {
+			if(scaleX == 1) {
+				return c.width;
+			}
+			return scaleX * c.width;
+		}
+		
+		public float scaledHeight() {
+			return scaledHeight(c.scale.y);
+		}
+		
+		public float scaledHeight(float scaleY) {
+			if(scaleY == 1) {
+				return c.height;
+			}
+			return scaleY * c.height;
 		}
 	}
 	
@@ -321,6 +352,32 @@ public final class Components {
 			health = 0;
 		}
 	}
+	
+	public static class VitalsCompUtil extends CompUtil<VitalsComp> {
+		
+		public void heal(int hp) {
+			c.health += hp;
+			if(c.health > c.maxHealth) {
+				c.health = c.maxHealth;
+			}
+		}
+		
+		public void damage(int hp) {
+			c.health -= hp;
+			if(c.health < 0) {
+				c.health = 0;
+			}
+		}
+		
+		public boolean isDead() {
+			return c.health <= 0;
+		}
+		
+		public boolean isNearDeath() {
+			return c.health <= c.weakHealth && !isDead();
+		}
+		
+	}
 
 	public static final class TurnActionComp implements C, Unique {
 		public TurnAction turnAction = null;
@@ -394,6 +451,36 @@ public final class Components {
 			zoneType = ZoneType.NONE;
 			internalObjectIDs.clear();
 			layout = null;
+		}
+		
+	}
+	
+	public static class ZoneCompUtil extends CompUtil<ZoneComp> {
+		
+		public boolean hasIndex(int index) {
+			return index >= 0 && index < c.internalObjectIDs.size;
+		}
+		
+		public void add(EntityBuilder b) {
+			add(b.IDComp().id, b.ZonePositionComp());
+		}
+		
+		public void add(ID id, ZonePositionComp zp) {
+			c.internalObjectIDs.add(id);
+			if(zp != null) {
+				zp.index = c.internalObjectIDs.size;
+				zp.zoneID = c.zoneID;
+			}
+		}
+		
+		public void remove(ID id) {
+			c.internalObjectIDs.removeValue(id, false);
+			for(int i = 0; i < c.internalObjectIDs.size; i++) {
+				ID oID = c.internalObjectIDs.get(i);
+				Entity obj = Comp.Entity.get(oID);
+				ZonePositionComp zp = Comp.ZonePositionComp.get(obj);
+				zp.index = i;
+			}
 		}
 		
 	}

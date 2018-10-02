@@ -172,7 +172,7 @@ public class CursorLayout extends ZoneLayout {
 	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
 		
 		// Make sure cursor is in a valid place
-		if(!Comp.ZoneComp(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
+		if(!Comp.util(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
 			return;
 		}
 		

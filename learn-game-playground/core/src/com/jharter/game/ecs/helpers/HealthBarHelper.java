@@ -32,7 +32,7 @@ public class HealthBarHelper extends EntityHandler {
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(5);
 		b.SpriteComp().relativePositionRules.tween = false;
 		b.ShapeRenderComp().renderMethod = new HealthBarRenderMethod(this);
-		Comp.ZoneComp(infoZone).add(b);
+		Comp.util(infoZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}

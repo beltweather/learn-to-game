@@ -119,7 +119,7 @@ public class BattleStage extends GameStage {
 		ZoneComp friendZone = ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND, new FriendLayout(this));
 		ZoneComp enemyZone = ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY);
 		ZoneHelper.addZone(globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
-		ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));
+		ZoneComp cursorZone = ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));
 		
 		// Turn timer
 		TurnHelper.addTurnEntity(infoZone, 30f);
@@ -160,7 +160,7 @@ public class BattleStage extends GameStage {
 		CardHelper.addX2Card(rangerPlayerID, rangerHandZone);
 		CardHelper.addAllCard(rangerPlayerID, rangerHandZone);
 		
-		EntityBuilder b = CursorHelper.buildCursor(ZoneType.HAND);
+		EntityBuilder b = CursorHelper.buildCursor(cursorZone);
 		b.FocusComp();
 		b.InputComp().input = buildInput(true);
 		getEngine().addEntity(b.Entity());

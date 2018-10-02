@@ -6,9 +6,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ecs.components.CompWrappers.CompWrapperSpriteComp;
-import com.jharter.game.ecs.components.CompWrappers.CompWrapperVitalsComp;
-import com.jharter.game.ecs.components.CompWrappers.CompWrapperZoneComp;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.ActionReadyComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
@@ -36,6 +33,7 @@ import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
 import com.jharter.game.ecs.components.Components.ShapeRenderComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
+import com.jharter.game.ecs.components.Components.SpriteCompUtil;
 import com.jharter.game.ecs.components.Components.StatsComp;
 import com.jharter.game.ecs.components.Components.TargetPositionComp;
 import com.jharter.game.ecs.components.Components.TargetableComp;
@@ -57,9 +55,12 @@ import com.jharter.game.ecs.components.Components.TypeComp;
 import com.jharter.game.ecs.components.Components.UntargetableComp;
 import com.jharter.game.ecs.components.Components.VelocityComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
+import com.jharter.game.ecs.components.Components.VitalsCompUtil;
 import com.jharter.game.ecs.components.Components.ZoneComp;
+import com.jharter.game.ecs.components.Components.ZoneCompUtil;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityManager;
+import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 /**
@@ -71,12 +72,17 @@ public class CompManager {
 	
 	private final ObjectMap<Class, CompMapper> componentMappersByClass = new ObjectMap<Class, CompMapper>();
 	
-	public CompManager() {
-		
+	private IEntityHandler handler;
+	private final CompUtilManager utilManager = new CompUtilManager(this);
+	public final EntityManager Entity = new EntityManager(this);
+	
+	public CompManager(IEntityHandler handler) {
+		this.handler = handler;
 	}
 	
-	private final CompWrappers Wrap = new CompWrappers(this);
-	public final EntityManager Entity = new EntityManager(this);
+	IEntityHandler getEntityHandler() {
+		return handler;
+	}
 	
 	public class CompMapper<T extends Component> {
 		
@@ -202,10 +208,10 @@ public class CompManager {
 	public final CompMapper<TurnPhaseNoneComp> TurnPhaseNoneComp = getFor(TurnPhaseNoneComp.class);
 	public final CompMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
 	
-	// Special Component Wrappers for Added Methods
-	public CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }
-	public CompWrapperZoneComp ZoneComp(ZoneComp comp) { return Wrap.get(CompWrapperZoneComp.class, comp); }
-	public CompWrapperVitalsComp VitalsComp(VitalsComp comp) { return Wrap.get(CompWrapperVitalsComp.class, comp); }
-	public CompWrapperVitalsComp VitalsComp(Entity entity) { return Wrap.get(CompWrapperVitalsComp.class, VitalsComp.class, entity); }
-
+	// Component Util Methods
+	public SpriteCompUtil util(SpriteComp comp) { return utilManager.get(SpriteCompUtil.class, comp); }
+	public ZoneCompUtil util(ZoneComp comp) { return utilManager.get(ZoneCompUtil.class, comp); }
+	public VitalsCompUtil util(VitalsComp comp) { return utilManager.get(VitalsCompUtil.class, comp); }
+	public VitalsCompUtil util(Entity entity, Class<VitalsComp> compClass) { return utilManager.get(VitalsCompUtil.class, VitalsComp.class, entity); }
+	
 }

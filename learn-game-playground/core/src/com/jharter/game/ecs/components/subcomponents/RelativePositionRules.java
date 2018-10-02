@@ -73,15 +73,15 @@ public class RelativePositionRules {
 			case WEST:
 			case NORTH_WEST:
 			case SOUTH_WEST:
-				x -= Comp.SpriteComp(s).scaledWidth(scaleX);
+				x -= Comp.util(s).scaledWidth(scaleX);
 				break;
 			case EAST:
 			case NORTH_EAST:
 			case SOUTH_EAST:
-				x += Comp.SpriteComp(sBaseline).scaledWidth();
+				x += Comp.util(sBaseline).scaledWidth();
 				break;
 			case CENTER:
-				x += (Comp.SpriteComp(sBaseline).scaledWidth() - Comp.SpriteComp(s).scaledWidth(scaleX)) / 2f;
+				x += (Comp.util(sBaseline).scaledWidth() - Comp.util(s).scaledWidth(scaleX)) / 2f;
 				break;
 			default:
 				break;
@@ -91,15 +91,15 @@ public class RelativePositionRules {
 			case SOUTH:
 			case SOUTH_WEST:
 			case SOUTH_EAST:
-				y -= Comp.SpriteComp(s).scaledHeight(scaleY);
+				y -= Comp.util(s).scaledHeight(scaleY);
 				break;
 			case NORTH:
 			case NORTH_WEST:
 			case NORTH_EAST:
-				y += Comp.SpriteComp(sBaseline).scaledHeight();
+				y += Comp.util(sBaseline).scaledHeight();
 				break;
 			case CENTER:
-				y += (Comp.SpriteComp(sBaseline).scaledHeight() - Comp.SpriteComp(s).scaledHeight(scaleY)) / 2f;
+				y += (Comp.util(sBaseline).scaledHeight() - Comp.util(s).scaledHeight(scaleY)) / 2f;
 				break;
 			default:
 				break;

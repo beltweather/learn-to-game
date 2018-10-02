@@ -55,7 +55,7 @@ public class ArrowHelper extends EntityHandler {
 		b.AnimationComp().animation = Media.arrowAnim;
 		b.AnimationComp().animation.setPlayMode(PlayMode.LOOP);
 		b.TextureComp();
-		Comp.ZoneComp(infoZone).add(b);
+		Comp.util(infoZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}

@@ -32,7 +32,7 @@ public class QueueTurnActionsSystem  extends IteratingSystem {
 		Entity owner = Comp.Entity.get(t.turnAction.ownerID);
 		ActiveTurnActionComp ac = Comp.getOrAdd(getEngine(), ActiveTurnActionComp.class, owner);
 		
-		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
 		cz.oldZoneID = z.zoneID;
 		cz.newZoneID = Comp.Find.ZoneComp.findZoneID(t.turnAction.ownerID, ZoneType.ACTIVE_CARD);

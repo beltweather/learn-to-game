@@ -21,17 +21,16 @@ public class CompFinders {
 		
 		private CompFinderZoneComp() {}
 		
+		public ID findZoneID(Entity entity) {
+			return Comp.ZonePositionComp.get(entity).zoneID;
+		}
+		
 		public ID findZoneID(ID ownerID, ZoneType type) {
 			return IDUtil.getZoneID(ownerID, type);
 		}
 		
 		public ZoneComp findZone(Entity entity) {
-			return findZone(Comp.ZonePositionComp.get(entity));
-		}
-		
-		public ZoneComp findZone(ZonePositionComp zp) {
-			Entity zone = Comp.Entity.get(zp.zoneID);
-			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
+			return Comp.ZoneComp.get(Comp.ZonePositionComp.get(entity).zoneID);
 		}
 		
 		public ZoneComp findZone(ID ownerID, ZoneType zoneType) {
@@ -43,7 +42,7 @@ public class CompFinders {
 			if(zone == null) {
 				return null;
 			}
-			return com.jharter.game.ashley.components.Comp.ZoneComp.get(zone);
+			return Comp.ZoneComp.get(zone);
 		}
 		
 	}

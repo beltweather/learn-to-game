@@ -25,7 +25,7 @@ public class DiscardZoneSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		ID ownerID = Comp.CardComp.has(entity) ? Comp.CardComp.get(entity).ownerID : Comp.TurnActionComp.get(entity).turnAction.ownerID;
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		
 		if(z.zoneType != ZoneType.HAND) {
 			ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);

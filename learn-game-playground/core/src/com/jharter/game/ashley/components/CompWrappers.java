@@ -4,24 +4,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Components.ActivePlayerComp;
-import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
-import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
-import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 /**
  * Class that links components, entities, and ids together. It is a sister class of C, the component mapper.
@@ -152,52 +143,6 @@ public class CompWrappers {
 		
 	}
 	
-	public static class CompWrapperZonePositionComp extends CompWrapper<ZonePositionComp> {
-		
-		private CompWrapperZonePositionComp() {}
-		
-		public ZoneComp getZoneComp() {
-			if(comp().zoneID == null) {
-				return null;
-			}
-			return Comp.Find.ZoneComp.findZone(comp());
-		}
-		
-		public void checkpoint(Engine engine) {
-			comp().history.add(copyForHistory(engine));
-		}
-		
-		public void undoCheckpoint() {
-			if(comp().history.size == 0) {
-				return;
-			}
-			comp().history.pop();
-		}
-		
-		public boolean tryRevertToLastCheckpoint() {
-			if(comp().history.size == 0) {
-				return false;
-			}
-			ZonePositionComp copy = comp().history.pop();
-			comp().zoneID = copy.zoneID;
-			comp().index = copy.index;
-			return true;
-		}
-		
-		public void clearHistory() {
-			comp().history.clear();
-		}
-		
-		private ZonePositionComp copyForHistory(Engine engine) {
-			ZonePositionComp zp = Comp.create(engine, ZonePositionComp.class);
-			zp.zoneID = comp().zoneID;
-			zp.index = comp().index;
-			// Intentionally ignoring history for copies since we don't use it
-			return zp;
-		}
-		
-	}
-	
 	public static class CompWrapperZoneComp extends CompWrapper<ZoneComp> {
 		
 		private CompWrapperZoneComp() {}
@@ -228,103 +173,6 @@ public class CompWrappers {
 			}
 		}
 		
-	}
-	
-	/**
-	 * Mark as deprecated until something actually needs to use this. There's nothing
-	 * wrong with this class, it's just not referenced anywhere right now.
-	 */
-	@Deprecated
-	public static class CompWrapperTurnActionComp extends CompWrapper<TurnActionComp> {
-		
-		private CompWrapperTurnActionComp() {}
-		
-		public ID getActionTargetID() {
-			return getActionTargetID(comp().turnAction.targetIDs.size-1);
-		}
-		
-		public ID getActionTargetID(int index) {
-			if(index < 0 || index >= comp().turnAction.targetIDs.size) {
-				return null;
-			}
-			return comp().turnAction.targetIDs.get(index);
-		}
-		
-		public Entity getActionTargetEntity() {
-			return Comp.Entity.get(getActionTargetID());
-		}
-		
-		public Entity getActionTargetEntity(int index) {
-			return Comp.Entity.get(getActionTargetID(index));
-		}
-		
-		public SpriteComp getActionTargetSprite() {
-			return Comp.SpriteComp.get(getActionTargetEntity());
-		}
-		
-		public SpriteComp getActionTargetSprite(int index) {
-			return Comp.SpriteComp.get(getActionTargetEntity(index));
-		}
-		
-	}
-	
-	@Deprecated
-	public static class CompWrapperActivePlayerComp extends CompWrapper<ActivePlayerComp> {
-		
-		private CompWrapperActivePlayerComp() {}
-		
-		@Deprecated
-		public boolean nextPlayer() {
-			return nextPlayer(false);
-		}
-		
-		@Deprecated
-		public boolean prevPlayer() {
-			return prevPlayer(false);
-		}
-		
-		@Deprecated
-		public boolean nextPlayer(boolean includeSpent) {
-			int i = IDUtil.getPlayerIDs().indexOf(comp().activePlayerID, false);
-			if(includeSpent) {
-				Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i));
-				return true;
-			}
-			
-			int counter = 0;
-			while(counter < IDUtil.getPlayerIDs().size()) {
-				i = ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i);
-				ID playerID = IDUtil.getPlayerIDs().get(i);
-				if(!Comp.Entity.DefaultTurn().ActivePlayerComp().spentPlayers.contains(playerID, false)) {
-					Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID = playerID;
-					return true;
-				}
-				counter++;
-			}
-			return false;
-		}
-		
-		@Deprecated
-		public boolean prevPlayer(boolean includeSpent) {
-			int i = IDUtil.getPlayerIDs().indexOf(comp().activePlayerID, false);
-			if(includeSpent) {
-				Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID = IDUtil.getPlayerIDs().get(ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i));
-				return true;
-			}
-			
-			int counter = 0;
-			while(counter < IDUtil.getPlayerIDs().size()) {
-				i = ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i);
-				ID playerID = IDUtil.getPlayerIDs().get(i);
-				if(!Comp.Entity.DefaultTurn().ActivePlayerComp().spentPlayers.contains(playerID, false)) {
-					Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID = playerID;
-					return true;
-				}
-				counter++;
-			}
-			return false;
-		}
-
 	}
 	
 	@Deprecated

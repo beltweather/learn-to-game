@@ -6,12 +6,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.CompWrappers.CompWrapperActivePlayerComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperCursorComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperSpriteComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperVitalsComp;
 import com.jharter.game.ashley.components.CompWrappers.CompWrapperZoneComp;
-import com.jharter.game.ashley.components.CompWrappers.CompWrapperZonePositionComp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.ActionReadyComp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
@@ -205,9 +203,7 @@ public class Comp {
 	
 	// Special Component Wrappers for Added Methods
 	public static CompWrapperSpriteComp SpriteComp(SpriteComp comp) { return Wrap.get(CompWrapperSpriteComp.class, comp); }
-	public static CompWrapperActivePlayerComp ActivePlayerComp(ActivePlayerComp comp) { return Wrap.get(CompWrapperActivePlayerComp.class, comp); }
 	public static CompWrapperZoneComp ZoneComp(ZoneComp comp) { return Wrap.get(CompWrapperZoneComp.class, comp); }
-	public static CompWrapperZonePositionComp ZonePositionComp(ZonePositionComp comp) { return Wrap.get(CompWrapperZonePositionComp.class, comp); }
 	public static CompWrapperVitalsComp VitalsComp(VitalsComp comp) { return Wrap.get(CompWrapperVitalsComp.class, comp); }
 	public static CompWrapperVitalsComp VitalsComp(Entity entity) { return Wrap.get(CompWrapperVitalsComp.class, VitalsComp.class, entity); }
 	public static CompWrapperCursorComp CursorComp(CursorComp comp) { return Wrap.get(CompWrapperCursorComp.class, comp); }

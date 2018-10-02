@@ -31,8 +31,7 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 	}
 	
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		
 		ID origID = c.targetID;

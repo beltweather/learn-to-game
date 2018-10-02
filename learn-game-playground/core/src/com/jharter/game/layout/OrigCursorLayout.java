@@ -39,7 +39,7 @@ public class OrigCursorLayout extends ZoneLayout {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		float targetAngle = getCursorAngle(cursor, z.zoneType);
 		
 		Vector3 targetPosition = getCursorPosition(cursor, z, zp.index);
@@ -68,7 +68,7 @@ public class OrigCursorLayout extends ZoneLayout {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		boolean changeZone = c.lastZoneID != z.zoneID; 
 		hasMulti = changeZone && isAll(c);
 		
@@ -131,7 +131,7 @@ public class OrigCursorLayout extends ZoneLayout {
 		}
 		
 		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
-		for(int i = 0; i < Comp.Find.ZoneComp.findZone(zp).objectIDs.size(); i++) {
+		for(int i = 0; i < Comp.ZoneComp.get(zp.zoneID).objectIDs.size(); i++) {
 			Vector3 position = getCursorPosition(cursor, z, i);
 			if(position != null) {
 				mp.positions.add(new Vector3(position));
@@ -174,7 +174,7 @@ public class OrigCursorLayout extends ZoneLayout {
 		// Get the last target in the list and find its zone
 		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.peek());
 		ZonePositionComp targetZonePosition = Comp.ZonePositionComp.get(targetEntity);
-		ZoneComp targetZone = Comp.ZonePositionComp(targetZonePosition).getZoneComp();
+		ZoneComp targetZone = Comp.ZoneComp.get(targetZonePosition.zoneID); 
 		
 		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 		ms.drawSingle = true;

@@ -44,6 +44,14 @@ public class ArrayUtil {
 		return index - 1;
 	}
 	
+	public static int prevOrNextIndex(Array array, int index, boolean next) {
+		return next ? nextIndex(array, index) : prevIndex(array, index);
+	}
+	
+	public static int prevOrNextIndex(ImmutableArray array, int index, boolean next) {
+		return next ? nextIndex(array, index) : prevIndex(array, index);
+	}
+	
 	public static int findNextIndex(Array array, int currentIndex, int direction) {
 		return findNextIndex(array.size, currentIndex, direction);
 	}

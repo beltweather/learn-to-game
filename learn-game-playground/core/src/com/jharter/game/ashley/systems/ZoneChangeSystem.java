@@ -29,7 +29,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 		if(cz.newZoneID != null && cz.newZoneID != null) {
 			targetZoneID = cz.newZoneID;
 		} else {
-			targetZoneID = Comp.ZonePositionComp(zp).getZoneComp().zoneID;
+			targetZoneID = zp.zoneID;
 		}
 		
 		ZoneComp z = Comp.ZoneComp.get(Comp.Entity.get(targetZoneID));
@@ -49,13 +49,13 @@ public class ZoneChangeSystem extends IteratingSystem {
 		
 		switch(ty.type) {
 			case CARD:
-				ZoneComp zOld = Comp.Find.ZoneComp.findZone(zp);
+				ZoneComp zOld = Comp.ZoneComp.get(zp.zoneID);
 				Comp.ZoneComp(zOld).remove(id.id);
 				Comp.ZoneComp(z).add(id.id, zp);
 				zp.index = targetIndex;
 				entity.remove(ChangeZoneComp.class);
 				break;
-			case CURSOR:
+			/*case CURSOR:
 				if(cz.checkpoint) {
 					Comp.ZonePositionComp(zp).checkpoint(getEngine());
 				}
@@ -64,7 +64,7 @@ public class ZoneChangeSystem extends IteratingSystem {
 				zp.zoneID = targetZoneID;
 				zp.index = targetIndex;
 				entity.remove(ChangeZoneComp.class);
-				break;
+				break;*/
 			case FRIEND:
 				
 				break;

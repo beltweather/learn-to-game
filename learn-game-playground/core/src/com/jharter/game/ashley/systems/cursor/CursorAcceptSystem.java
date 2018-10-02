@@ -18,8 +18,7 @@ public class CursorAcceptSystem extends CursorSystem {
 	}
 
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		if(c.targetID == null) {
 			return;
 		}

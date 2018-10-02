@@ -21,7 +21,7 @@ public class CursorInputSystem extends CursorSystem {
 	}
 	
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		InputComp in = Comp.InputComp.get(cursor);
 		if(Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.isStopped()) {
 			in.input.reset();

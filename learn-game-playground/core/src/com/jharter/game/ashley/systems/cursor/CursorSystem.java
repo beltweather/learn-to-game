@@ -11,7 +11,9 @@ import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
+import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.util.id.IDUtil;
 
 public abstract class CursorSystem extends FirstSystem {
 	
@@ -35,6 +37,13 @@ public abstract class CursorSystem extends FirstSystem {
 		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
 	}
 	
+	@Override
+	protected void processEntity(Entity cursor, float deltaTime) {
+		processEntity(cursor, Comp.CursorComp.get(cursor), deltaTime);
+	}
+	
+	protected abstract void processEntity(Entity cursor, CursorComp c, float deltaTime);
+	
 	protected ActivePlayerComp getActivePlayer() {
 		return getFirstComponent(ActivePlayerComp.class);
 	}
@@ -54,6 +63,30 @@ public abstract class CursorSystem extends FirstSystem {
 	
 	protected boolean isDisabled(Entity cursor) {
 		return Comp.DisabledComp.has(cursor);
+	}
+	
+	protected boolean nextPlayer() {
+		return changePlayer(true);
+	}
+	
+	protected boolean prevPlayer() {
+		return changePlayer(false);
+	}
+	
+	protected boolean changePlayer(boolean next) {
+		ActivePlayerComp a = getActivePlayer();
+		int i = IDUtil.getPlayerIDs().indexOf(a.activePlayerID, false);
+		int counter = 0;
+		while(counter < IDUtil.getPlayerIDs().size()) {
+			i = ArrayUtil.prevOrNextIndex(IDUtil.getPlayerIDs(), i, next);
+			ID playerID = IDUtil.getPlayerIDs().get(i);
+			if(!a.spentPlayers.contains(playerID, false)) {
+				a.activePlayerID = playerID;
+				return true;
+			}
+			counter++;
+		}
+		return false;
 	}
 	
 }

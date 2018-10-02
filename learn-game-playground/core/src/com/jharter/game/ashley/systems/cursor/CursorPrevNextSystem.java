@@ -18,58 +18,24 @@ public class CursorPrevNextSystem extends CursorSystem {
 	}
 
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
-
-		if(ci.prev) {
-			
-			if(prevPlayer()) {
-				c.reset();
-			}
-			
-		} else if(ci.next) {
-
-			if(nextPlayer()) {
-				c.reset();
-			}
-			
-		} 
+		
+		// If these are the same, don't do anything because they're
+		// either both false or cancel each other out.
+		if(ci.prev == ci.next) {
+			return;
+		}
+		
+		// Otherwise, change to "next" player if "next" is true or
+		// previous player if "next" is false, since we know that
+		// implies that "prev" is true.
+		if(changePlayer(ci.next)) {
+			c.reset();
+		}
 		
 		ci.prev = false;
 		ci.next = false;
-	}
-	
-	private boolean nextPlayer() {
-		ActivePlayerComp a = getActivePlayer();
-		int i = IDUtil.getPlayerIDs().indexOf(a.activePlayerID, false);
-		int counter = 0;
-		while(counter < IDUtil.getPlayerIDs().size()) {
-			i = ArrayUtil.nextIndex(IDUtil.getPlayerIDs(), i);
-			ID playerID = IDUtil.getPlayerIDs().get(i);
-			if(!a.spentPlayers.contains(playerID, false)) {
-				a.activePlayerID = playerID;
-				return true;
-			}
-			counter++;
-		}
-		return false;
-	}
-	
-	private boolean prevPlayer() {
-		ActivePlayerComp a = getActivePlayer();
-		int i = IDUtil.getPlayerIDs().indexOf(a.activePlayerID, false);
-		int counter = 0;
-		while(counter < IDUtil.getPlayerIDs().size()) {
-			i = ArrayUtil.prevIndex(IDUtil.getPlayerIDs(), i);
-			ID playerID = IDUtil.getPlayerIDs().get(i);
-			if(!a.spentPlayers.contains(playerID, false)) {
-				a.activePlayerID = playerID;
-				return true;
-			}
-			counter++;
-		}
-		return false;
 	}
 	
 }

@@ -16,8 +16,7 @@ public class CursorTurnActionValidationSystem extends CursorSystem {
 	}
 
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		Entity turnActionEntity = Comp.Entity.get(c.turnActionID);
 		if(turnActionEntity == null) {
 			for(Entity ptaEntity : getEntities(PendingTurnActionComp.class)) {

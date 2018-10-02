@@ -48,7 +48,7 @@ public class CursorLayout extends ZoneLayout {
 		Entity target = Comp.Entity.get(c.targetID);
 		
 		ZonePositionComp zp = Comp.ZonePositionComp.get(target);
-		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
+		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		float targetAngle = getCursorAngle(cursor, z.zoneType);
 		
 		Vector3 targetPosition = getCursorPosition(cursor, c.targetID, target, z);
@@ -70,7 +70,7 @@ public class CursorLayout extends ZoneLayout {
 		Entity lastTarget = Comp.Entity.get(c.lastTargetID);
 		if(lastTarget != null) {
 			ZonePositionComp zpLastTarget = Comp.ZonePositionComp.get(lastTarget);
-			ZoneComp zLastTarget = Comp.ZonePositionComp(zpLastTarget).getZoneComp();
+			ZoneComp zLastTarget = Comp.ZoneComp.get(zpLastTarget.zoneID); 
 			if(zLastTarget.zoneID == z.zoneID) {
 				tt.duration = 0.10f;
 			}

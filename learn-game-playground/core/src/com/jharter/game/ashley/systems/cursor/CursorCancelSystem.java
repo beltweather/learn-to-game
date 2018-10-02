@@ -17,8 +17,7 @@ public class CursorCancelSystem extends CursorSystem {
 	}
 
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		
 		if(ci.cancel) {

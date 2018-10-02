@@ -21,17 +21,15 @@ public class CursorFinishSelectionSystem extends CursorSystem {
 	}
 
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		TurnAction t = getTurnAction(c);
 		if(t == null || !t.hasAllTargets()) {
 			return;
 		}
 		
-		ID playerID = Comp.Entity.Cursor(cursor).getPlayerID();
 		ActivePlayerComp a = getActivePlayer();
-		a.spentPlayers.add(playerID);
-		Comp.ActivePlayerComp(a).nextPlayer();
+		a.spentPlayers.add(a.activePlayerID);
+		nextPlayer();
 		
 		Comp.swap(getEngine(), PendingTurnActionComp.class, ActionQueueableComp.class, Comp.Entity.get(c.turnActionID));
 		c.reset();

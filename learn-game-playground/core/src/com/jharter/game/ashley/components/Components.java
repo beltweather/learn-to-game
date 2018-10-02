@@ -402,7 +402,6 @@ public final class Components {
 		
 		public ID zoneID = null;
 		public int index = -1;
-		transient Array<ZonePositionComp> history = new Array<ZonePositionComp>();
 		
 		private ZonePositionComp() {}
 		
@@ -410,7 +409,6 @@ public final class Components {
 		public void reset() {
 			zoneID = null;
 			index = -1;
-			history.clear();
 		}
 		
 	}

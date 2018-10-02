@@ -25,8 +25,7 @@ public class CursorTargetValidationSystem extends CursorSystem {
 	}
 	
 	@Override
-	public void processEntity(Entity cursor, float deltaTime) {
-		CursorComp c = Comp.CursorComp.get(cursor);
+	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		TurnAction t = getTurnAction(c);
 		boolean cursorDisabled = isDisabled(cursor);
 		for(Entity zone : getEntities(ZoneComp.class)) {

@@ -3,11 +3,11 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.entities.EntityHandler;
-import com.jharter.game.ashley.entities.IEntityHandler;
-import com.jharter.game.ashley.systems.ZoneLayoutSystem;
+import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.SpriteComp;
+import com.jharter.game.ecs.entities.EntityHandler;
+import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.ecs.systems.ZoneLayoutSystem;
 import com.jharter.game.util.id.ID;
 
 public abstract class ZoneLayout extends EntityHandler {

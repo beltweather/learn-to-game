@@ -13,9 +13,9 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ashley.components.Components.CollisionComp;
-import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.control.GameInput;
+import com.jharter.game.ecs.components.Components.CollisionComp;
+import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 

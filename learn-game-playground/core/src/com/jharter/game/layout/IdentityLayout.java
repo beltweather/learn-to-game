@@ -1,7 +1,7 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.entities.IEntityHandler;
+import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 public class IdentityLayout extends ZoneLayout {

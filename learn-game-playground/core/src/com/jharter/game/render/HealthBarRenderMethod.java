@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.VitalsComp;
-import com.jharter.game.ashley.entities.IEntityHandler;
+import com.jharter.game.ecs.components.Components.SpriteComp;
+import com.jharter.game.ecs.components.Components.VitalsComp;
+import com.jharter.game.ecs.entities.IEntityHandler;
 
 public class HealthBarRenderMethod extends ShapeRenderMethod {
 

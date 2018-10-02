@@ -2,10 +2,10 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Components.MultiSpriteComp;
-import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.entities.IEntityHandler;
+import com.jharter.game.ecs.components.Components.MultiSpriteComp;
+import com.jharter.game.ecs.components.Components.SpriteComp;
+import com.jharter.game.ecs.components.Components.TurnActionComp;
+import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;

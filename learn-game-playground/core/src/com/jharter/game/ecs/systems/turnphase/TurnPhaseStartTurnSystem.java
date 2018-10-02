@@ -1,0 +1,41 @@
+package com.jharter.game.ecs.systems.turnphase;
+
+import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ecs.components.Components.ActivePlayerComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseSelectEnemyActionsComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnComp;
+import com.jharter.game.util.ArrayUtil;
+
+public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
+
+	public TurnPhaseStartTurnSystem() {
+		super(TurnPhaseStartTurnComp.class, TurnPhaseSelectEnemyActionsComp.class);
+		add(ActivePlayerComp.class);
+	}
+
+	@Override
+	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
+		return true;
+	}
+
+	@Override
+	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
+		ActivePlayerComp a = getFirstComponent(ActivePlayerComp.class);
+		setPlayer(a, 0);
+		a.spentPlayers.clear();
+		return true;
+	}
+
+	@Override
+	protected void processEntityPhaseEnd(Entity entity, float deltaTime) {
+		
+	}
+	
+	private void setPlayer(ActivePlayerComp a, int index) {
+		if(!ArrayUtil.has(getPlayerIDs(), index)) {
+			index = 0;
+		}
+		a.activePlayerID = getPlayerIDs().get(index);
+	}
+	
+}

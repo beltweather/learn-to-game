@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Components.AnimatingComp;
-import com.jharter.game.ashley.entities.EntityHandler;
-import com.jharter.game.ashley.entities.IEntityHandler;
+import com.jharter.game.ecs.components.Components.AnimatingComp;
+import com.jharter.game.ecs.entities.EntityHandler;
+import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;

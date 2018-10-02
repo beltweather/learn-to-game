@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.jharter.game.ashley.components.Components.BodyComp;
-import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.entities.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityBuildUtil;
+import com.jharter.game.ecs.components.Components.BodyComp;
+import com.jharter.game.ecs.components.Components.TileComp;
+import com.jharter.game.ecs.entities.EntityBuildUtil;
+import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.EntityType;

@@ -1,8 +1,8 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.entities.EntityHandler;
-import com.jharter.game.ashley.entities.IEntityHandler;
+import com.jharter.game.ecs.entities.EntityHandler;
+import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.TweenAccessor;

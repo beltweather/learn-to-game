@@ -1,6 +1,7 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Comp;
@@ -13,7 +14,6 @@ import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.TweenUtil;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -67,25 +67,37 @@ public class CursorLayout extends ZoneLayout {
 		
 		// If we haven't changed zones since our last target, increase our cursor
 		// speed for better responsiveness.
-		Entity lastTarget = Comp.Entity.get(c.lastTargetID);
-		if(lastTarget != null) {
-			ZonePositionComp zpLastTarget = Comp.ZonePositionComp.get(lastTarget);
-			ZoneComp zLastTarget = Comp.ZoneComp.get(zpLastTarget.zoneID); 
-			if(zLastTarget.zoneID == z.zoneID) {
-				tt.duration = 0.10f;
-			}
+		if(!changedZone(c, z)) {
+			tt.duration = 0.10f;
 		}
 		
 		return tt;
 	}
 	
+	protected boolean changedZone(CursorComp c, ZoneComp z) {
+		Entity lastTarget = Comp.Entity.get(c.lastTargetID);
+		ID zoneID = z == null ? null : z.zoneID;
+		ID lastZoneID = null;
+		if(lastTarget != null) {
+			ZonePositionComp zpLastTarget = Comp.ZonePositionComp.get(lastTarget);
+			ZoneComp zLastTarget = Comp.ZoneComp.get(zpLastTarget.zoneID); 
+			if(zLastTarget != null) {
+				lastZoneID = zLastTarget.zoneID;
+			}
+		}
+		return zoneID != lastZoneID;
+	}
+	
+	///////////////////////// MAYBE MOVE TO A NEW CLASS WHAT'S BELOW THIS LINE ////////////////////
+	
 	@Override
 	protected void modifyEntity(ID id, int index, Entity cursor, TweenTarget tt) {
-		/*CursorComp c = Comp.CursorComp.get(cursor);
+		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
-		ZonePositionComp zp = Comp.ZonePositionComp.get(cursor);
-		ZoneComp z = Comp.ZonePositionComp(zp).getZoneComp();
-		boolean changeZone = c.lastZoneID != z.zoneID; 
+		Entity target = Comp.Entity.get(c.targetID);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(target);
+		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
+		boolean changeZone = changedZone(c, z);
 		hasMulti = changeZone && isAll(c);
 		
 		if(changeZone) {
@@ -97,10 +109,10 @@ public class CursorLayout extends ZoneLayout {
 	
 		if(!hasMulti) {
 			Comp.remove(MultiSpriteComp.class, cursor);
-		}*/
+		}
 	}
 
-	/*private void handleChangeZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
+	private void handleChangeZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
 		if(!isAll(c)) {
 			return;
 		}
@@ -117,7 +129,7 @@ public class CursorLayout extends ZoneLayout {
 		
 		int size = z.objectIDs.size();
 		for(int i = 0; i < size; i++) {
-			Vector3 position = getCursorPosition(cursor, z, i);
+			Vector3 position = getCursorPosition(cursor, z.objectIDs.get(i), Comp.Entity.get(z.objectIDs.get(i)), z);
 			if(position != null) {
 				centerY += position.y;
 			}
@@ -125,7 +137,7 @@ public class CursorLayout extends ZoneLayout {
 		centerY /= (float) size;
 		
 		for(int i = 0; i < size; i++) {
-			Vector3 position = getCursorPosition(cursor, z, i);
+			Vector3 position = getCursorPosition(cursor, z.objectIDs.get(i), Comp.Entity.get(z.objectIDs.get(i)), z);
 			if(position != null) {
 				Vector3 currP = new Vector3(s.position);
 				mp.positions.add(currP);
@@ -139,24 +151,25 @@ public class CursorLayout extends ZoneLayout {
 		
 		Timeline tween = Timeline.createSequence().push(multiA).push(multiB);
 		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, tween);
-	}*/
+	}
 	
-	/*private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
+	private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
 		if(!isAll(c)) {
 			return;
 		}
 		
 		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
-		for(int i = 0; i < Comp.Find.ZoneComp.findZone(zp).objectIDs.size(); i++) {
-			Vector3 position = getCursorPosition(cursor, z, i);
+		ImmutableArray<ID> objectIDs = Comp.ZoneComp.get(zp.zoneID).objectIDs;
+		for(int i = 0; i < objectIDs.size(); i++) {
+			Vector3 position = getCursorPosition(cursor, objectIDs.get(i), Comp.Entity.get(objectIDs.get(i)), z);
 			if(position != null) {
 				mp.positions.add(new Vector3(position));
 			}
 		}
 		mp.size = mp.positions.size;
-	}*/
+	}
 	
-	/*private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
+	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
 		
 		// Make sure cursor is in a valid place
 		if(!Comp.ZoneComp(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
@@ -164,7 +177,11 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		// See if cursor is modifying an action
-		TurnAction t = Comp.CursorComp(c).turnAction();
+		if(c.turnActionID == null) {
+			return;
+		}
+		
+		TurnAction t = Comp.TurnActionComp.get(Comp.Entity.get(c.turnActionID)).turnAction;
 		if(t == null) {
 			return;
 		}
@@ -190,7 +207,7 @@ public class CursorLayout extends ZoneLayout {
 		// Get the last target in the list and find its zone
 		Entity targetEntity = Comp.Entity.get(turnAction.targetIDs.peek());
 		ZonePositionComp targetZonePosition = Comp.ZonePositionComp.get(targetEntity);
-		ZoneComp targetZone = Comp.ZonePositionComp(targetZonePosition).getZoneComp();
+		ZoneComp targetZone = Comp.ZoneComp.get(targetZonePosition.zoneID);
 		
 		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
 		ms.drawSingle = true;
@@ -212,10 +229,10 @@ public class CursorLayout extends ZoneLayout {
 		}
 		ms.size = ms.positions.size;
 		hasMulti = true;
-	}*/
+	}
 	
-	/*private void addMultiPositions(MultiSpriteComp ms, int multiplicity, Entity cursor, SpriteComp s, ZoneComp zone, ID targetID) {
-		Vector3 cursorPosition = getCursorPosition(cursor, zone, targetID);
+	private void addMultiPositions(MultiSpriteComp ms, int multiplicity, Entity cursor, SpriteComp s, ZoneComp zone, ID targetID) {
+		Vector3 cursorPosition = getCursorPosition(cursor, targetID, Comp.Entity.get(targetID), zone);
 		for(int m = 0; m < multiplicity; m++) {
 			Vector3 pos = new Vector3(cursorPosition);
 			pos.x -= U.u12(2)*m;
@@ -232,12 +249,17 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
-	}*/
+	}
 
-	/*private boolean isAll(CursorComp c) {
-		TurnAction ta = Comp.CursorComp(c).turnAction();
+	private boolean isAll(CursorComp c) {
+		if(c.turnActionID == null) {
+			return false;
+		}
+		TurnAction ta = Comp.TurnActionComp.get(Comp.Entity.get(c.turnActionID)).turnAction;
 		return ta != null && ta.all;
-	}*/
+	}
+	
+	///////////////////// KEEP BELOW THIS LINE ///////////////////////////
 	
 	private float getCursorAngle(Entity entity, ZoneType zoneType) {
 		switch(zoneType) {

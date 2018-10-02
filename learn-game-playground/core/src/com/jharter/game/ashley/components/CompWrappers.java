@@ -6,12 +6,10 @@ import java.lang.reflect.InvocationTargetException;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
 /**
@@ -175,25 +173,4 @@ public class CompWrappers {
 		
 	}
 	
-	@Deprecated
-	public static class CompWrapperCursorComp extends CompWrapper<CursorComp> {
-		
-		private CompWrapperCursorComp() {}
-		
-		private Entity TurnActionEntity() {
-			return Comp.Entity.get(comp().turnActionID);
-		}
-		
-		/**
-		 * Purely helper method		 */
-		@Deprecated
-		public TurnAction turnAction() {
-			Entity entity = TurnActionEntity();
-			if(entity == null) {
-				return null;
-			}
-			return Comp.TurnActionComp.get(entity).turnAction;
-		}		
-		
-	}
 }

@@ -21,6 +21,7 @@ import com.jharter.game.util.id.ID;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
+@Deprecated
 public class CursorSelectSystem extends FirstSystem {
 
 	@SuppressWarnings("unchecked")

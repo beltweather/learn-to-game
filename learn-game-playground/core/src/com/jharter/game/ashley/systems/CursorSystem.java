@@ -11,6 +11,7 @@ import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
+import com.jharter.game.util.id.ID;
 
 public abstract class CursorSystem extends FirstSystem {
 	
@@ -29,13 +30,18 @@ public abstract class CursorSystem extends FirstSystem {
 		this(Family.all(combine(cursorComps, CursorComp.class)).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
 	}
 	
-	public CursorSystem(Family family) {
+	private CursorSystem(Family family) {
 		super(family);
 		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
 	}
 	
 	protected ActivePlayerComp getActivePlayer() {
 		return getFirstComponent(ActivePlayerComp.class);
+	}
+	
+	protected ID getActivePlayerID() {
+		ActivePlayerComp a = getActivePlayer();
+		return a == null ? null : a.activePlayerID;
 	}
 	
 	protected TurnAction getTurnAction(CursorComp c) {
@@ -45,5 +51,9 @@ public abstract class CursorSystem extends FirstSystem {
 		}
 		return Comp.TurnActionComp.get(taEntity).turnAction;
 	}		
+	
+	protected boolean isDisabled(Entity cursor) {
+		return Comp.DisabledComp.has(cursor);
+	}
 	
 }

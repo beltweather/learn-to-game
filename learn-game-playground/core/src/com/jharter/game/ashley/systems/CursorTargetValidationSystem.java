@@ -3,40 +3,43 @@ package com.jharter.game.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.TargetableComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.UntargetableComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class CursorTargetValidationSystem extends CustomIteratingSystem {
+public class CursorTargetValidationSystem extends CursorSystem {
 	
 	@SuppressWarnings("unchecked")
 	public CursorTargetValidationSystem() {
-		super(Family.all(ZoneComp.class).exclude(InvisibleComp.class).get());
-		add(TurnActionComp.class, Family.all(TurnActionComp.class, PendingTurnActionComp.class).get());
-		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
-		add(CursorComp.class, Family.all(CursorComp.class).get());
+		super();
+		add(ZoneComp.class, Family.all(ZoneComp.class).exclude(InvisibleComp.class).get());
 	}
 	
 	@Override
-	public void processEntity(Entity zone, float deltaTime) {
+	public void processEntity(Entity cursor, float deltaTime) {
+		CursorComp c = Comp.CursorComp.get(cursor);
+		TurnAction t = getTurnAction(c);
+		boolean cursorDisabled = isDisabled(cursor);
+		for(Entity zone : getEntities(ZoneComp.class)) {
+			processZone(zone, t, cursorDisabled);
+		}
+	}
+	
+	public void processZone(Entity zone, TurnAction t, boolean cursorDisabled) {
 		ZoneComp z = Comp.ZoneComp.get(zone);
-		TurnAction t = getTurnAction();
 		boolean isTargetZone = z.zoneType == (t == null ? ZoneType.HAND : t.getTargetZoneType());
 		
 		// If there's no cursor we don't want to reason on targets
-		if(isCursorDisabled()) {
+		if(cursorDisabled) {
 			for(ID id : z.objectIDs) { clearTargeting(id); }
 			
 		// If we're not in the target zone, see if we're even using a turn action
@@ -55,24 +58,20 @@ public class CursorTargetValidationSystem extends CustomIteratingSystem {
 			
 			// If we're in the target zone and the cursor is enabled, then make these
 			// targetable if they're actually valid, otherwise, untargetable
-			int targetable = 0;
 			for(ID id : z.objectIDs) { 
 				if(isValid(id, t)) { 
 					makeTargetable(id); 
-					targetable++;
 				} else { 
 					makeUntargetable(id); 
 				} 
 			}
-			//Sys.out.println("Made " + targetable + " entities targetable.");
 			
 		}
 	}
 	
 	private void makeTargetable(ID id) {
 		Entity zoneObject = Comp.Entity.get(id);
-		Comp.add(getEngine(), TargetableComp.class, zoneObject);
-		Comp.remove(UntargetableComp.class, zoneObject);
+		Comp.swap(getEngine(), UntargetableComp.class, TargetableComp.class, zoneObject);
 	}
 	
 	private void clearTargeting(ID id) {
@@ -83,22 +82,7 @@ public class CursorTargetValidationSystem extends CustomIteratingSystem {
 	
 	private void makeUntargetable(ID id) {
 		Entity zoneObject = Comp.Entity.get(id);
-		Comp.remove(TargetableComp.class, zoneObject);
-		Comp.add(getEngine(), UntargetableComp.class, zoneObject);
-	}
-	
-	private boolean isCursorDisabled() {
-		return Comp.DisabledComp.has(getFirstEntity(CursorComp.class));
-	}
-	
-	private TurnAction getTurnAction() {
-		TurnActionComp t = getFirstComponent(TurnActionComp.class);
-		return t == null ? null : t.turnAction;
-	}
-	
-	private ID getActivePlayerID() {
-		ActivePlayerComp a = getFirstComponent(ActivePlayerComp.class);
-		return a == null ? null : a.activePlayerID;
+		Comp.swap(getEngine(), TargetableComp.class, UntargetableComp.class, zoneObject);
 	}
 	
 	private ZoneComp getZone(ZoneType zoneType) {

@@ -268,6 +268,7 @@ public class CompWrappers {
 		
 	}
 	
+	@Deprecated
 	public static class CompWrapperActivePlayerComp extends CompWrapper<ActivePlayerComp> {
 		
 		private CompWrapperActivePlayerComp() {}
@@ -326,6 +327,7 @@ public class CompWrappers {
 
 	}
 	
+	@Deprecated
 	public static class CompWrapperCursorComp extends CompWrapper<CursorComp> {
 		
 		private CompWrapperCursorComp() {}
@@ -336,6 +338,7 @@ public class CompWrappers {
 		
 		/**
 		 * Purely helper method		 */
+		@Deprecated
 		public TurnAction turnAction() {
 			Entity entity = TurnActionEntity();
 			if(entity == null) {

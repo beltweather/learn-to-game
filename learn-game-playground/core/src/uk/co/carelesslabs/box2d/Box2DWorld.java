@@ -14,12 +14,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Components.CollisionComp;
-import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
 
-public class Box2DWorld extends EntityFactory {
+public class Box2DWorld extends EntityHandler {
 	
     public World world;
     private Box2DDebugRenderer debugRenderer;

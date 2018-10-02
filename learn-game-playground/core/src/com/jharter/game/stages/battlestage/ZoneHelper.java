@@ -2,18 +2,18 @@ package com.jharter.game.stages.battlestage;
 
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class ZoneHelper extends EntityFactory {
+public class ZoneHelper extends EntityHandler {
 	
-	public ZoneHelper(IEntityFactory factory) {
-		super(factory);
+	public ZoneHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public ZoneComp addZone(ID playerID, ZoneType zoneType) {

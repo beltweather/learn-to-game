@@ -10,8 +10,8 @@ import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
@@ -19,10 +19,10 @@ import com.jharter.game.util.id.IDUtil;
 import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Media;
 
-public class ArrowHelper extends EntityFactory {
+public class ArrowHelper extends EntityHandler {
 
-	public ArrowHelper(IEntityFactory factory) {
-		super(factory);
+	public ArrowHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public void addArrow(ZoneComp infoZone) {

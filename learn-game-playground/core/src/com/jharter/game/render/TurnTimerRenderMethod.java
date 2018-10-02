@@ -7,12 +7,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 
 public class TurnTimerRenderMethod extends ShapeRenderMethod {
 	
-	public TurnTimerRenderMethod(IEntityFactory factory) {
-		super(factory);
+	public TurnTimerRenderMethod(IEntityHandler handler) {
+		super(handler);
 	}
 	
 	@Override

@@ -4,25 +4,25 @@ import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 
-public abstract class Callback<T, R> extends EntityFactory {
+public abstract class Callback<T, R> extends EntityHandler {
 
-	public Callback(IEntityFactory factory) {
-		super(factory);
+	public Callback(IEntityHandler handler) {
+		super(handler);
 	}
 	
 	public abstract R call(T object);
 
 	public static abstract class ValidTargetCallback extends Callback<Entity, Boolean> {
 		
-		public ValidTargetCallback(IEntityFactory factory, EntityBuilder b) {
-			this(factory, b.TurnActionComp().turnAction);
+		public ValidTargetCallback(IEntityHandler handler, EntityBuilder b) {
+			this(handler, b.TurnActionComp().turnAction);
 		}
 		
-		public ValidTargetCallback(IEntityFactory factory, TurnAction t) {
-			super(factory);
+		public ValidTargetCallback(IEntityHandler handler, TurnAction t) {
+			super(handler);
 			t.validTargetCallback = this;
 		}
 		
@@ -30,12 +30,12 @@ public abstract class Callback<T, R> extends EntityFactory {
 	
 	public static class HasActiveCardCallback extends ValidTargetCallback {
 		
-		public HasActiveCardCallback(IEntityFactory factory, EntityBuilder b) {
-			this(factory, b.TurnActionComp().turnAction);
+		public HasActiveCardCallback(IEntityHandler handler, EntityBuilder b) {
+			this(handler, b.TurnActionComp().turnAction);
 		}
 		
-		public HasActiveCardCallback(IEntityFactory factory, TurnAction t) {
-			super(factory, t);
+		public HasActiveCardCallback(IEntityHandler handler, TurnAction t) {
+			super(handler, t);
 		}
 
 		@Override
@@ -48,12 +48,12 @@ public abstract class Callback<T, R> extends EntityFactory {
 	
 	public static class DoesntHaveAllCallback extends ValidTargetCallback {
 		
-		public DoesntHaveAllCallback(IEntityFactory factory, EntityBuilder b) {
-			this(factory, b.TurnActionComp().turnAction);
+		public DoesntHaveAllCallback(IEntityHandler handler, EntityBuilder b) {
+			this(handler, b.TurnActionComp().turnAction);
 		}
 		
-		public DoesntHaveAllCallback(IEntityFactory factory, TurnAction t) {
-			super(factory, t);
+		public DoesntHaveAllCallback(IEntityHandler handler, TurnAction t) {
+			super(handler, t);
 		}
 
 		@Override

@@ -10,11 +10,12 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
-import com.jharter.game.ashley.util.ToolBox;
+import com.jharter.game.ashley.util.EntityToolBox;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.EndPointHelper;
+import com.jharter.game.tween.CustomTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDManager;
@@ -22,7 +23,7 @@ import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
-public abstract class GameStage implements IEntityFactory {
+public abstract class GameStage implements IEntityHandler {
 
 	private ID id;
 	protected OrthographicCamera camera;
@@ -31,7 +32,7 @@ public abstract class GameStage implements IEntityFactory {
     protected Box2DWorld box2D;
     protected GameInput stageInput;
     protected EndPointHelper endPointHelper;
-    protected ToolBox toolBox;
+    protected EntityToolBox toolBox;
     
 	public GameStage(EndPointHelper endPointHelper) {
 		this(IDUtil.newID(), endPointHelper);
@@ -51,16 +52,29 @@ public abstract class GameStage implements IEntityFactory {
 		this.id = id;
 	}
 	
-	public ToolBox getToolBox() {
+	@Override
+	public PooledEngine getEngine() {
+		return engine;
+	}
+	
+	@Override
+	public EntityToolBox getToolBox() {
 		return toolBox;
 	}
 	
+	@Override
 	public IDManager getIDManager() {
 		return toolBox.getIDManager();
 	}
 	
+	@Override
 	public CompManager getCompManager() {
 		return toolBox.getCompManager();
+	}
+	
+	@Override
+	public CustomTweenManager getTweenManager() {
+		return toolBox.getTweenManager();
 	}
 	
 	public EndPointHelper getEndPointHelper() {
@@ -79,10 +93,6 @@ public abstract class GameStage implements IEntityFactory {
 		return stageInput;
 	}
 	
-	public PooledEngine getEngine() {
-		return engine;
-	}
-	
     protected void create() {
     	camera = buildCamera();
     	viewport = buildViewport(camera);
@@ -91,7 +101,7 @@ public abstract class GameStage implements IEntityFactory {
     	
     	box2D = buildBox2DWorld();
         engine = buildEngine();
-        toolBox = new ToolBox(engine);
+        toolBox = new EntityToolBox(engine);
         toolBox.getCompManager().Entity.addIdListener(engine, getBox2DWorld());
         addManagers(engine);
         addEntities(engine);

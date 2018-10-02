@@ -1,15 +1,15 @@
 package com.jharter.game.stages.battlestage;
 
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
 
-public class BattleHelper extends EntityFactory {
+public class BattleHelper extends EntityHandler {
 	
-	public BattleHelper(IEntityFactory factory) {
-		super(factory);
+	public BattleHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public void addBattle(ID activePlayerID) {

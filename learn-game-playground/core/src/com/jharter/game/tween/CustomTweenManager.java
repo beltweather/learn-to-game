@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks.CompositeCallback;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
@@ -20,12 +20,12 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Circ;
 
-public class CustomTweenManager extends EntityFactory {
+public class CustomTweenManager extends EntityHandler {
 	
 	private TweenManager manager;
 
-	public CustomTweenManager(IEntityFactory factory) {
-		super(factory);
+	public CustomTweenManager(IEntityHandler handler) {
+		super(handler);
 		manager = new TweenManager();
 		registerAccessors();
 	}

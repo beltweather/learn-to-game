@@ -1,18 +1,18 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
-public class IDTweenAccessor extends EntityFactory implements TweenAccessor<ID> {
+public class IDTweenAccessor extends EntityHandler implements TweenAccessor<ID> {
 	
 	private EntityTweenAccessor entityTweenAccessor = new EntityTweenAccessor(this);
 	
-	public IDTweenAccessor(IEntityFactory factory) {
-		super(factory);
+	public IDTweenAccessor(IEntityHandler handler) {
+		super(handler);
 	}
 	
 	protected Entity entity(ID id) {

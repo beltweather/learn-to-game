@@ -5,20 +5,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 
-public class PlayerHelper extends EntityFactory {
+public class PlayerHelper extends EntityHandler {
 	
 	private HealthBarHelper healthBarHelper;
 	
-	public PlayerHelper(IEntityFactory factory) {
-		super(factory);
-		healthBarHelper = new HealthBarHelper(factory);
+	public PlayerHelper(IEntityHandler handler) {
+		super(handler);
+		healthBarHelper = new HealthBarHelper(handler);
 	}
 
 	public void addPlayer(ZoneComp zone, ZoneComp infoZone, ID playerID, Texture texture, String name) {

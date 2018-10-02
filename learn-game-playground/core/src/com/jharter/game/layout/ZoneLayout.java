@@ -5,12 +5,12 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.util.id.ID;
 
-public abstract class ZoneLayout extends EntityFactory {
+public abstract class ZoneLayout extends EntityHandler {
 	
 	protected ImmutableArray<ID> ids = null;
 	protected ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
@@ -20,8 +20,8 @@ public abstract class ZoneLayout extends EntityFactory {
 	protected int priority = 0;
 	protected ID activePlayerID = null;
 	
-	public ZoneLayout(IEntityFactory factory) {
-		super(factory);
+	public ZoneLayout(IEntityHandler handler) {
+		super(handler);
 	}
 	
 	public int getPriority() {

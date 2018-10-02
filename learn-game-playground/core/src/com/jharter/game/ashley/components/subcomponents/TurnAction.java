@@ -7,14 +7,14 @@ import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class TurnAction extends EntityFactory {
+public class TurnAction extends EntityHandler {
 	
 	public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 	public Array<ID> targetIDs = new Array<ID>();
@@ -31,8 +31,8 @@ public class TurnAction extends EntityFactory {
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
 	
-	public TurnAction(IEntityFactory factory) {
-		super(factory);
+	public TurnAction(IEntityHandler handler) {
+		super(handler);
 	}
 	
 	public Entity getEntity() {

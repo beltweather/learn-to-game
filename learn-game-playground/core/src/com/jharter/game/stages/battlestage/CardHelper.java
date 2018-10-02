@@ -14,24 +14,24 @@ import com.jharter.game.ashley.components.subcomponents.VoidCallback.CardCallbac
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemyCallback;
-import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
 
-public class CardHelper extends EntityFactory {
+public class CardHelper extends EntityHandler {
 	
 	//TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
 
 	private CombatUtil CombatUtil;
 	
-	public CardHelper(IEntityFactory factory) {
-		super(factory);
-		this.CombatUtil = new CombatUtil(factory);
+	public CardHelper(IEntityHandler handler) {
+		super(handler);
+		this.CombatUtil = new CombatUtil(handler);
 	}
 
 	public EntityBuilder buildCard(ID ownerID, ZoneComp zone, Texture texture, String name) {

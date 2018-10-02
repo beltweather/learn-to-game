@@ -2,8 +2,8 @@ package com.jharter.game.stages.battlestage;
 
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.render.HealthBarRenderMethod;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
@@ -11,10 +11,10 @@ import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.Direction;
 
-public class HealthBarHelper extends EntityFactory {
+public class HealthBarHelper extends EntityHandler {
 
-	public HealthBarHelper(IEntityFactory factory) {
-		super(factory);
+	public HealthBarHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public void addHealthBar(ZoneComp infoZone, ID relativeToID) {

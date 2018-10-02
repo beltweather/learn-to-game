@@ -2,13 +2,13 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.StatsComp;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 
-public class CombatUtil extends EntityFactory {
+public class CombatUtil extends EntityHandler {
 
-	public CombatUtil(IEntityFactory factory) {
-		super(factory);
+	public CombatUtil(IEntityHandler handler) {
+		super(handler);
 	}
 	
 	public int getDamage(Entity attacker, Entity defender, int baseDamage) {

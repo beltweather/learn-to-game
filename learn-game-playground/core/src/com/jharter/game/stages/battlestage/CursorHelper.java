@@ -2,18 +2,18 @@ package com.jharter.game.stages.battlestage;
 
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
-public class CursorHelper extends EntityFactory {
+public class CursorHelper extends EntityHandler {
 
-	public CursorHelper(IEntityFactory factory) {
-		super(factory);
+	public CursorHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public EntityBuilder buildCursor(ZoneType zoneType) {

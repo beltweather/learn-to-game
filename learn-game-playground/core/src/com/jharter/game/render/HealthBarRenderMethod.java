@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 
 public class HealthBarRenderMethod extends ShapeRenderMethod {
 
-	public HealthBarRenderMethod(IEntityFactory factory) {
-		super(factory);
+	public HealthBarRenderMethod(IEntityHandler handler) {
+		super(handler);
 	}
 
 	@Override

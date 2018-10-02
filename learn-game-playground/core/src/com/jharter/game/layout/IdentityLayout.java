@@ -1,13 +1,13 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
 public class IdentityLayout extends ZoneLayout {
 
-	public IdentityLayout(IEntityFactory factory) {
-		super(factory);
+	public IdentityLayout(IEntityHandler handler) {
+		super(handler);
 	}
 
 	@Override

@@ -3,17 +3,17 @@ package com.jharter.game.stages.battlestage;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.U;
 
 import uk.co.carelesslabs.Enums.EntityType;
 
-public class BackgroundHelper extends EntityFactory {
+public class BackgroundHelper extends EntityHandler {
 
-	public BackgroundHelper(IEntityFactory factory) {
-		super(factory);
+	public BackgroundHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public void addBackground(Texture texture) {

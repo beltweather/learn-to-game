@@ -2,16 +2,16 @@ package com.jharter.game.stages.battlestage;
 
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityFactory;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.EntityHandler;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.render.TurnTimerRenderMethod;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.IDUtil;
 
-public class TurnHelper extends EntityFactory {
+public class TurnHelper extends EntityHandler {
 	
-	public TurnHelper(IEntityFactory factory) {
-		super(factory);
+	public TurnHelper(IEntityHandler handler) {
+		super(handler);
 	}
 
 	public void addTurnEntity(ZoneComp infoZone, float maxTurnTimeSec) {

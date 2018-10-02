@@ -2,14 +2,14 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 public class FriendLayout extends ZoneLayout {
 
-	public FriendLayout(IEntityFactory factory) {
-		super(factory);
+	public FriendLayout(IEntityHandler handler) {
+		super(handler);
 	}
 
 	@Override

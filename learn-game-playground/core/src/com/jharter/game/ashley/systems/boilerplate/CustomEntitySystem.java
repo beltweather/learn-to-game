@@ -13,15 +13,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.entities.IEntityFactory;
-import com.jharter.game.ashley.util.ToolBox;
+import com.jharter.game.ashley.entities.IEntityHandler;
+import com.jharter.game.ashley.util.EntityToolBox;
 import com.jharter.game.tween.CustomTweenManager;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDManager;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public abstract class CustomEntitySystem extends EntitySystem implements IEntityFactory {
+public abstract class CustomEntitySystem extends EntitySystem implements IEntityHandler {
 	
 	public static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...defaultComps) {
 		Class<?>[] combined = new Class<?>[additionalComps.length + defaultComps.length];
@@ -42,7 +42,7 @@ public abstract class CustomEntitySystem extends EntitySystem implements IEntity
 	private ObjectMap<Object, ImmutableArray<Entity>> entityArraysByKey = new ObjectMap<Object, ImmutableArray<Entity>>();
 	private ObjectMap<Object, Comparator<Entity>> comparatorsByKey = new ObjectMap<Object, Comparator<Entity>>();
 	private ObjectMap<Object, Array<Entity>> sortedEntityArraysByKey = new ObjectMap<Object, Array<Entity>>();
-	private ToolBox toolBox;
+	private EntityToolBox toolBox;
 	protected CompManager Comp;
 	
 	public CustomEntitySystem() {
@@ -61,23 +61,32 @@ public abstract class CustomEntitySystem extends EntitySystem implements IEntity
 	
 	public abstract void performUpdate(float deltaTime);
 	
-	public ToolBox getToolBox() {
+	@Override
+	public EntityToolBox getToolBox() {
 		return toolBox;
 	}
 	
+	@Override
 	public PooledEngine getEngine() {
 		return (PooledEngine) super.getEngine();
 	}
 	
-	public void setToolBox(ToolBox toolBox) {
+	public void setToolBox(EntityToolBox toolBox) {
 		this.toolBox = toolBox;
 		Comp = toolBox.getCompManager();
 	}
 	
+	@Override
+	public CompManager getCompManager() {
+		return toolBox.getCompManager();
+	}
+	
+	@Override
 	public IDManager getIDManager() {
 		return toolBox.getIDManager();
 	}
 	
+	@Override
 	public CustomTweenManager getTweenManager() {
 		return toolBox.getTweenManager();
 	}

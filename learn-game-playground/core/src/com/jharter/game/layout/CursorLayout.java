@@ -11,7 +11,7 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.tween.TweenType;
 import com.jharter.game.tween.CustomTweenManager;
 import com.jharter.game.util.U;
@@ -28,8 +28,8 @@ public class CursorLayout extends ZoneLayout {
 	private boolean hasMulti = false;
 	private RelativePositionRules rpr;
 	
-	public CursorLayout(IEntityFactory factory) {
-		super(factory);
+	public CursorLayout(IEntityHandler handler) {
+		super(handler);
 		rpr = new RelativePositionRules();
 		rpr.enabled = true;
 		rpr.tween = true;

@@ -2,6 +2,7 @@ package com.jharter.game.ecs.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.jharter.game.ecs.components.Components.ActionQueueableComp;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
@@ -18,36 +19,28 @@ public class QueueTurnActionsSystem  extends GameIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public QueueTurnActionsSystem() {
-		super(Family.all(TurnActionComp.class, ActionQueueableComp.class, IDComp.class, ZonePositionComp.class).get());
+		super(Family.all(IDComp.class, ZonePositionComp.class, TurnActionComp.class, ActionQueueableComp.class).get());
 	}
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		IDComp id = Comp.IDComp.get(entity);
-		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
+		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		
-		Entity owner = Comp.Entity.get(t.turnAction.ownerID);
-		ActiveTurnActionComp ac = Comp.getOrAdd(getEngine(), ActiveTurnActionComp.class, owner);
+		// Move the turn action to the active card zone
+		ChangeZoneComp cz = Comp.add(ChangeZoneComp.class, entity);
+		Comp.util(cz).change(zp.zoneID, getZoneID(t.turnAction.ownerID, ZoneType.ACTIVE_CARD));
 		
-		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
-		ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
-		cz.oldZoneID = z.zoneID;
-		cz.newZoneID = getZoneID(t.turnAction.ownerID, ZoneType.ACTIVE_CARD);
-		cz.useNextIndex = true;
-		cz.instantChange = false;
-		entity.add(cz);
-		
-		ac.activeTurnActionID = id.id;
-		
+		// Perform the callback that occurs the moment a turn action is queued if it's
+		// of a high priority
+		Comp.add(ActiveTurnActionComp.class, t.turnAction.ownerID).activeTurnActionID = id.id;
 		if(t != null && t.turnAction.priority > 0) {
 			t.turnAction.performAcceptCallback();
 		}
-		entity.remove(ActionQueueableComp.class);
 		
-		ActionQueuedComp aq = Comp.create(getEngine(), ActionQueuedComp.class);
-		aq.queueIndex = ActionQueuedComp.QUEUE_INDEX++;
-		entity.add(aq);
+		// Change the action's state from "queueable" to "queued" and mark it with a timestamp
+		Comp.swap(ActionQueueableComp.class, ActionQueuedComp.class, entity).timestamp = TimeUtils.millis();
 	}
 	
 }

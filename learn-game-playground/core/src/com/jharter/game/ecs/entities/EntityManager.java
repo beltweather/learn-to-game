@@ -68,15 +68,15 @@ public class EntityManager {
 		return null;
 	}
 	
-	public void remove(Engine engine, ID id) {
-		remove(engine, get(id));
+	public void remove(ID id) {
+		remove(get(id));
 	}
 	
-	public void remove(Engine engine, Entity entity) {
+	public void remove(Entity entity) {
 		if(entity == null) {
 			return;
 		}
-		Comp.getOrAdd(engine, RemoveComp.class, entity);
+		Comp.getOrAdd(RemoveComp.class, entity);
 	}
 		
 }

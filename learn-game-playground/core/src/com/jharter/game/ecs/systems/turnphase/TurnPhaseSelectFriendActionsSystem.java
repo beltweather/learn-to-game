@@ -28,7 +28,6 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		resetCursor();
 		getTurnTimer().start();
 		Media.startTurnBeep.play();
-		ActionQueuedComp.QUEUE_INDEX = 0;
 		return true;
 	}
 
@@ -54,9 +53,8 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		// Cancel the current turn action if there is one
 		CursorComp c = getCursorComp();
 		if(c.turnActionID != null) {
-			Entity entity = Comp.Entity.get(c.turnActionID);
-			if(!Comp.ActionSpentComp.has(entity)) {
-				entity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
+			if(!Comp.ActionSpentComp.has(c.turnActionID)) {
+				Comp.add(CleanupTurnActionComp.class, c.turnActionID);
 			}
 		}
 	}

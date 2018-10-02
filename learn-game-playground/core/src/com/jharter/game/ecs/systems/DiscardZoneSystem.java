@@ -27,18 +27,12 @@ public class DiscardZoneSystem extends GameIteratingSystem {
 		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		
 		if(z.zoneType != ZoneType.HAND) {
-			ChangeZoneComp cz = Comp.create(getEngine(), ChangeZoneComp.class);
-			cz.useNextIndex = true;
-			cz.oldZoneID = z.zoneID;
-			cz.newZoneID = getZoneID(ownerID, ZoneType.HAND);
-			entity.add(cz);
+			ChangeZoneComp cz = Comp.add(ChangeZoneComp.class, entity);
+			Comp.util(cz).change(z.zoneID, getZoneID(ownerID, ZoneType.HAND)); // XXX Make this HAND until we actually want to use the discard
 		}
 		
 		// Discarding gets rid of any multi sprite information
-		if(Comp.MultiSpriteComp.has(entity)) {
-			entity.remove(MultiSpriteComp.class);
-		}
-		
+		Comp.remove(MultiSpriteComp.class, entity);
 		Comp.remove(ToDiscardZoneComp.class, entity);
 	}
 

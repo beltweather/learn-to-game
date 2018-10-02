@@ -71,10 +71,10 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		turnPhase.remove(phaseClass);
 		
 		if(alternativeNextPhaseClass != null) {
-			turnPhase.add(Comp.create(getEngine(), alternativeNextPhaseClass));
+			Comp.add(alternativeNextPhaseClass, turnPhase);
 			alternativeNextPhaseClass = null;
 		} else {
-			turnPhase.add(Comp.create(getEngine(), nextPhaseClass));
+			Comp.add(nextPhaseClass, turnPhase);
 		}
 		
 		phaseStarted = false;
@@ -122,7 +122,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		if(cursor == null) {
 			return;
 		}
-		Comp.add(getEngine(), DisabledComp.class, cursor);
+		Comp.add(DisabledComp.class, cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
 	

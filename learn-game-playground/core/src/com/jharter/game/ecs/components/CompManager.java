@@ -2,7 +2,6 @@ package com.jharter.game.ecs.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -15,6 +14,7 @@ import com.jharter.game.ecs.components.Components.AnimationComp;
 import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.CardComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
+import com.jharter.game.ecs.components.Components.ChangeZoneCompUtil;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ecs.components.Components.CollisionComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
@@ -61,6 +61,7 @@ import com.jharter.game.ecs.components.Components.ZoneCompUtil;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityManager;
 import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 /**
@@ -82,6 +83,10 @@ public class CompManager {
 	
 	IEntityHandler getEntityHandler() {
 		return handler;
+	}
+	
+	private PooledEngine getEngine() {
+		return handler.getEngine();
 	}
 	
 	public class CompMapper<T extends Component> {
@@ -117,24 +122,35 @@ public class CompManager {
 		return componentMappersByClass.get(klass);
 	}
 	
-	public <T extends Component> T create(Engine engine, Class<T> klass) {
-		if(engine == null || !(engine instanceof PooledEngine)) {
-			return null;
-		}
-		return ((PooledEngine) engine).createComponent(klass);
+	public <T extends Component> T create(Class<T> klass) {
+		return getEngine().createComponent(klass);
 	}
 	
-	public <T extends Component> void add(Engine engine, Class<T> klass, Entity entity) {
-		if(entity != null && !getFor(klass).has(entity)) {
-			entity.add(create(engine, klass));
-		}
-	}
-	
-	public <T extends Component> T getOrAdd(Engine engine, Class<T> klass, Entity entity) {
+	public <T extends Component> T get(Class<T> klass, Entity entity) {
 		if(getFor(klass).has(entity)) {
 			return getFor(klass).get(entity);
 		}
-		T comp = create(engine, klass);
+		return null;
+	}
+	
+	public <T extends Component> boolean toggle(Class<T> klass, Entity entity, boolean add) {
+		return add ? add(klass, entity) != null : remove(klass, entity);
+	}
+	
+	public <T extends Component> T add(Class<T> klass, Entity entity) {
+		if(getFor(klass).has(entity)) {
+			return getFor(klass).get(entity);
+		}
+		T comp = create(klass);
+		entity.add(comp);
+		return comp;
+	}
+	
+	public <T extends Component> T getOrAdd(Class<T> klass, Entity entity) {
+		if(getFor(klass).has(entity)) {
+			return getFor(klass).get(entity);
+		}
+		T comp = create(klass);
 		entity.add(comp);
 		return comp;
 	}
@@ -147,13 +163,41 @@ public class CompManager {
 		return true;
 	}
 	
-	public <TA extends Component, TB extends Component> void swap(Engine engine, Class<TA> klassOld, Class<TB> klassNew, Entity entity) {
+	public <TA extends Component, TB extends Component> TB swap(Class<TA> klassOld, Class<TB> klassNew, Entity entity) {
 		remove(klassOld, entity);
-		add(engine, klassNew, entity);
+		return getOrAdd(klassNew, entity);
 	}
 	
 	public boolean has(Class<? extends Component> klass, Entity entity) {
 		return getFor(klass).has(entity);
+	}
+
+	public <T extends Component> boolean toggle(Class<T> klass, ID entityID, boolean add) {
+		return toggle(klass, Entity.get(entityID), add);
+	}
+	
+	public <T extends Component> T add(Class<T> klass, ID entityID) {
+		return add(klass, Entity.get(entityID));
+	}
+	
+	public <T extends Component> T get(Class<T> klass, ID entityID) {
+		return get(klass, Entity.get(entityID));
+	}
+	
+	public <T extends Component> T getOrAdd(Class<T> klass, ID entityID) {
+		return getOrAdd(klass, Entity.get(entityID));
+	}
+	
+	public <T extends Component> boolean remove(Class<T> klass, ID entityID) {
+		return remove(klass, Entity.get(entityID));
+	}
+	
+	public <TA extends Component, TB extends Component> TB swap(Class<TA> klassOld, Class<TB> klassNew, ID entityID) {
+		return swap(klassOld, klassNew, Entity.get(entityID));
+	}
+	
+	public boolean has(Class<? extends Component> klass, ID entityID) {
+		return has(klass, Entity.get(entityID));
 	}
 	
 	// Standard Component Mappers
@@ -213,5 +257,6 @@ public class CompManager {
 	public ZoneCompUtil util(ZoneComp comp) { return utilManager.get(ZoneCompUtil.class, comp); }
 	public VitalsCompUtil util(VitalsComp comp) { return utilManager.get(VitalsCompUtil.class, comp); }
 	public VitalsCompUtil util(Entity entity, Class<VitalsComp> compClass) { return utilManager.get(VitalsCompUtil.class, VitalsComp.class, entity); }
+	public ChangeZoneCompUtil util(ChangeZoneComp comp) { return utilManager.get(ChangeZoneCompUtil.class, comp) ; }
 	
 }

@@ -50,8 +50,7 @@ public class GameTweenManager extends EntityHandler {
 	
 	public void start(Engine engine, ID id, BaseTween<?> baseTween, TweenCallback callback) {
 		if(id != null) {
-			Entity entity = Comp.Entity.get(id);
-			AnimatingComp a = Comp.getOrAdd(engine, AnimatingComp.class, entity);
+			AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, id);
 			a.activeCount++;
 			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
 			finishedCallback.setID(id);

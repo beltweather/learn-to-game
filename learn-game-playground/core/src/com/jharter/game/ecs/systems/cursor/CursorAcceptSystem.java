@@ -38,7 +38,7 @@ public class CursorAcceptSystem extends CursorSystem {
 			if(t == null) {
 				c.turnActionID = targetEntityID;
 				t = Comp.TurnActionComp.get(target).turnAction;
-				Comp.getOrAdd(getEngine(), PendingTurnActionComp.class, target);
+				Comp.add(PendingTurnActionComp.class, target);
 			
 			// Otherwise, add them to the turn entity target list
 			} else {

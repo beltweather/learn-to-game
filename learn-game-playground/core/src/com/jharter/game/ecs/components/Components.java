@@ -11,10 +11,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.control.GameInput;
-import com.jharter.game.ecs.components.Components.SpriteComp;
-import com.jharter.game.ecs.components.Components.VitalsComp;
+import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
-import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
@@ -76,12 +74,6 @@ public final class Components {
 	public static final class DisabledComp extends B {}
 	
 	public static final class ActionQueueableComp extends B {}
-	public static final class ActionQueuedComp implements C {
-		public static int QUEUE_INDEX = 0;
-		public int queueIndex = -1;
-		private ActionQueuedComp() {}
-		@Override public void reset() { queueIndex = -1; }
-	}
 	public static final class ActionReadyComp extends B {}
 	public static final class CleanupTurnActionComp extends B {}
 	
@@ -519,6 +511,38 @@ public final class Components {
 			newIndex = -1;
 			checkpoint = false;
 			useNextIndex = false;
+		}
+		
+	}
+	
+	public static final class ChangeZoneCompUtil extends CompUtil<ChangeZoneComp> {
+		
+		public void change(ID oldZoneID, ID newZoneID) {
+			change(oldZoneID, newZoneID, true);
+		}
+		
+		public void change(ID oldZoneID, ID newZoneID, boolean useNextIndex) {
+			change(oldZoneID, newZoneID, useNextIndex, false);	
+		}
+		
+		public void change(ID oldZoneID, ID newZoneID, boolean useNextIndex, boolean instantChange) {
+			c.oldZoneID = oldZoneID;
+			c.newZoneID = newZoneID;
+			c.useNextIndex = useNextIndex;
+			c.instantChange = instantChange;
+		}
+		
+	}
+	
+	public static final class ActionQueuedComp implements C {
+		
+		public long timestamp = Long.MAX_VALUE;
+		
+		private ActionQueuedComp() {}
+		
+		@Override 
+		public void reset() { 
+			timestamp = Long.MAX_VALUE; 
 		}
 		
 	}

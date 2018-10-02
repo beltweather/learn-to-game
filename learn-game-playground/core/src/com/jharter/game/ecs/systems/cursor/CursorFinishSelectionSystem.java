@@ -25,7 +25,7 @@ public class CursorFinishSelectionSystem extends CursorSystem {
 		a.spentPlayers.add(a.activePlayerID);
 		nextPlayer();
 		
-		Comp.swap(getEngine(), PendingTurnActionComp.class, ActionQueueableComp.class, Comp.Entity.get(c.turnActionID));
+		Comp.swap(PendingTurnActionComp.class, ActionQueueableComp.class, c.turnActionID);
 		c.reset();
 	}
 	

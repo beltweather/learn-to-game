@@ -18,7 +18,7 @@ import com.jharter.game.util.id.ID;
 public abstract class CursorSystem extends FirstSystem {
 	
 	public CursorSystem(Class<? extends Component>... cursorComps) {
-		this(Family.all(GameEntitySystem.combine(cursorComps, CursorComp.class)).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
+		this(Family.all(GameEntitySystem.combine(cursorComps, CursorComp.class)).exclude(DisabledComp.class, AnimatingComp.class).get());
 	}
 	
 	private CursorSystem(Family family) {

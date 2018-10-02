@@ -68,19 +68,16 @@ public class CursorTargetValidationSystem extends CursorSystem {
 	}
 	
 	private void makeTargetable(ID id) {
-		Entity zoneObject = Comp.Entity.get(id);
-		Comp.swap(getEngine(), UntargetableComp.class, TargetableComp.class, zoneObject);
+		Comp.swap(UntargetableComp.class, TargetableComp.class, id);
 	}
 	
 	private void clearTargeting(ID id) {
-		Entity zoneObject = Comp.Entity.get(id);
-		Comp.remove(TargetableComp.class, zoneObject);
-		Comp.remove(UntargetableComp.class, zoneObject);
+		Comp.remove(TargetableComp.class, id);
+		Comp.remove(UntargetableComp.class, id);
 	}
 	
 	private void makeUntargetable(ID id) {
-		Entity zoneObject = Comp.Entity.get(id);
-		Comp.swap(getEngine(), TargetableComp.class, UntargetableComp.class, zoneObject);
+		Comp.swap(TargetableComp.class, UntargetableComp.class, id);
 	}
 	
 	private ZoneComp getZone(ZoneType zoneType) {

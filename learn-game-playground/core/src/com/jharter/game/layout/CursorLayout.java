@@ -124,7 +124,7 @@ public class CursorLayout extends ZoneLayout {
 		Timeline multiB = Timeline.createParallel();
 		
 		float centerY = 0;
-		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
+		MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, cursor);
 		mp.clear();
 		
 		int size = z.objectIDs.size();
@@ -158,7 +158,7 @@ public class CursorLayout extends ZoneLayout {
 			return;
 		}
 		
-		MultiSpriteComp mp = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
+		MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, cursor);
 		ImmutableArray<ID> objectIDs = Comp.ZoneComp.get(zp.zoneID).objectIDs;
 		for(int i = 0; i < objectIDs.size(); i++) {
 			Vector3 position = getCursorPosition(cursor, objectIDs.get(i), Comp.Entity.get(objectIDs.get(i)), z);
@@ -209,7 +209,7 @@ public class CursorLayout extends ZoneLayout {
 		ZonePositionComp targetZonePosition = Comp.ZonePositionComp.get(targetEntity);
 		ZoneComp targetZone = Comp.ZoneComp.get(targetZonePosition.zoneID);
 		
-		MultiSpriteComp ms = Comp.getOrAdd(getEngine(), MultiSpriteComp.class, cursor);
+		MultiSpriteComp ms = Comp.getOrAdd(MultiSpriteComp.class, cursor);
 		ms.drawSingle = true;
 		ms.reflectAngle = false;
 		if(!hasMulti) {

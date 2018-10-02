@@ -146,15 +146,11 @@ public abstract class ZoneLayout extends EntityHandler {
 	}
 	
 	public void show(Entity entity) {
-		if(Comp.InvisibleComp.has(entity)) {
-			entity.remove(InvisibleComp.class);
-		}
+		Comp.remove(InvisibleComp.class, entity);
 	}
 	
 	public void hide(Entity entity) {
-		if(!Comp.InvisibleComp.has(entity)) {
-			entity.add(Comp.create(getEngine(), InvisibleComp.class));
-		}
+		Comp.add(InvisibleComp.class, entity);
 	}
 	
 	protected abstract TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target);

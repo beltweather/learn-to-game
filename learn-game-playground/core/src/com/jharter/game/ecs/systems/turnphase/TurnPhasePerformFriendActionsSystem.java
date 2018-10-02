@@ -98,7 +98,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 						turnAction.performAcceptCallback();
 					}
 					
-					turnActionEntity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
+					Comp.add(CleanupTurnActionComp.class, turnActionEntity);
 				}
 				
 			}); 
@@ -125,7 +125,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 				enemyTT.position.y += U.u12(1);
 				enemyTT.angleDegrees += 20;
 				
-				AnimatingComp a = Comp.getOrAdd(getEngine(), AnimatingComp.class, enemy);
+				AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, enemy);
 				a.activeCount++;
 				FinishedAnimatingCallback enemyFAC = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
 				enemyFAC.setID(enemyID);
@@ -143,7 +143,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 			
 			busy = true;
 		} else {
-			turnActionEntity.add(Comp.create(getEngine(), CleanupTurnActionComp.class));
+			Comp.add(CleanupTurnActionComp.class, turnActionEntity);
 		}
 	}
 	
@@ -153,7 +153,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 	
 	@Override
 	public int compare(Entity entityA, Entity entityB) {
-		return Comp.ActionQueuedComp.get(entityA).queueIndex - Comp.ActionQueuedComp.get(entityB).queueIndex;
+		long timeA = Comp.ActionQueuedComp.get(entityA).timestamp;
+		long timeB = Comp.ActionQueuedComp.get(entityB).timestamp;
+		if(timeA == timeB) {
+			return 0;
+		}
+		if(timeA < timeB) {
+			return -1;
+		}
+		return 1;
 	}
 	
 }

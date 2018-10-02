@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.IDComp;
+import com.jharter.game.ecs.components.Components.InvisibleComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TargetableComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
@@ -32,6 +33,8 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		ID origID = c.targetID;
 		c.lastTargetID = c.targetID;
 		c.targetID = getNewTargetID(c, ci);
+		
+		Comp.toggle(InvisibleComp.class, cursor, c.targetID == null);
 		
 		// Do a funny convention here, if our last target was actually
 		// null, then set our current target to be our last as well.

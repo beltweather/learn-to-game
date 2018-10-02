@@ -1,24 +1,28 @@
 package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 
-public abstract class Callback<T, R> {
+public abstract class Callback<T, R> extends EntityFactory {
 
-	public Callback() {}
+	public Callback(IEntityFactory factory) {
+		super(factory);
+	}
 	
 	public abstract R call(T object);
 
 	public static abstract class ValidTargetCallback extends Callback<Entity, Boolean> {
 		
-		public ValidTargetCallback(EntityBuilder b) {
-			this(b.TurnActionComp().turnAction);
+		public ValidTargetCallback(IEntityFactory factory, EntityBuilder b) {
+			this(factory, b.TurnActionComp().turnAction);
 		}
 		
-		public ValidTargetCallback(TurnAction t) {
+		public ValidTargetCallback(IEntityFactory factory, TurnAction t) {
+			super(factory);
 			t.validTargetCallback = this;
 		}
 		
@@ -26,12 +30,12 @@ public abstract class Callback<T, R> {
 	
 	public static class HasActiveCardCallback extends ValidTargetCallback {
 		
-		public HasActiveCardCallback(EntityBuilder b) {
-			this(b.TurnActionComp().turnAction);
+		public HasActiveCardCallback(IEntityFactory factory, EntityBuilder b) {
+			this(factory, b.TurnActionComp().turnAction);
 		}
 		
-		public HasActiveCardCallback(TurnAction t) {
-			super(t);
+		public HasActiveCardCallback(IEntityFactory factory, TurnAction t) {
+			super(factory, t);
 		}
 
 		@Override
@@ -44,12 +48,12 @@ public abstract class Callback<T, R> {
 	
 	public static class DoesntHaveAllCallback extends ValidTargetCallback {
 		
-		public DoesntHaveAllCallback(EntityBuilder b) {
-			this(b.TurnActionComp().turnAction);
+		public DoesntHaveAllCallback(IEntityFactory factory, EntityBuilder b) {
+			this(factory, b.TurnActionComp().turnAction);
 		}
 		
-		public DoesntHaveAllCallback(TurnAction t) {
-			super(t);
+		public DoesntHaveAllCallback(IEntityFactory factory, TurnAction t) {
+			super(factory, t);
 		}
 
 		@Override

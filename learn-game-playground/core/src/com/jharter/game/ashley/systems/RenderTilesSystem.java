@@ -2,16 +2,15 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class RenderTilesSystem extends IteratingSystem {
+public class RenderTilesSystem extends CustomIteratingSystem {
 	
 	private SpriteBatch batch;
 	private OrthographicCamera camera;

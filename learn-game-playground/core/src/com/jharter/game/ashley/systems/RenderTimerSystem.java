@@ -2,20 +2,19 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
 @Deprecated
-public class RenderTimerSystem extends IteratingSystem {
+public class RenderTimerSystem extends CustomIteratingSystem {
 	
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;

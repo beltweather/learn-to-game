@@ -2,15 +2,14 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class InputMovementSystem extends IteratingSystem {
+public class InputMovementSystem extends CustomIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public InputMovementSystem() {

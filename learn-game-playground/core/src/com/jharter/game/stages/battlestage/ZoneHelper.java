@@ -1,35 +1,37 @@
 package com.jharter.game.stages.battlestage;
 
-import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDManager;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class ZoneHelper {
-
-	private ZoneHelper() {}
+public class ZoneHelper extends EntityFactory {
 	
-	public static ZoneComp addZone(PooledEngine engine, IDManager idManager, ID playerID, ZoneType zoneType) {
-		return addZone(engine, idManager, playerID, zoneType, null);
+	public ZoneHelper(IEntityFactory factory) {
+		super(factory);
+	}
+
+	public ZoneComp addZone(ID playerID, ZoneType zoneType) {
+		return addZone(playerID, zoneType, null);
 	}
 	
-	public static ZoneComp addZone(PooledEngine engine, IDManager idManager, ID playerID, ZoneType zoneType, ZoneLayout layout) {
-		EntityBuilder b = EntityBuilder.create(engine);
-		b.IDComp().id = idManager.generateZoneID(playerID, zoneType);
+	public ZoneComp addZone(ID playerID, ZoneType zoneType, ZoneLayout layout) {
+		EntityBuilder b = EntityBuilder.create(getEngine());
+		b.IDComp().id = getIDManager().generateZoneID(playerID, zoneType);
 		b.ZoneComp().zoneID = b.IDComp().id;
 		b.ZoneComp().zoneType = zoneType;
 		if(layout == null) {
-			layout = new IdentityLayout();
+			layout = new IdentityLayout(this);
 		}
 		layout.setIds(b.ZoneComp().objectIDs);
 		b.ZoneComp().layout = layout;
 		ZoneComp z = b.ZoneComp();
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 		return z;
 	}

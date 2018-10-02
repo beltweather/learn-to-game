@@ -4,7 +4,6 @@ import java.util.Comparator;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
@@ -22,9 +20,10 @@ import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomSortedIteratingSystem;
 import com.jharter.game.render.ShapeRenderMethod;
 
-public class RenderEntitiesSystem extends SortedIteratingSystem {
+public class RenderEntitiesSystem extends CustomSortedIteratingSystem {
 	
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
@@ -32,7 +31,8 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
-		super(Family.all(SpriteComp.class).one(TextureComp.class, ShapeRenderComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get(), new PositionSort());
+		super(Family.all(SpriteComp.class).one(TextureComp.class, ShapeRenderComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get());
+		setComparator(new PositionSort());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 		this.shapeRenderer = new ShapeRenderer();
@@ -136,7 +136,7 @@ public class RenderEntitiesSystem extends SortedIteratingSystem {
 		return v; //Math.round(v);
 	}
 	
-	private static class PositionSort implements Comparator<Entity> {
+	private class PositionSort implements Comparator<Entity> {
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
 			Vector3 posA = Comp.SpriteComp.get(entityA).position;

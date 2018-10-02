@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.id.ID;
 
 public class TweenTarget implements Poolable {
@@ -21,9 +21,9 @@ public class TweenTarget implements Poolable {
 		return tt;
 	}
 	
-	public static TweenTarget newInstance(Entity entity) {
+	public static TweenTarget newInstance(IEntityFactory factory, Entity entity) {
 		TweenTarget tt = newInstance();
-		tt.setFromEntity(entity);
+		tt.setFromEntity(factory, entity);
 		return tt;
 	}
 	
@@ -40,15 +40,15 @@ public class TweenTarget implements Poolable {
 	
 	private TweenTarget() {}
 	
-	public void setFromEntityID(ID id) {
-		setFromEntity(Comp.Entity.get(id));
+	public void setFromEntityID(IEntityFactory factory, ID id) {
+		setFromEntity(factory, factory.getToolBox().getCompManager().Entity.get(id));
 	}
 	
-	public void setFromEntity(Entity entity) {
+	public void setFromEntity(IEntityFactory factory, Entity entity) {
 		if(entity == null) {
 			return;
 		}
-		setFromSpriteComp(Comp.SpriteComp.get(entity));
+		setFromSpriteComp(factory.getToolBox().getCompManager().SpriteComp.get(entity));
 	}
 	
 	public void setFromSpriteComp(SpriteComp s) {

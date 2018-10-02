@@ -1,7 +1,6 @@
 package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;

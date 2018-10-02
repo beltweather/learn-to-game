@@ -2,13 +2,12 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class VelocityMovementSystem extends IteratingSystem {
+public class VelocityMovementSystem extends CustomIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public VelocityMovementSystem() {

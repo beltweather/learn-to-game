@@ -4,8 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.id.ID;
 
 import aurelienribon.tweenengine.BaseTween;
@@ -13,17 +14,23 @@ import aurelienribon.tweenengine.TweenCallback;
 
 public class TweenCallbacks {
 	
-	public static <T extends TweenCallback> T newInstance(Class<T> klass) {
-		return Pools.get(klass).obtain();
+	public static <T extends TweenCallback> T newInstance(IEntityFactory factory, Class<T> klass) {
+		T callback = Pools.get(klass).obtain();
+		if(callback instanceof EntityFactory) {
+			((EntityFactory) callback).setFactory(factory);
+		}
+		return callback;
 	}
 	
 	private TweenCallbacks() {}
 	
-	public static class CompositeCallback implements TweenCallback, Poolable {
+	public static class CompositeCallback extends EntityFactory implements TweenCallback, Poolable {
 		
 		private Array<TweenCallback> callbacks = new Array<TweenCallback>();
 		
-		private CompositeCallback() {}
+		private CompositeCallback() {
+			super(null);
+		}
 
 		public void addCallback(TweenCallback callback) {
 			callbacks.add(callback);
@@ -44,11 +51,13 @@ public class TweenCallbacks {
 		
 	}
 	
-	public static class FinishedAnimatingCallback implements TweenCallback, Poolable {
+	public static class FinishedAnimatingCallback extends EntityFactory implements TweenCallback, Poolable {
 		
 		private ID id;
 		
-		private FinishedAnimatingCallback() {}
+		private FinishedAnimatingCallback() {
+			super(null);
+		}
 
 		public void setID(ID id) {
 			this.id = id;

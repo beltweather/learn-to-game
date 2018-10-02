@@ -2,13 +2,12 @@ package com.jharter.game.ashley.systems.network.client;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.InputComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class ClientRandomMovementSystem extends IteratingSystem {
+public class ClientRandomMovementSystem extends CustomIteratingSystem {
 
 	private float time = 0;
 	private int dir = 4;

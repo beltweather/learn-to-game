@@ -5,7 +5,6 @@ import java.util.Comparator;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
@@ -18,7 +17,7 @@ import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
-import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.tween.CustomTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -27,14 +26,14 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.TweenCallback;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
+public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem implements Comparator<Entity> {
 
 	private boolean busy = false;
 	
 	@SuppressWarnings("unchecked")
 	public TurnPhasePerformFriendActionsSystem() {
 		super(TurnPhasePerformFriendActionsComp.class, TurnPhasePerformEnemyActionsComp.class);
-		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).get(), new QueueSort());
+		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).get(), this);
 	}
 
 	@Override
@@ -75,7 +74,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			ID ownerID = turnAction.ownerID;
 			
 			TweenTarget tt = TweenTarget.newInstance();
-			tt.setFromEntity(turnActionEntity);
+			tt.setFromEntity(this, turnActionEntity);
 			tt.angleDegrees = 3600;
 			tt.alpha = 0f;
 			tt.scale.x = 0f;
@@ -83,15 +82,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.position.x = U.u12(160);
 			tt.position.y = U.u12(60);
 			
-			TweenUtil.start(getEngine(), id, TweenUtil.tween(id, tt, 1f));
+			getTweenManager().start(getEngine(), id, getTweenManager().tween(id, tt, 1f));
 			
 			tt = TweenTarget.newInstance();
-			tt.setFromEntityID(ownerID);
+			tt.setFromEntityID(this, ownerID);
 			tt.position.x -= U.u12(10);
 			tt.position.y += U.u12(4);
 			tt.angleDegrees = 20;
 				
-			Timeline tweenA = TweenUtil.tween(ownerID, tt, 0.25f).setCallback(new TweenCallback() {
+			Timeline tweenA = getTweenManager().tween(ownerID, tt, 0.25f).setCallback(new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -107,7 +106,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 			tt.position.x += U.u12(10);
 			tt.position.y -= U.u12(4);
 			tt.angleDegrees = 0;
-			Timeline tweenBa = TweenUtil.tween(ownerID, tt, 0.25f);
+			Timeline tweenBa = getTweenManager().tween(ownerID, tt, 0.25f);
 			
 			Timeline tweenBb = Timeline.createParallel();
 			Array<ID> allTargetIDs = turnAction.getAllTargetIDs();
@@ -121,19 +120,19 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 				}
 				
 				TweenTarget enemyTT = TweenTarget.newInstance();
-				enemyTT.setFromEntity(enemy);
+				enemyTT.setFromEntity(this, enemy);
 				enemyTT.position.x -= U.u12(10);
 				enemyTT.position.y += U.u12(1);
 				enemyTT.angleDegrees += 20;
 				
 				AnimatingComp a = Comp.getOrAdd(getEngine(), AnimatingComp.class, enemy);
 				a.activeCount++;
-				FinishedAnimatingCallback enemyFAC = TweenCallbacks.newInstance(FinishedAnimatingCallback.class);
+				FinishedAnimatingCallback enemyFAC = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
 				enemyFAC.setID(enemyID);
-				tweenBb.push(TweenUtil.tween(enemyID, enemyTT, 0.1f).setCallback(enemyFAC).repeatYoyo(1, 0f));
+				tweenBb.push(getTweenManager().tween(enemyID, enemyTT, 0.1f).setCallback(enemyFAC).repeatYoyo(1, 0f));
 			}
 			
-			TweenUtil.start(getEngine(), ownerID, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
+			getTweenManager().start(getEngine(), ownerID, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {
@@ -152,11 +151,9 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem {
 		return getFirstEntity(TurnActionComp.class);
 	}
 	
-	private static class QueueSort implements Comparator<Entity> {
-		@Override
-		public int compare(Entity entityA, Entity entityB) {
-			return Comp.ActionQueuedComp.get(entityA).queueIndex - Comp.ActionQueuedComp.get(entityB).queueIndex;
-		}
+	@Override
+	public int compare(Entity entityA, Entity entityB) {
+		return Comp.ActionQueuedComp.get(entityA).queueIndex - Comp.ActionQueuedComp.get(entityB).queueIndex;
 	}
 	
 }

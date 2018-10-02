@@ -1,16 +1,16 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 public class HandLayout extends ZoneLayout {
 
-	public HandLayout() {
-		super();
+	public HandLayout(IEntityFactory factory) {
+		super(factory);
 	}
 
 	@Override

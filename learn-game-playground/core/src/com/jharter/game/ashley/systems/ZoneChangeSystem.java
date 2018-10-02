@@ -2,17 +2,15 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ChangeZoneComp;
-import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 import com.jharter.game.util.id.ID;
 
-public class ZoneChangeSystem extends IteratingSystem {
+public class ZoneChangeSystem extends CustomIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public ZoneChangeSystem() {

@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
@@ -99,7 +98,7 @@ public class TestStageA extends GameStage {
 	    interactComp.interaction = new Interaction() {
 	    	
 	    	public void interact(Entity interactor, Entity target) {
-	    		RemoveComp removeComp = Comp.RemoveComp.get(target);
+	    		RemoveComp removeComp = getCompManager().RemoveComp.get(target);
 	    		removeComp.requestRemove = true;
 	    		// XXX Debug for now
 	    		removeComp.remove = true;
@@ -150,7 +149,7 @@ public class TestStageA extends GameStage {
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-		Comp.Entity.addIdListener(engine, getBox2DWorld());
+		getCompManager().Entity.addIdListener(engine, getBox2DWorld());
 		
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());

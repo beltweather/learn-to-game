@@ -2,18 +2,19 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.CardComp;
 import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class TurnAction {
+public class TurnAction extends EntityFactory {
 	
 	public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 	public Array<ID> targetIDs = new Array<ID>();
@@ -30,7 +31,9 @@ public class TurnAction {
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
 	
-	public TurnAction() {}
+	public TurnAction(IEntityFactory factory) {
+		super(factory);
+	}
 	
 	public Entity getEntity() {
 		if(entityID == null) {
@@ -153,25 +156,6 @@ public class TurnAction {
 		Comp.remove(PendingTurnActionComp.class, getEntity());
 	}
 	
-	public void freshCopyTo(TurnAction t) {
-		t.targetZoneTypes = new Array<ZoneType>(targetZoneTypes);
-		t.acceptCallback = acceptCallback;
-		t.validTargetCallback = validTargetCallback;
-		t.defaultMultiplicity = defaultMultiplicity;
-		t.multiplicity = defaultMultiplicity;
-		t.defaultAll = defaultAll;
-		t.all = defaultAll;
-		t.priority = priority;
-		t.makesTargetAll = makesTargetAll;
-		t.makesTargetMultiplicity = makesTargetMultiplicity;
-	}
-	
-	public TurnAction freshCopy() {
-		TurnAction t = new TurnAction();
-		freshCopyTo(t);
-		return t;
-	}
-		
 	public void reset() {
 		targetZoneTypes.clear();
 		targetIDs.clear();

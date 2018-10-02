@@ -1,8 +1,7 @@
 package com.jharter.game.ashley.systems;
 
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
@@ -10,7 +9,7 @@ import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.Sys;
 
 @Deprecated
-public class AddEntitiesSystem extends EntitySystem {
+public class AddEntitiesSystem extends CustomEntitySystem {
 
 	private GameStage stage;
 	private GameClient client;
@@ -21,7 +20,7 @@ public class AddEntitiesSystem extends EntitySystem {
 	}
 	
 	@Override
-	public void update(float deltaTime) {
+	public void performUpdate(float deltaTime) {
 		AddPlayersPacket addPlayers = null; // client.getAddPlayers();
 		if(addPlayers == null) {
 			return;

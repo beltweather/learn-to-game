@@ -1,9 +1,8 @@
 package com.jharter.game.ashley.systems.network;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ai.msg.PriorityQueue;
-import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 import com.jharter.game.network.endpoints.GameEndPoint;
 import com.jharter.game.network.packets.Packet;
 import com.jharter.game.network.packets.PacketManager;
@@ -12,7 +11,7 @@ import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.collections.SynchronizedPriorityQueue;
 import com.jharter.game.util.id.ID;
 
-public abstract class PacketSystem<EP extends GameEndPoint, T extends Packet<T>> extends EntitySystem {
+public abstract class PacketSystem<EP extends GameEndPoint, T extends Packet<T>> extends CustomEntitySystem {
 
 	protected PacketManager<T> packetManager;
 	protected EP endPoint;
@@ -34,7 +33,7 @@ public abstract class PacketSystem<EP extends GameEndPoint, T extends Packet<T>>
 	}
 	
 	@Override
-	public void update(float deltaTime) {
+	public void performUpdate(float deltaTime) {
 		if(!packetManager.hasPackets()) {
 			return;
 		}

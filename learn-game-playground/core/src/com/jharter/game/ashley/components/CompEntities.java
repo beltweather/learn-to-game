@@ -5,27 +5,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
-import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.BodyComp;
-import com.jharter.game.ashley.components.Components.CursorComp;
-import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.IDComp;
-import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
-import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseComp;
-import com.jharter.game.ashley.components.Components.TurnTimerComp;
-import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
-import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
 /**
@@ -33,7 +18,11 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
  */
 public class CompEntities {
 	
-	CompEntities() {}
+	private CompManager Comp;
+	
+	CompEntities(CompManager Comp) {
+		this.Comp = Comp;
+	}
 
 	private final ObjectMap<ID, Entity> entitiesById = new ObjectMap<ID, Entity>();
 	
@@ -88,25 +77,4 @@ public class CompEntities {
 		Comp.getOrAdd(engine, RemoveComp.class, entity);
 	}
 		
-	/*private abstract class EntityMapper {
-		
-		protected Entity entity;
-		
-		private EntityMapper() {}
-		
-		void setEntity(Entity entity) {
-			this.entity = entity;
-		}
-		
-		protected abstract ID getDefaultEntityID();
-
-		public Entity Entity() {
-			if(entity != null) {
-				return entity;
-			}
-			return get(getDefaultEntityID());
-		}
-		
-	}*/
-	
 }

@@ -1,15 +1,16 @@
 package com.jharter.game.tween;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
-public class EntityTweenAccessor implements TweenAccessor<Entity> {
+public class EntityTweenAccessor extends EntityFactory implements TweenAccessor<Entity> {
 	
-	public EntityTweenAccessor() {
-		
+	public EntityTweenAccessor(IEntityFactory factory) {
+		super(factory);
 	}
 	
 	@Override

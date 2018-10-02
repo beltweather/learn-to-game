@@ -1,24 +1,28 @@
 package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public abstract class VoidCallback<T> {
+public abstract class VoidCallback<T> extends EntityFactory {
 
-	public VoidCallback() {}
+	public VoidCallback(IEntityFactory factory) {
+		super(factory);
+	}
 	
 	public abstract void call(T object);
 	
 	public abstract static class FriendEnemyCallback extends VoidCallback<TurnAction> {
 		
-		public FriendEnemyCallback(EntityBuilder b) {
+		public FriendEnemyCallback(IEntityFactory factory, EntityBuilder b) {
+			super(factory);
 			b.CardComp().cardType = CardType.TARGET_FRIEND_THEN_ENEMY;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND);
@@ -62,7 +66,8 @@ public abstract class VoidCallback<T> {
 	
 	public abstract static class FriendCallback extends VoidCallback<TurnAction> {
 		
-		public FriendCallback(EntityBuilder b) {
+		public FriendCallback(IEntityFactory factory, EntityBuilder b) {
+			super(factory);
 			b.CardComp().cardType = CardType.TARGET_FRIEND;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND);
@@ -102,7 +107,8 @@ public abstract class VoidCallback<T> {
 	
 	public abstract static class CardCallback extends VoidCallback<TurnAction> {
 		
-		public CardCallback(EntityBuilder b) {
+		public CardCallback(IEntityFactory factory, EntityBuilder b) {
+			super(factory);
 			b.CardComp().cardType = CardType.TARGET_CARD;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.ACTIVE_CARD);
@@ -125,7 +131,8 @@ public abstract class VoidCallback<T> {
 
 	public abstract static class EnemyCallback extends VoidCallback<TurnAction> {
 		
-		public EnemyCallback(EntityBuilder b) {
+		public EnemyCallback(IEntityFactory factory, EntityBuilder b) {
+			super(factory);
 			b.CardComp().cardType = CardType.TARGET_ENEMY;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.ENEMY);

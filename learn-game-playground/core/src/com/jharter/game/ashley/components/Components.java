@@ -323,13 +323,13 @@ public final class Components {
 	}
 
 	public static final class TurnActionComp implements C, Unique {
-		public TurnAction turnAction = new TurnAction();
+		public TurnAction turnAction = null;
 		
 		private TurnActionComp() {}
 		
 		@Override
 		public void reset() {
-			turnAction.reset();
+			turnAction = null;
 		}
 	}
 	

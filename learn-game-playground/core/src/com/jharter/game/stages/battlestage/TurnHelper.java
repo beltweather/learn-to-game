@@ -1,19 +1,21 @@
 package com.jharter.game.stages.battlestage;
 
-import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.render.TurnTimerRenderMethod;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.IDUtil;
 
-public class TurnHelper {
+public class TurnHelper extends EntityFactory {
 	
-	private TurnHelper() {}
-	
-	public static void addTurnEntity(PooledEngine engine, ZoneComp infoZone, float maxTurnTimeSec) {
-		EntityBuilder b = EntityBuilder.create(engine);
+	public TurnHelper(IEntityFactory factory) {
+		super(factory);
+	}
+
+	public void addTurnEntity(ZoneComp infoZone, float maxTurnTimeSec) {
+		EntityBuilder b = EntityBuilder.create(getEngine());
 		b.IDComp().id = IDUtil.newID();
 		b.TurnTimerComp().turnTimer.maxTurnTimeSec = maxTurnTimeSec;
 		b.TurnPhaseComp();
@@ -25,8 +27,8 @@ public class TurnHelper {
 		b.SpriteComp().height = 100 / U.PIXELS_PER_UNIT;
 		b.SpriteComp();
 		Comp.ZoneComp(infoZone).add(b);
-		b.ShapeRenderComp().renderMethod = new TurnTimerRenderMethod();
-		engine.addEntity(b.Entity());
+		b.ShapeRenderComp().renderMethod = new TurnTimerRenderMethod(this);
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 

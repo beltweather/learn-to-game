@@ -2,16 +2,16 @@ package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDUtil;
@@ -19,12 +19,14 @@ import com.jharter.game.util.id.IDUtil;
 import uk.co.carelesslabs.Enums.Direction;
 import uk.co.carelesslabs.Media;
 
-public class ArrowHelper {
+public class ArrowHelper extends EntityFactory {
 
-	private ArrowHelper() {}
-	
-	public static void addArrow(PooledEngine engine, ZoneComp infoZone) {
-		EntityBuilder b = EntityBuilder.create(engine);
+	public ArrowHelper(IEntityFactory factory) {
+		super(factory);
+	}
+
+	public void addArrow(ZoneComp infoZone) {
+		EntityBuilder b = EntityBuilder.create(getEngine());
 		b.IDComp().id = IDUtil.newID();
 		b.SpriteComp().position.x = 200;
 		b.SpriteComp().position.y = 200;
@@ -37,8 +39,8 @@ public class ArrowHelper {
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(1);
 		b.SpriteComp().relativePositionRules.setRelativeToIDGetter(new RelativeToIDGetter() {
 			
-			private ImmutableArray<Entity> cursors = engine.getEntitiesFor(Family.all(CursorComp.class).exclude(DisabledComp.class).get());
-			private ImmutableArray<Entity> activePlayers = engine.getEntitiesFor(Family.all(ActivePlayerComp.class).get());
+			private ImmutableArray<Entity> cursors = getEngine().getEntitiesFor(Family.all(CursorComp.class).exclude(DisabledComp.class).get());
+			private ImmutableArray<Entity> activePlayers = getEngine().getEntitiesFor(Family.all(ActivePlayerComp.class).get());
 			
 			@Override
 			public ID getRelativeToID() {
@@ -54,7 +56,7 @@ public class ArrowHelper {
 		b.AnimationComp().animation.setPlayMode(PlayMode.LOOP);
 		b.TextureComp();
 		Comp.ZoneComp(infoZone).add(b);
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 	

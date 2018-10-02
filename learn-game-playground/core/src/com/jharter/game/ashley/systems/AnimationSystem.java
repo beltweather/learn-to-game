@@ -2,14 +2,13 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class AnimationSystem extends IteratingSystem {
+public class AnimationSystem extends CustomIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public AnimationSystem () {

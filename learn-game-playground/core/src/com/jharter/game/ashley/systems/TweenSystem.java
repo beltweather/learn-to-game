@@ -1,17 +1,16 @@
 package com.jharter.game.ashley.systems;
 
-import com.badlogic.ashley.core.EntitySystem;
-import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 
-public class TweenSystem extends EntitySystem {
+public class TweenSystem extends CustomEntitySystem {
 	
 	public TweenSystem() {
-		TweenUtil.init();
+		
 	}
 	
 	@Override
-	public void update(float deltaTime) {
-		TweenUtil.update(deltaTime);
+	public void performUpdate(float deltaTime) {
+		getTweenManager().update(deltaTime);
 	}
 	
 }

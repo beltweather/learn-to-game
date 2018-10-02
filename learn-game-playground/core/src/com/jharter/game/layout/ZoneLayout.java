@@ -1,16 +1,16 @@
 package com.jharter.game.layout;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
 import com.jharter.game.util.id.ID;
 
-public abstract class ZoneLayout {
+public abstract class ZoneLayout extends EntityFactory {
 	
 	protected ImmutableArray<ID> ids = null;
 	protected ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
@@ -20,10 +20,8 @@ public abstract class ZoneLayout {
 	protected int priority = 0;
 	protected ID activePlayerID = null;
 	
-	public ZoneLayout() {}
-	
-	public Engine getEngine() {
-		return system.getEngine();
+	public ZoneLayout(IEntityFactory factory) {
+		super(factory);
 	}
 	
 	public int getPriority() {
@@ -39,12 +37,7 @@ public abstract class ZoneLayout {
 		return this;
 	}
 	
-	public void clearSystem() {
-		setSystem(null, null);
-	}
-	
-	public void setSystem(ZoneLayoutSystem system, ID activePlayerID) {
-		this.system = system;
+	public void setActivePlayerID(ID activePlayerID) {
 		this.activePlayerID = activePlayerID;
 	}
 	
@@ -108,7 +101,7 @@ public abstract class ZoneLayout {
 		if(allowRelativePositions) {
 			SpriteComp s = Comp.SpriteComp.get(entity);
 			if(target != null && s != null && s.relativePositionRules.enabled) {
-				if(!s.relativePositionRules.setToRelativePosition(s, target)) {
+				if(!s.relativePositionRules.setToRelativePosition(this, s, target)) {
 					hide(entity);
 					hide = true;
 				} else if(!s.relativePositionRules.tween) {

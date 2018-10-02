@@ -1,22 +1,29 @@
 package com.jharter.game.stages.battlestage;
 
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityFactory;
 import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
 
-public class EnemyHelper {
+public class EnemyHelper extends EntityFactory {
+	
+	private HealthBarHelper healthBarHelper; 
 
-	public static void addAtma(PooledEngine engine, ZoneComp enemyZone, ZoneComp infoZone) {
-		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
+	public EnemyHelper(IEntityFactory factory) {
+		super(factory);
+		healthBarHelper = new HealthBarHelper(factory);
+	}
+
+	public void addAtma(ZoneComp enemyZone, ZoneComp infoZone) {
+		EntityBuilder b = EntityUtil.buildBasicEntity(getEngine(), 
 				  EntityType.ENEMY, 
 				  new Vector3(U.u12(-65),0,0), 
 				  Media.atma);
@@ -33,14 +40,14 @@ public class EnemyHelper {
 		b.StatsComp().mDefense = 10;
 		b.SpriteComp().scale = new Vector2(2f,2f);
 		Comp.ZoneComp(enemyZone).add(b);
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 		
-		HealthBarHelper.addHealthBar(engine, infoZone, id);
+		healthBarHelper.addHealthBar(infoZone, id);
 	}
 	
-	public static void addCactar(PooledEngine engine, ZoneComp enemyZone, ZoneComp infoZone) {
-		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
+	public void addCactar(ZoneComp enemyZone, ZoneComp infoZone) {
+		EntityBuilder b = EntityUtil.buildBasicEntity(getEngine(), 
 				  EntityType.ENEMY, 
 				  new Vector3(U.u12(-20), U.u12(-10), 0), 
 				  Media.cactar);
@@ -57,10 +64,10 @@ public class EnemyHelper {
 		b.StatsComp().mDefense = 7;
 		//b.SpriteComp().scale = new Vector2(2f,2f);
 		Comp.ZoneComp(enemyZone).add(b);
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 		
-		HealthBarHelper.addHealthBar(engine, infoZone, id);
+		healthBarHelper.addHealthBar(infoZone, id);
 	}
 	
 }

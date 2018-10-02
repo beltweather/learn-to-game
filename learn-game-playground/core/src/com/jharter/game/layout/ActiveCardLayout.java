@@ -2,12 +2,11 @@ package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.tween.TweenType;
-import com.jharter.game.tween.TweenUtil;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -17,8 +16,8 @@ import uk.co.carelesslabs.Enums.Direction;
 
 public class ActiveCardLayout extends ZoneLayout {
 
-	public ActiveCardLayout() {
-		super();
+	public ActiveCardLayout(IEntityFactory factory) {
+		super(factory);
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class ActiveCardLayout extends ZoneLayout {
 			}
 			m.size = m.positions.size;
 			
-			TweenUtil.start(getEngine(), null, timeline);
+			getTweenManager().start(getEngine(), null, timeline);
 			
 		} else {
 			Comp.remove(MultiSpriteComp.class, entity);

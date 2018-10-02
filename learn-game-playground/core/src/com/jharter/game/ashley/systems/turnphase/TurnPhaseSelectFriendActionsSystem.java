@@ -1,7 +1,6 @@
 package com.jharter.game.ashley.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;

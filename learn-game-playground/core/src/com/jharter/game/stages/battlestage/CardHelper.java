@@ -1,35 +1,41 @@
 package com.jharter.game.stages.battlestage;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.Callback.DoesntHaveAllCallback;
 import com.jharter.game.ashley.components.subcomponents.CombatUtil;
+import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.CardCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemyCallback;
+import com.jharter.game.ashley.entities.EntityFactory;
 import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
 
-public class CardHelper {
+public class CardHelper extends EntityFactory {
 	
 	//TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
 
-	private CardHelper() {}
+	private CombatUtil CombatUtil;
 	
-	public static EntityBuilder buildCard(PooledEngine engine, ID ownerID, ZoneComp zone, Texture texture, String name) {
-		EntityBuilder b = EntityUtil.buildBasicEntity(engine, 
+	public CardHelper(IEntityFactory factory) {
+		super(factory);
+		this.CombatUtil = new CombatUtil(factory);
+	}
+
+	public EntityBuilder buildCard(ID ownerID, ZoneComp zone, Texture texture, String name) {
+		EntityBuilder b = EntityUtil.buildBasicEntity(getEngine(), 
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
 				texture);
@@ -38,15 +44,16 @@ public class CardHelper {
 		b.VelocityComp();
 		b.BodyComp();
 		b.CardComp().ownerID = ownerID;
+		b.TurnActionComp().turnAction = new TurnAction(this);
 		b.TurnActionComp().turnAction.entityID = b.IDComp().id;
 		b.TurnActionComp().turnAction.ownerID = ownerID;
 		Comp.ZoneComp(zone).add(b);
 		return b;
 	}
 	
-	public static void addDrainCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, ownerID, zone, Media.drainLife, "Drain Life");
-		new FriendEnemyCallback(b) {
+	public void addDrainCard(ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(ownerID, zone, Media.drainLife, "Drain Life");
+		new FriendEnemyCallback(this, b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity friend, Entity enemy) {
@@ -84,13 +91,13 @@ public class CardHelper {
 			}
 			
 		};
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 	
-	public static void addAttackCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, ownerID, zone, Media.attack, "Attack");
-		new EnemyCallback(b) {
+	public void addAttackCard(ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(ownerID, zone, Media.attack, "Attack");
+		new EnemyCallback(this, b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity enemy) {
@@ -102,15 +109,15 @@ public class CardHelper {
 			}
 			
 		};
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 	
-	public static void addAttackAllCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, ownerID, zone, Media.attackAll, "Attack All");
+	public void addAttackAllCard(ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(ownerID, zone, Media.attackAll, "Attack All");
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
-		new EnemyCallback(b) {
+		new EnemyCallback(this, b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity enemy) {
@@ -122,15 +129,15 @@ public class CardHelper {
 			}
 			
 		};
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 	
-	public static void addHealAllCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, ownerID, zone, Media.healAll, "Heal All");
+	public void addHealAllCard(ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(ownerID, zone, Media.healAll, "Heal All");
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
-		new FriendCallback(b) {
+		new FriendCallback(this, b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity friend) {
@@ -140,14 +147,14 @@ public class CardHelper {
 			}
 			
 		};
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 
-	public static void addX2Card(PooledEngine engine, ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, ownerID, zone, Media.x2, "x2");
+	public void addX2Card(ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(ownerID, zone, Media.x2, "x2");
 		b.TurnActionComp().turnAction.makesTargetMultiplicity = 2;
-		new CardCallback(b) {
+		new CardCallback(this, b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
@@ -157,15 +164,15 @@ public class CardHelper {
 			}
 			
 		};
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 	
-	public static void addAllCard(PooledEngine engine, ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(engine, ownerID, zone, Media.all, "All");
+	public void addAllCard(ID ownerID, ZoneComp zone) {
+		EntityBuilder b = buildCard(ownerID, zone, Media.all, "All");
 		b.TurnActionComp().turnAction.makesTargetAll = true;
-		new DoesntHaveAllCallback(b);
-		new CardCallback(b) {
+		new DoesntHaveAllCallback(this, b);
+		new CardCallback(this, b) {
 
 			@Override
 			public void call(Entity owner, Entity card, Entity activeCard) {
@@ -175,7 +182,7 @@ public class CardHelper {
 			}
 			
 		};
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 

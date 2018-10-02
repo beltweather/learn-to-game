@@ -1,10 +1,8 @@
 package com.jharter.game.stages.battlestage;
 
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.systems.AnimationSystem;
@@ -17,7 +15,6 @@ import com.jharter.game.ashley.systems.RenderWorldGridSystem;
 import com.jharter.game.ashley.systems.TweenSystem;
 import com.jharter.game.ashley.systems.ZoneChangeSystem;
 import com.jharter.game.ashley.systems.ZoneLayoutSystem;
-import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 import com.jharter.game.ashley.systems.cursor.CursorAcceptSystem;
 import com.jharter.game.ashley.systems.cursor.CursorCancelSystem;
 import com.jharter.game.ashley.systems.cursor.CursorFinishSelectionSystem;
@@ -55,7 +52,6 @@ import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
@@ -68,50 +64,59 @@ public class BattleStage extends GameStage {
 
 	@Override
 	public void addEntities(PooledEngine engine) {
-		BackgroundHelper.addBackground(engine, Media.background);
-		//BackgroundHelper.addBackground(engine, Media.bgField2);
-		//BackgroundHelper.addBackground(engine, Media.bgLightYellow, 5f);
-		//BackgroundHelper.addBackground(engine, Media.bgField2bg);
-		//BackgroundHelper.addBackground(engine, Media.bgField2fg, 5f);
+		BackgroundHelper BackgroundHelper = new BackgroundHelper(this);
+		ZoneHelper ZoneHelper = new ZoneHelper(this);
+		CardHelper CardHelper = new CardHelper(this);
+		TurnHelper TurnHelper = new TurnHelper(this);
+		ArrowHelper ArrowHelper = new ArrowHelper(this);
+		PlayerHelper PlayerHelper = new PlayerHelper(this);
+		EnemyHelper EnemyHelper = new EnemyHelper(this);
+		CursorHelper CursorHelper = new CursorHelper(this);
+		
+		BackgroundHelper.addBackground(Media.background);
+		//BackgroundHelper.addBackground(Media.bgField2);
+		//BackgroundHelper.addBackground(Media.bgLightYellow, 5f);
+		//BackgroundHelper.addBackground(Media.bgField2bg);
+		//BackgroundHelper.addBackground(Media.bgField2fg, 5f);
 
 		// Player IDs
-		ID warriorPlayerID = idManager.buildPlayerEntityID();
-		ID sorcererPlayerID = idManager.buildPlayerEntityID();
-		ID roguePlayerID = idManager.buildPlayerEntityID();
-		ID rangerPlayerID = idManager.buildPlayerEntityID();
-		ID globalPlayerID = idManager.getGlobalPlayerEntityID();
+		ID warriorPlayerID = getIDManager().buildPlayerEntityID();
+		ID sorcererPlayerID = getIDManager().buildPlayerEntityID();
+		ID roguePlayerID = getIDManager().buildPlayerEntityID();
+		ID rangerPlayerID = getIDManager().buildPlayerEntityID();
+		ID globalPlayerID = getIDManager().getGlobalPlayerEntityID();
 		
 		// Battle entity
 		//BattleHelper.addBattle(engine, warriorPlayerID);
 		
 		// Player Zones
-		ZoneComp handZone = ZoneHelper.addZone(engine, idManager, roguePlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, idManager, roguePlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, idManager, roguePlayerID, ZoneType.DISCARD);
+		ZoneComp handZone = ZoneHelper.addZone(roguePlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(roguePlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(roguePlayerID, ZoneType.DISCARD);
 		
-		ZoneComp warriorHandZone = ZoneHelper.addZone(engine, idManager, warriorPlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, idManager, warriorPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, idManager, warriorPlayerID, ZoneType.DISCARD);
+		ZoneComp warriorHandZone = ZoneHelper.addZone(warriorPlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(warriorPlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(warriorPlayerID, ZoneType.DISCARD);
 		
-		ZoneComp sorcererHandZone = ZoneHelper.addZone(engine, idManager, sorcererPlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, idManager, sorcererPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, idManager, sorcererPlayerID, ZoneType.DISCARD);
+		ZoneComp sorcererHandZone = ZoneHelper.addZone(sorcererPlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DISCARD);
 		
-		ZoneComp rangerHandZone = ZoneHelper.addZone(engine, idManager, rangerPlayerID, ZoneType.HAND, new HandLayout());
-		ZoneHelper.addZone(engine, idManager, rangerPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(engine, idManager, rangerPlayerID, ZoneType.DISCARD);
+		ZoneComp rangerHandZone = ZoneHelper.addZone(rangerPlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(rangerPlayerID, ZoneType.DECK);
+		ZoneHelper.addZone(rangerPlayerID, ZoneType.DISCARD);
 
-		ZoneComp infoZone = ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.INFO, new IdentityLayout());
-		ZoneComp friendZone = ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.FRIEND, new FriendLayout());
-		ZoneComp enemyZone = ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.ENEMY);
-		ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout().setPriority(-1));
-		ZoneHelper.addZone(engine, idManager, globalPlayerID, ZoneType.CURSOR, new CursorLayout().setPriority(-2));
+		ZoneComp infoZone = ZoneHelper.addZone(globalPlayerID, ZoneType.INFO, new IdentityLayout(this));
+		ZoneComp friendZone = ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND, new FriendLayout(this));
+		ZoneComp enemyZone = ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY);
+		ZoneHelper.addZone(globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
+		ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));
 		
 		// Turn timer
-		TurnHelper.addTurnEntity(engine, infoZone, 30f);
+		TurnHelper.addTurnEntity(infoZone, 30f);
 		
 		// Arrow
-		ArrowHelper.addArrow(engine, infoZone);
+		ArrowHelper.addArrow(infoZone);
 		
 		// Other players
 		/*PlayerComp roguePlayer = PlayerHelper.addPlayer(engine, roguePlayerID);
@@ -120,33 +125,33 @@ public class BattleStage extends GameStage {
 		PlayerComp rangerPlayer = PlayerHelper.addPlayer(engine, rangerPlayerID);*/
 		
 		// CHARACTERS
-		PlayerHelper.addPlayer(engine, friendZone, infoZone, warriorPlayerID, Media.warrior, "Warrior");
-		PlayerHelper.addPlayer(engine, friendZone, infoZone, sorcererPlayerID, Media.sorcerer, "Sorcerer");
-		PlayerHelper.addPlayer(engine, friendZone, infoZone, roguePlayerID, Media.rogue, "Rogue");
-		PlayerHelper.addPlayer(engine, friendZone, infoZone, rangerPlayerID, Media.ranger, "Ranger");
+		PlayerHelper.addPlayer(friendZone, infoZone, warriorPlayerID, Media.warrior, "Warrior");
+		PlayerHelper.addPlayer(friendZone, infoZone, sorcererPlayerID, Media.sorcerer, "Sorcerer");
+		PlayerHelper.addPlayer(friendZone, infoZone, roguePlayerID, Media.rogue, "Rogue");
+		PlayerHelper.addPlayer(friendZone, infoZone, rangerPlayerID, Media.ranger, "Ranger");
 
 		// ENEMIES
-		EnemyHelper.addAtma(engine, enemyZone, infoZone);
-		EnemyHelper.addCactar(engine, enemyZone, infoZone);
+		EnemyHelper.addAtma(enemyZone, infoZone);
+		EnemyHelper.addCactar(enemyZone, infoZone);
 		
 		// Cards
-		CardHelper.addDrainCard(engine, roguePlayerID, handZone);
-		CardHelper.addX2Card(engine, roguePlayerID, handZone);
-		CardHelper.addAllCard(engine, roguePlayerID, handZone);
+		CardHelper.addDrainCard(roguePlayerID, handZone);
+		CardHelper.addX2Card(roguePlayerID, handZone);
+		CardHelper.addAllCard(roguePlayerID, handZone);
 		
-		CardHelper.addAttackCard(engine, warriorPlayerID, warriorHandZone);
-		CardHelper.addX2Card(engine, warriorPlayerID, warriorHandZone);
-		CardHelper.addAllCard(engine, warriorPlayerID, warriorHandZone);
+		CardHelper.addAttackCard(warriorPlayerID, warriorHandZone);
+		CardHelper.addX2Card(warriorPlayerID, warriorHandZone);
+		CardHelper.addAllCard(warriorPlayerID, warriorHandZone);
 
-		CardHelper.addHealAllCard(engine, sorcererPlayerID, sorcererHandZone);
-		CardHelper.addX2Card(engine, sorcererPlayerID, sorcererHandZone);
-		CardHelper.addAllCard(engine, sorcererPlayerID, sorcererHandZone);
+		CardHelper.addHealAllCard(sorcererPlayerID, sorcererHandZone);
+		CardHelper.addX2Card(sorcererPlayerID, sorcererHandZone);
+		CardHelper.addAllCard(sorcererPlayerID, sorcererHandZone);
 		
-		CardHelper.addAttackAllCard(engine, rangerPlayerID, rangerHandZone);
-		CardHelper.addX2Card(engine, rangerPlayerID, rangerHandZone);
-		CardHelper.addAllCard(engine, rangerPlayerID, rangerHandZone);
+		CardHelper.addAttackAllCard(rangerPlayerID, rangerHandZone);
+		CardHelper.addX2Card(rangerPlayerID, rangerHandZone);
+		CardHelper.addAllCard(rangerPlayerID, rangerHandZone);
 		
-		EntityBuilder b = CursorHelper.buildCursor(engine, idManager, ZoneType.HAND);
+		EntityBuilder b = CursorHelper.buildCursor(ZoneType.HAND);
 		b.FocusComp();
 		b.InputComp().input = buildInput(true);
 		getEngine().addEntity(b.Entity());
@@ -243,20 +248,10 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new RenderWorldGridSystem(getCamera()));
 	}
 	
-	private void addIDManager(PooledEngine engine) {
-		for(EntitySystem system : engine.getSystems()) {
-			if(system instanceof CustomEntitySystem) {
-				((CustomEntitySystem) system).setIDManager(idManager);
-			}
-		}
-	}
-
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
     	
-		Comp.Entity.addIdListener(engine, getBox2DWorld());
-		
 		addNetworkSystems(engine);
 		addDependencySystems(engine);
 		addTurnPhaseSystems(engine);
@@ -271,8 +266,6 @@ public class BattleStage extends GameStage {
 		if(!endPointHelper.isHeadless()) {
 			addVisualSystems(engine);
 		}
-		
-		addIDManager(engine);
 		
 		return engine;
     }

@@ -3,19 +3,18 @@ package com.jharter.game.ashley.systems.network.server;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIntervalSystem;
 import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.SnapshotPacket;
 
-public class ServerSendSnapshotSystem extends IntervalSystem {
+public class ServerSendSnapshotSystem extends CustomIntervalSystem {
 	
 	private static final float DEFAULT_INTERVAL = 1/20f;
 	

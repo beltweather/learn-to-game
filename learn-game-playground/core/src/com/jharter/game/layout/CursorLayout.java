@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.MultiSpriteComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
@@ -12,8 +11,9 @@ import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.tween.TweenType;
-import com.jharter.game.tween.TweenUtil;
+import com.jharter.game.tween.CustomTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -28,8 +28,8 @@ public class CursorLayout extends ZoneLayout {
 	private boolean hasMulti = false;
 	private RelativePositionRules rpr;
 	
-	public CursorLayout() {
-		super();
+	public CursorLayout(IEntityFactory factory) {
+		super(factory);
 		rpr = new RelativePositionRules();
 		rpr.enabled = true;
 		rpr.tween = true;
@@ -150,7 +150,7 @@ public class CursorLayout extends ZoneLayout {
 		mp.size = mp.positions.size;
 		
 		Timeline tween = Timeline.createSequence().push(multiA).push(multiB);
-		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, tween);
+		getTweenManager().start(getEngine(), Comp.IDComp.get(cursor).id, tween);
 	}
 	
 	private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
@@ -248,7 +248,7 @@ public class CursorLayout extends ZoneLayout {
 			}
 		}
 		
-		TweenUtil.start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
+		getTweenManager().start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
 	}
 
 	private boolean isAll(CursorComp c) {
@@ -320,7 +320,7 @@ public class CursorLayout extends ZoneLayout {
 				break;
 		}
 		
-		rpr.setToRelativePosition(s, cursorPosition);
+		rpr.setToRelativePosition(this, s, cursorPosition);
 		return cursorPosition;
 	}
 

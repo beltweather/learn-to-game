@@ -1,9 +1,9 @@
 package com.jharter.game.stages.battlestage;
 
-import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.render.HealthBarRenderMethod;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
@@ -11,12 +11,14 @@ import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Enums.Direction;
 
-public class HealthBarHelper {
+public class HealthBarHelper extends EntityFactory {
 
-	private HealthBarHelper() {}
-	
-	public static void addHealthBar(PooledEngine engine, ZoneComp infoZone, ID relativeToID) {
-		EntityBuilder b = EntityBuilder.create(engine);
+	public HealthBarHelper(IEntityFactory factory) {
+		super(factory);
+	}
+
+	public void addHealthBar(ZoneComp infoZone, ID relativeToID) {
+		EntityBuilder b = EntityBuilder.create(getEngine());
 		b.IDComp().id = IDUtil.newID();
 		b.SpriteComp().position.x = 0;
 		b.SpriteComp().position.y = -U.u12(2f);
@@ -29,9 +31,9 @@ public class HealthBarHelper {
 		b.SpriteComp().relativePositionRules.yAlign = Direction.CENTER;
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(5);
 		b.SpriteComp().relativePositionRules.tween = false;
-		b.ShapeRenderComp().renderMethod = new HealthBarRenderMethod();
+		b.ShapeRenderComp().renderMethod = new HealthBarRenderMethod(this);
 		Comp.ZoneComp(infoZone).add(b);
-		engine.addEntity(b.Entity());
+		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 

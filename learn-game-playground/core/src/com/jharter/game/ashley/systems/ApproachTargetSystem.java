@@ -2,16 +2,15 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class ApproachTargetSystem extends IteratingSystem {
+public class ApproachTargetSystem extends CustomIteratingSystem {
 	
 	private static final float ALPHA = 0.01f;
 	private static final float MIN_DIFF = 1.0f;

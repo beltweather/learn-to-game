@@ -20,7 +20,11 @@ public class CompWrappers {
 	private ObjectMap<Class<?>, CompWrapper<?>> wrappersByClass = new ObjectMap<Class<?>, CompWrapper<?>>();
 	private ObjectMap<Class<? extends Component>, Boolean> permissionsByClass = new ObjectMap<Class<? extends Component>, Boolean>();
 	
-	CompWrappers() {}
+	private CompManager Comp;
+	
+	CompWrappers(CompManager Comp) {
+		this.Comp = Comp;
+	}
 	
 	public <W extends CompWrapper<C>, C extends Component> W get(Class<W> wrapperClass, C comp) {
 		if(!isAllowed(comp.getClass())) {
@@ -30,7 +34,7 @@ public class CompWrappers {
 			try {
 				Constructor c = wrapperClass.getDeclaredConstructors()[0];
 				c.setAccessible(true);
-				wrappersByClass.put(comp.getClass(), (W) c.newInstance());
+				wrappersByClass.put(comp.getClass(), (W) c.newInstance(Comp));
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -73,6 +77,11 @@ public class CompWrappers {
 	private static class CompWrapper<T extends Component> {
 		
 		private T comp;
+		protected CompManager Comp;
+		
+		private CompWrapper(CompManager Comp) {
+			this.Comp = Comp;
+		}
 		
 		void setComponent(T comp) {
 			this.comp = comp;
@@ -88,7 +97,9 @@ public class CompWrappers {
 	
 	public static class CompWrapperSpriteComp extends CompWrapper<SpriteComp> {
 		
-		private CompWrapperSpriteComp() {}
+		private CompWrapperSpriteComp(CompManager Comp) {
+			super(Comp);
+		}
 		
 		public float scaledWidth() {
 			return scaledWidth(comp().scale.x);
@@ -115,7 +126,9 @@ public class CompWrappers {
 	
 	public static class CompWrapperVitalsComp extends CompWrapper<VitalsComp> {
 		
-		private CompWrapperVitalsComp() {}
+		private CompWrapperVitalsComp(CompManager Comp) {
+			super(Comp);
+		}
 		
 		public void heal(int hp) {
 			comp().health += hp;
@@ -143,7 +156,9 @@ public class CompWrappers {
 	
 	public static class CompWrapperZoneComp extends CompWrapper<ZoneComp> {
 		
-		private CompWrapperZoneComp() {}
+		private CompWrapperZoneComp(CompManager Comp) {
+			super(Comp);
+		}
 		
 		public boolean hasIndex(int index) {
 			return index >= 0 && index < comp().internalObjectIDs.size;

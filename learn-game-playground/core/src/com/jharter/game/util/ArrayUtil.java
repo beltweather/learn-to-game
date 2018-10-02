@@ -2,7 +2,6 @@ package com.jharter.game.util;
 
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ashley.components.Components.ZoneComp;
 
 public class ArrayUtil {
 

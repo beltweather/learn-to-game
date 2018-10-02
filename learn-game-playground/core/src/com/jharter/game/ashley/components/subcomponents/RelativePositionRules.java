@@ -2,8 +2,9 @@ package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.Components.SpriteComp;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.util.id.ID;
 
@@ -18,10 +19,6 @@ public class RelativePositionRules {
 	public Vector3 offset = new Vector3();
 	public Direction xAlign = Direction.NONE;
 	public Direction yAlign = Direction.NONE;
-	
-	public RelativePositionRules() {
-
-	}
 	
 	public ID getRelativeToID() {
 		if(relativeToIDGetter != null) {
@@ -42,19 +39,21 @@ public class RelativePositionRules {
 		this.relativeToIDGetter = relativeToIDGetter;
 	}
 	
-	public boolean setToRelativePosition(SpriteComp s, TweenTarget target) {
-		return setToRelativePosition(s, target.scale.x, target.scale.y, target.position);
+	public boolean setToRelativePosition(IEntityFactory factory, SpriteComp s, TweenTarget target) {
+		return setToRelativePosition(factory, s, target.scale.x, target.scale.y, target.position);
 	}
 	
-	public boolean setToRelativePosition(SpriteComp s, Vector3 positionToSet) {
-		return setToRelativePosition(s, 1f, 1f, positionToSet);
+	public boolean setToRelativePosition(IEntityFactory factory, SpriteComp s, Vector3 positionToSet) {
+		return setToRelativePosition(factory, s, 1f, 1f, positionToSet);
 	}
 	
-	public boolean setToRelativePosition(SpriteComp s, float scaleX, float scaleY, Vector3 positionToSet) {
+	public boolean setToRelativePosition(IEntityFactory factory, SpriteComp s, float scaleX, float scaleY, Vector3 positionToSet) {
 		ID relativeToID = getRelativeToID();
 		if(s == null || !enabled || relativeToID == null) {
 			return false;
 		}
+		
+		CompManager Comp = factory.getToolBox().getCompManager();
 		
 		Entity baselineEntity = Comp.Entity.get(relativeToID);
 		SpriteComp sBaseline = Comp.SpriteComp.get(baselineEntity);

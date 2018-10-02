@@ -5,8 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.AnimatingComp;
+import com.jharter.game.ashley.entities.EntityFactory;
+import com.jharter.game.ashley.entities.IEntityFactory;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks.CompositeCallback;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
@@ -19,48 +20,46 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Circ;
 
-public class TweenUtil {
-	private TweenUtil() {}
-		
-	private static TweenManager manager;
+public class CustomTweenManager extends EntityFactory {
 	
-	public static void init() {
+	private TweenManager manager;
+
+	public CustomTweenManager(IEntityFactory factory) {
+		super(factory);
 		manager = new TweenManager();
+		registerAccessors();
+	}
+	
+	private void registerAccessors() {
 		//Tween.setCombinedAttributesLimit(4);
-		Tween.registerAccessor(ID.class, new IDTweenAccessor());
-		Tween.registerAccessor(Entity.class, new EntityTweenAccessor());
+		Tween.registerAccessor(ID.class, new IDTweenAccessor(this));
+		Tween.registerAccessor(Entity.class, new EntityTweenAccessor(this));
 		Tween.registerAccessor(Vector3.class, new Vector3TweenAccessor());
 		Tween.registerAccessor(Vector2.class, new Vector2TweenAccessor());
 		Tween.registerAccessor(Float.class, new FloatTweenAccessor());
 		Tween.registerAccessor(Array.class, new FloatArrayTweenAccessor());
 	}
 	
-	public static void update(float deltaTime) {
-		if(manager != null) {
-			manager.update(deltaTime);
-		}
+	public void update(float deltaTime) {
+		manager.update(deltaTime);
 	}
 	
-	public static void start(Engine engine, ID id, BaseTween<?> baseTween) {
+	public void start(Engine engine, ID id, BaseTween<?> baseTween) {
 		start(engine, id, baseTween, null);
 	}
 	
-	public static void start(Engine engine, ID id, BaseTween<?> baseTween, TweenCallback callback) {
-		if(manager == null) {
-			return;
-		}
-		
+	public void start(Engine engine, ID id, BaseTween<?> baseTween, TweenCallback callback) {
 		if(id != null) {
 			Entity entity = Comp.Entity.get(id);
 			AnimatingComp a = Comp.getOrAdd(engine, AnimatingComp.class, entity);
 			a.activeCount++;
-			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(FinishedAnimatingCallback.class);
+			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
 			finishedCallback.setID(id);
 			
 			if(callback == null) {
 				baseTween.setCallback(finishedCallback);
 			} else {
-				CompositeCallback cc = TweenCallbacks.newInstance(CompositeCallback.class);
+				CompositeCallback cc = TweenCallbacks.newInstance(this, CompositeCallback.class);
 				cc.addCallback(callback);
 				cc.addCallback(finishedCallback);
 				baseTween.setCallback(cc);
@@ -70,23 +69,23 @@ public class TweenUtil {
 		baseTween.start(manager);
 	}
 	
-	public static void start(Engine engine, Entity entity, TweenTarget target) {
+	public void start(Engine engine, Entity entity, TweenTarget target) {
 		start(engine, Comp.IDComp.get(entity).id, target);
 	}
 	
-	public static void start(Engine engine, ID id, TweenTarget target) {
+	public void start(Engine engine, ID id, TweenTarget target) {
 		start(engine, id, target, target.duration);
 	}
 	
-	public static void start(Engine engine, ID id, TweenTarget target, float duration) {
+	public void start(Engine engine, ID id, TweenTarget target, float duration) {
 		start(engine, id, tween(id, target, duration));
 	}
 	
-	public static Timeline tween(ID id, TweenTarget target) {
+	public Timeline tween(ID id, TweenTarget target) {
 		return tween(id, target, target.duration);
 	}
 	
-	public static Timeline tween(ID id, TweenTarget target, float duration) {
+	public Timeline tween(ID id, TweenTarget target, float duration) {
 		float d = duration;
 		target.round();
 		return Timeline.createParallel()
@@ -96,7 +95,7 @@ public class TweenUtil {
 			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(Circ.INOUT).target(target.angleDegrees));
 	}
 	
-	public static Timeline set(ID id, TweenTarget target) {
+	public Timeline set(ID id, TweenTarget target) {
 		return tween(id, target, 0f);
 		
 		/*target.round();

@@ -1,5 +1,6 @@
 package com.jharter.game.stages;
 
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
@@ -7,7 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
+import com.jharter.game.ashley.util.ToolBox;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.util.U;
@@ -17,7 +22,7 @@ import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
-public abstract class GameStage {
+public abstract class GameStage implements IEntityFactory {
 
 	private ID id;
 	protected OrthographicCamera camera;
@@ -26,7 +31,7 @@ public abstract class GameStage {
     protected Box2DWorld box2D;
     protected GameInput stageInput;
     protected EndPointHelper endPointHelper;
-    protected IDManager idManager;
+    protected ToolBox toolBox;
     
 	public GameStage(EndPointHelper endPointHelper) {
 		this(IDUtil.newID(), endPointHelper);
@@ -44,6 +49,18 @@ public abstract class GameStage {
 	
 	protected void setId(ID id) {
 		this.id = id;
+	}
+	
+	public ToolBox getToolBox() {
+		return toolBox;
+	}
+	
+	public IDManager getIDManager() {
+		return toolBox.getIDManager();
+	}
+	
+	public CompManager getCompManager() {
+		return toolBox.getCompManager();
 	}
 	
 	public EndPointHelper getEndPointHelper() {
@@ -66,12 +83,7 @@ public abstract class GameStage {
 		return engine;
 	}
 	
-	public IDManager getIDManager() {
-		return idManager;
-	}
-	
     protected void create() {
-    	idManager = new IDManager();
     	camera = buildCamera();
     	viewport = buildViewport(camera);
     	viewport.apply();
@@ -79,9 +91,20 @@ public abstract class GameStage {
     	
     	box2D = buildBox2DWorld();
         engine = buildEngine();
+        toolBox = new ToolBox(engine);
+        toolBox.getCompManager().Entity.addIdListener(engine, getBox2DWorld());
+        addManagers(engine);
         addEntities(engine);
     }
-	
+    
+    private void addManagers(PooledEngine engine) {
+		for(EntitySystem system : engine.getSystems()) {
+			if(system instanceof CustomEntitySystem) {
+				((CustomEntitySystem) system).setToolBox(toolBox);
+			}
+		}
+	}
+    
 	public GameInput buildInput(boolean active) {
 		int displayW = Gdx.graphics.getWidth();
     	int displayH = Gdx.graphics.getHeight();
@@ -119,7 +142,7 @@ public abstract class GameStage {
     }
     
     protected Box2DWorld buildBox2DWorld() {
-    	return new Box2DWorld();
+    	return new Box2DWorld(this);
     }
     
     protected abstract PooledEngine buildEngine();

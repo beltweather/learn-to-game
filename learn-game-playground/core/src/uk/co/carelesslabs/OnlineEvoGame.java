@@ -134,7 +134,7 @@ public class OnlineEvoGame extends ApplicationAdapter {
         screenMatrix = new Matrix4(batch.getProjectionMatrix().setToOrtho2D(0, 0, displayW, displayH));
         
         // Box2D
-        box2D = new Box2DWorld();
+        box2D = new Box2DWorld(null);
         
         // Island
         island = new Island(box2D);

@@ -39,6 +39,10 @@ public abstract class CustomSortedIteratingSystem extends CustomEntitySystem imp
 	private boolean shouldSort;
 	private Comparator<Entity> comparator;
 
+	public CustomSortedIteratingSystem (Family family) {
+		this(family, null);
+	}	
+	
 	/**
 	 * Instantiates a system that will iterate over the entities described by the Family.
 	 * @param family The family of entities iterated over in this System
@@ -63,6 +67,10 @@ public abstract class CustomSortedIteratingSystem extends CustomEntitySystem imp
 		this.comparator = comparator;
 	}
 
+	public void setComparator(Comparator<Entity> comparator) {
+		this.comparator = comparator;
+	}
+	
 	/**
 	 * Call this if the sorting criteria have changed. The actual sorting will be delayed until the entities are processed.
 	 */

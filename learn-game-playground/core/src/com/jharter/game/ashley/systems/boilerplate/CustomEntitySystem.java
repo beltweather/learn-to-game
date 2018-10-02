@@ -7,17 +7,21 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.entities.IEntityFactory;
+import com.jharter.game.ashley.util.ToolBox;
+import com.jharter.game.tween.CustomTweenManager;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDManager;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public abstract class CustomEntitySystem extends EntitySystem {
+public abstract class CustomEntitySystem extends EntitySystem implements IEntityFactory {
 	
 	public static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...defaultComps) {
 		Class<?>[] combined = new Class<?>[additionalComps.length + defaultComps.length];
@@ -38,7 +42,8 @@ public abstract class CustomEntitySystem extends EntitySystem {
 	private ObjectMap<Object, ImmutableArray<Entity>> entityArraysByKey = new ObjectMap<Object, ImmutableArray<Entity>>();
 	private ObjectMap<Object, Comparator<Entity>> comparatorsByKey = new ObjectMap<Object, Comparator<Entity>>();
 	private ObjectMap<Object, Array<Entity>> sortedEntityArraysByKey = new ObjectMap<Object, Array<Entity>>();
-	private IDManager idManager;
+	private ToolBox toolBox;
+	protected CompManager Comp;
 	
 	public CustomEntitySystem() {
 		this(0);
@@ -56,12 +61,25 @@ public abstract class CustomEntitySystem extends EntitySystem {
 	
 	public abstract void performUpdate(float deltaTime);
 	
-	public IDManager getIDManager() {
-		return idManager;
+	public ToolBox getToolBox() {
+		return toolBox;
 	}
 	
-	public void setIDManager(IDManager idManager) {
-		this.idManager = idManager;
+	public PooledEngine getEngine() {
+		return (PooledEngine) super.getEngine();
+	}
+	
+	public void setToolBox(ToolBox toolBox) {
+		this.toolBox = toolBox;
+		Comp = toolBox.getCompManager();
+	}
+	
+	public IDManager getIDManager() {
+		return toolBox.getIDManager();
+	}
+	
+	public CustomTweenManager getTweenManager() {
+		return toolBox.getTweenManager();
 	}
 	
 	protected void add(Class<? extends Component> componentClass) {

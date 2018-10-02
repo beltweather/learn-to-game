@@ -2,13 +2,12 @@ package com.jharter.game.ashley.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
-import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.ToDiscardZoneComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
+import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
 
-public class CleanupTurnActionsSystem extends IteratingSystem {
+public class CleanupTurnActionsSystem extends CustomIteratingSystem {
 	
 	public static final float DEFAULT_INTERVAL = 10f;
 	

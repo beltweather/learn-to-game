@@ -74,7 +74,6 @@ public class Comp {
 	
 	private static final CompWrappers Wrap = new CompWrappers();
 	public static final CompEntities Entity = new CompEntities();
-	public static final CompFinders Find = new CompFinders();
 	
 	public static class CompMapper<T extends Component> {
 		

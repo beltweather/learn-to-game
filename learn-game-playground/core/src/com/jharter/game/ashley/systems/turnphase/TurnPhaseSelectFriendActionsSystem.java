@@ -1,14 +1,14 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Comp;
 import com.jharter.game.ashley.components.Components.ActionQueuedComp;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.PlayerComp;
 import com.jharter.game.ashley.components.Components.TurnPhasePerformFriendActionsComp;
 import com.jharter.game.ashley.components.Components.TurnPhaseSelectFriendActionsComp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
-import com.jharter.game.util.id.IDUtil;
 
 import uk.co.carelesslabs.Media;
 
@@ -16,6 +16,8 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseSelectFriendActionsSystem() {
 		super(TurnPhaseSelectFriendActionsComp.class, TurnPhasePerformFriendActionsComp.class);
+		add(ActionQueuedComp.class);
+		add(PlayerComp.class);
 	}
 
 	@Override
@@ -25,7 +27,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		}
 		enableCursor();
 		resetCursor();
-		Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.start();
+		getTurnTimer().start();
 		Media.startTurnBeep.play();
 		ActionQueuedComp.QUEUE_INDEX = 0;
 		return true;
@@ -33,7 +35,7 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
-		TurnTimer t = Comp.TurnTimerComp.get(entity).turnTimer;
+		TurnTimer t = getTurnTimer();
 		t.increment(deltaTime);
 		if(t.isOvertime()) {
 			return true;
@@ -42,16 +44,16 @@ public class TurnPhaseSelectFriendActionsSystem extends TurnPhaseSystem {
 		// XXX This assumption will change, but the intent is to check if all characters
 		// have made a card selection. Currently, one cursor controls all actions so 
 		// we'll leave this hack in for testing.
-		return count(ActionQueuedComp.class) >= IDUtil.getPlayerIDs().size();
+		return countEntities(ActionQueuedComp.class) >= countEntities(PlayerComp.class);
 	}
 
 	@Override
 	protected void processEntityPhaseEnd(Entity turnEntity, float deltaTime) {
 		disableCursor();
-		Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.stop();
+		getTurnTimer().stop();
 		
 		// Cancel the current turn action if there is one
-		CursorComp c = Comp.CursorComp.get(Comp.Entity.DefaultCursor().Entity());
+		CursorComp c = getCursorComp();
 		if(c.turnActionID != null) {
 			Entity entity = Comp.Entity.get(c.turnActionID);
 			if(!Comp.ActionSpentComp.has(entity)) {

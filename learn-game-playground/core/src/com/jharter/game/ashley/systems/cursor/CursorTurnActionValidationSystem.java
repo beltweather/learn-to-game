@@ -12,7 +12,7 @@ public class CursorTurnActionValidationSystem extends CursorSystem {
 	@SuppressWarnings("unchecked")
 	public CursorTurnActionValidationSystem() {
 		super();
-		add(PendingTurnActionComp.class, Family.all(PendingTurnActionComp.class).get());
+		add(PendingTurnActionComp.class);
 	}
 
 	@Override

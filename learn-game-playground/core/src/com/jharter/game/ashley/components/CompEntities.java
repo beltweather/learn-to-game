@@ -88,7 +88,7 @@ public class CompEntities {
 		Comp.getOrAdd(engine, RemoveComp.class, entity);
 	}
 		
-	private abstract class EntityMapper {
+	/*private abstract class EntityMapper {
 		
 		protected Entity entity;
 		
@@ -107,124 +107,6 @@ public class CompEntities {
 			return get(getDefaultEntityID());
 		}
 		
-	}
-	
-	public class EntityMapperCursorEntity extends EntityMapper {
-		
-		private EntityMapperCursorEntity() {}
-		
-		@Override
-		protected ID getDefaultEntityID() {
-			return IDUtil.getCursorEntityID();
-		}
-		
-		private CursorComp CursorComp() {
-			Entity entity = Entity();
-			if(entity == null) {
-				return null;
-			}
-			return Comp.CursorComp.get(entity);
-		}
-		
-		public void enable() {
-			Entity entity = Entity();
-			if(entity == null) {
-				return;
-			}
-			if(Comp.DisabledComp.has(entity)) {
-				entity.remove(DisabledComp.class);
-			}
-			InputComp in = Comp.InputComp.get(entity);
-			in.input.reset();
-		}
-		
-		public void disable(Engine engine) {
-			Entity entity = Entity();
-			if(entity == null) {
-				return;
-			}
-			if(!Comp.DisabledComp.has(entity)) {
-				entity.add(Comp.create(engine, DisabledComp.class));
-			}
-			InputComp in = Comp.InputComp.get(entity);
-			in.input.reset();
-		}
-		
-		public boolean isEnabled() {
-			return !isDisabled();
-		}
-		
-		public boolean isDisabled() {
-			return Entity() == null || Comp.DisabledComp.has(Entity());
-		}
-		
-		public void single() {
-			Comp.remove(MultiSpriteComp.class, Entity());
-		}
-		
-		public ID getPlayerID() {
-			return DefaultTurn().ActivePlayerComp().activePlayerID;
-		}
-		
-		public void toDefault(Engine engine) {
-			single();
-			CursorComp().reset();
-		}
-
-	}
-	
-	public class EntityMapperTurnEntity extends EntityMapper {
-		
-		private EntityMapperTurnEntity() {}
-		
-		@Override
-		protected ID getDefaultEntityID() {
-			return IDUtil.getTurnEntityID();
-		}
-		
-		public TurnTimerComp TurnTimerComp() {
-			return Comp.TurnTimerComp.get(Entity());
-		}
-		
-		public TurnPhaseComp TurnPhaseComp() {
-			return Comp.TurnPhaseComp.get(Entity());
-		}
-		
-		public ActivePlayerComp ActivePlayerComp() {
-			return Comp.ActivePlayerComp.get(Entity());
-		}
-		
-		public boolean isTurnPhaseStartBattle() { return Comp.TurnPhaseStartBattleComp.has(Entity()); }
-		public boolean isTurnPhaseStartTurn() { return Comp.TurnPhaseStartTurnComp.has(Entity()); }
-		public boolean isTurnPhaseSelectEnemyActions() { return Comp.TurnPhaseSelectEnemyActionsComp.has(Entity()); }
-		public boolean isTurnPhaseSelectFriendActions() { return Comp.TurnPhaseSelectFriendActionsComp.has(Entity()); }
-		public boolean isTurnPhasePerformFriendActions() { return Comp.TurnPhasePerformFriendActionsComp.has(Entity()); }
-		public boolean isTurnPhasePerformEnemyActions() { return Comp.TurnPhasePerformEnemyActionsComp.has(Entity()); }
-		public boolean isTurnPhaseEndTurn() { return Comp.TurnPhaseEndTurnComp.has(Entity()); }
-		public boolean isTurnPhaseEndBattle() { return Comp.TurnPhaseEndBattleComp.has(Entity()); }
-		public boolean isTurnPhaseNone() { return Comp.TurnPhaseNoneComp.has(Entity()); }
-
-	}
-	
-	private final EntityMapperCursorEntity entityMapperCursor = new EntityMapperCursorEntity();
-	private final EntityMapperTurnEntity entityMapperTurn = new EntityMapperTurnEntity();
-	
-	public EntityMapperCursorEntity Cursor(Entity cursorEntity) {
-		entityMapperCursor.setEntity(cursorEntity);
-		return entityMapperCursor;
-	}
-	
-	public EntityMapperCursorEntity DefaultCursor() {
-		return Cursor(null);
-	}
-	
-	public EntityMapperTurnEntity Turn(Entity turnEntity) {
-		entityMapperTurn.setEntity(turnEntity);
-		return entityMapperTurn;
-	}
-	
-	public EntityMapperTurnEntity DefaultTurn() {
-		return Turn(null);
-	}
+	}*/
 	
 }

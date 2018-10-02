@@ -10,6 +10,7 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
+import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
@@ -17,19 +18,8 @@ import com.jharter.game.util.id.IDUtil;
 
 public abstract class CursorSystem extends FirstSystem {
 	
-	private static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...cursorComps) {
-		Class<?>[] combined = new Class<?>[additionalComps.length + cursorComps.length];
-		for(int i = 0; i < additionalComps.length; i++) {
-			combined[i] = additionalComps[i];
-		}
-		for(int i = additionalComps.length; i < combined.length; i++) {
-			combined[i] = cursorComps[i - additionalComps.length];
-		}
-		return (Class<? extends Component>[]) combined;
-	}
-
 	public CursorSystem(Class<? extends Component>... cursorComps) {
-		this(Family.all(combine(cursorComps, CursorComp.class)).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
+		this(Family.all(CustomEntitySystem.combine(cursorComps, CursorComp.class)).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
 	}
 	
 	private CursorSystem(Family family) {

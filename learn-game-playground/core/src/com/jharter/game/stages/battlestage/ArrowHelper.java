@@ -1,8 +1,14 @@
 package com.jharter.game.stages.battlestage;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
+import com.jharter.game.ashley.components.Components.CursorComp;
+import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
@@ -30,13 +36,16 @@ public class ArrowHelper {
 		b.SpriteComp().relativePositionRules.yAlign = Direction.NORTH;
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(1);
 		b.SpriteComp().relativePositionRules.setRelativeToIDGetter(new RelativeToIDGetter() {
-
+			
+			private ImmutableArray<Entity> cursors = engine.getEntitiesFor(Family.all(CursorComp.class).exclude(DisabledComp.class).get());
+			private ImmutableArray<Entity> activePlayers = engine.getEntitiesFor(Family.all(ActivePlayerComp.class).get());
+			
 			@Override
 			public ID getRelativeToID() {
-				if(Comp.Entity.DefaultCursor().isDisabled()) {
+				if(cursors.size() == 0 || activePlayers.size() == 0) {
 					return null;
 				}
-				return Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID;
+				return Comp.ActivePlayerComp.get(activePlayers.first()).activePlayerID;
 			}
 			
 		});

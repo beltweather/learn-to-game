@@ -44,7 +44,7 @@ public class HandLayout extends ZoneLayout {
 			return;
 		}
 		ID ownerID = t.turnAction.ownerID;
-		if(ownerID != Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID) {
+		if(ownerID != getActivePlayerID()) {
 			hide(entity);
 		} else {
 			show(entity);

@@ -13,7 +13,18 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.Comp;
 
 public abstract class CustomEntitySystem extends EntitySystem {
-
+	
+	public static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...defaultComps) {
+		Class<?>[] combined = new Class<?>[additionalComps.length + defaultComps.length];
+		for(int i = 0; i < additionalComps.length; i++) {
+			combined[i] = additionalComps[i];
+		}
+		for(int i = additionalComps.length; i < combined.length; i++) {
+			combined[i] = defaultComps[i - additionalComps.length];
+		}
+		return (Class<? extends Component>[]) combined;
+	}
+	
 	private static final Array<Entity> empty = new Array<Entity>();
 	private static final ImmutableArray<Entity> emptyImm = new ImmutableArray<Entity>(new Array<Entity>());
 	
@@ -38,6 +49,10 @@ public abstract class CustomEntitySystem extends EntitySystem {
 	}
 	
 	public abstract void performUpdate(float deltaTime);
+	
+	protected void add(Class<? extends Component> componentClass) {
+		add(componentClass, Family.all(componentClass).get());
+	}
 
 	protected void add(Object key, Family family) {
 		add(key, family, null);
@@ -66,6 +81,14 @@ public abstract class CustomEntitySystem extends EntitySystem {
 			return sortedEntityArraysByKey.get(key);
 		}
 		return empty;
+	}
+	
+	protected int countEntities(Object key) {
+		return getEntities(key).size();
+	}
+	
+	protected boolean hasEntities(Object key) {
+		return getEntities(key).size() > 0;
 	}
 	
 	/**

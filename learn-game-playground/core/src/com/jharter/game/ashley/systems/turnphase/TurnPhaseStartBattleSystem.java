@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.TurnPhaseStartBattleComp;
@@ -11,17 +11,17 @@ public class TurnPhaseStartBattleSystem extends TurnPhaseSystem {
 	}
 
 	@Override
-	protected boolean processEntityPhaseStart(Entity entity, float deltaTime) {
+	protected boolean processEntityPhaseStart(Entity turnPhase, float deltaTime) {
 		return true;
 	}
 
 	@Override
-	protected boolean processEntityPhaseMiddle(Entity entity, float deltaTime) {
+	protected boolean processEntityPhaseMiddle(Entity turnPhase, float deltaTime) {
 		return true;
 	}
 
 	@Override
-	protected void processEntityPhaseEnd(Entity entity, float deltaTime) {
+	protected void processEntityPhaseEnd(Entity turnPhase, float deltaTime) {
 		
 	}
 	

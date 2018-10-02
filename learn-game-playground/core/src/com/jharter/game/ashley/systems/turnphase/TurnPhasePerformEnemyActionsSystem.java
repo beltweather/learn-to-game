@@ -1,13 +1,13 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.TurnPhaseEndTurnComp;
-import com.jharter.game.ashley.components.Components.TurnPhaseStartTurnComp;
+import com.jharter.game.ashley.components.Components.TurnPhasePerformEnemyActionsComp;
 
-public class TurnPhaseEndTurnSystem extends TurnPhaseSystem {
+public class TurnPhasePerformEnemyActionsSystem extends TurnPhaseSystem {
 
-	public TurnPhaseEndTurnSystem() {
-		super(TurnPhaseEndTurnComp.class, TurnPhaseStartTurnComp.class);
+	public TurnPhasePerformEnemyActionsSystem() {
+		super(TurnPhasePerformEnemyActionsComp.class, TurnPhaseEndTurnComp.class);
 	}
 
 	@Override

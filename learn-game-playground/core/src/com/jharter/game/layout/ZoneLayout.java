@@ -18,6 +18,7 @@ public abstract class ZoneLayout {
 	protected boolean allowRelativePositions = true;
 	protected transient ZoneLayoutSystem system = null;
 	protected int priority = 0;
+	protected ID activePlayerID = null;
 	
 	public ZoneLayout() {}
 	
@@ -29,13 +30,22 @@ public abstract class ZoneLayout {
 		return priority;
 	}
 	
+	public ID getActivePlayerID() {
+		return activePlayerID;
+	}
+	
 	public ZoneLayout setPriority(int priority) {
 		this.priority = priority;
 		return this;
 	}
 	
-	public void setSystem(ZoneLayoutSystem system) {
+	public void clearSystem() {
+		setSystem(null, null);
+	}
+	
+	public void setSystem(ZoneLayoutSystem system, ID activePlayerID) {
 		this.system = system;
+		this.activePlayerID = activePlayerID;
 	}
 	
 	public void setIds(ImmutableArray<ID> ids) {

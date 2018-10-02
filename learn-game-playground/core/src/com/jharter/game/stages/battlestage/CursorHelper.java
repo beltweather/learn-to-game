@@ -1,8 +1,10 @@
 package com.jharter.game.stages.battlestage;
 
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Comp;
+import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityUtil;
 import com.jharter.game.util.id.ID;
@@ -25,7 +27,8 @@ public class CursorHelper {
 		b.CursorComp();
 		b.CursorInputRegulatorComp();
 		b.CursorInputComp();
-		b.ChangeZoneComp().newZoneID = Comp.Find.ZoneComp.findZoneID(Comp.Entity.DefaultTurn().ActivePlayerComp().activePlayerID, zoneType);
+		b.ChangeZoneComp().newZoneID = 
+				Comp.Find.ZoneComp.findZoneID(getActivePlayerID(engine), zoneType);
 		b.ChangeZoneComp().newIndex = 0;
 		b.ZonePositionComp().zoneID = b.ChangeZoneComp().newZoneID;
 		b.ZonePositionComp();
@@ -33,6 +36,10 @@ public class CursorHelper {
 		b.SpriteComp().position.z = 3;
 		Comp.ZoneComp(Comp.Find.ZoneComp.findZone(null, ZoneType.CURSOR)).add(cursorID, null);;
 		return b;
+	}
+	
+	private static ID getActivePlayerID(PooledEngine engine) {
+		return Comp.ActivePlayerComp.get(engine.getEntitiesFor(Family.all(ActivePlayerComp.class).get()).first()).activePlayerID;
 	}
 	
 }

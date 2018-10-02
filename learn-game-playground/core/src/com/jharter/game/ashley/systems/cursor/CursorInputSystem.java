@@ -3,33 +3,25 @@ package com.jharter.game.ashley.systems.cursor;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Comp;
-import com.jharter.game.ashley.components.Components.AnimatingComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.CursorInputComp;
 import com.jharter.game.ashley.components.Components.CursorInputRegulatorComp;
-import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.components.Components.InvisibleComp;
-import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
-import com.jharter.game.util.Sys;
+import com.jharter.game.ashley.components.Components.TurnTimerComp;
+import com.jharter.game.ashley.components.subcomponents.TurnTimer;
 
 public class CursorInputSystem extends CursorSystem {
 
 	@SuppressWarnings("unchecked")
 	public CursorInputSystem() {
-		super(CursorInputComp.class, CursorInputRegulatorComp.class);
+		super(InputComp.class, CursorInputComp.class, CursorInputRegulatorComp.class);
 	}
 	
 	@Override
 	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		InputComp in = Comp.InputComp.get(cursor);
-		if(Comp.Entity.DefaultTurn().TurnTimerComp().turnTimer.isStopped()) {
-			in.input.reset();
-			return;
-		}
-		
-		CursorInputRegulatorComp cir = Comp.CursorInputRegulatorComp.get(cursor);
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
+		CursorInputRegulatorComp cir = Comp.CursorInputRegulatorComp.get(cursor);
 		
 		if (in.input.isDown()) {
 			ci.direction.y++;

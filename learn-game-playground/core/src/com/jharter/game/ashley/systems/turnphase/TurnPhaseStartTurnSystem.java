@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -12,7 +12,7 @@ public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
 	public TurnPhaseStartTurnSystem() {
 		super(TurnPhaseStartTurnComp.class, TurnPhaseSelectEnemyActionsComp.class);
-		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
+		add(ActivePlayerComp.class);
 	}
 
 	@Override

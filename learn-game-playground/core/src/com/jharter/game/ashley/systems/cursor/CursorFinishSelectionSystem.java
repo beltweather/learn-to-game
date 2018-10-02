@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.systems;
+package com.jharter.game.ashley.systems.cursor;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -13,10 +13,10 @@ import com.jharter.game.ashley.components.Components.PendingTurnActionComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
-public class CursorQueueTurnActionSystem extends CursorSystem {
+public class CursorFinishSelectionSystem extends CursorSystem {
 
 	@SuppressWarnings("unchecked")
-	public CursorQueueTurnActionSystem() {
+	public CursorFinishSelectionSystem() {
 		super();
 	}
 

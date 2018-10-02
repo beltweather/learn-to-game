@@ -1,8 +1,8 @@
 package com.jharter.game.ashley.systems;
 
-import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
+import com.jharter.game.ashley.systems.boilerplate.GameEntitySystem;
 
-public class TweenSystem extends CustomEntitySystem {
+public class TweenSystem extends GameEntitySystem {
 	
 	public TweenSystem() {
 		

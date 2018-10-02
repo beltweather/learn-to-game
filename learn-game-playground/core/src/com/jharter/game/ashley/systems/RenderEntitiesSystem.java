@@ -20,10 +20,10 @@ import com.jharter.game.ashley.components.Components.ShapeRenderComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomSortedIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameSortedIteratingSystem;
 import com.jharter.game.render.ShapeRenderMethod;
 
-public class RenderEntitiesSystem extends CustomSortedIteratingSystem {
+public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 	
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;

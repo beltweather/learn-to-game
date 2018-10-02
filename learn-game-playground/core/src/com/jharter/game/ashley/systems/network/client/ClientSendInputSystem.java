@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.network.endpoints.GameClient;
 
-public class ClientSendInputSystem extends CustomIteratingSystem {
+public class ClientSendInputSystem extends GameIteratingSystem {
 
 	private GameClient client;
 	

@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright 2014 See AUTHORS file.
  * 
@@ -18,34 +19,35 @@ package com.jharter.game.ashley.systems.boilerplate;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 /**
- * A simple EntitySystem that iterates over each entity and calls processEntity() for each entity every time the EntitySystem is
- * updated. This is really just a convenience class as most systems iterate over a list of entities.
- * @author Stefan Bachmann
+ * A simple {@link EntitySystem} that processes a {@link Family} of entities not once per frame, but after a given interval.
+ * Entity processing logic should be placed in {@link IntervalIteratingSystem#processEntity(Entity)}.
+ * @author David Saltares
  */
-public abstract class CustomIteratingSystem extends CustomEntitySystem {
-	protected Family family;
+public abstract class GameIntervalIteratingSystem extends GameIntervalSystem {
+	private Family family;
 	protected ImmutableArray<Entity> entities;
 
 	/**
-	 * Instantiates a system that will iterate over the entities described by the Family.
-	 * @param family The family of entities iterated over in this System
+	 * @param family represents the collection of family the system should process
+	 * @param interval time in seconds between calls to {@link IntervalIteratingSystem#updateInterval()}.
 	 */
-	public CustomIteratingSystem (Family family) {
-		this(family, 0);
+	public GameIntervalIteratingSystem (Family family, float interval) {
+		this(family, interval, 0);
 	}
 
 	/**
-	 * Instantiates a system that will iterate over the entities described by the Family, with a specific priority.
-	 * @param family The family of entities iterated over in this System
-	 * @param priority The priority to execute this system with (lower means higher priority)
+	 * @param family represents the collection of family the system should process
+	 * @param interval time in seconds between calls to {@link IntervalIteratingSystem#updateInterval()}.
+	 * @param priority
 	 */
-	public CustomIteratingSystem (Family family, int priority) {
-		super(priority);
-
+	public GameIntervalIteratingSystem (Family family, float interval, int priority) {
+		super(interval, priority);
 		this.family = family;
 	}
 
@@ -56,15 +58,9 @@ public abstract class CustomIteratingSystem extends CustomEntitySystem {
 	}
 
 	@Override
-	public void removedFromEngine (Engine engine) {
-		super.removedFromEngine(engine);
-		entities = null;
-	}
-
-	@Override
-	public void performUpdate (float deltaTime) {
+	protected void updateInterval () {
 		for (int i = 0; i < entities.size(); ++i) {
-			processEntity(entities.get(i), deltaTime);
+			processEntity(entities.get(i));
 		}
 	}
 
@@ -75,7 +71,7 @@ public abstract class CustomIteratingSystem extends CustomEntitySystem {
 		return entities;
 	}
 
-	/**
+    /**
 	 * @return the Family used when the system was created
 	 */
 	public Family getFamily () {
@@ -83,10 +79,8 @@ public abstract class CustomIteratingSystem extends CustomEntitySystem {
 	}
 
 	/**
-	 * This method is called on every entity on every update call of the EntitySystem. Override this to implement your system's
-	 * specific processing.
-	 * @param entity The current Entity being processed
-	 * @param deltaTime The delta time between the last and current frame
+	 * The user should place the entity processing logic here.
+	 * @param entity
 	 */
-	protected abstract void processEntity (Entity entity, float deltaTime);
+	protected abstract void processEntity (Entity entity);
 }

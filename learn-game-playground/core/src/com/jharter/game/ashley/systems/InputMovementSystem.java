@@ -7,9 +7,9 @@ import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.VelocityComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class InputMovementSystem extends CustomIteratingSystem {
+public class InputMovementSystem extends GameIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public InputMovementSystem() {

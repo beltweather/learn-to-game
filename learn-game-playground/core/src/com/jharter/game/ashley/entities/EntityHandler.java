@@ -2,8 +2,7 @@ package com.jharter.game.ashley.entities;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ashley.components.CompManager;
-import com.jharter.game.ashley.util.EntityToolBox;
-import com.jharter.game.tween.CustomTweenManager;
+import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.IDManager;
 
 public class EntityHandler implements IEntityHandler {
@@ -48,7 +47,7 @@ public class EntityHandler implements IEntityHandler {
 	}
 
 	@Override
-	public CustomTweenManager getTweenManager() {
+	public GameTweenManager getTweenManager() {
 		return toolBox == null ? null : toolBox.getTweenManager();
 	}
 

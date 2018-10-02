@@ -1,7 +1,7 @@
 package com.jharter.game.ashley.systems;
 
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
+import com.jharter.game.ashley.systems.boilerplate.GameEntitySystem;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
@@ -9,7 +9,7 @@ import com.jharter.game.stages.GameStage;
 import com.jharter.game.util.Sys;
 
 @Deprecated
-public class AddEntitiesSystem extends CustomEntitySystem {
+public class AddEntitiesSystem extends GameEntitySystem {
 
 	private GameStage stage;
 	private GameClient client;

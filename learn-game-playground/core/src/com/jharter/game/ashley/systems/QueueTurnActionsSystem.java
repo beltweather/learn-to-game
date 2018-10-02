@@ -10,11 +10,11 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class QueueTurnActionsSystem  extends CustomIteratingSystem {
+public class QueueTurnActionsSystem  extends GameIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public QueueTurnActionsSystem() {

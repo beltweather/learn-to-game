@@ -8,9 +8,9 @@ import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
 import com.jharter.game.ashley.components.Components.TileComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class RenderTilesSystem extends CustomIteratingSystem {
+public class RenderTilesSystem extends GameIteratingSystem {
 	
 	private SpriteBatch batch;
 	private OrthographicCamera camera;

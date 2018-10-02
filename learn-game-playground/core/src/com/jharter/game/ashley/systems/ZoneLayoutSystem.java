@@ -6,13 +6,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomSortedIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameSortedIteratingSystem;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.layout.ZoneLayout;
-import com.jharter.game.tween.CustomTweenManager;
+import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.ID;
 
-public class ZoneLayoutSystem extends CustomSortedIteratingSystem implements Comparator<Entity> {
+public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Comparator<Entity> {
 
 	@SuppressWarnings("unchecked")
 	public ZoneLayoutSystem() {

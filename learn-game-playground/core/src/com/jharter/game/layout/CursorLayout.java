@@ -13,7 +13,7 @@ import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.tween.TweenType;
-import com.jharter.game.tween.CustomTweenManager;
+import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 

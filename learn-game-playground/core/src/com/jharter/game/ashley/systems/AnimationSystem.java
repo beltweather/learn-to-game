@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class AnimationSystem extends CustomIteratingSystem {
+public class AnimationSystem extends GameIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public AnimationSystem () {

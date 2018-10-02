@@ -9,12 +9,12 @@ import com.jharter.game.ashley.components.Components.ToDiscardZoneComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class DiscardZoneSystem extends CustomIteratingSystem {
+public class DiscardZoneSystem extends GameIteratingSystem {
 
 	public DiscardZoneSystem() {
 		super(Family.all(ZonePositionComp.class, ToDiscardZoneComp.class).one(CardComp.class, TurnActionComp.class).get());

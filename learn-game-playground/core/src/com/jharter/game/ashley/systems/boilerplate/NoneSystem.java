@@ -3,7 +3,7 @@ package com.jharter.game.ashley.systems.boilerplate;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 
-public abstract class NoneSystem extends CustomIteratingSystem {
+public abstract class NoneSystem extends GameIteratingSystem {
 
 	public NoneSystem(Family family) {
 		super(family);

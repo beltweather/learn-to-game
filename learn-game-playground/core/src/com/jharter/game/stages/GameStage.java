@@ -10,12 +10,12 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityToolBox;
 import com.jharter.game.ashley.entities.IEntityHandler;
-import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
-import com.jharter.game.ashley.util.EntityToolBox;
+import com.jharter.game.ashley.systems.boilerplate.GameEntitySystem;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.network.endpoints.EndPointHelper;
-import com.jharter.game.tween.CustomTweenManager;
+import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDManager;
@@ -73,7 +73,7 @@ public abstract class GameStage implements IEntityHandler {
 	}
 	
 	@Override
-	public CustomTweenManager getTweenManager() {
+	public GameTweenManager getTweenManager() {
 		return toolBox.getTweenManager();
 	}
 	
@@ -109,8 +109,8 @@ public abstract class GameStage implements IEntityHandler {
     
     private void addManagers(PooledEngine engine) {
 		for(EntitySystem system : engine.getSystems()) {
-			if(system instanceof CustomEntitySystem) {
-				((CustomEntitySystem) system).setToolBox(toolBox);
+			if(system instanceof GameEntitySystem) {
+				((GameEntitySystem) system).setToolBox(toolBox);
 			}
 		}
 	}

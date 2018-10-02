@@ -13,15 +13,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ashley.components.CompManager;
 import com.jharter.game.ashley.components.Components.ZoneComp;
+import com.jharter.game.ashley.entities.EntityToolBox;
 import com.jharter.game.ashley.entities.IEntityHandler;
-import com.jharter.game.ashley.util.EntityToolBox;
-import com.jharter.game.tween.CustomTweenManager;
+import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDManager;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public abstract class CustomEntitySystem extends EntitySystem implements IEntityHandler {
+public abstract class GameEntitySystem extends EntitySystem implements IEntityHandler {
 	
 	public static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...defaultComps) {
 		Class<?>[] combined = new Class<?>[additionalComps.length + defaultComps.length];
@@ -45,11 +45,11 @@ public abstract class CustomEntitySystem extends EntitySystem implements IEntity
 	private EntityToolBox toolBox;
 	protected CompManager Comp;
 	
-	public CustomEntitySystem() {
+	public GameEntitySystem() {
 		this(0);
 	}
 
-	public CustomEntitySystem(int priority) {
+	public GameEntitySystem(int priority) {
 		super(priority);
 	}
 	
@@ -87,7 +87,7 @@ public abstract class CustomEntitySystem extends EntitySystem implements IEntity
 	}
 	
 	@Override
-	public CustomTweenManager getTweenManager() {
+	public GameTweenManager getTweenManager() {
 		return toolBox.getTweenManager();
 	}
 	

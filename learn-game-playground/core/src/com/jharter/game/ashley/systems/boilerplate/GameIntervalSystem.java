@@ -24,14 +24,14 @@ import com.badlogic.ashley.systems.IntervalSystem;
  * given interval. The actual logic should be placed in {@link IntervalSystem#updateInterval()}.
  * @author David Saltares
  */
-public abstract class CustomIntervalSystem extends CustomEntitySystem {
+public abstract class GameIntervalSystem extends GameEntitySystem {
 	protected float interval;
 	protected float accumulator;
 
 	/**
 	 * @param interval time in seconds between calls to {@link IntervalSystem#updateInterval()}.
 	 */
-	public CustomIntervalSystem (float interval) {
+	public GameIntervalSystem (float interval) {
 		this(interval, 0);
 	}
 
@@ -39,7 +39,7 @@ public abstract class CustomIntervalSystem extends CustomEntitySystem {
 	 * @param interval time in seconds between calls to {@link IntervalSystem#updateInterval()}.
 	 * @param priority
 	 */
-	public CustomIntervalSystem (float interval, int priority) {
+	public GameIntervalSystem (float interval, int priority) {
 		super(priority);
 		this.interval = interval;
 		this.accumulator = 0;

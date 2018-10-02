@@ -8,9 +8,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TargetPositionComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class ApproachTargetSystem extends CustomIteratingSystem {
+public class ApproachTargetSystem extends GameIteratingSystem {
 	
 	private static final float ALPHA = 0.01f;
 	private static final float MIN_DIFF = 1.0f;

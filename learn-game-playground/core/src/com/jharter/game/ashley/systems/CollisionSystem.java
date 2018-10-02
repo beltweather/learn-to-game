@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.CollisionComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class CollisionSystem extends CustomIteratingSystem {
+public class CollisionSystem extends GameIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public CollisionSystem() {

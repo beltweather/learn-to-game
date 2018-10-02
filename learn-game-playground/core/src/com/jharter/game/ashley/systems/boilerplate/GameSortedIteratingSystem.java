@@ -32,14 +32,14 @@ import com.badlogic.gdx.utils.Array;
  * Call forceSort() if you changed your sorting criteria.
  * @author Santo Pfingsten
  */
-public abstract class CustomSortedIteratingSystem extends CustomEntitySystem implements EntityListener {
+public abstract class GameSortedIteratingSystem extends GameEntitySystem implements EntityListener {
 	private Family family;
 	private Array<Entity> sortedEntities;
 	private final ImmutableArray<Entity> entities;
 	private boolean shouldSort;
 	private Comparator<Entity> comparator;
 
-	public CustomSortedIteratingSystem (Family family) {
+	public GameSortedIteratingSystem (Family family) {
 		this(family, null);
 	}	
 	
@@ -48,7 +48,7 @@ public abstract class CustomSortedIteratingSystem extends CustomEntitySystem imp
 	 * @param family The family of entities iterated over in this System
 	 * @param comparator The comparator to sort the entities
 	 */
-	public CustomSortedIteratingSystem (Family family, Comparator<Entity> comparator) {
+	public GameSortedIteratingSystem (Family family, Comparator<Entity> comparator) {
 		this(family, comparator, 0);
 	}
 
@@ -58,7 +58,7 @@ public abstract class CustomSortedIteratingSystem extends CustomEntitySystem imp
 	 * @param comparator The comparator to sort the entities
 	 * @param priority The priority to execute this system with (lower means higher priority)
 	 */
-	public CustomSortedIteratingSystem (Family family, Comparator<Entity> comparator, int priority) {
+	public GameSortedIteratingSystem (Family family, Comparator<Entity> comparator, int priority) {
 		super(priority);
 
 		this.family = family;

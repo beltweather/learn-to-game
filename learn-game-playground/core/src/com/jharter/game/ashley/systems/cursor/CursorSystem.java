@@ -10,7 +10,7 @@ import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
-import com.jharter.game.ashley.systems.boilerplate.CustomEntitySystem;
+import com.jharter.game.ashley.systems.boilerplate.GameEntitySystem;
 import com.jharter.game.ashley.systems.boilerplate.FirstSystem;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.id.ID;
@@ -18,7 +18,7 @@ import com.jharter.game.util.id.ID;
 public abstract class CursorSystem extends FirstSystem {
 	
 	public CursorSystem(Class<? extends Component>... cursorComps) {
-		this(Family.all(CustomEntitySystem.combine(cursorComps, CursorComp.class)).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
+		this(Family.all(GameEntitySystem.combine(cursorComps, CursorComp.class)).exclude(InvisibleComp.class, DisabledComp.class, AnimatingComp.class).get());
 	}
 	
 	private CursorSystem(Family family) {

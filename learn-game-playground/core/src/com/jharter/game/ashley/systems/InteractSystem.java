@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.InputComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
-public class InteractSystem extends CustomIteratingSystem {
+public class InteractSystem extends GameIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public InteractSystem() {

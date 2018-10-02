@@ -2,7 +2,7 @@ package com.jharter.game.ashley.systems.boilerplate;
 
 import com.badlogic.ashley.core.Family;
 
-public abstract class FirstSystem extends CustomIteratingSystem {
+public abstract class FirstSystem extends GameIteratingSystem {
 
 	public FirstSystem(Family family) {
 		super(family);

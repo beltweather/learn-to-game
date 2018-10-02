@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.MathUtils;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.InputComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class ClientRandomMovementSystem extends CustomIteratingSystem {
+public class ClientRandomMovementSystem extends GameIteratingSystem {
 
 	private float time = 0;
 	private int dir = 4;

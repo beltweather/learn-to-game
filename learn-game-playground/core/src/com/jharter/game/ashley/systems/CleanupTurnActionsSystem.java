@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ashley.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ashley.components.Components.ToDiscardZoneComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
-public class CleanupTurnActionsSystem extends CustomIteratingSystem {
+public class CleanupTurnActionsSystem extends GameIteratingSystem {
 	
 	public static final float DEFAULT_INTERVAL = 10f;
 	

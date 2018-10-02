@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TurnTimerComp;
 import com.jharter.game.ashley.components.subcomponents.TurnTimer;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 
 @Deprecated
-public class RenderTimerSystem extends CustomIteratingSystem {
+public class RenderTimerSystem extends GameIteratingSystem {
 	
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;

@@ -20,11 +20,11 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Circ;
 
-public class CustomTweenManager extends EntityHandler {
+public class GameTweenManager extends EntityHandler {
 	
 	private TweenManager manager;
 
-	public CustomTweenManager(IEntityHandler handler) {
+	public GameTweenManager(IEntityHandler handler) {
 		super(handler);
 		manager = new TweenManager();
 		registerAccessors();

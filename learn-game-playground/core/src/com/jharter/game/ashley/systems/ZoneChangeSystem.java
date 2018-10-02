@@ -7,10 +7,10 @@ import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.TypeComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.util.id.ID;
 
-public class ZoneChangeSystem extends CustomIteratingSystem {
+public class ZoneChangeSystem extends GameIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public ZoneChangeSystem() {

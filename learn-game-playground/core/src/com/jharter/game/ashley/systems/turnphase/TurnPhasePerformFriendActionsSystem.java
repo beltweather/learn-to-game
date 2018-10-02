@@ -17,7 +17,7 @@ import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
-import com.jharter.game.tween.CustomTweenManager;
+import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 

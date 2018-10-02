@@ -5,12 +5,12 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.jharter.game.ashley.components.Components.FocusComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.systems.boilerplate.CustomIteratingSystem;
+import com.jharter.game.ashley.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.debug.Debug;
 
 import uk.co.carelesslabs.Rumble;
 
-public class FocusCameraSystem extends CustomIteratingSystem {
+public class FocusCameraSystem extends GameIteratingSystem {
 
 	private OrthographicCamera camera;
 	

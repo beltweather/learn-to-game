@@ -1,4 +1,4 @@
-package com.jharter.game.stages.battlestage;
+package com.jharter.game.ashley.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -8,8 +8,8 @@ import com.jharter.game.ashley.components.Components.ActivePlayerComp;
 import com.jharter.game.ashley.components.Components.CursorComp;
 import com.jharter.game.ashley.components.Components.DisabledComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.U;

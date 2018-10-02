@@ -15,9 +15,9 @@ import com.jharter.game.ashley.components.Components.AnimationComp;
 import com.jharter.game.ashley.components.Components.InteractComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
 import com.jharter.game.ashley.components.Components.SensorComp;
-import com.jharter.game.ashley.components.EntityBuilder;
-import com.jharter.game.ashley.entities.EntityUtil;
-import com.jharter.game.ashley.interactions.Interaction;
+import com.jharter.game.ashley.components.subcomponents.Interaction;
+import com.jharter.game.ashley.entities.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuildUtil;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.ApproachTargetSystem;
 import com.jharter.game.ashley.systems.CleanupInputSystemOld;
@@ -84,7 +84,7 @@ public class TestStageA extends GameStage {
 		TextureRegion texture = new TextureRegion(Media.birdWalk, Media.birdWalk.getWidth()/3, Media.birdWalk.getHeight());
 		float speed = 5;
 		ID id = IDUtil.newID();
-		EntityBuilder b = EntityUtil.buildDynamicSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, BodyType.StaticBody, speed);
+		EntityBuilder b = EntityBuildUtil.buildDynamicSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, BodyType.StaticBody, speed);
 		Entity birdEntity = b.Entity();
 		b.free();
 		
@@ -133,7 +133,7 @@ public class TestStageA extends GameStage {
 		TextureRegion texture = new TextureRegion(Media.hero);
 		float speed = 90;
 		Sys.out.println("Hero id: " + id);
-		EntityBuilder b = EntityUtil.buildPlayerSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, speed, buildInput(focus));
+		EntityBuilder b = EntityBuildUtil.buildPlayerSprite(engine, id, EntityType.HERO, position, width, height, texture, box2D, speed, buildInput(focus));
 		if(focus) {
 			b.FocusComp();
 		}

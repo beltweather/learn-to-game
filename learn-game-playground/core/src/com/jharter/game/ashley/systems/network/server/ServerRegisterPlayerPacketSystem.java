@@ -1,8 +1,8 @@
 package com.jharter.game.ashley.systems.network.server;
 
 import com.jharter.game.ashley.components.Components.SpriteComp;
-import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.RelativePositionRules;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.endpoints.GameServer;

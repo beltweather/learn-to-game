@@ -1,4 +1,4 @@
-package com.jharter.game.stages.battlestage;
+package com.jharter.game.ashley.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,16 +6,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.DescriptionComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.ashley.components.subcomponents.Callback.DoesntHaveAllCallback;
-import com.jharter.game.ashley.components.subcomponents.CombatUtil;
 import com.jharter.game.ashley.components.subcomponents.TurnAction;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.CardCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.EnemyCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendCallback;
 import com.jharter.game.ashley.components.subcomponents.VoidCallback.FriendEnemyCallback;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityHandler;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.entities.EntityBuildUtil;
 import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
@@ -27,15 +26,15 @@ public class CardHelper extends EntityHandler {
 	
 	//TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
 
-	private CombatUtil CombatUtil;
+	private CombatHelper CombatUtil;
 	
 	public CardHelper(IEntityHandler handler) {
 		super(handler);
-		this.CombatUtil = new CombatUtil(handler);
+		this.CombatUtil = new CombatHelper(handler);
 	}
 
 	public EntityBuilder buildCard(ID ownerID, ZoneComp zone, Texture texture, String name) {
-		EntityBuilder b = EntityUtil.buildBasicEntity(getEngine(), 
+		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
 				texture);

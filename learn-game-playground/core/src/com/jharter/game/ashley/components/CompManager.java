@@ -59,6 +59,7 @@ import com.jharter.game.ashley.components.Components.VelocityComp;
 import com.jharter.game.ashley.components.Components.VitalsComp;
 import com.jharter.game.ashley.components.Components.ZoneComp;
 import com.jharter.game.ashley.components.Components.ZonePositionComp;
+import com.jharter.game.ashley.entities.EntityManager;
 import com.jharter.game.util.id.ID;
 
 /**
@@ -75,7 +76,7 @@ public class CompManager {
 	}
 	
 	private final CompWrappers Wrap = new CompWrappers(this);
-	public final CompEntities Entity = new CompEntities(this);
+	public final EntityManager Entity = new EntityManager(this);
 	
 	public class CompMapper<T extends Component> {
 		

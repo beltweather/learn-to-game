@@ -1,10 +1,12 @@
-package com.jharter.game.ashley.components;
+package com.jharter.game.ashley.entities;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.jharter.game.ashley.components.CompManager;
+import com.jharter.game.ashley.components.Components;
 import com.jharter.game.ashley.components.Components.BodyComp;
 import com.jharter.game.ashley.components.Components.IDComp;
 import com.jharter.game.ashley.components.Components.RemoveComp;
@@ -16,11 +18,11 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 /**
  * Used to retrieve entities directly, the sibling of "C" the mapper and "L" the linker
  */
-public class CompEntities {
+public class EntityManager {
 	
 	private CompManager Comp;
 	
-	CompEntities(CompManager Comp) {
+	public EntityManager(CompManager Comp) {
 		this.Comp = Comp;
 	}
 

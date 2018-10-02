@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.ashley.components.Components.InvisibleComp;
 import com.jharter.game.ashley.components.Components.SpriteComp;
 import com.jharter.game.ashley.components.Components.TextureComp;
-import com.jharter.game.ashley.components.EntityBuilder;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
@@ -20,9 +19,9 @@ import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.box2d.Box2DHelper;
 import uk.co.carelesslabs.box2d.Box2DWorld;
 
-public class EntityUtil {
+public class EntityBuildUtil {
 	
-	private EntityUtil() {}
+	private EntityBuildUtil() {}
 	
 	private static Body buildBody(Vector3 position, float width, float height, Box2DWorld world, BodyType bodyType) {
 		return Box2DHelper.createBody(world.world, width/2, height/2, width/4, 0, position, bodyType);  

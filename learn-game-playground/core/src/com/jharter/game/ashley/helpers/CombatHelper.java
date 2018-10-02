@@ -1,13 +1,13 @@
-package com.jharter.game.ashley.components.subcomponents;
+package com.jharter.game.ashley.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.StatsComp;
 import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.IEntityHandler;
 
-public class CombatUtil extends EntityHandler {
+public class CombatHelper extends EntityHandler {
 
-	public CombatUtil(IEntityHandler handler) {
+	public CombatHelper(IEntityHandler handler) {
 		super(handler);
 	}
 	

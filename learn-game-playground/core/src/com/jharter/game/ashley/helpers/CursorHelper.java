@@ -1,9 +1,9 @@
-package com.jharter.game.stages.battlestage;
+package com.jharter.game.ashley.helpers;
 
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityHandler;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.entities.EntityBuildUtil;
 import com.jharter.game.ashley.entities.IEntityHandler;
 
 import uk.co.carelesslabs.Enums.EntityType;
@@ -18,7 +18,7 @@ public class CursorHelper extends EntityHandler {
 
 	public EntityBuilder buildCursor(ZoneType zoneType) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
-		EntityBuilder b = EntityUtil.buildBasicEntity(getEngine(), 
+		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
 				  EntityType.CURSOR, 
 				  new Vector3(-550,-100,1), 
 				  Media.handPointDown);

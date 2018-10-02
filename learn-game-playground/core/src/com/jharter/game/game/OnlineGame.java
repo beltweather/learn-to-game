@@ -1,7 +1,7 @@
 package com.jharter.game.game;
 
 import com.badlogic.gdx.Game;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;

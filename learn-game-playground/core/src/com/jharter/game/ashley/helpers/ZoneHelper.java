@@ -1,7 +1,7 @@
-package com.jharter.game.stages.battlestage;
+package com.jharter.game.ashley.helpers;
 
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.layout.IdentityLayout;

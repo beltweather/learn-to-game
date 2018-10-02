@@ -3,7 +3,7 @@ package com.jharter.game.ashley.components.subcomponents;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ashley.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ashley.components.Components.TurnActionComp;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityHandler;
 import com.jharter.game.ashley.entities.IEntityHandler;
 

@@ -1,10 +1,18 @@
-package com.jharter.game.stages.battlestage;
+package com.jharter.game.stages.impl;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
+import com.jharter.game.ashley.helpers.ArrowHelper;
+import com.jharter.game.ashley.helpers.BackgroundHelper;
+import com.jharter.game.ashley.helpers.CardHelper;
+import com.jharter.game.ashley.helpers.CursorHelper;
+import com.jharter.game.ashley.helpers.EnemyHelper;
+import com.jharter.game.ashley.helpers.PlayerHelper;
+import com.jharter.game.ashley.helpers.TurnHelper;
+import com.jharter.game.ashley.helpers.ZoneHelper;
 import com.jharter.game.ashley.systems.AnimationSystem;
 import com.jharter.game.ashley.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ashley.systems.DiscardZoneSystem;

@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jharter.game.ashley.components.CompManager;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityToolBox;
 import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.ashley.systems.boilerplate.GameEntitySystem;

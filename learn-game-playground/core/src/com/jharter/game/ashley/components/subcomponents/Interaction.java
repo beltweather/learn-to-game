@@ -1,4 +1,4 @@
-package com.jharter.game.ashley.interactions;
+package com.jharter.game.ashley.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 

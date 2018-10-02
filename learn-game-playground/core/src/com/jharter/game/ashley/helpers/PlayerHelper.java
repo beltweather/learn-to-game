@@ -1,12 +1,12 @@
-package com.jharter.game.stages.battlestage;
+package com.jharter.game.ashley.helpers;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ashley.components.Components.ZoneComp;
-import com.jharter.game.ashley.components.EntityBuilder;
+import com.jharter.game.ashley.entities.EntityBuilder;
 import com.jharter.game.ashley.entities.EntityHandler;
-import com.jharter.game.ashley.entities.EntityUtil;
+import com.jharter.game.ashley.entities.EntityBuildUtil;
 import com.jharter.game.ashley.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
@@ -22,7 +22,7 @@ public class PlayerHelper extends EntityHandler {
 	}
 
 	public void addPlayer(ZoneComp zone, ZoneComp infoZone, ID playerID, Texture texture, String name) {
-		EntityBuilder b = EntityUtil.buildBasicEntity(getEngine(),
+		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(),
 													  playerID,
 				  									  EntityType.FRIEND, 
 				  									  new Vector3(660,140,0), 

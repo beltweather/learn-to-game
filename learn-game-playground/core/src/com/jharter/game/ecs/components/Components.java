@@ -11,8 +11,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.control.GameInput;
-import com.jharter.game.ecs.components.Components.ChangeZoneComp;
-import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
@@ -429,8 +427,9 @@ public final class Components {
 	public static final class ZoneComp implements C {
 		public ID zoneID = null;
 		public ZoneType zoneType = ZoneType.NONE;
-		Array<ID> internalObjectIDs = new Array<ID>();
-		public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
+		//Array<ID> internalObjectIDs = new Array<ID>();
+		//public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
+		public Array<ID> objectIDs = new Array<ID>();
 		public ZoneLayout layout = null;
 		
 		private ZoneComp() {
@@ -441,7 +440,8 @@ public final class Components {
 		public void reset() {
 			zoneID = null;
 			zoneType = ZoneType.NONE;
-			internalObjectIDs.clear();
+			objectIDs.clear();
+			//internalObjectIDs.clear();
 			layout = null;
 		}
 		
@@ -450,25 +450,29 @@ public final class Components {
 	public static class ZoneCompUtil extends CompUtil<ZoneComp> {
 		
 		public boolean hasIndex(int index) {
-			return index >= 0 && index < c.internalObjectIDs.size;
+			return index >= 0 && index < c.objectIDs.size;
 		}
 		
 		public void add(EntityBuilder b) {
 			add(b.IDComp().id, b.ZonePositionComp());
 		}
 		
+		public void add(ID id) {
+			add(id, Comp.ZonePositionComp.get(id));
+		}
+		
 		public void add(ID id, ZonePositionComp zp) {
-			c.internalObjectIDs.add(id);
+			c.objectIDs.add(id);
 			if(zp != null) {
-				zp.index = c.internalObjectIDs.size;
+				zp.index = c.objectIDs.size;
 				zp.zoneID = c.zoneID;
 			}
 		}
 		
 		public void remove(ID id) {
-			c.internalObjectIDs.removeValue(id, false);
-			for(int i = 0; i < c.internalObjectIDs.size; i++) {
-				ID oID = c.internalObjectIDs.get(i);
+			c.objectIDs.removeValue(id, false);
+			for(int i = 0; i < c.objectIDs.size; i++) {
+				ID oID = c.objectIDs.get(i);
 				Entity obj = Comp.Entity.get(oID);
 				ZonePositionComp zp = Comp.ZonePositionComp.get(obj);
 				zp.index = i;
@@ -543,6 +547,19 @@ public final class Components {
 		@Override 
 		public void reset() { 
 			timestamp = Long.MAX_VALUE; 
+		}
+		
+	}
+	
+	public static final class NextTurnPhaseComp implements C {
+		
+		public Class<? extends Component> next = null;
+		
+		private NextTurnPhaseComp() {}
+		
+		@Override
+		public void reset() {
+			next = null;
 		}
 		
 	}

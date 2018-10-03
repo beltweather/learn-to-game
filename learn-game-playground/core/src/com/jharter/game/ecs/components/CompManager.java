@@ -28,6 +28,7 @@ import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleComp;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
+import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
 import com.jharter.game.ecs.components.Components.PlayerComp;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
@@ -61,7 +62,6 @@ import com.jharter.game.ecs.components.Components.ZoneCompUtil;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityManager;
 import com.jharter.game.ecs.entities.IEntityHandler;
-import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 /**
@@ -110,6 +110,9 @@ public class CompManager {
 		}
 		
 		public T get(Entity entity) {
+			if(entity == null) {
+				return null;
+			}
 			return mapper.get(entity);
 		}
 		
@@ -240,6 +243,7 @@ public class CompManager {
 	public final CompMapper<ChangeZoneComp> ChangeZoneComp = getFor(ChangeZoneComp.class);
 	public final CompMapper<PlayerComp> PlayerComp = getFor(PlayerComp.class);
 	public final CompMapper<ShapeRenderComp> ShapeRenderComp = getFor(ShapeRenderComp.class);
+	public final CompMapper<NextTurnPhaseComp> NextTurnPhaseComp = getFor(NextTurnPhaseComp.class);
 	public final CompMapper<TurnPhaseComp> TurnPhaseComp = getFor(TurnPhaseComp.class);
 	public final CompMapper<TurnPhaseStartBattleComp> TurnPhaseStartBattleComp = getFor(TurnPhaseStartBattleComp.class);
 	public final CompMapper<TurnPhaseStartTurnComp> TurnPhaseStartTurnComp = getFor(TurnPhaseStartTurnComp.class);

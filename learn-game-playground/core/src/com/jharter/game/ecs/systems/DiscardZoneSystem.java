@@ -28,7 +28,7 @@ public class DiscardZoneSystem extends GameIteratingSystem {
 		
 		if(z.zoneType != ZoneType.HAND) {
 			ChangeZoneComp cz = Comp.add(ChangeZoneComp.class, entity);
-			Comp.util(cz).change(z.zoneID, getZoneID(ownerID, ZoneType.HAND)); // XXX Make this HAND until we actually want to use the discard
+			Comp.util(cz).change(z.zoneID, getZoneID(ownerID, ZoneType.DISCARD));
 		}
 		
 		// Discarding gets rid of any multi sprite information

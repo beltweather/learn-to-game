@@ -22,7 +22,7 @@ public class EnemyHelper extends EntityHandler {
 		healthBarHelper = new HealthBarHelper(handler);
 	}
 
-	public void addAtma(ZoneComp enemyZone, ZoneComp infoZone) {
+	public ID addAtma(ZoneComp enemyZone, ZoneComp infoZone) {
 		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
 				  EntityType.ENEMY, 
 				  new Vector3(U.u12(-65),0,0), 
@@ -44,9 +44,10 @@ public class EnemyHelper extends EntityHandler {
 		b.free();
 		
 		healthBarHelper.addHealthBar(infoZone, id);
+		return id;
 	}
 	
-	public void addCactar(ZoneComp enemyZone, ZoneComp infoZone) {
+	public ID addCactar(ZoneComp enemyZone, ZoneComp infoZone) {
 		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
 				  EntityType.ENEMY, 
 				  new Vector3(U.u12(-20), U.u12(-10), 0), 
@@ -68,6 +69,7 @@ public class EnemyHelper extends EntityHandler {
 		b.free();
 		
 		healthBarHelper.addHealthBar(infoZone, id);
+		return id;
 	}
 	
 }

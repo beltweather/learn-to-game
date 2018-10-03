@@ -37,7 +37,6 @@ public class CursorAcceptSystem extends CursorSystem {
 			// If this is our first target, make them the turn action entity
 			if(t == null) {
 				c.turnActionID = targetEntityID;
-				t = Comp.TurnActionComp.get(target).turnAction;
 				Comp.add(PendingTurnActionComp.class, target);
 			
 			// Otherwise, add them to the turn entity target list
@@ -45,6 +44,7 @@ public class CursorAcceptSystem extends CursorSystem {
 				t.addTarget(target);
 			}
 			
+			// When we select a new target, record it for our "undo" history
 			if(c.targetID != null) {
 				c.history.add(c.targetID);
 			}

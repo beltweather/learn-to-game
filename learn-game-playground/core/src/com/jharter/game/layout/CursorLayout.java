@@ -1,10 +1,9 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.tween.TweenType;
+import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
@@ -13,7 +12,7 @@ import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.entities.IEntityHandler;
-import com.jharter.game.tween.GameTweenManager;
+import com.jharter.game.tween.TweenType;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -127,7 +126,7 @@ public class CursorLayout extends ZoneLayout {
 		MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, cursor);
 		mp.clear();
 		
-		int size = z.objectIDs.size();
+		int size = z.objectIDs.size;
 		for(int i = 0; i < size; i++) {
 			Vector3 position = getCursorPosition(cursor, z.objectIDs.get(i), Comp.Entity.get(z.objectIDs.get(i)), z);
 			if(position != null) {
@@ -159,8 +158,8 @@ public class CursorLayout extends ZoneLayout {
 		}
 		
 		MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, cursor);
-		ImmutableArray<ID> objectIDs = Comp.ZoneComp.get(zp.zoneID).objectIDs;
-		for(int i = 0; i < objectIDs.size(); i++) {
+		Array<ID> objectIDs = Comp.ZoneComp.get(zp.zoneID).objectIDs;
+		for(int i = 0; i < objectIDs.size; i++) {
 			Vector3 position = getCursorPosition(cursor, objectIDs.get(i), Comp.Entity.get(objectIDs.get(i)), z);
 			if(position != null) {
 				mp.positions.add(new Vector3(position));
@@ -219,7 +218,7 @@ public class CursorLayout extends ZoneLayout {
 		// If the last target has an "all connection", find all targets within that zone and
 		// add multiplicity to them.
 		if((turnAction.all || forceAll)) {
-			for(int i = 0; i < targetZone.objectIDs.size(); i++) {
+			for(int i = 0; i < targetZone.objectIDs.size; i++) {
 				addMultiPositions(ms, multiplicity, cursor, s, targetZone, Comp.IDComp.get(Comp.Entity.get(targetZone.objectIDs.get(i))).id);
 			}
 			

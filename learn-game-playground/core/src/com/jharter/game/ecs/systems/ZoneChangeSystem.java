@@ -8,6 +8,7 @@ import com.jharter.game.ecs.components.Components.TypeComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
 public class ZoneChangeSystem extends GameIteratingSystem {
@@ -33,7 +34,7 @@ public class ZoneChangeSystem extends GameIteratingSystem {
 		
 		int targetIndex;
 		if(cz.useNextIndex) {
-			targetIndex = z.objectIDs.size();
+			targetIndex = z.objectIDs.size;
 		} else if(cz.newIndex >= 0) {
 			targetIndex = cz.newIndex;
 		} else {
@@ -47,6 +48,9 @@ public class ZoneChangeSystem extends GameIteratingSystem {
 		ZoneComp zOld = Comp.ZoneComp.get(zp.zoneID);
 		Comp.util(zOld).remove(id.id);
 		Comp.util(z).add(id.id, zp);
+		
+		Sys.out.println("ZoneChange from " + zOld.zoneType.name() + " to " + z.zoneType.name());
+		
 		zp.index = targetIndex;
 		entity.remove(ChangeZoneComp.class);
 	}

@@ -192,7 +192,7 @@ public class TestStageA extends GameStage {
 			engine.addSystem(new RenderEntitiesSystem(getCamera()));
 		}
 		
-		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+		engine.addSystem(new RemoveEntitiesSystem(endPointHelper.getClient()));
 		
 		/*if(endPointHelper.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));

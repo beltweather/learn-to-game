@@ -11,13 +11,11 @@ import com.jharter.game.network.packets.Packets.RemoveEntityPacket;
 
 public class RemoveEntitiesSystem extends GameIteratingSystem {
 
-	private PooledEngine engine;
 	private GameClient client;
 	
 	@SuppressWarnings("unchecked")
-	public RemoveEntitiesSystem(PooledEngine engine, GameClient client) {
+	public RemoveEntitiesSystem(GameClient client) {
 		super(Family.all(RemoveComp.class).get());
-		this.engine = engine;
 		this.client = client;
 	}
 	
@@ -27,7 +25,7 @@ public class RemoveEntitiesSystem extends GameIteratingSystem {
 			r.remove = true;
 		}
 		if(r.remove) {
-			engine.removeEntity(entity);
+			getEngine().removeEntity(entity);
 		} else if(client != null && r.requestRemove) {
 			IDComp id = Comp.IDComp.get(entity);
 			if(id != null) {

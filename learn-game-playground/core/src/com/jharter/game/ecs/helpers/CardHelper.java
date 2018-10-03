@@ -27,13 +27,18 @@ public class CardHelper extends EntityHandler {
 	//TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
 
 	private CombatHelper CombatUtil;
+	private ID ownerID;
 	
 	public CardHelper(IEntityHandler handler) {
 		super(handler);
 		this.CombatUtil = new CombatHelper(handler);
 	}
+	
+	public void setOwnerID(ID ownerID) {
+		this.ownerID = ownerID;
+	}
 
-	public EntityBuilder buildCard(ID ownerID, ZoneComp zone, Texture texture, String name) {
+	public EntityBuilder buildCard(Texture texture, String name) {
 		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
 				EntityType.CARD, 
 				new Vector3(-450,-475,0), 
@@ -46,12 +51,12 @@ public class CardHelper extends EntityHandler {
 		b.TurnActionComp().turnAction = new TurnAction(this);
 		b.TurnActionComp().turnAction.entityID = b.IDComp().id;
 		b.TurnActionComp().turnAction.ownerID = ownerID;
-		Comp.util(zone).add(b);
+		b.ZonePositionComp();
 		return b;
 	}
 	
-	public void addDrainCard(ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(ownerID, zone, Media.drainLife, "Drain Life");
+	public void addDrainCard() {
+		EntityBuilder b = buildCard(Media.drainLife, "Drain Life");
 		new FriendEnemyCallback(this, b) {
 
 			@Override
@@ -94,8 +99,8 @@ public class CardHelper extends EntityHandler {
 		b.free();
 	}
 	
-	public void addAttackCard(ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(ownerID, zone, Media.attack, "Attack");
+	public void addAttackCard() {
+		EntityBuilder b = buildCard(Media.attack, "Attack");
 		new EnemyCallback(this, b) {
 
 			@Override
@@ -112,8 +117,26 @@ public class CardHelper extends EntityHandler {
 		b.free();
 	}
 	
-	public void addAttackAllCard(ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(ownerID, zone, Media.attackAll, "Attack All");
+	public void addEnemyAttackCard() {
+		EntityBuilder b = buildCard(Media.attack, "Attack");
+		new FriendCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity friend) {
+				Media.weaponSwing.play();
+				
+				int damage = CombatUtil.getDamage(owner, friend, 20);
+				Comp.util(friend, VitalsComp.class).damage(damage);
+				Sys.out.println("Dealt " + damage + " damage.");
+			}
+			
+		};
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addAttackAllCard() {
+		EntityBuilder b = buildCard(Media.attackAll, "Attack All");
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		new EnemyCallback(this, b) {
@@ -132,8 +155,8 @@ public class CardHelper extends EntityHandler {
 		b.free();
 	}
 	
-	public void addHealAllCard(ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(ownerID, zone, Media.healAll, "Heal All");
+	public void addHealAllCard() {
+		EntityBuilder b = buildCard(Media.healAll, "Heal All");
 		b.TurnActionComp().turnAction.defaultAll = true;
 		b.TurnActionComp().turnAction.all = true;
 		new FriendCallback(this, b) {
@@ -150,8 +173,8 @@ public class CardHelper extends EntityHandler {
 		b.free();
 	}
 
-	public void addX2Card(ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(ownerID, zone, Media.x2, "x2");
+	public void addX2Card() {
+		EntityBuilder b = buildCard(Media.x2, "x2");
 		b.TurnActionComp().turnAction.makesTargetMultiplicity = 2;
 		new CardCallback(this, b) {
 
@@ -167,8 +190,8 @@ public class CardHelper extends EntityHandler {
 		b.free();
 	}
 	
-	public void addAllCard(ID ownerID, ZoneComp zone) {
-		EntityBuilder b = buildCard(ownerID, zone, Media.all, "All");
+	public void addAllCard() {
+		EntityBuilder b = buildCard(Media.all, "All");
 		b.TurnActionComp().turnAction.makesTargetAll = true;
 		new DoesntHaveAllCallback(this, b);
 		new CardCallback(this, b) {

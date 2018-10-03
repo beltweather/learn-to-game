@@ -7,6 +7,7 @@ import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.DisabledComp;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
+import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseComp;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
@@ -22,7 +23,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	
 	@SuppressWarnings("unchecked")
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass) {
-		super(Family.all(TurnPhaseComp.class, phaseClass).get());
+		super(Family.all(TurnPhaseComp.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
 		add(CursorComp.class);
 		add(TurnTimerComp.class);
 		add(TurnPhaseComp.class);
@@ -68,13 +69,14 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	
 	protected void endPhase(Entity turnPhase, float deltaTime) {
 		processEntityPhaseEnd(turnPhase, deltaTime);
-		turnPhase.remove(phaseClass);
+		Comp.remove(phaseClass, turnPhase);
 		
+		NextTurnPhaseComp n = Comp.add(NextTurnPhaseComp.class, turnPhase);
 		if(alternativeNextPhaseClass != null) {
-			Comp.add(alternativeNextPhaseClass, turnPhase);
+			n.next = alternativeNextPhaseClass;
 			alternativeNextPhaseClass = null;
 		} else {
-			Comp.add(nextPhaseClass, turnPhase);
+			n.next = nextPhaseClass;
 		}
 		
 		phaseStarted = false;

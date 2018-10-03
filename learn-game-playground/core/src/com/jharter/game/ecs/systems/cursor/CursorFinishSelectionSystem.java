@@ -3,9 +3,14 @@ package com.jharter.game.ecs.systems.cursor;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ecs.components.Components.ActionQueueableComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
+import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionComp;
+import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.util.id.ID;
+
+import uk.co.carelesslabs.Enums.ZoneType;
 
 public class CursorFinishSelectionSystem extends CursorSystem {
 

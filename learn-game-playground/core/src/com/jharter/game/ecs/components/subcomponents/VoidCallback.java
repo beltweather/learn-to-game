@@ -42,7 +42,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
-				for(int i = 0; i < z.objectIDs.size(); i++) {
+				for(int i = 0; i < z.objectIDs.size; i++) {
 					id = z.objectIDs.get(i);
 					Entity entity = Comp.Entity.get(id);
 					if(Comp.CursorComp.has(entity)) {
@@ -84,7 +84,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
-				for(int i = 0; i < z.objectIDs.size(); i++) {
+				for(int i = 0; i < z.objectIDs.size; i++) {
 					id = z.objectIDs.get(i);
 					Entity entity = Comp.Entity.get(id);
 					if(Comp.CursorComp.has(entity)) {
@@ -149,7 +149,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
-				for(int i = 0; i < z.objectIDs.size(); i++) {
+				for(int i = 0; i < z.objectIDs.size; i++) {
 					id = z.objectIDs.get(i);
 					Entity entity = Comp.Entity.get(id);
 					if(Comp.CursorComp.has(entity)) {

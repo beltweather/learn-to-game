@@ -42,6 +42,7 @@ import com.jharter.game.ecs.systems.network.server.ServerInputPacketSystem;
 import com.jharter.game.ecs.systems.network.server.ServerRegisterPlayerPacketSystem;
 import com.jharter.game.ecs.systems.network.server.ServerRequestEntityPacketSystem;
 import com.jharter.game.ecs.systems.network.server.ServerSendSnapshotSystem;
+import com.jharter.game.ecs.systems.turnphase.ChangeTurnPhaseSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseEndBattleSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseEndTurnSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhasePerformEnemyActionsSystem;
@@ -54,12 +55,12 @@ import com.jharter.game.layout.ActiveCardLayout;
 import com.jharter.game.layout.CursorLayout;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
+import com.jharter.game.layout.HiddenLayout;
 import com.jharter.game.layout.IdentityLayout;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.network.endpoints.GameClient;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.stages.GameStage;
-import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -100,20 +101,20 @@ public class BattleStage extends GameStage {
 		
 		// Player Zones
 		ZoneComp handZone = ZoneHelper.addZone(roguePlayerID, ZoneType.HAND, new HandLayout(this));
-		ZoneHelper.addZone(roguePlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(roguePlayerID, ZoneType.DISCARD);
+		ZoneHelper.addZone(roguePlayerID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(roguePlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 		
 		ZoneComp warriorHandZone = ZoneHelper.addZone(warriorPlayerID, ZoneType.HAND, new HandLayout(this));
-		ZoneHelper.addZone(warriorPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(warriorPlayerID, ZoneType.DISCARD);
+		ZoneComp warriorDeckZone = ZoneHelper.addZone(warriorPlayerID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(warriorPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 		
 		ZoneComp sorcererHandZone = ZoneHelper.addZone(sorcererPlayerID, ZoneType.HAND, new HandLayout(this));
-		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DISCARD);
+		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 		
 		ZoneComp rangerHandZone = ZoneHelper.addZone(rangerPlayerID, ZoneType.HAND, new HandLayout(this));
-		ZoneHelper.addZone(rangerPlayerID, ZoneType.DECK);
-		ZoneHelper.addZone(rangerPlayerID, ZoneType.DISCARD);
+		ZoneHelper.addZone(rangerPlayerID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(rangerPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 
 		ZoneComp infoZone = ZoneHelper.addZone(globalPlayerID, ZoneType.INFO, new IdentityLayout(this));
 		ZoneComp friendZone = ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND, new FriendLayout(this));
@@ -140,25 +141,55 @@ public class BattleStage extends GameStage {
 		PlayerHelper.addPlayer(friendZone, infoZone, rangerPlayerID, Media.ranger, "Ranger");
 
 		// ENEMIES
-		EnemyHelper.addAtma(enemyZone, infoZone);
-		EnemyHelper.addCactar(enemyZone, infoZone);
+		ID atmaID = EnemyHelper.addAtma(enemyZone, infoZone);
+		ID cactarID = EnemyHelper.addCactar(enemyZone, infoZone);
+		
+		ZoneHelper.addZone(atmaID, ZoneType.HAND, new HiddenLayout(this));
+		ZoneHelper.addZone(atmaID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(atmaID, ZoneType.DISCARD, new HiddenLayout(this));
+		
+		ZoneHelper.addZone(cactarID, ZoneType.HAND, new HiddenLayout(this));
+		ZoneHelper.addZone(cactarID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(cactarID, ZoneType.DISCARD, new HiddenLayout(this));
 		
 		// Cards
-		CardHelper.addDrainCard(roguePlayerID, handZone);
-		CardHelper.addX2Card(roguePlayerID, handZone);
-		CardHelper.addAllCard(roguePlayerID, handZone);
+		CardHelper.setOwnerID(atmaID);
+		for(int i = 0; i < 1; i++) { CardHelper.addEnemyAttackCard(); }
 		
-		CardHelper.addAttackCard(warriorPlayerID, warriorHandZone);
-		CardHelper.addX2Card(warriorPlayerID, warriorHandZone);
-		CardHelper.addAllCard(warriorPlayerID, warriorHandZone);
-
-		CardHelper.addHealAllCard(sorcererPlayerID, sorcererHandZone);
-		CardHelper.addX2Card(sorcererPlayerID, sorcererHandZone);
-		CardHelper.addAllCard(sorcererPlayerID, sorcererHandZone);
+		CardHelper.setOwnerID(cactarID);
+		for(int i = 0; i < 1; i++) { CardHelper.addEnemyAttackCard(); }
 		
-		CardHelper.addAttackAllCard(rangerPlayerID, rangerHandZone);
-		CardHelper.addX2Card(rangerPlayerID, rangerHandZone);
-		CardHelper.addAllCard(rangerPlayerID, rangerHandZone);
+		CardHelper.setOwnerID(roguePlayerID);
+		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		
+		CardHelper.setOwnerID(warriorPlayerID);
+		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		
+		CardHelper.setOwnerID(sorcererPlayerID);
+		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		
+		CardHelper.setOwnerID(rangerPlayerID);
+		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
+		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
+		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
 		
 		EntityBuilder b = CursorHelper.buildCursor(cursorZone);
 		b.FocusComp();
@@ -221,6 +252,7 @@ public class BattleStage extends GameStage {
 	}
 	
 	private void addTurnPhaseSystems(PooledEngine engine) {
+		engine.addSystem(new ChangeTurnPhaseSystem());
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 			engine.addSystem(new TurnPhaseStartTurnSystem());
 				engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
@@ -247,7 +279,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CleanupTurnActionsSystem());
 		engine.addSystem(new DiscardZoneSystem());
 		engine.addSystem(new ZoneChangeSystem());
-		engine.addSystem(new RemoveEntitiesSystem(engine, endPointHelper.getClient()));
+		engine.addSystem(new RemoveEntitiesSystem(endPointHelper.getClient()));
 	}
 	
 	private void addVisualSystems(PooledEngine engine) {

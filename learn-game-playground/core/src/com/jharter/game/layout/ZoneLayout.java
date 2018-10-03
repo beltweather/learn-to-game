@@ -1,7 +1,7 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ecs.components.Components.InvisibleComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
@@ -12,7 +12,7 @@ import com.jharter.game.util.id.ID;
 
 public abstract class ZoneLayout extends EntityHandler {
 	
-	protected ImmutableArray<ID> ids = null;
+	protected Array<ID> ids = null;
 	protected ObjectMap<ID, TweenTarget> dataById = new ObjectMap<ID, TweenTarget>();
 	protected boolean tween = true;
 	protected boolean allowRelativePositions = true;
@@ -41,7 +41,7 @@ public abstract class ZoneLayout extends EntityHandler {
 		this.activePlayerID = activePlayerID;
 	}
 	
-	public void setIds(ImmutableArray<ID> ids) {
+	public void setIds(Array<ID> ids) {
 		this.ids = ids;
 	}
 	

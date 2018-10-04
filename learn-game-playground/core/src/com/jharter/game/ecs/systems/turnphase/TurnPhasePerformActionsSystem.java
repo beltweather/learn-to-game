@@ -83,7 +83,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			tt.position.x = U.u12(160);
 			tt.position.y = U.u12(60);
 			
-			getTweenManager().start(getEngine(), id, getTweenManager().tween(id, tt, 1f));
+			getTweenManager().start(id, getTweenManager().tween(id, tt, 1f));
 			
 			tt = TweenTarget.newInstance();
 			tt.setFromEntityID(this, ownerID);
@@ -151,7 +151,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 				tweenBb.push(getTweenManager().tween(enemyID, enemyTT, 0.1f).setCallback(enemyFAC).repeatYoyo(1, 0f));
 			}
 			
-			getTweenManager().start(getEngine(), ownerID, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
+			getTweenManager().start(ownerID, Timeline.createSequence().push(tweenA).beginParallel().push(tweenBa).push(tweenBb).end(), new TweenCallback() {
 
 				@Override
 				public void onEvent(int type, BaseTween<?> source) {

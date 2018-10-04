@@ -87,6 +87,69 @@ public class CursorLayout extends ZoneLayout {
 		return zoneID != lastZoneID;
 	}
 	
+	private float getCursorAngle(Entity entity, ZoneType zoneType) {
+		switch(zoneType) {
+			case FRIEND:
+			case FRIEND_ACTIVE_CARD:
+				return 90f;
+			case ENEMY:
+				return 270f;
+			case HAND:
+			default:
+				return 0f;
+		}
+	}
+	
+	private Vector3 getCursorPosition(Entity cursor, ID targetID, Entity target, ZoneComp z) {
+		if(target == null) {
+			return null;
+		}
+		
+		// Could use this if you always wanted the cursor to point to the target
+		// layout location as opposed to the target actual location. These two
+		// would be different if the target entity was currently moving back in
+		// to place or something like that.
+		//TweenTarget lTarget = z.layout.getTarget(cursorTargetID);
+		
+		SpriteComp sTarget = Comp.SpriteComp.get(target);
+		if(sTarget == null) {
+			return null;
+		}
+		
+		SpriteComp s = Comp.SpriteComp.get(cursor);
+		Vector3 cursorPosition = new Vector3();
+		
+		rpr.setRelativeToID(targetID);
+		rpr.offset.set(0,0,0);
+		switch(z.zoneType) {
+			case HAND:
+				rpr.xAlign = Direction.CENTER;
+				rpr.yAlign = Direction.NORTH;
+				rpr.offset.y = -U.u12(2);
+				break;
+			case FRIEND:
+				rpr.xAlign = Direction.WEST;
+				rpr.yAlign = Direction.CENTER;
+				rpr.offset.x = -U.u12(2);
+				break;
+			case FRIEND_ACTIVE_CARD:
+				rpr.xAlign = Direction.WEST;
+				rpr.yAlign = Direction.CENTER;
+				rpr.offset.x = -U.u12(2);
+				break;
+			case ENEMY:
+				rpr.xAlign = Direction.EAST;
+				rpr.yAlign = Direction.CENTER;
+				rpr.offset.x = U.u12(2);
+				break;
+			default:
+				break;
+		}
+		
+		rpr.setToRelativePosition(this, s, cursorPosition);
+		return cursorPosition;
+	}
+	
 	///////////////////////// MAYBE MOVE TO A NEW CLASS WHAT'S BELOW THIS LINE ////////////////////
 	
 	@Override
@@ -149,7 +212,7 @@ public class CursorLayout extends ZoneLayout {
 		mp.size = mp.positions.size;
 		
 		Timeline tween = Timeline.createSequence().push(multiA).push(multiB);
-		getTweenManager().start(getEngine(), Comp.IDComp.get(cursor).id, tween);
+		getTweenManager().start(Comp.IDComp.get(cursor).id, tween);
 	}
 	
 	private void handleStayInZone(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, TweenTarget tt) {
@@ -247,7 +310,7 @@ public class CursorLayout extends ZoneLayout {
 			}
 		}
 		
-		getTweenManager().start(getEngine(), Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
+		getTweenManager().start(Comp.IDComp.get(cursor).id, Tween.to(ms.alphas, TweenType.ALPHA.asInt(), 0.5f).target(1f));
 	}
 
 	private boolean isAll(CursorComp c) {
@@ -258,69 +321,4 @@ public class CursorLayout extends ZoneLayout {
 		return ta != null && ta.all;
 	}
 	
-	///////////////////// KEEP BELOW THIS LINE ///////////////////////////
-	
-	private float getCursorAngle(Entity entity, ZoneType zoneType) {
-		switch(zoneType) {
-			case FRIEND:
-			case FRIEND_ACTIVE_CARD:
-				return 90f;
-			case ENEMY:
-				return 270f;
-			case HAND:
-			default:
-				return 0f;
-		}
-	}
-	
-	private Vector3 getCursorPosition(Entity cursor, ID targetID, Entity target, ZoneComp z) {
-		if(target == null) {
-			return null;
-		}
-		
-		// Could use this if you always wanted the cursor to point to the target
-		// layout location as opposed to the target actual location. These two
-		// would be different if the target entity was currently moving back in
-		// to place or something like that.
-		//TweenTarget lTarget = z.layout.getTarget(cursorTargetID);
-		
-		SpriteComp sTarget = Comp.SpriteComp.get(target);
-		if(sTarget == null) {
-			return null;
-		}
-		
-		SpriteComp s = Comp.SpriteComp.get(cursor);
-		Vector3 cursorPosition = new Vector3();
-		
-		rpr.setRelativeToID(targetID);
-		rpr.offset.set(0,0,0);
-		switch(z.zoneType) {
-			case HAND:
-				rpr.xAlign = Direction.CENTER;
-				rpr.yAlign = Direction.NORTH;
-				rpr.offset.y = -U.u12(2);
-				break;
-			case FRIEND:
-				rpr.xAlign = Direction.WEST;
-				rpr.yAlign = Direction.CENTER;
-				rpr.offset.x = -U.u12(2);
-				break;
-			case FRIEND_ACTIVE_CARD:
-				rpr.xAlign = Direction.WEST;
-				rpr.yAlign = Direction.CENTER;
-				rpr.offset.x = -U.u12(2);
-				break;
-			case ENEMY:
-				rpr.xAlign = Direction.EAST;
-				rpr.yAlign = Direction.CENTER;
-				rpr.offset.x = U.u12(2);
-				break;
-			default:
-				break;
-		}
-		
-		rpr.setToRelativePosition(this, s, cursorPosition);
-		return cursorPosition;
-	}
-
 }

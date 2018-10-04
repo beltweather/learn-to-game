@@ -67,7 +67,7 @@ public class ActiveCardLayout extends ZoneLayout {
 			}
 			m.size = m.positions.size;
 			
-			getTweenManager().start(getEngine(), null, timeline);
+			getTweenManager().start(null, timeline);
 			
 		} else {
 			Comp.remove(MultiSpriteComp.class, entity);

@@ -33,7 +33,7 @@ public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Compa
 			}
 			TweenTarget target = z.layout.getTarget(id, true);
 			if(target != null && !z.layout.matchesTarget(zEntity, target)) {
-				getTweenManager().start(getEngine(), id, target);
+				getTweenManager().start(id, target);
 			}
 		}
 	}

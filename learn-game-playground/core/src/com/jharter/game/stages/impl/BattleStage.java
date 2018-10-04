@@ -118,8 +118,8 @@ public class BattleStage extends GameStage {
 		ZoneComp infoZone = ZoneHelper.addZone(globalPlayerID, ZoneType.INFO, new IdentityLayout(this));
 		ZoneComp friendZone = ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND, new FriendLayout(this));
 		ZoneComp enemyZone = ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY);
-		ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND_ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
-		ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY_ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
+		ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND_ACTIVE_CARD, new ActiveCardLayout(this, true).setPriority(-1));
+		ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY_ACTIVE_CARD, new ActiveCardLayout(this, false).setPriority(-1));
 		ZoneComp cursorZone = ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));
 		
 		// Turn timer

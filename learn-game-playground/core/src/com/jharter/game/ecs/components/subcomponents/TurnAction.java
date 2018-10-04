@@ -155,12 +155,6 @@ public class TurnAction extends EntityHandler {
 		Entity owner = getOwnerEntity();
 		Comp.remove(ActiveTurnActionComp.class, owner);
 		Comp.remove(PendingTurnActionComp.class, getEntity());
-		
-		// This will depend on the card logic, but for now put it here
-		Entity entity = getEntity();
-		if(Comp.CardComp.has(entity)) {
-			Comp.add(DiscardCardComp.class, entity);	
-		}
 	}
 	
 	public void reset() {

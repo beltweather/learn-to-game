@@ -16,8 +16,11 @@ import uk.co.carelesslabs.Enums.Direction;
 
 public class ActiveCardLayout extends ZoneLayout {
 
-	public ActiveCardLayout(IEntityHandler handler) {
+	private boolean isFriend;
+	
+	public ActiveCardLayout(IEntityHandler handler, boolean isFriend) {
 		super(handler);
+		this.isFriend = isFriend;
 	}
 
 	@Override
@@ -32,9 +35,9 @@ public class ActiveCardLayout extends ZoneLayout {
 		
 		s.relativePositionRules.enabled = true;
 		s.relativePositionRules.setRelativeToID(t.turnAction.ownerID);
-		s.relativePositionRules.xAlign = Direction.WEST;
+		s.relativePositionRules.xAlign = isFriend ? Direction.WEST : Direction.EAST;
 		s.relativePositionRules.yAlign = Direction.CENTER;
-		s.relativePositionRules.offset.x = -U.u12(1);
+		s.relativePositionRules.offset.x = isFriend ? -U.u12(1) : U.u12(1);
 		
 		target.scale.y = 0.25f;
 		target.scale.x = 0.25f;

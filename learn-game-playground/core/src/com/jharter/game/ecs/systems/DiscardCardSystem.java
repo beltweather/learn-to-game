@@ -24,15 +24,20 @@ public class DiscardCardSystem extends GameIteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		ID ownerID = Comp.CardComp.get(entity).ownerID;
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
+		//ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		
-		if(z.zoneType != ZoneType.HAND) {
+		// XXX This is weird logic here, we need to decouple this from turn actions.
+		// I think this is trying to capture the state where we've cancelled a
+		// turn action but the card still has multi sprite targets or something.
+		// Need a better way to remove multi sprite comp, likely another validator.
+		//if(z.zoneType != ZoneType.HAND) {
+			
 			ChangeZoneComp cz = Comp.add(ChangeZoneComp.class, entity);
-			Comp.util(cz).change(z.zoneID, getZoneID(ownerID, ZoneType.DISCARD));
-		}
+			Comp.util(cz).change(zp.zoneID, getZoneID(ownerID, ZoneType.DISCARD));
+		
+		//}
 		
 		// Discarding gets rid of any multi sprite information
-		Comp.remove(MultiSpriteComp.class, entity);
 		Comp.remove(DiscardCardComp.class, entity);
 	}
 

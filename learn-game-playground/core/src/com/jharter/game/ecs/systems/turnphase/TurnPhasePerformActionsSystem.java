@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
+import com.jharter.game.ecs.components.Components.DiscardCardComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnComp;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsComp;
@@ -104,7 +105,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 						turnAction.performAcceptCallback();
 					}
 					
-					Comp.add(CleanupTurnActionComp.class, turnActionEntity);
+					cleanUp(turnActionEntity);
 				}
 				
 			}); 
@@ -161,7 +162,14 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			
 			busy = true;
 		} else {
-			Comp.add(CleanupTurnActionComp.class, turnActionEntity);
+			cleanUp(turnActionEntity);
+		}
+	}
+	
+	protected void cleanUp(Entity turnActionEntity) {
+		Comp.add(CleanupTurnActionComp.class, turnActionEntity);
+		if(Comp.CardComp.has(turnActionEntity)) {
+			Comp.add(DiscardCardComp.class, turnActionEntity);	
 		}
 	}
 	

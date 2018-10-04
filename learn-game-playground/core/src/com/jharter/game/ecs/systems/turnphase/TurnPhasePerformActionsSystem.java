@@ -32,7 +32,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	@SuppressWarnings("unchecked")
 	public TurnPhasePerformActionsSystem() {
 		super(TurnPhasePerformActionsComp.class, TurnPhaseEndTurnComp.class);
-		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).get(), new TimestampSort());
+		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionComp.class).get(), new TimestampSort());
 	}
 
 	@Override

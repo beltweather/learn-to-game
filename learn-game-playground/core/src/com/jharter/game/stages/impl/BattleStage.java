@@ -16,7 +16,7 @@ import com.jharter.game.ecs.helpers.TurnHelper;
 import com.jharter.game.ecs.helpers.ZoneHelper;
 import com.jharter.game.ecs.systems.AnimationSystem;
 import com.jharter.game.ecs.systems.CleanupTurnActionsSystem;
-import com.jharter.game.ecs.systems.DiscardZoneSystem;
+import com.jharter.game.ecs.systems.DiscardCardSystem;
 import com.jharter.game.ecs.systems.QueueTurnActionsSystem;
 import com.jharter.game.ecs.systems.RemoveEntitiesSystem;
 import com.jharter.game.ecs.systems.RenderEntitiesSystem;
@@ -279,7 +279,7 @@ public class BattleStage extends GameStage {
 	private void addOtherSystems(PooledEngine engine) {
 		engine.addSystem(new QueueTurnActionsSystem());
 		engine.addSystem(new CleanupTurnActionsSystem());
-		engine.addSystem(new DiscardZoneSystem());
+		engine.addSystem(new DiscardCardSystem());
 		engine.addSystem(new ZoneChangeSystem());
 		engine.addSystem(new RemoveEntitiesSystem(endPointHelper.getClient()));
 	}

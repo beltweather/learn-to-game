@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.CardComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionComp;
-import com.jharter.game.ecs.components.Components.ToDiscardZoneComp;
+import com.jharter.game.ecs.components.Components.DiscardCardComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityHandler;
@@ -157,7 +157,10 @@ public class TurnAction extends EntityHandler {
 		Comp.remove(PendingTurnActionComp.class, getEntity());
 		
 		// This will depend on the card logic, but for now put it here
-		Comp.add(ToDiscardZoneComp.class, getEntity());	
+		Entity entity = getEntity();
+		if(Comp.CardComp.has(entity)) {
+			Comp.add(DiscardCardComp.class, entity);	
+		}
 	}
 	
 	public void reset() {

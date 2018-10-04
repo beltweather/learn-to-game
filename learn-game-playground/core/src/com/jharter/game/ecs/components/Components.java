@@ -78,7 +78,7 @@ public final class Components {
 	public static final class ActionReadyComp extends B {}
 	public static final class CleanupTurnActionComp extends B {}
 	
-	public static final class ToDiscardZoneComp extends B {}
+	public static final class DiscardCardComp extends B {}
 	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	

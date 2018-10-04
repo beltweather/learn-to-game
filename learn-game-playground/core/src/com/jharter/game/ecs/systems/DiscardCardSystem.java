@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.CardComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
-import com.jharter.game.ecs.components.Components.ToDiscardZoneComp;
+import com.jharter.game.ecs.components.Components.DiscardCardComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
@@ -14,15 +14,15 @@ import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class DiscardZoneSystem extends GameIteratingSystem {
+public class DiscardCardSystem extends GameIteratingSystem {
 
-	public DiscardZoneSystem() {
-		super(Family.all(ZonePositionComp.class, ToDiscardZoneComp.class).one(CardComp.class, TurnActionComp.class).get());
+	public DiscardCardSystem() {
+		super(Family.all(CardComp.class, ZonePositionComp.class, DiscardCardComp.class).get());
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		ID ownerID = Comp.CardComp.has(entity) ? Comp.CardComp.get(entity).ownerID : Comp.TurnActionComp.get(entity).turnAction.ownerID;
+		ID ownerID = Comp.CardComp.get(entity).ownerID;
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		
@@ -33,7 +33,7 @@ public class DiscardZoneSystem extends GameIteratingSystem {
 		
 		// Discarding gets rid of any multi sprite information
 		Comp.remove(MultiSpriteComp.class, entity);
-		Comp.remove(ToDiscardZoneComp.class, entity);
+		Comp.remove(DiscardCardComp.class, entity);
 	}
 
 }

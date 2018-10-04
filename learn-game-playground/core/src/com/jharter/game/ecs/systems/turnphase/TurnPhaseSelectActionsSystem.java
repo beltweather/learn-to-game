@@ -130,7 +130,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 					}
 				}
 				if(!success) {
-					t.cleanUp();
+					Comp.add(CleanupTurnActionComp.class, card);
 					break;
 				}
 			}

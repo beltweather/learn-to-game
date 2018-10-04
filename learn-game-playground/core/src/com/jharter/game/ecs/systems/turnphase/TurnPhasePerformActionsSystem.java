@@ -105,7 +105,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 						turnAction.performAcceptCallback();
 					}
 					
-					cleanUp(turnActionEntity);
+					resolve(turnActionEntity);
 				}
 				
 			}); 
@@ -162,11 +162,11 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			
 			busy = true;
 		} else {
-			cleanUp(turnActionEntity);
+			resolve(turnActionEntity);
 		}
 	}
 	
-	protected void cleanUp(Entity turnActionEntity) {
+	protected void resolve(Entity turnActionEntity) {
 		Comp.add(CleanupTurnActionComp.class, turnActionEntity);
 		if(Comp.CardComp.has(turnActionEntity)) {
 			Comp.add(DiscardCardComp.class, turnActionEntity);	

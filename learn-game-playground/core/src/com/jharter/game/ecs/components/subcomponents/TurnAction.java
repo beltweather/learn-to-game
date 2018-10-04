@@ -94,11 +94,8 @@ public class TurnAction extends EntityHandler {
 			return false;
 		}
 		
-		// Special check for cards that modify other cards, we don't
-		// want them to be able to target each other
-		CardComp c = Comp.CardComp.get(entity);
-		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		if(c != null && zp != null && c.cardType == CardType.TARGET_CARD && Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.FRIEND_ACTIVE_CARD) {
+		// Special check for cards that modify other cards, we don't want them to be able to target each other
+		if(isUntargetableCard(entity)) {
 			return false;
 		}
 		
@@ -107,6 +104,15 @@ public class TurnAction extends EntityHandler {
 		}
 		
 		return true;
+	}
+	
+	public boolean isUntargetableCard(Entity entity) {
+		CardComp c = Comp.CardComp.get(entity);
+		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
+		return c != null && 
+			   zp != null && 
+			   c.cardType == CardType.TARGET_CARD && 
+			   Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.FRIEND_ACTIVE_CARD;
 	}
 	
 	public void performAcceptCallback() {
@@ -146,15 +152,6 @@ public class TurnAction extends EntityHandler {
 			}
 		}
 		return temp;
-	}
-	
-	public void cleanUp() {
-		multiplicity = defaultMultiplicity;
-		all = defaultAll;
-		targetIDs.clear();
-		Entity owner = getOwnerEntity();
-		Comp.remove(ActiveTurnActionComp.class, owner);
-		Comp.remove(PendingTurnActionComp.class, getEntity());
 	}
 	
 	public void reset() {

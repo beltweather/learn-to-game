@@ -9,7 +9,6 @@ import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.systems.boilerplate.GameSortedIteratingSystem;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.layout.ZoneLayout;
-import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.ID;
 
 public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Comparator<Entity> {
@@ -40,7 +39,7 @@ public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Compa
 	}
 	
 	private ID getActivePlayerID() {
-		return getFirstComponent(ActivePlayerComp.class).activePlayerID;
+		return comp(ActivePlayerComp.class).activePlayerID;
 	}
 	
 	@Override

@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.IDComp;
-import com.jharter.game.ecs.components.Components.TypeComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;

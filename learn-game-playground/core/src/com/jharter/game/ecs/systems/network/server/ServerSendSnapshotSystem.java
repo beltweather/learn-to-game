@@ -5,12 +5,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.VelocityComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIntervalSystem;
+import com.jharter.game.network.endpoints.GameNetwork.EntityData;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.SnapshotPacket;
 

@@ -3,11 +3,11 @@ package com.jharter.game.ecs.helpers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.ecs.components.Components.CardOwnerComp;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
-import com.jharter.game.ecs.components.Components.ZoneComp;
-import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.Callback.DoesntHaveAllCallback;
+import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.VoidCallback.CardCallback;
 import com.jharter.game.ecs.components.subcomponents.VoidCallback.EnemyCallback;
 import com.jharter.game.ecs.components.subcomponents.VoidCallback.FriendCallback;
@@ -28,6 +28,7 @@ public class CardHelper extends EntityHandler {
 
 	private CombatHelper CombatUtil;
 	private ID ownerID;
+	private CardOwnerComp co;
 	
 	public CardHelper(IEntityHandler handler) {
 		super(handler);
@@ -36,6 +37,7 @@ public class CardHelper extends EntityHandler {
 	
 	public void setOwnerID(ID ownerID) {
 		this.ownerID = ownerID;
+		this.co = Comp.getOrAdd(CardOwnerComp.class, ownerID);
 	}
 
 	public EntityBuilder buildCard(Texture texture, String name) {
@@ -52,6 +54,7 @@ public class CardHelper extends EntityHandler {
 		b.TurnActionComp().turnAction.entityID = b.IDComp().id;
 		b.TurnActionComp().turnAction.ownerID = ownerID;
 		b.ZonePositionComp();
+		co.cardIDs.add(b.IDComp().id);
 		return b;
 	}
 	

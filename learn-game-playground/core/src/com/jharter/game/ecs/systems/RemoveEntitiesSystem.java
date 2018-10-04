@@ -2,7 +2,6 @@ package com.jharter.game.ecs.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.core.PooledEngine;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;

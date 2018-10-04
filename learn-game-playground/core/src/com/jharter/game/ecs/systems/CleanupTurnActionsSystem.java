@@ -3,7 +3,6 @@ package com.jharter.game.ecs.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
-import com.jharter.game.ecs.components.Components.ToDiscardZoneComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 

@@ -1,10 +1,10 @@
 package com.jharter.game.ecs.systems.network.server;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.ecs.components.Components.PlayerComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.systems.network.ConsumingPacketSystem;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.network.packets.Packets.RequestEntityPacket;

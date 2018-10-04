@@ -27,7 +27,7 @@ public class CursorTargetValidationSystem extends CursorSystem {
 	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		TurnAction t = getTurnAction(c);
 		boolean cursorDisabled = isDisabled(cursor);
-		for(Entity zone : getEntities(ZoneComp.class)) {
+		for(Entity zone : entities(ZoneComp.class)) {
 			processZone(zone, t, cursorDisabled);
 		}
 	}

@@ -1,8 +1,9 @@
 package com.jharter.game.ecs.components;
 
+import java.util.EnumSet;
+
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -20,6 +21,7 @@ import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
 
+import uk.co.carelesslabs.Enums.CardOwnerAction;
 import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
@@ -54,16 +56,18 @@ public final class Components {
 
 	public static final class FocusComp extends B implements Unique {}
 	
+	
 	public static final class TurnPhaseComp extends B implements Unique {}
 	public static final class TurnPhaseStartBattleComp extends B implements Unique {}
 	public static final class TurnPhaseStartTurnComp extends B implements Unique {}
-	public static final class TurnPhaseSelectEnemyActionsComp extends B implements Unique {}
-	public static final class TurnPhaseSelectFriendActionsComp extends B implements Unique {}
-	public static final class TurnPhasePerformFriendActionsComp extends B implements Unique {}
-	public static final class TurnPhasePerformEnemyActionsComp extends B implements Unique {}
+	public static final class TurnPhaseSelectActionsComp extends B implements Unique {}
+	public static final class TurnPhasePerformActionsComp extends B implements Unique {}
 	public static final class TurnPhaseEndTurnComp extends B implements Unique {}
 	public static final class TurnPhaseEndBattleComp extends B implements Unique {}
 	public static final class TurnPhaseNoneComp extends B implements Unique {}
+
+	public static final class FriendComp extends B {}
+	public static final class EnemyComp extends B {}
 	
 	public static final class PendingTurnActionComp extends B {}
 	public static final class TargetableComp extends B {}
@@ -71,7 +75,6 @@ public final class Components {
 	public static final class InvisibleComp extends B {}
 	public static final class DisabledComp extends B {}
 	
-	public static final class ActionQueueableComp extends B {}
 	public static final class ActionReadyComp extends B {}
 	public static final class CleanupTurnActionComp extends B {}
 	
@@ -282,6 +285,25 @@ public final class Components {
 			interactables.clear();
 			interaction = null;
 		}
+	}
+	
+	public static final class CardOwnerComp implements C {
+		
+		public int handSize = 3;
+		public Array<ID> cardIDs = new Array<ID>();
+		public EnumSet<CardOwnerAction> actions = EnumSet.noneOf(CardOwnerAction.class);
+		public int draw = 0;
+		
+		private CardOwnerComp() {}
+		
+		@Override
+		public void reset() {
+			handSize = 3;
+			cardIDs.clear();
+			actions.clear();
+			draw = 0;
+		}
+		
 	}
 	
 	public static final class CardComp implements C {
@@ -538,6 +560,19 @@ public final class Components {
 		
 	}
 	
+	public static final class ActionQueueableComp implements C {
+		
+		public long timestamp = Long.MAX_VALUE;
+		
+		private ActionQueueableComp() {}
+		
+		@Override 
+		public void reset() { 
+			timestamp = Long.MAX_VALUE; 
+		}
+		
+	}
+	
 	public static final class ActionQueuedComp implements C {
 		
 		public long timestamp = Long.MAX_VALUE;
@@ -549,6 +584,26 @@ public final class Components {
 			timestamp = Long.MAX_VALUE; 
 		}
 		
+	}
+	
+	public static final class AutoSelectTurnActionComp implements C {
+		
+		public float minWaitTime = 0;
+		public float maxWaitTime = 20;
+		public float waitTime = 0;
+		public float waited = 0;
+		public boolean waiting = false;
+		
+		private AutoSelectTurnActionComp() {}
+		
+		@Override
+		public void reset() {
+			minWaitTime = 0;
+			maxWaitTime = 20;
+			waitTime = 0;
+			waited = 0;
+			waiting = false;
+		}
 	}
 	
 	public static final class NextTurnPhaseComp implements C {

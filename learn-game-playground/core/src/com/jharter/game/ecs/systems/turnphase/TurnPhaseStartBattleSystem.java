@@ -1,20 +1,17 @@
 package com.jharter.game.ecs.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ecs.components.Components.CardComp;
-import com.jharter.game.ecs.components.Components.ChangeZoneComp;
+import com.jharter.game.ecs.components.Components.CardOwnerComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnComp;
-import com.jharter.game.ecs.components.Components.ZoneComp;
-import com.jharter.game.util.id.ID;
 
-import uk.co.carelesslabs.Enums.ZoneType;
+import uk.co.carelesslabs.Enums.CardOwnerAction;
 
 public class TurnPhaseStartBattleSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseStartBattleSystem() {
 		super(TurnPhaseStartBattleComp.class, TurnPhaseStartTurnComp.class);
-		add(CardComp.class);
+		all(CardOwnerComp.class);
 	}
 
 	@Override
@@ -24,7 +21,7 @@ public class TurnPhaseStartBattleSystem extends TurnPhaseSystem {
 
 	@Override
 	protected boolean processEntityPhaseMiddle(Entity turnPhase, float deltaTime) {
-		addCardsToDecks();
+		setupCards();
 		return true;
 	}
 
@@ -33,24 +30,9 @@ public class TurnPhaseStartBattleSystem extends TurnPhaseSystem {
 		
 	}
 	
-	private void addCardsToDecks() {
-		// Move all cards in every zone to their decks
-		for(Entity card : getEntities(CardComp.class)) {
-			ID cardID = Comp.IDComp.get(card).id;
-			ID ownerID = Comp.CardComp.get(card).ownerID;
-			ZoneComp zCard = Comp.ZoneComp.get(Comp.ZonePositionComp.get(card).zoneID);
-			ZoneComp zDeck = getZone(ownerID, ZoneType.DECK);
-			if(zCard == null) {
-				Comp.util(zDeck).add(cardID);
-			} else if(zCard.zoneType != ZoneType.DECK) {
-				Comp.util(zCard).remove(cardID);
-				Comp.util(zDeck).add(cardID);
-			}
-		}
-		
-		// Shuffle each player's deck
-		for(ID playerID : getPlayerIDs()) {
-			getZone(playerID, ZoneType.DECK).objectIDs.shuffle();
+	protected void setupCards() {
+		for(CardOwnerComp c : comps(CardOwnerComp.class)) {
+			c.actions.add(CardOwnerAction.RESET_CARDS);
 		}
 	}
 	

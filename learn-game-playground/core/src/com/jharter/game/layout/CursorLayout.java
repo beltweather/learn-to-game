@@ -171,7 +171,7 @@ public class CursorLayout extends ZoneLayout {
 	private void handleTargetingTurnAction(Entity cursor, CursorComp c, ZonePositionComp zp, ZoneComp z, SpriteComp s, Vector3 position) {
 		
 		// Make sure cursor is in a valid place
-		if(!Comp.util(z).hasIndex(zp.index) || z.zoneType != ZoneType.ACTIVE_CARD) {
+		if(!Comp.util(z).hasIndex(zp.index) || z.zoneType != ZoneType.FRIEND_ACTIVE_CARD) {
 			return;
 		}
 		
@@ -263,7 +263,7 @@ public class CursorLayout extends ZoneLayout {
 	private float getCursorAngle(Entity entity, ZoneType zoneType) {
 		switch(zoneType) {
 			case FRIEND:
-			case ACTIVE_CARD:
+			case FRIEND_ACTIVE_CARD:
 				return 90f;
 			case ENEMY:
 				return 270f;
@@ -305,7 +305,7 @@ public class CursorLayout extends ZoneLayout {
 				rpr.yAlign = Direction.CENTER;
 				rpr.offset.x = -U.u12(2);
 				break;
-			case ACTIVE_CARD:
+			case FRIEND_ACTIVE_CARD:
 				rpr.xAlign = Direction.WEST;
 				rpr.yAlign = Direction.CENTER;
 				rpr.offset.x = -U.u12(2);

@@ -6,10 +6,8 @@ import com.jharter.game.ecs.entities.EntityBuildUtil;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
-import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
-import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
 public class CursorHelper extends EntityHandler {

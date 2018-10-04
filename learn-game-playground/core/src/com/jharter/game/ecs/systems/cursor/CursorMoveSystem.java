@@ -49,7 +49,7 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 	}
 	
 	private Array<Entity> getTargets() {
-		return getSortedEntities(TargetableComp.class);
+		return entitiesSorted(TargetableComp.class);
 	}
 	
 	private int getCurrentTargetIndex(CursorComp c) {

@@ -28,6 +28,7 @@ public class PlayerHelper extends EntityHandler {
 				  									  new Vector3(660,140,0), 
 				  									  new TextureRegion(texture));
 		b.PlayerComp();
+		b.FriendComp();
 		b.VitalsComp().maxHealth = 100;
 		b.VitalsComp().weakHealth = 25;
 		b.VitalsComp().health = 10;
@@ -38,6 +39,7 @@ public class PlayerHelper extends EntityHandler {
 		b.StatsComp().mDefense = 2;
 		b.DescriptionComp().name = name;
 		b.SpriteComp();
+		b.CardOwnerComp();
 		Comp.util(zone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();

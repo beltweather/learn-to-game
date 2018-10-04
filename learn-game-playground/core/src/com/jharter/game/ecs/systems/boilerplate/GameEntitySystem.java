@@ -91,7 +91,7 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		return toolBox.getTweenManager();
 	}
 	
-	protected void add(Class<? extends Component> componentClass) {
+	protected void all(Class<? extends Component> componentClass) {
 		add(componentClass, Family.all(componentClass).get());
 	}
 
@@ -106,14 +106,14 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		}
 	}
 	
-	protected ImmutableArray<Entity> getEntities(Object key) {
+	protected ImmutableArray<Entity> entities(Object key) {
 		if(entityArraysByKey.containsKey(key)) {
 			return entityArraysByKey.get(key);
 		}
 		return emptyImm;
 	}
 	
-	protected Array<Entity> getSortedEntities(Object key) {
+	protected Array<Entity> entitiesSorted(Object key) {
 		if(shouldSort) {
 			sortAddedEntities();
 			shouldSort = false;
@@ -125,11 +125,11 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	}
 	
 	protected int countEntities(Object key) {
-		return getEntities(key).size();
+		return entities(key).size();
 	}
 	
 	protected boolean hasEntities(Object key) {
-		return getEntities(key).size() > 0;
+		return entities(key).size() > 0;
 	}
 	
 	protected ID getZoneID(ID ownerID, ZoneType type) {
@@ -155,12 +155,12 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	/**
 	 * Special case where we assume the component class doubles as the key
 	 */
-	protected <T extends Component> ImmutableArray<T> getComponents(Class<T> componentClass) {
-		return getComponents(componentClass, componentClass);
+	protected <T extends Component> ImmutableArray<T> comps(Class<T> componentClass) {
+		return comps(componentClass, componentClass);
 	}
 	
-	protected <T extends Component> ImmutableArray<T> getComponents(Object key, Class<T> componentClass) {
-		ImmutableArray<Entity> entities = getEntities(key);
+	protected <T extends Component> ImmutableArray<T> comps(Object key, Class<T> componentClass) {
+		ImmutableArray<Entity> entities = entities(key);
 		Array<T> comps = new Array<T>(false, entities.size());
 		for(int i = 0; i < entities.size(); i++) {
 			comps.add(Comp.getFor(componentClass).get(entities.get(i)));
@@ -168,34 +168,34 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		return new ImmutableArray<T>(comps);
 	}
 	
-	protected Entity getFirstEntity(Object key) {
-		ImmutableArray<Entity> entityArray = getEntities(key);
+	protected Entity entity(Object key) {
+		ImmutableArray<Entity> entityArray = entities(key);
 		return entityArray.size() == 0 ? null : entityArray.first();
 	}
 	
-	protected Entity getFirstSortedEntity(Object key) {
-		Array<Entity> entityArray = getSortedEntities(key);
+	protected Entity entitySorted(Object key) {
+		Array<Entity> entityArray = entitiesSorted(key);
 		return entityArray.size == 0 ? null : entityArray.first();
 	}
 	
 	/**
 	 * Special case where we assume the component class doubles as the key
 	 */
-	protected <T extends Component> T getFirstComponent(Class<T> componentClass) {
-		return getFirstComponent(componentClass, componentClass);
+	protected <T extends Component> T comp(Class<T> componentClass) {
+		return comp(componentClass, componentClass);
 	}
 	
-	protected <T extends Component> T getFirstComponent(Object key, Class<T> componentClass) {
-		Entity entity = getFirstEntity(key);
+	protected <T extends Component> T comp(Object key, Class<T> componentClass) {
+		Entity entity = entity(key);
 		return entity == null ? null : Comp.getFor(componentClass).get(entity);
 	}
 	
-	protected <T extends Component> T getFirstSortedComponent(Class<T> componentClass) {
-		return getFirstSortedComponent(componentClass, componentClass);
+	protected <T extends Component> T compSorted(Class<T> componentClass) {
+		return compSorted(componentClass, componentClass);
 	}
 	
-	protected <T extends Component> T getFirstSortedComponent(Object key, Class<T> componentClass) {
-		Entity entity = getFirstSortedEntity(key);
+	protected <T extends Component> T compSorted(Object key, Class<T> componentClass) {
+		Entity entity = entitySorted(key);
 		return entity == null ? null : Comp.getFor(componentClass).get(entity);
 	}
 	

@@ -24,6 +24,7 @@ import com.jharter.game.ecs.systems.RenderWorldGridSystem;
 import com.jharter.game.ecs.systems.TweenSystem;
 import com.jharter.game.ecs.systems.ZoneChangeSystem;
 import com.jharter.game.ecs.systems.ZoneLayoutSystem;
+import com.jharter.game.ecs.systems.card.CardOwnerActionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorAcceptSystem;
 import com.jharter.game.ecs.systems.cursor.CursorCancelSystem;
 import com.jharter.game.ecs.systems.cursor.CursorFinishSelectionSystem;
@@ -45,10 +46,8 @@ import com.jharter.game.ecs.systems.network.server.ServerSendSnapshotSystem;
 import com.jharter.game.ecs.systems.turnphase.ChangeTurnPhaseSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseEndBattleSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseEndTurnSystem;
-import com.jharter.game.ecs.systems.turnphase.TurnPhasePerformEnemyActionsSystem;
-import com.jharter.game.ecs.systems.turnphase.TurnPhasePerformFriendActionsSystem;
-import com.jharter.game.ecs.systems.turnphase.TurnPhaseSelectEnemyActionsSystem;
-import com.jharter.game.ecs.systems.turnphase.TurnPhaseSelectFriendActionsSystem;
+import com.jharter.game.ecs.systems.turnphase.TurnPhasePerformActionsSystem;
+import com.jharter.game.ecs.systems.turnphase.TurnPhaseSelectActionsSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseStartBattleSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseStartTurnSystem;
 import com.jharter.game.layout.ActiveCardLayout;
@@ -119,7 +118,8 @@ public class BattleStage extends GameStage {
 		ZoneComp infoZone = ZoneHelper.addZone(globalPlayerID, ZoneType.INFO, new IdentityLayout(this));
 		ZoneComp friendZone = ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND, new FriendLayout(this));
 		ZoneComp enemyZone = ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY);
-		ZoneHelper.addZone(globalPlayerID, ZoneType.ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
+		ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND_ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
+		ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY_ACTIVE_CARD, new ActiveCardLayout(this).setPriority(-1));
 		ZoneComp cursorZone = ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));
 		
 		// Turn timer
@@ -255,10 +255,8 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new ChangeTurnPhaseSystem());
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 			engine.addSystem(new TurnPhaseStartTurnSystem());
-				engine.addSystem(new TurnPhaseSelectEnemyActionsSystem());
-				engine.addSystem(new TurnPhaseSelectFriendActionsSystem());
-				engine.addSystem(new TurnPhasePerformFriendActionsSystem()); // XXX The only turn phase that iterates over a non-turn entity
-				engine.addSystem(new TurnPhasePerformEnemyActionsSystem());
+				engine.addSystem(new TurnPhaseSelectActionsSystem());
+				engine.addSystem(new TurnPhasePerformActionsSystem());
 			engine.addSystem(new TurnPhaseEndTurnSystem());
 		engine.addSystem(new TurnPhaseEndBattleSystem());
 	}
@@ -272,6 +270,10 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorCancelSystem());
 		engine.addSystem(new CursorTurnActionValidationSystem());
 		engine.addSystem(new CursorFinishSelectionSystem());
+	}
+	
+	private void addCardSystems(PooledEngine engine) {
+		engine.addSystem(new CardOwnerActionSystem());
 	}
 	
 	private void addOtherSystems(PooledEngine engine) {
@@ -298,6 +300,7 @@ public class BattleStage extends GameStage {
 		addTurnPhaseSystems(engine);
 		addOtherSystems(engine);
 		addCursorSystems(engine);
+		addCardSystems(engine);
 		
 		/*if(endPointHelper.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));

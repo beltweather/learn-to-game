@@ -98,7 +98,7 @@ public class TurnAction extends EntityHandler {
 		// want them to be able to target each other
 		CardComp c = Comp.CardComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		if(c != null && zp != null && c.cardType == CardType.TARGET_CARD && Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.ACTIVE_CARD) {
+		if(c != null && zp != null && c.cardType == CardType.TARGET_CARD && Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.FRIEND_ACTIVE_CARD) {
 			return false;
 		}
 		

@@ -24,10 +24,10 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	@SuppressWarnings("unchecked")
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass) {
 		super(Family.all(TurnPhaseComp.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
-		add(CursorComp.class);
-		add(TurnTimerComp.class);
-		add(TurnPhaseComp.class);
-		add(AnimatingComp.class);
+		all(CursorComp.class);
+		all(TurnTimerComp.class);
+		all(TurnPhaseComp.class);
+		all(AnimatingComp.class);
 		
 		this.phaseClass = phaseClass;
 		this.nextPhaseClass = nextPhaseClass;
@@ -90,19 +90,19 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	}
 	
 	protected Entity getTurnPhaseEntity() {
-		return getFirstEntity(TurnPhaseComp.class);
+		return entity(TurnPhaseComp.class);
 	}
 	
 	protected CursorComp getCursorComp() {
-		return getFirstComponent(CursorComp.class);
+		return comp(CursorComp.class);
 	}
 	
 	protected TurnTimer getTurnTimer() {
-		return getFirstComponent(TurnTimerComp.class).turnTimer;
+		return comp(TurnTimerComp.class).turnTimer;
 	}
 	
 	protected void resetCursor() {
-		Entity cursor = getFirstEntity(CursorComp.class);
+		Entity cursor = entity(CursorComp.class);
 		if(cursor == null) {
 			return;
 		}
@@ -111,7 +111,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	}
 	
 	protected void enableCursor() {
-		Entity cursor = getFirstEntity(CursorComp.class);
+		Entity cursor = entity(CursorComp.class);
 		if(cursor == null) {
 			return;
 		}
@@ -120,7 +120,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	}
 	
 	protected void disableCursor() {
-		Entity cursor = getFirstEntity(CursorComp.class);
+		Entity cursor = entity(CursorComp.class);
 		if(cursor == null) {
 			return;
 		}

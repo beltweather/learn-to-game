@@ -8,7 +8,6 @@ import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.DisabledComp;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.systems.boilerplate.FirstSystem;
 import com.jharter.game.ecs.systems.boilerplate.GameEntitySystem;
@@ -34,7 +33,7 @@ public abstract class CursorSystem extends FirstSystem {
 	protected abstract void processEntity(Entity cursor, CursorComp c, float deltaTime);
 	
 	protected ActivePlayerComp getActivePlayer() {
-		return getFirstComponent(ActivePlayerComp.class);
+		return comp(ActivePlayerComp.class);
 	}
 	
 	protected ID getActivePlayerID() {

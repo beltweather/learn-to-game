@@ -111,7 +111,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			super(handler);
 			b.CardComp().cardType = CardType.TARGET_CARD;
 			TurnAction t = b.TurnActionComp().turnAction;
-			t.targetZoneTypes.add(ZoneType.ACTIVE_CARD);
+			t.targetZoneTypes.add(ZoneType.FRIEND_ACTIVE_CARD);
 			t.acceptCallback = this;
 			t.priority = 1;
 			//new HasActiveCardCallback(t);

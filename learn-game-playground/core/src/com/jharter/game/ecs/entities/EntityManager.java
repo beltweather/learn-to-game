@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ecs.components.CompManager;
-import com.jharter.game.ecs.components.Components;
 import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.RemoveComp;

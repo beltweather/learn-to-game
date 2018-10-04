@@ -1,10 +1,9 @@
 package com.jharter.game.ecs.systems.network.server;
 
-import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.ecs.components.Components.SpriteComp;
-import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.systems.network.ConsumingPacketSystem;
+import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
 import com.jharter.game.network.endpoints.GameServer;
 import com.jharter.game.network.packets.Packets.AddPlayersPacket;
 import com.jharter.game.network.packets.Packets.RegisterPlayerPacket;

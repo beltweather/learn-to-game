@@ -7,15 +7,17 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.jharter.game.ecs.components.Components;
+import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.ActionReadyComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AnimationComp;
+import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.CardComp;
+import com.jharter.game.ecs.components.Components.CardOwnerComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ecs.components.Components.CollisionComp;
@@ -24,7 +26,9 @@ import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
 import com.jharter.game.ecs.components.Components.DisabledComp;
+import com.jharter.game.ecs.components.Components.EnemyComp;
 import com.jharter.game.ecs.components.Components.FocusComp;
+import com.jharter.game.ecs.components.Components.FriendComp;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.components.Components.InteractComp;
@@ -49,7 +53,6 @@ import com.jharter.game.ecs.components.Components.VelocityComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
-import com.badlogic.gdx.utils.Pools;
 
 public class EntityBuilder implements Poolable {
 	
@@ -127,9 +130,11 @@ public class EntityBuilder implements Poolable {
 	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
+	public CardOwnerComp CardOwnerComp() { return get(CardOwnerComp.class); }
 	public CardComp CardComp() { return get(CardComp.class); }
 	public ActiveTurnActionComp ActiveTurnActionComp() { return get(ActiveTurnActionComp.class); }
 	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
+	public AutoSelectTurnActionComp AutoSelectTurnActionComp() { return get(AutoSelectTurnActionComp.class); }
 	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }
@@ -147,5 +152,7 @@ public class EntityBuilder implements Poolable {
 	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
 	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
+	public FriendComp FriendComp() { return get(FriendComp.class); }
+	public EnemyComp EnemyComp() { return get(EnemyComp.class); }
 	
 }

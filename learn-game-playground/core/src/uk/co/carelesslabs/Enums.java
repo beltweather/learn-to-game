@@ -41,8 +41,9 @@ public class Enums {
     public enum ZoneType {
     	HAND,
     	ENEMY,
+    	ENEMY_ACTIVE_CARD,
     	FRIEND,
-    	ACTIVE_CARD,
+    	FRIEND_ACTIVE_CARD,
     	DECK,
     	DISCARD,
     	INFO,
@@ -57,6 +58,12 @@ public class Enums {
     	TARGET_FRIEND_THEN_ENEMY,
     	NONE
     }
+    
+    public enum CardOwnerAction {
+		RESET_CARDS, 
+		DISCARD_HAND, 
+		FILL_HAND; 
+	}
     
     /*public enum TurnPhase {
     	START_BATTLE,

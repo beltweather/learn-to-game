@@ -9,15 +9,14 @@ import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
-import com.jharter.game.ecs.components.Components.TurnPhasePerformEnemyActionsComp;
-import com.jharter.game.ecs.components.Components.TurnPhasePerformFriendActionsComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnComp;
+import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.tween.TweenCallbacks;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
-import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -26,14 +25,14 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.TweenCallback;
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem implements Comparator<Entity> {
+public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 
 	private boolean busy = false;
 	
 	@SuppressWarnings("unchecked")
-	public TurnPhasePerformFriendActionsSystem() {
-		super(TurnPhasePerformFriendActionsComp.class, TurnPhasePerformEnemyActionsComp.class);
-		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).get(), this);
+	public TurnPhasePerformActionsSystem() {
+		super(TurnPhasePerformActionsComp.class, TurnPhaseEndTurnComp.class);
+		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).get(), new TimestampSort());
 	}
 
 	@Override
@@ -72,6 +71,7 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 			final TurnAction turnAction = t.turnAction;
 			ID id = Comp.IDComp.get(turnActionEntity).id;
 			ID ownerID = turnAction.ownerID;
+			boolean isFriend = Comp.FriendComp.has(ownerID); 
 			
 			TweenTarget tt = TweenTarget.newInstance();
 			tt.setFromEntity(this, turnActionEntity);
@@ -86,9 +86,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 			
 			tt = TweenTarget.newInstance();
 			tt.setFromEntityID(this, ownerID);
-			tt.position.x -= U.u12(10);
+			
+			if(isFriend) {
+				tt.angleDegrees = 20;
+				tt.position.x -= U.u12(10);
+			} else {
+				tt.angleDegrees = -20;
+				tt.position.x += U.u12(10);
+			}
 			tt.position.y += U.u12(4);
-			tt.angleDegrees = 20;
 				
 			Timeline tweenA = getTweenManager().tween(ownerID, tt, 0.25f).setCallback(new TweenCallback() {
 
@@ -103,10 +109,15 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 				
 			}); 
 			
-			tt.position.x += U.u12(10);
+			if(isFriend) {
+				tt.position.x += U.u12(10);
+			} else {
+				tt.position.x -= U.u12(10);
+			}
 			tt.position.y -= U.u12(4);
 			tt.angleDegrees = 0;
 			Timeline tweenBa = getTweenManager().tween(ownerID, tt, 0.25f);
+			
 			
 			Timeline tweenBb = Timeline.createParallel();
 			Array<ID> allTargetIDs = turnAction.getAllTargetIDs();
@@ -115,15 +126,22 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 				Entity enemy = Comp.Entity.get(enemyID);
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
-				if(z.zoneType != ZoneType.ENEMY) {
+				
+				if((isFriend && z.zoneType != ZoneType.ENEMY) ||
+				   (!isFriend && z.zoneType != ZoneType.FRIEND)) {
 					continue;
 				}
 				
 				TweenTarget enemyTT = TweenTarget.newInstance();
 				enemyTT.setFromEntity(this, enemy);
-				enemyTT.position.x -= U.u12(10);
+				if(isFriend) {
+					enemyTT.position.x -= U.u12(10);
+					enemyTT.angleDegrees += 20;
+				} else {
+					enemyTT.position.x += U.u12(10);
+					enemyTT.angleDegrees -= 20;
+				}
 				enemyTT.position.y += U.u12(1);
-				enemyTT.angleDegrees += 20;
 				
 				AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, enemy);
 				a.activeCount++;
@@ -148,20 +166,24 @@ public class TurnPhasePerformFriendActionsSystem extends TurnPhaseSystem impleme
 	}
 	
 	protected Entity getNextTurnActionEntity() {
-		return getFirstEntity(TurnActionComp.class);
+		return entitySorted(TurnActionComp.class);
 	}
 	
-	@Override
-	public int compare(Entity entityA, Entity entityB) {
-		long timeA = Comp.ActionQueuedComp.get(entityA).timestamp;
-		long timeB = Comp.ActionQueuedComp.get(entityB).timestamp;
-		if(timeA == timeB) {
-			return 0;
+	private class TimestampSort implements Comparator<Entity> {
+	
+		@Override
+		public int compare(Entity entityA, Entity entityB) {
+			long timeA = Comp.ActionQueuedComp.get(entityA).timestamp;
+			long timeB = Comp.ActionQueuedComp.get(entityB).timestamp;
+			if(timeA == timeB) {
+				return 0;
+			}
+			if(timeA < timeB) {
+				return -1;
+			}
+			return 1;
 		}
-		if(timeA < timeB) {
-			return -1;
-		}
-		return 1;
+	
 	}
 	
 }

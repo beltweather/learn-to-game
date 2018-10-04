@@ -6,12 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ecs.components.Components.SpriteComp;
-import com.jharter.game.ecs.components.Components.VitalsComp;
-import com.jharter.game.ecs.components.Components.ZoneComp;
-import com.jharter.game.ecs.components.Components.ZonePositionComp;
-import com.jharter.game.ecs.entities.EntityBuilder;
-import com.jharter.game.util.id.ID;
 
 /**
  * Class that links components, entities, and ids together. It is a sister class of C, the component mapper.

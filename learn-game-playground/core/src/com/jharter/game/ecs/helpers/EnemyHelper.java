@@ -28,6 +28,7 @@ public class EnemyHelper extends EntityHandler {
 				  new Vector3(U.u12(-65),0,0), 
 				  Media.atma);
 		ID id = b.IDComp().id;
+		b.EnemyComp();
 		b.VitalsComp().maxHealth = 10000;
 		b.VitalsComp().weakHealth = 1000;
 		b.VitalsComp().health = 10000;
@@ -39,6 +40,8 @@ public class EnemyHelper extends EntityHandler {
 		b.StatsComp().mPower = 10;
 		b.StatsComp().mDefense = 10;
 		b.SpriteComp().scale = new Vector2(2f,2f);
+		b.CardOwnerComp().handSize = 1;
+		b.AutoSelectTurnActionComp();
 		Comp.util(enemyZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
@@ -53,6 +56,7 @@ public class EnemyHelper extends EntityHandler {
 				  new Vector3(U.u12(-20), U.u12(-10), 0), 
 				  Media.cactar);
 		ID id = b.IDComp().id;
+		b.EnemyComp();
 		b.VitalsComp().maxHealth = 5000;
 		b.VitalsComp().weakHealth = 500;
 		b.VitalsComp().health = 5000;
@@ -63,6 +67,8 @@ public class EnemyHelper extends EntityHandler {
 		b.StatsComp().defense = 5;
 		b.StatsComp().mPower = 5;
 		b.StatsComp().mDefense = 7;
+		b.CardOwnerComp().handSize = 1;
+		b.AutoSelectTurnActionComp();
 		//b.SpriteComp().scale = new Vector2(2f,2f);
 		Comp.util(enemyZone).add(b);
 		getEngine().addEntity(b.Entity());

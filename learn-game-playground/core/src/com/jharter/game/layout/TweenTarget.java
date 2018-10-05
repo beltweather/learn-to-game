@@ -9,6 +9,9 @@ import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
+import aurelienribon.tweenengine.TweenEquation;
+import aurelienribon.tweenengine.equations.Circ;
+
 public class TweenTarget implements Poolable {
 	
 	public static TweenTarget newInstance() {
@@ -37,8 +40,21 @@ public class TweenTarget implements Poolable {
 	public float angleDegrees = 0f;
 	public float defaultDuration = 0.25f;
 	public float duration = defaultDuration;
+	public TweenEquation ease = Circ.INOUT;
 	
 	private TweenTarget() {}
+	
+	public TweenTarget copy() {
+		TweenTarget tt = newInstance();
+		tt.position.set(position);
+		tt.scale.set(scale);
+		tt.alpha = alpha;
+		tt.angleDegrees = angleDegrees;
+		tt.defaultDuration = defaultDuration;
+		tt.duration = duration;
+		tt.ease = ease;
+		return tt;
+	}
 	
 	public void setFromEntityID(IEntityHandler handler, ID id) {
 		setFromEntity(handler, handler.getToolBox().getCompManager().Entity.get(id));
@@ -93,6 +109,7 @@ public class TweenTarget implements Poolable {
 		angleDegrees = 0f;
 		defaultDuration = 0.25f;
 		duration = defaultDuration;
+		ease = Circ.INOUT;
 	}
 	
 	public void free() {

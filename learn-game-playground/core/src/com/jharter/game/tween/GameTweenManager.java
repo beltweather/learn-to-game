@@ -43,17 +43,21 @@ public class GameTweenManager extends EntityHandler {
 		manager.update(deltaTime);
 	}
 	
+	public FinishedAnimatingCallback buildFinishedAnimationCallback(ID id) {
+		AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, id);
+		a.activeCount++;
+		FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
+		finishedCallback.setID(id);
+		return finishedCallback;
+	}
+	
 	public void start(ID id, BaseTween<?> baseTween) {
 		start(id, baseTween, null);
 	}
 	
 	public void start(ID id, BaseTween<?> baseTween, TweenCallback callback) {
 		if(id != null) {
-			AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, id);
-			a.activeCount++;
-			FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
-			finishedCallback.setID(id);
-			
+			FinishedAnimatingCallback finishedCallback = buildFinishedAnimationCallback(id);
 			if(callback == null) {
 				baseTween.setCallback(finishedCallback);
 			} else {
@@ -67,34 +71,30 @@ public class GameTweenManager extends EntityHandler {
 		baseTween.start(manager);
 	}
 	
-	public void start(Entity entity, TweenTarget target) {
-		start(Comp.IDComp.get(entity).id, target);
-	}
-	
 	public void start(ID id, TweenTarget target) {
 		start(id, target, target.duration);
 	}
 	
 	public void start(ID id, TweenTarget target, float duration) {
-		start(id, tween(id, target, duration));
+		start(id, build(id, target, duration));
 	}
 	
-	public Timeline tween(ID id, TweenTarget target) {
-		return tween(id, target, target.duration);
+	public Timeline build(ID id, TweenTarget target) {
+		return build(id, target, target.duration);
 	}
 	
-	public Timeline tween(ID id, TweenTarget target, float duration) {
+	public Timeline build(ID id, TweenTarget target, float duration) {
 		float d = duration;
 		target.round();
 		return Timeline.createParallel()
-			.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).ease(Circ.INOUT).target(target.position.x, target.position.y))
-			.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).ease(Circ.INOUT).target(target.scale.x, target.scale.y))
-			.push(Tween.to(id, TweenType.ALPHA.asInt(), d).ease(Circ.INOUT).target(target.alpha))
-			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(Circ.INOUT).target(target.angleDegrees));
+			.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).ease(target.ease).target(target.position.x, target.position.y))
+			.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).ease(target.ease).target(target.scale.x, target.scale.y))
+			.push(Tween.to(id, TweenType.ALPHA.asInt(), d).ease(target.ease).target(target.alpha))
+			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(target.ease).target(target.angleDegrees));
 	}
 	
 	public Timeline set(ID id, TweenTarget target) {
-		return tween(id, target, 0f);
+		return build(id, target, 0f);
 		
 		/*target.round();
 		return Timeline.createParallel()

@@ -11,6 +11,7 @@ import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.InvisibleComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TargetableComp;
+import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.GenericUtils;
@@ -31,16 +32,9 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		
 		ID origID = c.targetID;
-		c.lastTargetID = c.targetID;
 		c.targetID = getNewTargetID(c, ci);
 		
 		Comp.toggle(InvisibleComp.class, cursor, c.targetID == null);
-		
-		// Do a funny convention here, if our last target was actually
-		// null, then set our current target to be our last as well.
-		if(c.lastTargetID == null) {
-			c.lastTargetID = c.targetID;
-		}
 		
 		if(!GenericUtils.safeEquals(origID, c.targetID)) {
 			Media.moveBeep.play();

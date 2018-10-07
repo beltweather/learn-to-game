@@ -91,7 +91,7 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		return toolBox.getTweenManager();
 	}
 	
-	protected void all(Class<? extends Component> componentClass) {
+	protected void add(Class<? extends Component> componentClass) {
 		add(componentClass, Family.all(componentClass).get());
 	}
 

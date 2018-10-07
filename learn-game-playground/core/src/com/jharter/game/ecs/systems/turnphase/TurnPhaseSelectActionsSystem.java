@@ -26,10 +26,10 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseSelectActionsSystem() {
 		super(TurnPhaseSelectActionsComp.class, TurnPhasePerformActionsComp.class);
-		all(CardOwnerComp.class);
-		all(ActionQueuedComp.class);
-		all(AutoSelectTurnActionComp.class);
-		all(ActivePlayerComp.class);
+		add(CardOwnerComp.class);
+		add(ActionQueuedComp.class);
+		add(AutoSelectTurnActionComp.class);
+		add(ActivePlayerComp.class);
 	}
 
 	@Override

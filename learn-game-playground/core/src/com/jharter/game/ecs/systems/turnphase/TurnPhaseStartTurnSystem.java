@@ -13,8 +13,8 @@ public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
 	public TurnPhaseStartTurnSystem() {
 		super(TurnPhaseStartTurnComp.class, TurnPhaseSelectActionsComp.class);
-		all(ActivePlayerComp.class);
-		all(CardOwnerComp.class);
+		add(ActivePlayerComp.class);
+		add(CardOwnerComp.class);
 	}
 
 	@Override

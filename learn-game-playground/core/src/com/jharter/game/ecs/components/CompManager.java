@@ -23,6 +23,7 @@ import com.jharter.game.ecs.components.Components.CollisionComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.CursorInputRegulatorComp;
+import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
 import com.jharter.game.ecs.components.Components.DisabledComp;
 import com.jharter.game.ecs.components.Components.EnemyComp;
@@ -261,6 +262,7 @@ public class CompManager {
 	public final CompMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
 	public final CompMapper<FriendComp> FriendComp = getFor(FriendComp.class);
 	public final CompMapper<EnemyComp> EnemyComp = getFor(EnemyComp.class);
+	public final CompMapper<CursorTargetComp> CursorTargetComp = getFor(CursorTargetComp.class);
 
 	// Component Util Methods
 	public SpriteCompUtil util(SpriteComp comp) { return utilManager.get(SpriteCompUtil.class, comp); }

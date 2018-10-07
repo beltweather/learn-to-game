@@ -15,10 +15,10 @@ import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.ZoneType;
 
-public class CursorTargetValidationSystem extends CursorSystem {
+public class CursorAvailableTargetsSystem extends CursorSystem {
 	
 	@SuppressWarnings("unchecked")
-	public CursorTargetValidationSystem() {
+	public CursorAvailableTargetsSystem() {
 		super();
 		add(ZoneComp.class, Family.all(ZoneComp.class).exclude(InvisibleComp.class).get());
 	}

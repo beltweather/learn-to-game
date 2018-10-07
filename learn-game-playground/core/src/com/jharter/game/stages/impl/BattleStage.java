@@ -26,12 +26,13 @@ import com.jharter.game.ecs.systems.ZoneChangeSystem;
 import com.jharter.game.ecs.systems.ZoneLayoutSystem;
 import com.jharter.game.ecs.systems.card.CardOwnerActionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorAcceptSystem;
+import com.jharter.game.ecs.systems.cursor.CursorAvailableTargetsSystem;
 import com.jharter.game.ecs.systems.cursor.CursorCancelSystem;
 import com.jharter.game.ecs.systems.cursor.CursorFinishSelectionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorInputSystem;
 import com.jharter.game.ecs.systems.cursor.CursorMoveSystem;
 import com.jharter.game.ecs.systems.cursor.CursorPrevNextSystem;
-import com.jharter.game.ecs.systems.cursor.CursorTargetValidationSystem;
+import com.jharter.game.ecs.systems.cursor.CursorTargetedSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTurnActionValidationSystem;
 import com.jharter.game.ecs.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ecs.systems.network.client.ClientRandomMovementSystem;
@@ -263,13 +264,14 @@ public class BattleStage extends GameStage {
 	
 	private void addCursorSystems(PooledEngine engine) {
 		engine.addSystem(new CursorInputSystem());
-		engine.addSystem(new CursorTargetValidationSystem());
+		engine.addSystem(new CursorAvailableTargetsSystem());
 		engine.addSystem(new CursorMoveSystem());
 		engine.addSystem(new CursorPrevNextSystem());
 		engine.addSystem(new CursorAcceptSystem());
 		engine.addSystem(new CursorCancelSystem());
 		engine.addSystem(new CursorTurnActionValidationSystem());
 		engine.addSystem(new CursorFinishSelectionSystem());
+		engine.addSystem(new CursorTargetedSystem());
 	}
 	
 	private void addCardSystems(PooledEngine engine) {

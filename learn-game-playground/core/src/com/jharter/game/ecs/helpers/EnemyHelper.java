@@ -29,9 +29,9 @@ public class EnemyHelper extends EntityHandler {
 				  Media.atma);
 		ID id = b.IDComp().id;
 		b.EnemyComp();
-		b.VitalsComp().maxHealth = 10000;
-		b.VitalsComp().weakHealth = 1000;
-		b.VitalsComp().health = 10000;
+		b.VitalsComp().maxHealth = 100; //10000;
+		b.VitalsComp().weakHealth = 20; //1000;
+		b.VitalsComp().health = 100; //10000;
 		b.DescriptionComp().name = "Atma";
 		b.SpriteComp();
 		b.StatsComp().level = 3;

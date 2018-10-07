@@ -24,10 +24,10 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	@SuppressWarnings("unchecked")
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass) {
 		super(Family.all(TurnPhaseComp.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
-		all(CursorComp.class);
-		all(TurnTimerComp.class);
-		all(TurnPhaseComp.class);
-		all(AnimatingComp.class);
+		add(CursorComp.class);
+		add(TurnTimerComp.class);
+		add(TurnPhaseComp.class);
+		add(AnimatingComp.class);
 		
 		this.phaseClass = phaseClass;
 		this.nextPhaseClass = nextPhaseClass;

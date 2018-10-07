@@ -24,6 +24,7 @@ import com.jharter.game.ecs.components.Components.CollisionComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.CursorInputRegulatorComp;
+import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
 import com.jharter.game.ecs.components.Components.DisabledComp;
 import com.jharter.game.ecs.components.Components.EnemyComp;
@@ -154,5 +155,6 @@ public class EntityBuilder implements Poolable {
 	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
 	public FriendComp FriendComp() { return get(FriendComp.class); }
 	public EnemyComp EnemyComp() { return get(EnemyComp.class); }
+	public CursorTargetComp CursorTargetComp() { return get(CursorTargetComp.class); }
 	
 }

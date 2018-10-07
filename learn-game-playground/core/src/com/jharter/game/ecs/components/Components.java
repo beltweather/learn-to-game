@@ -354,7 +354,9 @@ public final class Components {
 		public int maxHealth = 0;
 		public int weakHealth = 0;
 		public int health = 0;
-		
+		public int incomingDamage = 0;
+		public int incomingHealing = 0;
+
 		private VitalsComp() {}
 		
 		@Override
@@ -362,6 +364,8 @@ public final class Components {
 			maxHealth = 0;
 			weakHealth = 0;
 			health = 0;
+			incomingDamage = 0;
+			incomingHealing = 0;
 		}
 	}
 	
@@ -411,6 +415,19 @@ public final class Components {
 		public void reset() {
 			activeTurnActionID = null;
 		}
+	}
+	
+	public static final class CursorTargetComp implements C {
+		
+		public ID cursorID;
+		
+		private CursorTargetComp() {}
+		
+		@Override
+		public void reset() {
+			cursorID = null;
+		}
+		
 	}
 	
 	public static final class CursorComp implements C, Unique {

@@ -33,7 +33,20 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	    shapeRenderer.setColor(1f, 1f, 1f, 1f);
 		shapeRenderer.rect(x, y, w, h);
 	    shapeRenderer.setColor(0.8f, 0, 0, 1f);
-		shapeRenderer.rect(x, y, w*(v.health/(float)v.maxHealth), h);
+	    float healthW = w*(v.health/(float)v.maxHealth);
+		shapeRenderer.rect(x, y, healthW, h);
+		int incoming = v.incomingHealing - v.incomingDamage;
+		if(incoming != 0) {
+			if(incoming > 0) {
+				float incomingW = w*(Math.min(v.maxHealth - v.health, incoming)/(float)v.maxHealth);
+				shapeRenderer.setColor(0, 0.8f, 0, 1f);
+				shapeRenderer.rect(x + healthW, y, incomingW, h);
+			} else {
+				float incomingW = w*(Math.min(v.health, -incoming)/(float)v.maxHealth);
+				shapeRenderer.setColor(0.8f, 0.8f, 0, 1f);
+				shapeRenderer.rect(x + healthW - incomingW, y, incomingW, h);
+			}
+		}
 		shapeRenderer.end();
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(0, 0, 0, 1f);

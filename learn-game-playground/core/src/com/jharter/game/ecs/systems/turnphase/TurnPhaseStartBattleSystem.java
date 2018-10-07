@@ -11,7 +11,7 @@ public class TurnPhaseStartBattleSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseStartBattleSystem() {
 		super(TurnPhaseStartBattleComp.class, TurnPhaseStartTurnComp.class);
-		all(CardOwnerComp.class);
+		add(CardOwnerComp.class);
 	}
 
 	@Override

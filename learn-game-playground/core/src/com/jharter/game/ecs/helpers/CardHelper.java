@@ -98,6 +98,7 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
+		b.TurnActionComp().turnAction.incomingDamage = 13;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
@@ -116,6 +117,7 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
+		b.TurnActionComp().turnAction.incomingDamage = 20;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
@@ -134,6 +136,7 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
+		b.TurnActionComp().turnAction.incomingDamage = 20;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
@@ -154,6 +157,7 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
+		b.TurnActionComp().turnAction.incomingDamage = 20;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
@@ -172,6 +176,7 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
+		b.TurnActionComp().turnAction.incomingHealing = 50;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}

@@ -28,6 +28,8 @@ public class TurnAction extends EntityHandler {
 	public int priority = 0;
 	public ID entityID = null;
 	public ID ownerID = null;
+	public int incomingDamage = 0;
+	public int incomingHealing = 0;
 	
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;

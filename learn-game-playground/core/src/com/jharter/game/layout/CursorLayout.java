@@ -77,6 +77,9 @@ public class CursorLayout extends ZoneLayout {
 		Entity lastTarget = Comp.Entity.get(c.lastTargetID);
 		ID zoneID = z == null ? null : z.zoneID;
 		ID lastZoneID = null;
+		if(lastTarget == null) {
+			lastTarget = Comp.Entity.get(c.targetID);
+		}
 		if(lastTarget != null) {
 			ZonePositionComp zpLastTarget = Comp.ZonePositionComp.get(lastTarget);
 			ZoneComp zLastTarget = Comp.ZoneComp.get(zpLastTarget.zoneID); 

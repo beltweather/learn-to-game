@@ -33,15 +33,15 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		
 		ID origID = c.targetID;
-		c.lastTargetID = c.targetID;
+		ID lastTargetID = c.targetID;
 		c.targetID = getNewTargetID(c, ci);
 		
 		// We always want a last target, so even if it's null, set it to our target.
-		if(c.lastTargetID == null) {
-			c.lastTargetID = c.targetID;
+		if(lastTargetID == null) {
+			lastTargetID = c.targetID;
 		}
 		
-		if(isChangedZones(c)) {
+		if(hasChangedZones(c, lastTargetID)) {
 			Comp.add(CursorChangedZoneEvent.class, cursor);
 		}
 		
@@ -53,11 +53,11 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		consumeMovement(ci);
 	}
 	
-	private boolean isChangedZones(CursorComp c) {
-		if(c.lastTargetID == null || c.targetID == null || c.lastTargetID.equals(c.targetID)) {
+	private boolean hasChangedZones(CursorComp c, ID lastTargetID) {
+		if(lastTargetID == null || c.targetID == null || lastTargetID.equals(c.targetID)) {
 			return false;
 		}
-		return !Comp.ZoneComp.get(Comp.ZonePositionComp.get(c.lastTargetID).zoneID).zoneID.equals(
+		return !Comp.ZoneComp.get(Comp.ZonePositionComp.get(lastTargetID).zoneID).zoneID.equals(
 			    Comp.ZoneComp.get(Comp.ZonePositionComp.get(c.targetID).zoneID).zoneID);
 	}
 	

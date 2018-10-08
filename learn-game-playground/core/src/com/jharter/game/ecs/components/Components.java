@@ -448,9 +448,7 @@ public final class Components {
 	
 	public static final class CursorComp implements C, Unique {
 		public ID turnActionID = null;
-		public ID lastTargetID = null; // Remember the ID of the last target, possibly only going to be used for layout purposes
 		public ID targetID = null; // The id of the entity the cursor is pointing to
-		//public boolean changedZones = false;
 		public Array<ID> history = new Array<ID>(); // The history of targets based on cursor "select" events, somewhat redundant with turn action list
 		
 		private CursorComp() {}
@@ -459,8 +457,6 @@ public final class Components {
 		public void reset() {
 			turnActionID = null;
 			targetID = null;
-			lastTargetID = null;
-			//changedZones = false;
 			history.clear();
 		}
 	}
@@ -479,8 +475,6 @@ public final class Components {
 	public static final class ZoneComp implements C {
 		public ID zoneID = null;
 		public ZoneType zoneType = ZoneType.NONE;
-		//Array<ID> internalObjectIDs = new Array<ID>();
-		//public ImmutableArray<ID> objectIDs = new ImmutableArray<ID>(internalObjectIDs);
 		public Array<ID> objectIDs = new Array<ID>();
 		public ZoneLayout layout = null;
 		
@@ -493,7 +487,6 @@ public final class Components {
 			zoneID = null;
 			zoneType = ZoneType.NONE;
 			objectIDs.clear();
-			//internalObjectIDs.clear();
 			layout = null;
 		}
 		

@@ -5,13 +5,13 @@ import java.util.Comparator;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
+import com.jharter.game.ecs.components.Components.CursorChangedZoneEvent;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.IDComp;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
-import com.jharter.game.ecs.components.Components.TargetableComp;
-import com.jharter.game.ecs.components.Components.VitalsComp;
+import com.jharter.game.ecs.components.Components.TargetableTag;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.GenericUtils;
@@ -24,7 +24,8 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 	@SuppressWarnings("unchecked")
 	public CursorMoveSystem() {
 		super(CursorInputComp.class);
-		add(TargetableComp.class, Family.all(TargetableComp.class, SpriteComp.class, IDComp.class).get(), this);
+		add(TargetableTag.class, Family.all(TargetableTag.class, SpriteComp.class, IDComp.class).get(), this);
+		event(CursorChangedZoneEvent.class);
 	}
 	
 	@Override
@@ -32,9 +33,19 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
 		
 		ID origID = c.targetID;
+		c.lastTargetID = c.targetID;
 		c.targetID = getNewTargetID(c, ci);
 		
-		Comp.toggle(InvisibleComp.class, cursor, c.targetID == null);
+		// We always want a last target, so even if it's null, set it to our target.
+		if(c.lastTargetID == null) {
+			c.lastTargetID = c.targetID;
+		}
+		
+		if(isChangedZones(c)) {
+			Comp.add(CursorChangedZoneEvent.class, cursor);
+		}
+		
+		Comp.toggle(InvisibleTag.class, cursor, c.targetID == null);
 		
 		if(!GenericUtils.safeEquals(origID, c.targetID)) {
 			Media.moveBeep.play();
@@ -42,8 +53,16 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		consumeMovement(ci);
 	}
 	
+	private boolean isChangedZones(CursorComp c) {
+		if(c.lastTargetID == null || c.targetID == null || c.lastTargetID.equals(c.targetID)) {
+			return false;
+		}
+		return !Comp.ZoneComp.get(Comp.ZonePositionComp.get(c.lastTargetID).zoneID).zoneID.equals(
+			    Comp.ZoneComp.get(Comp.ZonePositionComp.get(c.targetID).zoneID).zoneID);
+	}
+	
 	private Array<Entity> getTargets() {
-		return entitiesSorted(TargetableComp.class);
+		return entitiesSorted(TargetableTag.class);
 	}
 	
 	private int getCurrentTargetIndex(CursorComp c) {

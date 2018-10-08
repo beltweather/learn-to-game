@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
@@ -17,7 +17,7 @@ public class RenderTilesSystem extends GameIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderTilesSystem (OrthographicCamera camera) {
-		super(Family.all(TileComp.class, SpriteComp.class, TextureComp.class).exclude(InvisibleComp.class).get());
+		super(Family.all(TileComp.class, SpriteComp.class, TextureComp.class).exclude(InvisibleTag.class).get());
 		this.camera = camera;
 		this.batch = new SpriteBatch();
 	}

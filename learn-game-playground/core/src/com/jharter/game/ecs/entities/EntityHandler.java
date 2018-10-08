@@ -7,7 +7,7 @@ import com.jharter.game.util.id.IDManager;
 
 public class EntityHandler implements IEntityHandler {
 	
-	private EntityToolBox toolBox;
+	private GameToolBox toolBox;
 	
 	/**
 	 * Special case here where instead of the method
@@ -26,13 +26,13 @@ public class EntityHandler implements IEntityHandler {
 		setToolBox(handler == null ? null : handler.getToolBox());
 	}
 	
-	private void setToolBox(EntityToolBox toolBox) {
+	private void setToolBox(GameToolBox toolBox) {
 		this.toolBox = toolBox;
 		this.Comp = toolBox == null ? null : toolBox.getCompManager();
 	}
 	
 	@Override
-	public EntityToolBox getToolBox() {
+	public GameToolBox getToolBox() {
 		return toolBox;
 	}
 	

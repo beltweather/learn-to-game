@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.ecs.components.CompManager;
 import com.jharter.game.ecs.entities.EntityBuilder;
-import com.jharter.game.ecs.entities.EntityToolBox;
+import com.jharter.game.ecs.entities.GameToolBox;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.ecs.systems.boilerplate.GameEntitySystem;
 import com.jharter.game.network.endpoints.EndPointHelper;
@@ -32,7 +32,7 @@ public abstract class GameStage implements IEntityHandler {
     protected Box2DWorld box2D;
     protected GameInput stageInput;
     protected EndPointHelper endPointHelper;
-    protected EntityToolBox toolBox;
+    protected GameToolBox toolBox;
     
 	public GameStage(EndPointHelper endPointHelper) {
 		this(IDUtil.newID(), endPointHelper);
@@ -58,7 +58,7 @@ public abstract class GameStage implements IEntityHandler {
 	}
 	
 	@Override
-	public EntityToolBox getToolBox() {
+	public GameToolBox getToolBox() {
 		return toolBox;
 	}
 	
@@ -101,7 +101,7 @@ public abstract class GameStage implements IEntityHandler {
     	
     	box2D = buildBox2DWorld();
         engine = buildEngine();
-        toolBox = new EntityToolBox(engine);
+        toolBox = new GameToolBox(engine);
         toolBox.getCompManager().Entity.addIdListener(engine, getBox2DWorld());
         addManagers(engine);
         addEntities(engine);

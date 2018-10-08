@@ -3,7 +3,7 @@ package com.jharter.game.ecs.systems.network.client;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.MathUtils;
-import com.jharter.game.ecs.components.Components.FocusComp;
+import com.jharter.game.ecs.components.Components.FocusTag;
 import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
@@ -13,7 +13,7 @@ public class ClientRandomMovementSystem extends GameIteratingSystem {
 	private int dir = 4;
 	
 	public ClientRandomMovementSystem() {
-		super(Family.all(FocusComp.class, InputComp.class).get());
+		super(Family.all(FocusTag.class, InputComp.class).get());
 	}
 	
 	@Override

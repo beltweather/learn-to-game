@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.jharter.game.ecs.components.Components.CursorChangedZoneEvent;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
@@ -13,6 +14,7 @@ import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.tween.TweenType;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
@@ -39,7 +41,6 @@ public class CursorLayout extends ZoneLayout {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
 		
-		//Sys.out.println("Target ID: " + c.targetID);
 		if(c.targetID == null) {
 			return null;
 		}
@@ -66,28 +67,15 @@ public class CursorLayout extends ZoneLayout {
 		
 		// If we haven't changed zones since our last target, increase our cursor
 		// speed for better responsiveness.
-		if(!changedZone(c, z)) {
+		if(!changedZones(cursor)) { 
 			tt.duration = 0.10f;
 		}
 		
 		return tt;
 	}
 	
-	protected boolean changedZone(CursorComp c, ZoneComp z) {
-		Entity lastTarget = Comp.Entity.get(c.lastTargetID);
-		ID zoneID = z == null ? null : z.zoneID;
-		ID lastZoneID = null;
-		if(lastTarget == null) {
-			lastTarget = Comp.Entity.get(c.targetID);
-		}
-		if(lastTarget != null) {
-			ZonePositionComp zpLastTarget = Comp.ZonePositionComp.get(lastTarget);
-			ZoneComp zLastTarget = Comp.ZoneComp.get(zpLastTarget.zoneID); 
-			if(zLastTarget != null) {
-				lastZoneID = zLastTarget.zoneID;
-			}
-		}
-		return zoneID != lastZoneID;
+	private boolean changedZones(Entity cursor) {
+		return Comp.has(CursorChangedZoneEvent.class, cursor);
 	}
 	
 	private float getCursorAngle(Entity entity, ZoneType zoneType) {
@@ -162,7 +150,7 @@ public class CursorLayout extends ZoneLayout {
 		Entity target = Comp.Entity.get(c.targetID);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(target);
 		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
-		boolean changeZone = changedZone(c, z);
+		boolean changeZone = changedZones(cursor); 
 		hasMulti = changeZone && isAll(c);
 		
 		if(changeZone) {

@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
-import com.jharter.game.ecs.components.Components.DisabledComp;
+import com.jharter.game.ecs.components.Components.DisabledTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
 import com.jharter.game.ecs.systems.boilerplate.FirstSystem;
@@ -23,10 +23,10 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	
 	@SuppressWarnings("unchecked")
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass) {
-		super(Family.all(TurnPhaseComp.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
+		super(Family.all(TurnPhaseTag.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
 		add(CursorComp.class);
 		add(TurnTimerComp.class);
-		add(TurnPhaseComp.class);
+		add(TurnPhaseTag.class);
 		add(AnimatingComp.class);
 		
 		this.phaseClass = phaseClass;
@@ -90,7 +90,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	}
 	
 	protected Entity getTurnPhaseEntity() {
-		return entity(TurnPhaseComp.class);
+		return entity(TurnPhaseTag.class);
 	}
 	
 	protected CursorComp getCursorComp() {
@@ -115,7 +115,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		if(cursor == null) {
 			return;
 		}
-		Comp.remove(DisabledComp.class, cursor);
+		Comp.remove(DisabledTag.class, cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
 	
@@ -124,7 +124,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		if(cursor == null) {
 			return;
 		}
-		Comp.add(DisabledComp.class, cursor);
+		Comp.add(DisabledTag.class, cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
 	

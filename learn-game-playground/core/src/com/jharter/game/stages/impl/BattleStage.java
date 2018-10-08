@@ -14,11 +14,13 @@ import com.jharter.game.ecs.helpers.EnemyHelper;
 import com.jharter.game.ecs.helpers.PlayerHelper;
 import com.jharter.game.ecs.helpers.TurnHelper;
 import com.jharter.game.ecs.helpers.ZoneHelper;
+import com.jharter.game.ecs.systems.AddIncomingVitalsChangesSystem;
 import com.jharter.game.ecs.systems.AnimationSystem;
 import com.jharter.game.ecs.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ecs.systems.DiscardCardSystem;
 import com.jharter.game.ecs.systems.QueueTurnActionsSystem;
 import com.jharter.game.ecs.systems.RemoveEntitiesSystem;
+import com.jharter.game.ecs.systems.RemoveIncomingVitalsChangesSystem;
 import com.jharter.game.ecs.systems.RenderEntitiesSystem;
 import com.jharter.game.ecs.systems.RenderWorldGridSystem;
 import com.jharter.game.ecs.systems.TweenSystem;
@@ -32,7 +34,7 @@ import com.jharter.game.ecs.systems.cursor.CursorFinishSelectionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorInputSystem;
 import com.jharter.game.ecs.systems.cursor.CursorMoveSystem;
 import com.jharter.game.ecs.systems.cursor.CursorPrevNextSystem;
-import com.jharter.game.ecs.systems.cursor.CursorTargetedSystem;
+import com.jharter.game.ecs.systems.cursor.CursorTargetEventSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTurnActionValidationSystem;
 import com.jharter.game.ecs.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ecs.systems.network.client.ClientRandomMovementSystem;
@@ -271,7 +273,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorCancelSystem());
 		engine.addSystem(new CursorTurnActionValidationSystem());
 		engine.addSystem(new CursorFinishSelectionSystem());
-		engine.addSystem(new CursorTargetedSystem());
+		engine.addSystem(new CursorTargetEventSystem());
 	}
 	
 	private void addCardSystems(PooledEngine engine) {
@@ -279,6 +281,8 @@ public class BattleStage extends GameStage {
 	}
 	
 	private void addOtherSystems(PooledEngine engine) {
+		engine.addSystem(new AddIncomingVitalsChangesSystem());
+		engine.addSystem(new RemoveIncomingVitalsChangesSystem());
 		engine.addSystem(new QueueTurnActionsSystem());
 		engine.addSystem(new CleanupTurnActionsSystem());
 		engine.addSystem(new DiscardCardSystem());

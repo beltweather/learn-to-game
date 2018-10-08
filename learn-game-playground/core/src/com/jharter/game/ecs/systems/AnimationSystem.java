@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jharter.game.ecs.components.Components.AnimationComp;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
@@ -12,7 +12,7 @@ public class AnimationSystem extends GameIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public AnimationSystem () {
-		super(Family.all(TextureComp.class, AnimationComp.class).exclude(InvisibleComp.class).get());
+		super(Family.all(TextureComp.class, AnimationComp.class).exclude(InvisibleTag.class).get());
 	}
 
 	@Override

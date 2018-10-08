@@ -8,7 +8,7 @@ import com.jharter.game.util.id.IDManager;
 public interface IEntityHandler {
 	
 	public PooledEngine getEngine();
-	public EntityToolBox getToolBox();
+	public GameToolBox getToolBox();
 	public CompManager getCompManager();
 	public IDManager getIDManager();
 	public GameTweenManager getTweenManager();

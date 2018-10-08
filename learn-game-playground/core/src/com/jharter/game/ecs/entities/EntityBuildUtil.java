@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jharter.game.control.GameInput;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.util.U;
@@ -92,6 +92,6 @@ public class EntityBuildUtil {
 		return b;
 	}
 	
-	private static final Family renderFamily = Family.all(SpriteComp.class, TextureComp.class).exclude(InvisibleComp.class).get();
+	private static final Family renderFamily = Family.all(SpriteComp.class, TextureComp.class).exclude(InvisibleTag.class).get();
 	
 }

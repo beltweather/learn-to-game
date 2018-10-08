@@ -6,7 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
-import com.jharter.game.ecs.components.Components.DisabledComp;
+import com.jharter.game.ecs.components.Components.DisabledTag;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules.RelativeToIDGetter;
 import com.jharter.game.ecs.entities.EntityBuilder;
@@ -39,7 +39,7 @@ public class ArrowHelper extends EntityHandler {
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(1);
 		b.SpriteComp().relativePositionRules.setRelativeToIDGetter(new RelativeToIDGetter() {
 			
-			private ImmutableArray<Entity> cursors = getEngine().getEntitiesFor(Family.all(CursorComp.class).exclude(DisabledComp.class).get());
+			private ImmutableArray<Entity> cursors = getEngine().getEntitiesFor(Family.all(CursorComp.class).exclude(DisabledTag.class).get());
 			private ImmutableArray<Entity> activePlayers = getEngine().getEntitiesFor(Family.all(ActivePlayerComp.class).get());
 			
 			@Override

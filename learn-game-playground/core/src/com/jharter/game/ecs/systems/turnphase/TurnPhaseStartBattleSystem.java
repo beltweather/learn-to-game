@@ -2,15 +2,15 @@ package com.jharter.game.ecs.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnTag;
 
 import uk.co.carelesslabs.Enums.CardOwnerAction;
 
 public class TurnPhaseStartBattleSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseStartBattleSystem() {
-		super(TurnPhaseStartBattleComp.class, TurnPhaseStartTurnComp.class);
+		super(TurnPhaseStartBattleTag.class, TurnPhaseStartTurnTag.class);
 		add(CardOwnerComp.class);
 	}
 

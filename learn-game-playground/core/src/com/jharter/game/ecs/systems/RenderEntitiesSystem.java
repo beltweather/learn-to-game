@@ -13,8 +13,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ecs.components.Components.DisabledComp;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.DisabledTag;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.ShapeRenderComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
@@ -31,7 +31,7 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 
 	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
-		super(Family.all(SpriteComp.class).one(TextureComp.class, ShapeRenderComp.class).exclude(InvisibleComp.class, TileComp.class, DisabledComp.class).get());
+		super(Family.all(SpriteComp.class).one(TextureComp.class, ShapeRenderComp.class).exclude(InvisibleTag.class, TileComp.class, DisabledTag.class).get());
 		setComparator(new PositionSort());
 		this.camera = camera;
 		this.batch = new SpriteBatch();

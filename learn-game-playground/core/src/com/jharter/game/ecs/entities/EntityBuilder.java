@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
-import com.jharter.game.ecs.components.Components.ActionReadyComp;
+import com.jharter.game.ecs.components.Components.ActionReadyTag;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
@@ -19,23 +19,23 @@ import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.CardComp;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
-import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
+import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
 import com.jharter.game.ecs.components.Components.CollisionComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
-import com.jharter.game.ecs.components.Components.DisabledComp;
-import com.jharter.game.ecs.components.Components.EnemyComp;
-import com.jharter.game.ecs.components.Components.FocusComp;
-import com.jharter.game.ecs.components.Components.FriendComp;
+import com.jharter.game.ecs.components.Components.DisabledTag;
+import com.jharter.game.ecs.components.Components.EnemyTag;
+import com.jharter.game.ecs.components.Components.FocusTag;
+import com.jharter.game.ecs.components.Components.FriendTag;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.components.Components.InteractComp;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
-import com.jharter.game.ecs.components.Components.PlayerComp;
+import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
 import com.jharter.game.ecs.components.Components.ShapeRenderComp;
@@ -45,11 +45,11 @@ import com.jharter.game.ecs.components.Components.TargetPositionComp;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
 import com.jharter.game.ecs.components.Components.TypeComp;
-import com.jharter.game.ecs.components.Components.UntargetableComp;
+import com.jharter.game.ecs.components.Components.UntargetableTag;
 import com.jharter.game.ecs.components.Components.VelocityComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
@@ -111,7 +111,7 @@ public class EntityBuilder implements Poolable {
 	}
 
 	public SpriteComp SpriteComp() { return get(SpriteComp.class); }
-	public FocusComp FocusComp() { return get(FocusComp.class); }
+	public FocusTag FocusComp() { return get(FocusTag.class); }
 	public IDComp IDComp() { return get(IDComp.class); }
 	public TypeComp TypeComp() { return get(TypeComp.class); }
 	public TileComp TileComp() { return get(TileComp.class); }
@@ -125,7 +125,7 @@ public class EntityBuilder implements Poolable {
 	public RemoveComp RemoveComp() { return get(RemoveComp.class); }
 	public InputComp InputComp() { return get(InputComp.class); }
 	public InteractComp InteractComp() { return get(InteractComp.class); }
-	public InvisibleComp InvisibleComp() { return get(InvisibleComp.class); }
+	public InvisibleTag InvisibleComp() { return get(InvisibleTag.class); }
 	public CursorComp CursorComp() { return get(CursorComp.class); }
 	public CursorInputComp CursorInputComp() { return get(CursorInputComp.class); }
 	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
@@ -140,21 +140,21 @@ public class EntityBuilder implements Poolable {
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }
 	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
-	public ActionReadyComp ActionReadyComp() { return get(ActionReadyComp.class); }
+	public ActionReadyTag ActionReadyComp() { return get(ActionReadyTag.class); }
 	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
-	public CleanupTurnActionComp CleanupTurnActionComp() { return get(CleanupTurnActionComp.class); }
+	public CleanupTurnActionTag CleanupTurnActionComp() { return get(CleanupTurnActionTag.class); }
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
-	public UntargetableComp UntargetableComp() { return get(UntargetableComp.class); }
-	public TurnPhaseComp TurnPhaseComp() { return get(TurnPhaseComp.class); }
-	public TurnPhaseStartBattleComp TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleComp.class); }
-	public DisabledComp DisabledComp() { return get(DisabledComp.class); }
+	public UntargetableTag UntargetableComp() { return get(UntargetableTag.class); }
+	public TurnPhaseTag TurnPhaseComp() { return get(TurnPhaseTag.class); }
+	public TurnPhaseStartBattleTag TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleTag.class); }
+	public DisabledTag DisabledComp() { return get(DisabledTag.class); }
 	public AnimatingComp AnimatingComp() { return get(AnimatingComp.class); }
 	public ChangeZoneComp ChangeZoneComp() { return get(ChangeZoneComp.class); }
-	public PlayerComp PlayerComp() { return get(PlayerComp.class); }
+	public PlayerTag PlayerComp() { return get(PlayerTag.class); }
 	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
-	public FriendComp FriendComp() { return get(FriendComp.class); }
-	public EnemyComp EnemyComp() { return get(EnemyComp.class); }
+	public FriendTag FriendComp() { return get(FriendTag.class); }
+	public EnemyTag EnemyComp() { return get(EnemyTag.class); }
 	public CursorTargetComp CursorTargetComp() { return get(CursorTargetComp.class); }
 	
 }

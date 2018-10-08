@@ -3,8 +3,8 @@ package com.jharter.game.ecs.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
-import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionComp;
+import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
+import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
@@ -15,13 +15,13 @@ public class CleanupTurnActionsSystem extends GameIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public CleanupTurnActionsSystem() {
-		super(Family.all(TurnActionComp.class, CleanupTurnActionComp.class).get());
+		super(Family.all(TurnActionComp.class, CleanupTurnActionTag.class).get());
 	}
 	
 	@Override
 	public void processEntity(Entity turnActionEntity, float deltaTime) {
 		cleanUp(turnActionEntity);
-		turnActionEntity.remove(CleanupTurnActionComp.class);
+		turnActionEntity.remove(CleanupTurnActionTag.class);
 	}
 	
 	private void cleanUp(Entity turnActionEntity) {
@@ -31,7 +31,7 @@ public class CleanupTurnActionsSystem extends GameIteratingSystem {
 		t.targetIDs.clear();
 		Entity owner = t.getOwnerEntity();
 		Comp.remove(ActiveTurnActionComp.class, owner);
-		Comp.remove(PendingTurnActionComp.class, t.getEntity());
+		Comp.remove(PendingTurnActionTag.class, t.getEntity());
 	}
 	
 }

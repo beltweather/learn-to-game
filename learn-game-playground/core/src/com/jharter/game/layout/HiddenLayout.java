@@ -1,7 +1,7 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
@@ -20,7 +20,7 @@ public class HiddenLayout  extends ZoneLayout {
 	
 	@Override
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
-		Comp.add(InvisibleComp.class, entity);
+		Comp.add(InvisibleTag.class, entity);
 	}
 
 }

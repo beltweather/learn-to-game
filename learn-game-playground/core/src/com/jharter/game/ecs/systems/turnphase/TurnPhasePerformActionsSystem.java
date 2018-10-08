@@ -7,11 +7,11 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
-import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
-import com.jharter.game.ecs.components.Components.DiscardCardComp;
+import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
+import com.jharter.game.ecs.components.Components.DiscardCardTag;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnComp;
-import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
+import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
@@ -33,8 +33,8 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	
 	@SuppressWarnings("unchecked")
 	public TurnPhasePerformActionsSystem() {
-		super(TurnPhasePerformActionsComp.class, TurnPhaseEndTurnComp.class);
-		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionComp.class).get(), new TimestampSort());
+		super(TurnPhasePerformActionsTag.class, TurnPhaseEndTurnTag.class);
+		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
 	}
 
 	@Override
@@ -284,9 +284,9 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	}
 	
 	protected void resolve(Entity turnActionEntity) {
-		Comp.add(CleanupTurnActionComp.class, turnActionEntity);
+		Comp.add(CleanupTurnActionTag.class, turnActionEntity);
 		if(Comp.CardComp.has(turnActionEntity)) {
-			Comp.add(DiscardCardComp.class, turnActionEntity);	
+			Comp.add(DiscardCardTag.class, turnActionEntity);	
 		}
 	}
 	

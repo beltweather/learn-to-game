@@ -1,13 +1,13 @@
 package com.jharter.game.ecs.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnTag;
 
 public class TurnPhaseEndTurnSystem extends TurnPhaseSystem {
 
 	public TurnPhaseEndTurnSystem() {
-		super(TurnPhaseEndTurnComp.class, TurnPhaseStartTurnComp.class);
+		super(TurnPhaseEndTurnTag.class, TurnPhaseStartTurnTag.class);
 	}
 
 	@Override

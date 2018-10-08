@@ -27,6 +27,13 @@ import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
+/**
+ * All components used in the game. Components should not inherit properties
+ * from superclasses, but can implement interfaces that 
+ * 
+ * @author Jon
+ *
+ */
 public final class Components {
 
 	private Components() {}
@@ -41,10 +48,17 @@ public final class Components {
 	/**
 	 * Simple boolean component, no data inside.
 	 */
-	private static class B implements C {
+	private static class B implements C, Tag {
 		private B() {}
 		@Override public void reset() {}
 	}
+	
+	/**
+	 * Special interface that denotes a component is to be used as a 
+	 * tag. Tags are stateless components meaning they should never
+	 * have any properties. They are completely boolean.
+	 */
+	public static interface Tag {}
 	
 	/**
 	 * Special interface that denotes a component is supposed to only
@@ -52,33 +66,39 @@ public final class Components {
 	 */
 	public static interface Unique {}
 	
+	/**
+	 * Special interface to denote which comps will be treated as events.
+	 * This is mainly here for book-keeping, it has no functional effect.
+	 */
+	public static interface Event {}
+	
 	// ------------------- BOOL COMPONENTS -----------------------------
 
-	public static final class FocusComp extends B implements Unique {}
-	
-	
-	public static final class TurnPhaseComp extends B implements Unique {}
-	public static final class TurnPhaseStartBattleComp extends B implements Unique {}
-	public static final class TurnPhaseStartTurnComp extends B implements Unique {}
-	public static final class TurnPhaseSelectActionsComp extends B implements Unique {}
-	public static final class TurnPhasePerformActionsComp extends B implements Unique {}
-	public static final class TurnPhaseEndTurnComp extends B implements Unique {}
-	public static final class TurnPhaseEndBattleComp extends B implements Unique {}
-	public static final class TurnPhaseNoneComp extends B implements Unique {}
+	public static final class FocusTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseStartBattleTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseStartTurnTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseSelectActionsTag extends B implements Unique, Tag {}
+	public static final class TurnPhasePerformActionsTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseEndTurnTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseEndBattleTag extends B implements Unique, Tag {}
+	public static final class TurnPhaseNoneTag extends B implements Unique, Tag {}
 
-	public static final class FriendComp extends B {}
-	public static final class EnemyComp extends B {}
+	public static final class FriendTag extends B implements Tag {}
+	public static final class EnemyTag extends B implements Tag {}
+	public static final class PendingTurnActionTag extends B implements Tag {}
+	public static final class TargetableTag extends B implements Tag {}
+	public static final class UntargetableTag extends B implements Tag {}
+	public static final class InvisibleTag extends B implements Tag {}
+	public static final class DisabledTag extends B implements Tag {}
+	public static final class ActionReadyTag extends B implements Tag {}
+	public static final class CleanupTurnActionTag extends B implements Tag {}
+	public static final class DiscardCardTag extends B implements Tag {}
+	public static final class PlayerTag extends B implements Tag {}
 	
-	public static final class PendingTurnActionComp extends B {}
-	public static final class TargetableComp extends B {}
-	public static final class UntargetableComp extends B {}
-	public static final class InvisibleComp extends B {}
-	public static final class DisabledComp extends B {}
-	
-	public static final class ActionReadyComp extends B {}
-	public static final class CleanupTurnActionComp extends B {}
-	
-	public static final class DiscardCardComp extends B {}
+	public static final class CursorTargetEvent extends B implements Event {}
+	public static final class CursorUntargetEvent extends B implements Event {}
+	public static final class CursorChangedZoneEvent extends B implements Event {}
 	
 	// ------------------- NORMAL COMPONENTS ---------------------------
 	
@@ -205,10 +225,6 @@ public final class Components {
 		public void reset() {
 			activeCount = 0;
 		}
-	}
-	
-	public static final class PlayerComp extends B {
-		private PlayerComp() {}
 	}
 	
 	public static final class ActivePlayerComp implements C, Unique {
@@ -434,10 +450,8 @@ public final class Components {
 		public ID turnActionID = null;
 		public ID lastTargetID = null; // Remember the ID of the last target, possibly only going to be used for layout purposes
 		public ID targetID = null; // The id of the entity the cursor is pointing to
+		//public boolean changedZones = false;
 		public Array<ID> history = new Array<ID>(); // The history of targets based on cursor "select" events, somewhat redundant with turn action list
-		
-		@Deprecated
-		public ID lastZoneID = null; // XXX Used only by cursor layout to reason on cursor speed, need better way to do this
 		
 		private CursorComp() {}
 		
@@ -446,9 +460,8 @@ public final class Components {
 			turnActionID = null;
 			targetID = null;
 			lastTargetID = null;
+			//changedZones = false;
 			history.clear();
-
-			lastZoneID = null;
 		}
 	}
 	

@@ -3,10 +3,10 @@ package com.jharter.game.ecs.systems.cursor;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.CursorComp;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
-import com.jharter.game.ecs.components.Components.TargetableComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
+import com.jharter.game.ecs.components.Components.TargetableTag;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
-import com.jharter.game.ecs.components.Components.UntargetableComp;
+import com.jharter.game.ecs.components.Components.UntargetableTag;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
@@ -20,7 +20,7 @@ public class CursorAvailableTargetsSystem extends CursorSystem {
 	@SuppressWarnings("unchecked")
 	public CursorAvailableTargetsSystem() {
 		super();
-		add(ZoneComp.class, Family.all(ZoneComp.class).exclude(InvisibleComp.class).get());
+		add(ZoneComp.class, Family.all(ZoneComp.class).exclude(InvisibleTag.class).get());
 	}
 	
 	@Override
@@ -68,16 +68,16 @@ public class CursorAvailableTargetsSystem extends CursorSystem {
 	}
 	
 	private void makeTargetable(ID id) {
-		Comp.swap(UntargetableComp.class, TargetableComp.class, id);
+		Comp.swap(UntargetableTag.class, TargetableTag.class, id);
 	}
 	
 	private void clearTargeting(ID id) {
-		Comp.remove(TargetableComp.class, id);
-		Comp.remove(UntargetableComp.class, id);
+		Comp.remove(TargetableTag.class, id);
+		Comp.remove(UntargetableTag.class, id);
 	}
 	
 	private void makeUntargetable(ID id) {
-		Comp.swap(TargetableComp.class, UntargetableComp.class, id);
+		Comp.swap(TargetableTag.class, UntargetableTag.class, id);
 	}
 	
 	private ZoneComp getZone(ZoneType zoneType) {

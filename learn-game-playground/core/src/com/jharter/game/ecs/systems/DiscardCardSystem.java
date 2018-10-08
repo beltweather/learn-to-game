@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.CardComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
-import com.jharter.game.ecs.components.Components.DiscardCardComp;
+import com.jharter.game.ecs.components.Components.DiscardCardTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
@@ -15,7 +15,7 @@ import uk.co.carelesslabs.Enums.ZoneType;
 public class DiscardCardSystem extends GameIteratingSystem {
 
 	public DiscardCardSystem() {
-		super(Family.all(CardComp.class, ZonePositionComp.class, DiscardCardComp.class).get());
+		super(Family.all(CardComp.class, ZonePositionComp.class, DiscardCardTag.class).get());
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class DiscardCardSystem extends GameIteratingSystem {
 		ChangeZoneComp cz = Comp.add(ChangeZoneComp.class, entity);
 		Comp.util(cz).change(zp.zoneID, getZoneID(ownerID, ZoneType.DISCARD));
 		
-		Comp.remove(DiscardCardComp.class, entity);
+		Comp.remove(DiscardCardTag.class, entity);
 	}
 
 }

@@ -3,8 +3,8 @@ package com.jharter.game.ecs.systems.turnphase;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnComp;
+import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnTag;
 import com.jharter.game.util.ArrayUtil;
 
 import uk.co.carelesslabs.Enums.CardOwnerAction;
@@ -12,7 +12,7 @@ import uk.co.carelesslabs.Enums.CardOwnerAction;
 public class TurnPhaseStartTurnSystem extends TurnPhaseSystem {
 
 	public TurnPhaseStartTurnSystem() {
-		super(TurnPhaseStartTurnComp.class, TurnPhaseSelectActionsComp.class);
+		super(TurnPhaseStartTurnTag.class, TurnPhaseSelectActionsTag.class);
 		add(ActivePlayerComp.class);
 		add(CardOwnerComp.class);
 	}

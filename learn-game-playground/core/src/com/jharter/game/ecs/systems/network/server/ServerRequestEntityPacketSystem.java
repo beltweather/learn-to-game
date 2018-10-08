@@ -1,7 +1,7 @@
 package com.jharter.game.ecs.systems.network.server;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ecs.components.Components.PlayerComp;
+import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.systems.network.ConsumingPacketSystem;
 import com.jharter.game.network.endpoints.GameNetwork.AddPlayer;
@@ -28,7 +28,7 @@ public class ServerRequestEntityPacketSystem extends ConsumingPacketSystem<GameS
 		}
 		
 		// XXX Right now just add players
-		PlayerComp playerComp = Comp.PlayerComp.get(entity);
+		PlayerTag playerComp = Comp.PlayerComp.get(entity);
 		if(playerComp != null) {
 			AddPlayersPacket addPlayers = AddPlayersPacket.newInstance();
 			AddPlayer addPlayer = new AddPlayer();

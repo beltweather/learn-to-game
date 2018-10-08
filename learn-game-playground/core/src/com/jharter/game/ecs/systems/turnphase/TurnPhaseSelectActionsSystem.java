@@ -9,10 +9,10 @@ import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
-import com.jharter.game.ecs.components.Components.CleanupTurnActionComp;
+import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
 import com.jharter.game.ecs.components.Components.CursorComp;
-import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsComp;
+import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsTag;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
@@ -25,7 +25,7 @@ import uk.co.carelesslabs.Media;
 public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 	
 	public TurnPhaseSelectActionsSystem() {
-		super(TurnPhaseSelectActionsComp.class, TurnPhasePerformActionsComp.class);
+		super(TurnPhaseSelectActionsTag.class, TurnPhasePerformActionsTag.class);
 		add(CardOwnerComp.class);
 		add(ActionQueuedComp.class);
 		add(AutoSelectTurnActionComp.class);
@@ -73,7 +73,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 		CursorComp c = getCursorComp();
 		if(c.turnActionID != null) {
 			if(!Comp.ActionSpentComp.has(c.turnActionID)) {
-				Comp.add(CleanupTurnActionComp.class, c.turnActionID);
+				Comp.add(CleanupTurnActionTag.class, c.turnActionID);
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 					}
 				}
 				if(!success) {
-					Comp.add(CleanupTurnActionComp.class, card);
+					Comp.add(CleanupTurnActionTag.class, card);
 					break;
 				}
 			}

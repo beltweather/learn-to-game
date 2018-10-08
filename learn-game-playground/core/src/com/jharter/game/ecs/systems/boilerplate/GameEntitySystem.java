@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ecs.components.CompManager;
 import com.jharter.game.ecs.components.Components.ZoneComp;
-import com.jharter.game.ecs.entities.EntityToolBox;
+import com.jharter.game.ecs.entities.GameToolBox;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.ID;
@@ -37,12 +37,14 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	private static final Array<Entity> empty = new Array<Entity>();
 	private static final ImmutableArray<Entity> emptyImm = new ImmutableArray<Entity>(new Array<Entity>());
 	
+	private boolean hasEvents = false;
 	private boolean shouldSort = false;
 	private ObjectMap<Object, Family> familiesByKey = new ObjectMap<Object, Family>();
 	private ObjectMap<Object, ImmutableArray<Entity>> entityArraysByKey = new ObjectMap<Object, ImmutableArray<Entity>>();
 	private ObjectMap<Object, Comparator<Entity>> comparatorsByKey = new ObjectMap<Object, Comparator<Entity>>();
 	private ObjectMap<Object, Array<Entity>> sortedEntityArraysByKey = new ObjectMap<Object, Array<Entity>>();
-	private EntityToolBox toolBox;
+	private Array<Class<? extends Component>> events = new Array<Class<? extends Component>>();
+	private GameToolBox toolBox;
 	protected CompManager Comp;
 	
 	public GameEntitySystem() {
@@ -56,13 +58,14 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	@Override
 	public void update(float deltaTime) {
 		shouldSort = true;
+		clearEvents();
 		performUpdate(deltaTime);
 	}
 	
 	public abstract void performUpdate(float deltaTime);
 	
 	@Override
-	public EntityToolBox getToolBox() {
+	public GameToolBox getToolBox() {
 		return toolBox;
 	}
 	
@@ -71,9 +74,12 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		return (PooledEngine) super.getEngine();
 	}
 	
-	public void setToolBox(EntityToolBox toolBox) {
+	public void setToolBox(GameToolBox toolBox) {
 		this.toolBox = toolBox;
 		Comp = toolBox.getCompManager();
+		for(Class<? extends Component> event : events) {
+			toolBox.registerEvent(event);
+		}
 	}
 	
 	@Override
@@ -130,6 +136,34 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	
 	protected boolean hasEntities(Object key) {
 		return entities(key).size() > 0;
+	}
+	
+	protected void clearComps(Class<? extends Component> compClass) {
+		for(Entity entity : entities(compClass)) {
+			Comp.remove(compClass, entity);
+		}
+	}
+	
+	/**
+	 * All component classes in this list will be treated like events with this
+	 * system as the source and sink. The way events work is they are boolean
+	 * components that are added to entities in this system and removed from
+	 * entities the next time this system is invoked. This means they live for
+	 * exactly one tick.
+	 */
+	protected void event(Class<? extends Component> eventClass) {
+		events.add(eventClass);
+		add(eventClass);
+		hasEvents = true;
+	}
+	
+	protected void clearEvents() {
+		if(!hasEvents) {
+			return;
+		}
+		for(Class<? extends Component> eventClass : events) {
+			clearComps(eventClass);
+		}
 	}
 	
 	protected ID getZoneID(ID ownerID, ZoneType type) {

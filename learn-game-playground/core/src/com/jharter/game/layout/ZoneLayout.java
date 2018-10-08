@@ -3,7 +3,7 @@ package com.jharter.game.layout;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ecs.components.Components.InvisibleComp;
+import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
@@ -146,11 +146,11 @@ public abstract class ZoneLayout extends EntityHandler {
 	}
 	
 	public void show(Entity entity) {
-		Comp.remove(InvisibleComp.class, entity);
+		Comp.remove(InvisibleTag.class, entity);
 	}
 	
 	public void hide(Entity entity) {
-		Comp.add(InvisibleComp.class, entity);
+		Comp.add(InvisibleTag.class, entity);
 	}
 	
 	protected abstract TweenTarget getTarget(ID id, int index, Entity entity, TweenTarget target);

@@ -2,7 +2,7 @@ package com.jharter.game.ecs.systems.network.client;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.jharter.game.ecs.components.Components.FocusComp;
+import com.jharter.game.ecs.components.Components.FocusTag;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
@@ -14,7 +14,7 @@ public class ClientSendInputSystem extends GameIteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public ClientSendInputSystem(GameClient client) {
-		super(Family.all(FocusComp.class, InputComp.class, IDComp.class).get());
+		super(Family.all(FocusTag.class, InputComp.class, IDComp.class).get());
 		this.client = client;
 	}
 

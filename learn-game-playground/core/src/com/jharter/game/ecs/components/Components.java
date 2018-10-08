@@ -46,7 +46,7 @@ public final class Components {
 	private static interface C extends Component, Poolable {}
 	
 	/**
-	 * Simple boolean component, no data inside.
+	 * Convenience class for simple boolean component, no data inside.
 	 */
 	private static class B implements C, Tag {
 		private B() {}
@@ -62,7 +62,9 @@ public final class Components {
 	
 	/**
 	 * Special interface that denotes a component is supposed to only
-	 * exist on one entity total in the entire engine.
+	 * exist on one entity total in the entire engine. It should be
+	 * safe to use "FirstSystems" with families containing these
+	 * components since exactly one entity should exist with it.
 	 */
 	public static interface Unique {}
 	
@@ -434,14 +436,15 @@ public final class Components {
 	}
 	
 	public static final class CursorTargetComp implements C {
-		
 		public ID cursorID;
+		public ID allTargetID = null; // The id of the actual target of the cursor if this target is part of a group of targets due to "all"
 		
 		private CursorTargetComp() {}
 		
 		@Override
 		public void reset() {
 			cursorID = null;
+			allTargetID = null;
 		}
 		
 	}

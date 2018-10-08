@@ -4,10 +4,12 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.DisabledTag;
+import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.systems.boilerplate.FirstSystem;
 import com.jharter.game.ecs.systems.boilerplate.GameEntitySystem;
@@ -78,4 +80,22 @@ public abstract class CursorSystem extends FirstSystem {
 		return false;
 	}
 	
+	protected boolean isTargetAll(CursorComp c) {
+		TurnAction t = getTurnAction(c);
+		return t != null && t.all;
+	}
+	
+	protected Array<ID> getTargetAllIDs(CursorComp c) {
+		Array<ID> allIDs = new Array<ID>();
+		ZoneComp z = Comp.ZoneComp.get(Comp.ZonePositionComp.get(c.targetID).zoneID);
+		if(z != null) {
+			for(ID id : z.objectIDs) {
+				if(Comp.TargetableComp.has(id)) {
+					allIDs.add(id);
+				}
+			}
+		}
+		return allIDs;
+	}
+
 }

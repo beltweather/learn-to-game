@@ -12,7 +12,6 @@ import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TargetableTag;
-import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.util.ArrayUtil;
 import com.jharter.game.util.GenericUtils;
 import com.jharter.game.util.id.ID;
@@ -89,13 +88,8 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		ci.direction.setZero();
 	}
 	
-	private boolean isAll(CursorComp c) {
-		TurnAction t = getTurnAction(c);
-		return t != null && t.all;
-	}
-	
 	private ID getNewTargetID(CursorComp c, CursorInputComp ci) {
-		boolean move = hasMovement(ci) && !isAll(c);
+		boolean move = hasMovement(ci) && !isTargetAll(c);
 		if(!move && c.targetID != null && Comp.TargetableComp.has(c.targetID)) {
 			return c.targetID;
 		}

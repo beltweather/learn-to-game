@@ -36,6 +36,10 @@ public class CursorTargetEventSystem extends CursorSystem {
 		if(targetID.equals(c.targetID)) {
 			return;
 		}
+		CursorTargetComp t = Comp.CursorTargetComp.get(target);
+		if(t.allTargetID != null && t.allTargetID.equals(c.targetID)) {
+			return;
+		}
 		Comp.remove(CursorTargetComp.class, target);
 		Comp.add(CursorUntargetEvent.class, target);
 	}
@@ -46,10 +50,23 @@ public class CursorTargetEventSystem extends CursorSystem {
 		if(c.targetID == null || (t != null && t.cursorID != null && t.cursorID.equals(cursorID))) {
 			return;
 		}
+		
 		Entity target = Comp.Entity.get(c.targetID);
 		t = Comp.getOrAdd(CursorTargetComp.class, target);
-		Comp.add(CursorTargetEvent.class, target);
 		t.cursorID = cursorID;
+		Comp.add(CursorTargetEvent.class, target);
+		
+		if(isTargetAll(c)) {
+			for(ID id : getTargetAllIDs(c)) {
+				if(id.equals(c.targetID)) {
+					continue;
+				}
+				t = Comp.getOrAdd(CursorTargetComp.class, id);
+				t.cursorID = cursorID;
+				t.allTargetID = c.targetID;
+				Comp.add(CursorTargetEvent.class, id);
+			}
+		}
 	}
 	
 }

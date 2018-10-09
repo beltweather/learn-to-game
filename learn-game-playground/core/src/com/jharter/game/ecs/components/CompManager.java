@@ -24,6 +24,8 @@ import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.CursorInputRegulatorComp;
 import com.jharter.game.ecs.components.Components.CursorTargetComp;
+import com.jharter.game.ecs.components.Components.CursorTargetEvent;
+import com.jharter.game.ecs.components.Components.CursorUntargetEvent;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
 import com.jharter.game.ecs.components.Components.DisabledTag;
 import com.jharter.game.ecs.components.Components.EnemyTag;
@@ -47,7 +49,6 @@ import com.jharter.game.ecs.components.Components.TargetableTag;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndBattleTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseNoneTag;
@@ -55,6 +56,7 @@ import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseStartTurnTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
 import com.jharter.game.ecs.components.Components.TypeComp;
 import com.jharter.game.ecs.components.Components.UntargetableTag;
@@ -266,6 +268,8 @@ public class CompManager {
 	public final CompMapper<FriendTag> FriendComp = getFor(FriendTag.class);
 	public final CompMapper<EnemyTag> EnemyComp = getFor(EnemyTag.class);
 	public final CompMapper<CursorTargetComp> CursorTargetComp = getFor(CursorTargetComp.class);
+	public final CompMapper<CursorTargetEvent> CursorTargetEvent = getFor(CursorTargetEvent.class);
+	public final CompMapper<CursorUntargetEvent> CursorUntargetEvent = getFor(CursorUntargetEvent.class);
 
 	// Component Util Methods
 	public SpriteCompUtil util(SpriteComp comp) { return utilManager.get(SpriteCompUtil.class, comp); }

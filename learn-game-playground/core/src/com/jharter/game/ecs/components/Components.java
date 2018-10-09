@@ -99,7 +99,18 @@ public final class Components {
 	public static final class PlayerTag extends B implements Tag {}
 	
 	public static final class CursorTargetEvent extends B implements Event {}
-	public static final class CursorUntargetEvent extends B implements Event {}
+	public static final class CursorUntargetEvent implements C, Event {
+		
+		public ID cursorID;
+		
+		private CursorUntargetEvent() {}
+		
+		@Override
+		public void reset() {
+			cursorID = null;
+		}
+		
+	}
 	public static final class CursorChangedZoneEvent extends B implements Event {}
 	
 	// ------------------- NORMAL COMPONENTS ---------------------------
@@ -195,6 +206,7 @@ public final class Components {
 		public boolean reflectAngle = false;
 		public int size = 0;
 		public boolean drawSingle = false;
+		public Array<ID> ids = new Array<ID>(); // Used to identify what's at a certain index in this list so it can be cleared by id
 		
 		private MultiSpriteComp() {}
 		
@@ -207,6 +219,7 @@ public final class Components {
 			scales.clear();
 			alphas.clear();
 			anglesDegrees.clear();
+			ids.clear();
 			size = 0;
 		}
 		
@@ -437,14 +450,20 @@ public final class Components {
 	
 	public static final class CursorTargetComp implements C {
 		public ID cursorID;
-		public ID allTargetID = null; // The id of the actual target of the cursor if this target is part of a group of targets due to "all"
+		public ID mainTargetID = null; // The id of the actual target of the cursor if this target is part of a group of targets due to "all"
+		public boolean isSub = false;
+		public boolean isAll = false;
+		public int multiplicity = 1;
 		
 		private CursorTargetComp() {}
 		
 		@Override
 		public void reset() {
 			cursorID = null;
-			allTargetID = null;
+			mainTargetID = null;
+			isSub = false;
+			isAll = false;
+			multiplicity = 1;
 		}
 		
 	}

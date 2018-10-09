@@ -130,7 +130,7 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		return empty;
 	}
 	
-	protected int countEntities(Object key) {
+	protected int count(Object key) {
 		return entities(key).size();
 	}
 	

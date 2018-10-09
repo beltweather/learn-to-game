@@ -33,6 +33,7 @@ import com.jharter.game.ecs.systems.cursor.CursorCancelSystem;
 import com.jharter.game.ecs.systems.cursor.CursorFinishSelectionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorInputSystem;
 import com.jharter.game.ecs.systems.cursor.CursorMoveSystem;
+import com.jharter.game.ecs.systems.cursor.CursorMultiTargetSystem;
 import com.jharter.game.ecs.systems.cursor.CursorPrevNextSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTargetEventSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTurnActionValidationSystem;
@@ -274,6 +275,7 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorTurnActionValidationSystem());
 		engine.addSystem(new CursorFinishSelectionSystem());
 		engine.addSystem(new CursorTargetEventSystem());
+		engine.addSystem(new CursorMultiTargetSystem());
 	}
 	
 	private void addCardSystems(PooledEngine engine) {

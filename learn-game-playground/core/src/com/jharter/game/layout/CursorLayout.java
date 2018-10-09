@@ -154,14 +154,14 @@ public class CursorLayout extends ZoneLayout {
 		hasMulti = changeZone && isAll(c);
 		
 		if(changeZone) {
-			handleChangeZone(cursor, c, zp, z, s, tt);
+		//	handleChangeZone(cursor, c, zp, z, s, tt);
 		} else {
-			handleStayInZone(cursor, c, zp, z, s, tt);
+			//handleStayInZone(cursor, c, zp, z, s, tt);
 		}
-		handleTargetingTurnAction(cursor, c, zp, z, s, s.position);
-	
+		//handleTargetingTurnAction(cursor, c, zp, z, s, s.position);
+
 		if(!hasMulti) {
-			Comp.remove(MultiSpriteComp.class, cursor);
+			//Comp.remove(MultiSpriteComp.class, cursor);
 		}
 	}
 

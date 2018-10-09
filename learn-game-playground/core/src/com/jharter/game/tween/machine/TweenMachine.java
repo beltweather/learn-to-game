@@ -1,5 +1,6 @@
 package com.jharter.game.tween.machine;
 
+import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.layout.TweenTarget;
@@ -159,6 +160,10 @@ public class TweenMachine<T extends TweenMachine<?>> extends EntityHandler {
 	
 	public TweenTarget getTarget() {
 		return tt;
+	}
+	
+	protected SpriteComp getSpriteComp() {
+		return Comp.SpriteComp.get(id);
 	}
 	
 	public Timeline getTimeline() {

@@ -7,7 +7,11 @@ import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.CursorTargetEvent;
 import com.jharter.game.ecs.components.Components.CursorUntargetEvent;
 import com.jharter.game.ecs.components.Components.IDComp;
+import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
+
+import uk.co.carelesslabs.Enums.ZoneType;
 
 public class CursorTargetEventSystem extends CursorSystem {
 
@@ -37,11 +41,12 @@ public class CursorTargetEventSystem extends CursorSystem {
 			return;
 		}
 		CursorTargetComp t = Comp.CursorTargetComp.get(target);
-		if(t.allTargetID != null && t.allTargetID.equals(c.targetID)) {
+		if(t.mainTargetID != null && t.mainTargetID.equals(c.targetID)) {
 			return;
 		}
+		Sys.out.println("Remove target");
 		Comp.remove(CursorTargetComp.class, target);
-		Comp.add(CursorUntargetEvent.class, target);
+		Comp.add(CursorUntargetEvent.class, target).cursorID = Comp.IDComp.get(cursor).id;
 	}
 	
 	private void addTargets(Entity cursor, CursorComp c) {
@@ -56,14 +61,29 @@ public class CursorTargetEventSystem extends CursorSystem {
 		t.cursorID = cursorID;
 		Comp.add(CursorTargetEvent.class, target);
 		
-		if(isTargetAll(c)) {
-			for(ID id : getTargetAllIDs(c)) {
+		if(isAll(c)) {
+			for(ID id : getCursorAllIDs(c)) {
 				if(id.equals(c.targetID)) {
 					continue;
 				}
 				t = Comp.getOrAdd(CursorTargetComp.class, id);
 				t.cursorID = cursorID;
-				t.allTargetID = c.targetID;
+				t.mainTargetID = c.targetID;
+				t.isAll = true;
+				Comp.add(CursorTargetEvent.class, id);
+			}
+		}
+		
+		if(isTargetingCard(c)) {
+			TurnAction cursorTurnAction = Comp.TurnActionComp.get(c.turnActionID).turnAction;
+			TurnAction turnAction = Comp.TurnActionComp.get(c.targetID).turnAction;
+			int multiplicity = turnAction.multiplicity * cursorTurnAction.makesTargetMultiplicity;
+			for(ID id : getCursorSecondaryIDs(c)) {
+				t = Comp.getOrAdd(CursorTargetComp.class, id);
+				t.cursorID = cursorID;
+				t.mainTargetID = c.targetID;
+				t.isSub = true;
+				t.multiplicity = multiplicity;
 				Comp.add(CursorTargetEvent.class, id);
 			}
 		}

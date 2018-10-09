@@ -89,7 +89,7 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 	}
 	
 	private ID getNewTargetID(CursorComp c, CursorInputComp ci) {
-		boolean move = hasMovement(ci) && !isAll(c);
+		boolean move = hasMovement(ci) && !getCursorManager().isAll(c);
 		if(!move && c.targetID != null && Comp.TargetableComp.has(c.targetID)) {
 			return c.targetID;
 		}

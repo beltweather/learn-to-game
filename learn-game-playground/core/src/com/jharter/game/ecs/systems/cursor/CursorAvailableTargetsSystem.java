@@ -25,8 +25,8 @@ public class CursorAvailableTargetsSystem extends CursorSystem {
 	
 	@Override
 	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
-		TurnAction t = getTurnAction(c);
-		boolean cursorDisabled = isDisabled(cursor);
+		TurnAction t = getCursorManager().getTurnAction(c);
+		boolean cursorDisabled = getCursorManager().isDisabled(cursor);
 		for(Entity zone : entities(ZoneComp.class)) {
 			processZone(zone, t, cursorDisabled);
 		}

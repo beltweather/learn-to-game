@@ -24,7 +24,7 @@ public class CursorCancelSystem extends CursorSystem {
 				Media.cancelBeep.play();	
 				cursor.remove(ActiveTurnActionComp.class); // XXX Highly suspect line of code that probably doesn't do anything
 				
-				TurnAction t = getTurnAction(c);
+				TurnAction t = getCursorManager().getTurnAction(c);
 				if(t != null) {
 					if(t.targetIDs.size == 0) {
 						c.turnActionID = null;

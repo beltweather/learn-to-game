@@ -56,6 +56,7 @@ import com.jharter.game.ecs.systems.turnphase.TurnPhaseStartBattleSystem;
 import com.jharter.game.ecs.systems.turnphase.TurnPhaseStartTurnSystem;
 import com.jharter.game.layout.ActiveCardLayout;
 import com.jharter.game.layout.CursorLayout;
+import com.jharter.game.layout.EnemyLayout;
 import com.jharter.game.layout.FriendLayout;
 import com.jharter.game.layout.HandLayout;
 import com.jharter.game.layout.HiddenLayout;
@@ -121,7 +122,7 @@ public class BattleStage extends GameStage {
 
 		ZoneComp infoZone = ZoneHelper.addZone(globalPlayerID, ZoneType.INFO, new IdentityLayout(this));
 		ZoneComp friendZone = ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND, new FriendLayout(this));
-		ZoneComp enemyZone = ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY);
+		ZoneComp enemyZone = ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY, new EnemyLayout(this));
 		ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND_ACTIVE_CARD, new ActiveCardLayout(this, true).setPriority(-1));
 		ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY_ACTIVE_CARD, new ActiveCardLayout(this, false).setPriority(-1));
 		ZoneComp cursorZone = ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));

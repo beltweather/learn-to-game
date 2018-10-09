@@ -31,7 +31,7 @@ public class CursorAcceptSystem extends CursorSystem {
 		if(ci.accept) {
 			Media.acceptBeep.play();
 			
-			TurnAction t = getTurnAction(c);
+			TurnAction t = getCursorManager().getTurnAction(c);
 			ID targetEntityID = c.targetID;
 				
 			// If this is our first target, make them the turn action entity

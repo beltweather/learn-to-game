@@ -1,6 +1,7 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.U;
@@ -25,7 +26,7 @@ public class FriendLayout extends ZoneLayout {
 		target.scale.y = 1f;
 		target.angleDegrees = 0;
 		
-		if(Comp.UntargetableComp.has(entity)) {
+		if(Comp.UntargetableComp.has(entity) && !Comp.has(CursorTargetComp.class, entity)) {
 			target.alpha = 0.25f;
 		} else {
 			target.alpha = 1f;

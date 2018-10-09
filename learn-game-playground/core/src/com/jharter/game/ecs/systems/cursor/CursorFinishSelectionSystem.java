@@ -17,7 +17,7 @@ public class CursorFinishSelectionSystem extends CursorSystem {
 
 	@Override
 	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
-		TurnAction t = getTurnAction(c);
+		TurnAction t = getCursorManager().getTurnAction(c);
 		if(t == null || !t.hasAllTargets()) {
 			return;
 		}

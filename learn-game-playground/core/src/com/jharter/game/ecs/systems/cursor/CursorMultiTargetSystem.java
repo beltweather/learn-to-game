@@ -54,7 +54,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 	private void addAllCursorPosition(Entity target) {
 		CursorTargetComp t = Comp.CursorTargetComp.get(target);
 		Entity cursor = Comp.Entity.get(t.cursorID);
-		if(!Comp.has(CursorChangedZoneEvent.class, cursor) || !isAll(cursor)) {
+		if(!Comp.has(CursorChangedZoneEvent.class, cursor) || !getCursorManager().isAll(cursor)) {
 			return;
 		}
 		
@@ -68,24 +68,24 @@ public class CursorMultiTargetSystem extends CursorSystem {
 	private void addAllCursorPosition(Entity target, float offsetX, float offsetY) {
 		CursorTargetComp t = Comp.CursorTargetComp.get(target);
 		Entity cursor = Comp.Entity.get(t.cursorID);
-		if(!Comp.has(CursorChangedZoneEvent.class, cursor) || !isAll(cursor)) {
+		if(!Comp.has(CursorChangedZoneEvent.class, cursor) || !getCursorManager().isAll(cursor)) {
 			return;
 		}
 		ZoneComp zTarget = Comp.ZoneComp.get(Comp.ZonePositionComp.get(target).zoneID);
 		SpriteComp sCursor = Comp.SpriteComp.get(cursor);
-		Vector3 goalPosition = getCursorPosition(cursor, Comp.IDComp.get(target).id, zTarget);
+		Vector3 goalPosition = getCursorManager().getCursorPosition(cursor, Comp.IDComp.get(target).id, zTarget);
 		goalPosition.x += offsetX;
 		goalPosition.y += offsetY;
 		
 		float duration = 0.25f;
-		float splitX = sCursor.position.x + (getCursorPosition(cursor).x - sCursor.position.x) * 0.75f;
-		float splitY = getZoneCenterY(cursor, zTarget);
+		float splitX = sCursor.position.x + (getCursorManager().getCursorPosition(cursor).x - sCursor.position.x) * 0.75f;
+		float splitY = getCursorManager().getZoneCenterY(cursor, zTarget);
 		Vector3 positionMulti = new Vector3(sCursor.position);
 		
 		Timeline multiA = Timeline.createParallel().push(Tween.to(positionMulti, TweenType.POSITION_XY.asInt(), duration).ease(Circ.INOUT).target(splitX, splitY));
 		Timeline multiB = Timeline.createParallel().push(Tween.to(positionMulti, TweenType.POSITION_XY.asInt(), duration).ease(TweenEquations.easeInOutElastic).target(goalPosition.x, goalPosition.y));
 		if(!t.isAll && !t.isAll && t.mainTargetID == null) {
-			multiA.push(Tween.to(cursor, TweenType.ANGLE.asInt(), duration).ease(Circ.INOUT).target(getCursorAngle(zTarget.zoneType)));
+			multiA.push(Tween.to(cursor, TweenType.ANGLE.asInt(), duration).ease(Circ.INOUT).target(getCursorManager().getCursorAngle(zTarget.zoneType)));
 			multiA.push(Tween.to(cursor, TweenType.SCALE_XY.asInt(), duration).ease(Circ.INOUT).target(0.5f, 0.5f));
 			multiB.push(Tween.to(cursor, TweenType.SCALE_XY.asInt(), duration).ease(Circ.OUT).target(1f, 1f));
 		} 
@@ -127,8 +127,8 @@ public class CursorMultiTargetSystem extends CursorSystem {
 		
 		ID targetID = Comp.IDComp.get(target).id;
 		ZoneComp zTarget = Comp.ZoneComp.get(Comp.ZonePositionComp.get(target).zoneID);
-		float angle = getCursorAngle(zTarget.zoneType);
-		Vector3 position = getCursorPosition(t.cursorID, targetID, zTarget);
+		float angle = getCursorManager().getCursorAngle(zTarget.zoneType);
+		Vector3 position = getCursorManager().getCursorPosition(t.cursorID, targetID, zTarget);
 		position.x += offsetX;
 		position.y += offsetY;
 		SpriteComp s = Comp.SpriteComp.get(t.cursorID);

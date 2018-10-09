@@ -61,8 +61,8 @@ public class CursorTargetEventSystem extends CursorSystem {
 		t.cursorID = cursorID;
 		Comp.add(CursorTargetEvent.class, target);
 		
-		if(isAll(c)) {
-			for(ID id : getCursorAllIDs(c)) {
+		if(getCursorManager().isAll(c)) {
+			for(ID id : getCursorManager().getCursorAllIDs(c)) {
 				if(id.equals(c.targetID)) {
 					continue;
 				}
@@ -74,11 +74,11 @@ public class CursorTargetEventSystem extends CursorSystem {
 			}
 		}
 		
-		if(isTargetingCard(c)) {
+		if(getCursorManager().isTargetingCard(c)) {
 			TurnAction cursorTurnAction = Comp.TurnActionComp.get(c.turnActionID).turnAction;
 			TurnAction turnAction = Comp.TurnActionComp.get(c.targetID).turnAction;
 			int multiplicity = turnAction.multiplicity * cursorTurnAction.makesTargetMultiplicity;
-			for(ID id : getCursorSecondaryIDs(c)) {
+			for(ID id : getCursorManager().getCursorSecondaryIDs(c)) {
 				t = Comp.getOrAdd(CursorTargetComp.class, id);
 				t.cursorID = cursorID;
 				t.mainTargetID = c.targetID;

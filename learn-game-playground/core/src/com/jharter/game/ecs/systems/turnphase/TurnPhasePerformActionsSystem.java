@@ -7,11 +7,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
+import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
 import com.jharter.game.ecs.components.Components.DiscardCardTag;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
+import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
@@ -34,6 +36,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	public TurnPhasePerformActionsSystem() {
 		super(TurnPhasePerformActionsTag.class, TurnPhaseEndTurnTag.class);
 		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
+		add(AssociatedTurnActionsComp.class, Family.all(AssociatedTurnActionsComp.class, VitalsComp.class).get());
 	}
 
 	@Override
@@ -60,6 +63,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 
 	@Override
 	protected void processEntityPhaseEnd(Entity turnPhase, float deltaTime) {
+		removePendingResults();
 		busy = false;
 	}
 	
@@ -163,7 +167,16 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			.repeatYoyo(1, 0f);
 	}
 	
-	
+	private void removePendingResults() {
+		for(Entity entity : entities(AssociatedTurnActionsComp.class)) {
+			AssociatedTurnActionsComp a = Comp.AssociatedTurnActionsComp.get(entity);
+			a.cursorIDs.clear();
+			a.targetIndices.clear();
+			a.turnActionIDs.clear();
+			VitalsComp v = Comp.VitalsComp.get(entity);
+			v.pendingVitals.setFrom(v.vitals);
+		}
+	}
 	
 	
 	

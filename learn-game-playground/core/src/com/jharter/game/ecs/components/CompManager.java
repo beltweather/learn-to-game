@@ -12,6 +12,7 @@ import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AnimationComp;
+import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.CardComp;
@@ -272,6 +273,7 @@ public class CompManager {
 	public final CompMapper<CursorTargetComp> CursorTargetComp = getFor(CursorTargetComp.class);
 	public final CompMapper<CursorTargetEvent> CursorTargetEvent = getFor(CursorTargetEvent.class);
 	public final CompMapper<CursorUntargetEvent> CursorUntargetEvent = getFor(CursorUntargetEvent.class);
+	public final CompMapper<AssociatedTurnActionsComp> AssociatedTurnActionsComp = getFor(AssociatedTurnActionsComp.class);
 
 	// Component Util Methods
 	public SpriteCompUtil util(SpriteComp comp) { return utilManager.get(SpriteCompUtil.class, comp); }

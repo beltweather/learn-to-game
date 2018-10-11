@@ -17,7 +17,8 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Entity entity, float deltaTime) {
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		VitalsComp v = Comp.VitalsComp.get(Comp.Entity.get(s.relativePositionRules.getRelativeToID()));
+		Entity owner = Comp.Entity.get(s.relativePositionRules.getRelativeToID()); 
+		VitalsComp v = Comp.VitalsComp.get(owner);
 		
 		if(s == null || v == null) {
 			return;
@@ -33,16 +34,16 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	    shapeRenderer.setColor(1f, 1f, 1f, 1f);
 		shapeRenderer.rect(x, y, w, h);
 	    shapeRenderer.setColor(0.8f, 0, 0, 1f);
-	    float healthW = w*(v.health/(float)v.maxHealth);
+	    float healthW = w*(v.vitals.health/(float)v.vitals.maxHealth);
 		shapeRenderer.rect(x, y, healthW, h);
 		int incoming = getIncomingHealthChange(v);
 		if(incoming != 0) {
 			if(incoming > 0) {
-				float incomingW = w*(Math.min(v.maxHealth - v.health, incoming)/(float)v.maxHealth);
+				float incomingW = w*(Math.min(v.vitals.maxHealth - v.vitals.health, incoming)/(float)v.vitals.maxHealth);
 				shapeRenderer.setColor(0, 0.8f, 0, 1f);
 				shapeRenderer.rect(x + healthW, y, incomingW, h);
 			} else {
-				float incomingW = w*(Math.min(v.health, -incoming)/(float)v.maxHealth);
+				float incomingW = w*(Math.min(v.vitals.health, -incoming)/(float)v.vitals.maxHealth);
 				shapeRenderer.setColor(0.8f, 0.8f, 0, 1f);
 				shapeRenderer.rect(x + healthW - incomingW, y, incomingW, h);
 			}
@@ -56,14 +57,7 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	}
 	
 	private int getIncomingHealthChange(VitalsComp v) {
-		int incoming = 0;
-		for(Integer val : v.incomingDamage.values()) {
-			incoming -= val.intValue();
-		}
-		for(Integer val : v.incomingHealing.values()) {
-			incoming += val.intValue();
-		}
-		return incoming;
+		return v.pendingVitals.health - v.vitals.health;
 	}
 	
 }

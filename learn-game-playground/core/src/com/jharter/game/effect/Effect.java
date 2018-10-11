@@ -1,6 +1,7 @@
 package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.entities.EntityHandler;
 
@@ -32,8 +33,9 @@ public abstract class Effect<T> extends EntityHandler {
 		return targetIndex;
 	}
 	
-	public void setTargetIndex(int targetIndex) {
+	public Effect<T> setTargetIndex(int targetIndex) {
 		this.targetIndex = targetIndex;
+		return this;
 	}
 	
 	public Entity getPerformer() {
@@ -48,14 +50,57 @@ public abstract class Effect<T> extends EntityHandler {
 		return turnAction.getTargetEntity(targetIndex);
 	}
 	
-	public T perform() {
-		return perform(getTarget());
+	public T getResult() {
+		return getResult(getTarget());
 	}
 	
-	public T perform(Entity target) {
-		return perform(getPerformer(), target);
+	public T getResult(Entity target) {
+		return getResult(getPerformer(), target);
 	}
  	
-	public abstract T perform(Entity performer, Entity target);
+	public abstract T getResult(Entity performer, Entity target);
 	
+	public void handleAudioVisual() {
+		handleAudioVisual(getTarget());
+	}
+ 	
+	public void handleAudioVisual(Entity target) {
+		handleAudioVisual(getPerformer(), target);
+	}
+	
+	public abstract void handleAudioVisual(Entity performer, Entity target);
+	
+	public void perform() {
+		applyResult();
+		handleAudioVisual();
+	}
+	
+	public void perform(Entity target) {
+		applyResult(target);
+		handleAudioVisual(target);
+	}
+	
+	public void applyResult() {
+		applyResult(getTarget());
+	}
+	
+	public void applyResult(Entity target) {
+		VitalsComp v = Comp.VitalsComp.get(target);
+		switch(prop) {
+			case DAMAGE:
+				v.vitals.health -= (int) getResult(target);
+				if(v.vitals.health < 0) {
+					v.vitals.health = 0;
+				}
+				break;
+			case HEAL:
+				v.vitals.health += (int) getResult(target);
+				if(v.vitals.health > v.vitals.maxHealth) {
+					v.vitals.health = v.vitals.maxHealth;
+				}
+			default:
+				break;
+		}
+	}
+
 }

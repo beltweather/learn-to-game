@@ -14,6 +14,7 @@ import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AnimationComp;
+import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.CardComp;
@@ -45,8 +46,8 @@ import com.jharter.game.ecs.components.Components.TargetPositionComp;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
-import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleTag;
+import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
 import com.jharter.game.ecs.components.Components.TypeComp;
 import com.jharter.game.ecs.components.Components.UntargetableTag;
@@ -156,5 +157,6 @@ public class EntityBuilder implements Poolable {
 	public FriendTag FriendComp() { return get(FriendTag.class); }
 	public EnemyTag EnemyComp() { return get(EnemyTag.class); }
 	public CursorTargetComp CursorTargetComp() { return get(CursorTargetComp.class); }
+	public AssociatedTurnActionsComp AssociatedTurnActionsComp() { return get(AssociatedTurnActionsComp.class); }
 	
 }

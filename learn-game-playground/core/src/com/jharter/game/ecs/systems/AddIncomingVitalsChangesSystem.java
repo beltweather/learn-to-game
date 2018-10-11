@@ -2,6 +2,7 @@ package com.jharter.game.ecs.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.CursorTargetEvent;
@@ -10,34 +11,34 @@ import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.entities.GameToolBox;
 import com.jharter.game.ecs.helpers.CombatHelper;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
+import com.jharter.game.util.id.ID;
+import com.jharter.game.vitals.Vitals;
 
 public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 
 	private CombatHelper CombatHelper;
 	
 	public AddIncomingVitalsChangesSystem() {
-		super(Family.all(CursorTargetEvent.class, VitalsComp.class, CursorTargetComp.class).get());
+		super(Family.all(CursorTargetEvent.class, AssociatedTurnActionsComp.class, CursorTargetComp.class).get());
 		CombatHelper = new CombatHelper(this);
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		VitalsComp v = Comp.VitalsComp.get(entity);
-		CursorComp c = Comp.CursorComp.get(Comp.CursorTargetComp.get(entity).cursorID);
-		if(c.turnActionID == null) {
+		CursorTargetComp ct = Comp.CursorTargetComp.get(entity);
+		AssociatedTurnActionsComp a = Comp.AssociatedTurnActionsComp.get(entity);
+		CursorComp c = Comp.CursorComp.get(ct.cursorID);
+		if(c.turnActionID == null || a.turnActionIDs.contains(c.turnActionID, false)) {
 			return;
 		}
 		
 		TurnAction t = Comp.TurnActionComp.get(c.turnActionID).turnAction;
-		Entity owner = Comp.Entity.get(t.ownerID);
-		int incomingDamage = CombatHelper.getDamage(owner, entity, t.incomingDamage);
-		int incomingHealing = CombatHelper.getDamage(owner, entity, t.incomingHealing);
+		a.turnActionIDs.add(c.turnActionID);
+		a.targetIndices.add(t.targetIDs.size);
+		a.cursorIDs.add(ct.cursorID);
 		
-		if(incomingDamage > 0) {
-			v.incomingDamage.put(c.turnActionID, incomingDamage);
-		}
-		if(incomingHealing > 0) {
-			v.incomingHealing.put(c.turnActionID, incomingHealing);
+		if(Comp.has(VitalsComp.class, entity)) {
+			setPendingVitals(entity, a);
 		}
 	}
 	
@@ -45,6 +46,23 @@ public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 	public void setToolBox(GameToolBox toolBox) {
 		super.setToolBox(toolBox);
 		CombatHelper.setHandler(this);
+	}
+	
+	public void setPendingVitals(Entity entity, AssociatedTurnActionsComp a) {
+		VitalsComp v = Comp.VitalsComp.get(entity);
+		v.pendingVitals.setFrom(v.vitals);
+		
+		Vitals temp = v.vitals;
+		v.vitals = v.pendingVitals;
+		
+		for(int i = 0; i < a.turnActionIDs.size; i++) {
+			ID turnActionID = a.turnActionIDs.get(i);
+			int targetIndex = a.targetIndices.get(i);
+			TurnAction t = Comp.TurnActionComp.get(turnActionID).turnAction;
+			t.applyResult(entity, targetIndex);
+		}
+		
+		v.vitals = temp;
 	}
 
 }

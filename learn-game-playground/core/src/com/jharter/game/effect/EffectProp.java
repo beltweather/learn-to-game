@@ -1,5 +1,5 @@
 package com.jharter.game.effect;
 
 public enum EffectProp {
-	HEALTH, MULTIPLICITY, ALL;
+	HEAL, DAMAGE, MULTIPLICITY, ALL;
 }

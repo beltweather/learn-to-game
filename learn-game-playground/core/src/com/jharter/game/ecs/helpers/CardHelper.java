@@ -16,6 +16,9 @@ import com.jharter.game.ecs.entities.EntityBuildUtil;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.effect.DamageEffect;
+import com.jharter.game.effect.HealEffect;
+import com.jharter.game.effect.HealFromDamageEffect;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
@@ -58,7 +61,7 @@ public class CardHelper extends EntityHandler {
 		return b;
 	}
 	
-	public void addDrainCard() {
+	public void addOrigDrainCard() {
 		EntityBuilder b = buildCard(Media.drainLife, "Drain Life");
 		new FriendEnemyCallback(this, b) {
 
@@ -70,15 +73,15 @@ public class CardHelper extends EntityHandler {
 				
 				VitalsComp vEnemy = Comp.VitalsComp.get(enemy);
 				VitalsComp vFriend = Comp.VitalsComp.get(friend);
-				int origHealthFriend = vFriend.health;
-				int origHealthEnemy = vEnemy.health;
+				int origHealthFriend = vFriend.vitals.health;
+				int origHealthEnemy = vEnemy.vitals.health;
 				
 				Comp.util(vEnemy).damage(damage);
 				Comp.util(vFriend).heal(damage);
 				
 				// DEBUG PRINTING
-				int healed = vFriend.health - origHealthFriend;
-				int damaged = origHealthEnemy - vEnemy.health; 
+				int healed = vFriend.vitals.health - origHealthFriend;
+				int damaged = origHealthEnemy - vEnemy.vitals.health; 
 				
 				String nameFriend = Comp.DescriptionComp.get(friend).name;
 				String nameEnemy = Comp.DescriptionComp.get(enemy).name;
@@ -87,8 +90,8 @@ public class CardHelper extends EntityHandler {
 				Sys.out.println(nameEnemy + " received " + damaged + " damage.");
 				Sys.out.println(nameFriend + " received " + healed + " health.");
 				
-				Sys.out.println(nameEnemy + " hp: " + vEnemy.health);
-				Sys.out.println(nameFriend + " hp: " + vFriend.health);
+				Sys.out.println(nameEnemy + " hp: " + vEnemy.vitals.health);
+				Sys.out.println(nameFriend + " hp: " + vFriend.vitals.health);
 				
 				if(Comp.util(vEnemy).isNearDeath()) {
 					Sys.out.println(nameEnemy + " is near death.");
@@ -98,12 +101,11 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
-		b.TurnActionComp().turnAction.incomingDamage = 13;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
 	
-	public void addAttackCard() {
+	public void addOrigAttackCard() {
 		EntityBuilder b = buildCard(Media.attack, "Attack");
 		new EnemyCallback(this, b) {
 
@@ -117,7 +119,109 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
-		b.TurnActionComp().turnAction.incomingDamage = 20;
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addOrigAttackAllCard() {
+		EntityBuilder b = buildCard(Media.attackAll, "Attack All");
+		b.TurnActionComp().turnAction.defaultAll = true;
+		b.TurnActionComp().turnAction.all = true;
+		new EnemyCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity enemy) {
+				Media.weaponSwing.play();
+				
+				int damage = CombatHelper.getDamage(owner, enemy, 20);
+				Comp.util(enemy, VitalsComp.class).damage(damage);
+				Sys.out.println("Dealt " + damage + " damage.");
+			}
+			
+		};
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addOrigHealAllCard() {
+		EntityBuilder b = buildCard(Media.healAll, "Heal All");
+		b.TurnActionComp().turnAction.defaultAll = true;
+		b.TurnActionComp().turnAction.all = true;
+		new FriendCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity friend) {
+				int hp = 50;
+				Comp.util(friend, VitalsComp.class).heal(hp);
+				Sys.out.println("Healed " + hp + " hp to " + Comp.DescriptionComp.get(friend).name);
+			}
+			
+		};
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addAttackCard() {
+		EntityBuilder b = buildCard(Media.attack, "Attack");
+		new EnemyCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity enemy) {
+				Comp.TurnActionComp.get(card).turnAction.perform();
+			}
+			
+		};
+		b.TurnActionComp().turnAction.addEffect(new DamageEffect(40));
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addDrainCard() {
+		EntityBuilder b = buildCard(Media.drainLife, "Drain Life");
+		new FriendEnemyCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity friend, Entity enemy) {
+				Comp.TurnActionComp.get(card).turnAction.perform();
+			}
+			
+		};
+		b.TurnActionComp().turnAction.addEffect(new DamageEffect(25), 1);
+		b.TurnActionComp().turnAction.addEffect(new HealFromDamageEffect(25), 0);
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addAttackAllCard() {
+		EntityBuilder b = buildCard(Media.attackAll, "Attack All");
+		b.TurnActionComp().turnAction.defaultAll = true;
+		b.TurnActionComp().turnAction.all = true;
+		new EnemyCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity enemy) {
+				Comp.TurnActionComp.get(card).turnAction.perform();
+			}
+			
+		};
+		b.TurnActionComp().turnAction.addEffect(new DamageEffect(20));
+		getEngine().addEntity(b.Entity());
+		b.free();
+	}
+	
+	public void addHealAllCard() {
+		EntityBuilder b = buildCard(Media.healAll, "Heal All");
+		b.TurnActionComp().turnAction.defaultAll = true;
+		b.TurnActionComp().turnAction.all = true;
+		new FriendCallback(this, b) {
+
+			@Override
+			public void call(Entity owner, Entity card, Entity friend) {
+				Comp.TurnActionComp.get(card).turnAction.perform();
+			}
+			
+		};
+		b.TurnActionComp().turnAction.addEffect(new HealEffect(50));
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
@@ -136,47 +240,6 @@ public class CardHelper extends EntityHandler {
 			}
 			
 		};
-		b.TurnActionComp().turnAction.incomingDamage = 20;
-		getEngine().addEntity(b.Entity());
-		b.free();
-	}
-	
-	public void addAttackAllCard() {
-		EntityBuilder b = buildCard(Media.attackAll, "Attack All");
-		b.TurnActionComp().turnAction.defaultAll = true;
-		b.TurnActionComp().turnAction.all = true;
-		new EnemyCallback(this, b) {
-
-			@Override
-			public void call(Entity owner, Entity card, Entity enemy) {
-				Media.weaponSwing.play();
-				
-				int damage = CombatHelper.getDamage(owner, enemy, 20);
-				Comp.util(enemy, VitalsComp.class).damage(damage);
-				Sys.out.println("Dealt " + damage + " damage.");
-			}
-			
-		};
-		b.TurnActionComp().turnAction.incomingDamage = 20;
-		getEngine().addEntity(b.Entity());
-		b.free();
-	}
-	
-	public void addHealAllCard() {
-		EntityBuilder b = buildCard(Media.healAll, "Heal All");
-		b.TurnActionComp().turnAction.defaultAll = true;
-		b.TurnActionComp().turnAction.all = true;
-		new FriendCallback(this, b) {
-
-			@Override
-			public void call(Entity owner, Entity card, Entity friend) {
-				int hp = 50;
-				Comp.util(friend, VitalsComp.class).heal(hp);
-				Sys.out.println("Healed " + hp + " hp to " + Comp.DescriptionComp.get(friend).name);
-			}
-			
-		};
-		b.TurnActionComp().turnAction.incomingHealing = 50;
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}

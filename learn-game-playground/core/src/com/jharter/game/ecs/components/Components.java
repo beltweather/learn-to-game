@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
@@ -21,6 +20,7 @@ import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
+import com.jharter.game.vitals.Vitals;
 
 import uk.co.carelesslabs.Enums.CardOwnerAction;
 import uk.co.carelesslabs.Enums.CardType;
@@ -383,46 +383,44 @@ public final class Components {
 	}
 	
 	public static final class VitalsComp implements C {
-		public int maxHealth = 0;
-		public int weakHealth = 0;
-		public int health = 0;
-		public ObjectMap<ID, Integer> incomingDamage = new ObjectMap<>();
-		public ObjectMap<ID, Integer> incomingHealing = new ObjectMap<>(); 
+		public Vitals vitals = new Vitals();
+		public Vitals pendingVitals = new Vitals();
+		//public ObjectMap<ID, Integer> incomingDamage = new ObjectMap<>();
+		//public ObjectMap<ID, Integer> incomingHealing = new ObjectMap<>(); 
 
 		private VitalsComp() {}
 		
 		@Override
 		public void reset() {
-			maxHealth = 0;
-			weakHealth = 0;
-			health = 0;
-			incomingDamage.clear();
-			incomingHealing.clear();
+			vitals.clear();
+			pendingVitals.clear();
+			//incomingDamage.clear();
+			//incomingHealing.clear();
 		}
 	}
 	
 	public static class VitalsCompUtil extends CompUtil<VitalsComp> {
 		
 		public void heal(int hp) {
-			c.health += hp;
-			if(c.health > c.maxHealth) {
-				c.health = c.maxHealth;
+			c.vitals.health += hp;
+			if(c.vitals.health > c.vitals.maxHealth) {
+				c.vitals.health = c.vitals.maxHealth;
 			}
 		}
 		
 		public void damage(int hp) {
-			c.health -= hp;
-			if(c.health < 0) {
-				c.health = 0;
+			c.vitals.health -= hp;
+			if(c.vitals.health < 0) {
+				c.vitals.health = 0;
 			}
 		}
 		
 		public boolean isDead() {
-			return c.health <= 0;
+			return c.vitals.health <= 0;
 		}
 		
 		public boolean isNearDeath() {
-			return c.health <= c.weakHealth && !isDead();
+			return c.vitals.health <= c.vitals.weakHealth && !isDead();
 		}
 		
 	}
@@ -447,6 +445,23 @@ public final class Components {
 		public void reset() {
 			activeTurnActionID = null;
 		}
+	}
+	
+	public static final class AssociatedTurnActionsComp implements C {
+		
+		public Array<ID> turnActionIDs = new Array<ID>();
+		public Array<Integer> targetIndices = new Array<Integer>();
+		public Array<ID> cursorIDs = new Array<ID>();
+		
+		private AssociatedTurnActionsComp() {}
+		
+		@Override
+		public void reset() {
+			turnActionIDs.clear();
+			targetIndices.clear();
+			cursorIDs.clear();
+		}
+		
 	}
 	
 	public static final class CursorTargetComp implements C {

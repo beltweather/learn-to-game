@@ -2,11 +2,14 @@ package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
 
-public class DamageEffect extends HealthEffect {
+import uk.co.carelesslabs.Media;
+
+public class DamageEffect extends Effect<Integer> {
 
 	private int baseDamage;
 	
 	public DamageEffect(int baseDamage) {
+		super(EffectProp.DAMAGE);
 		this.baseDamage = baseDamage;
 	}
 	
@@ -19,8 +22,13 @@ public class DamageEffect extends HealthEffect {
 	}
 	
 	@Override
-	public Integer perform(Entity attacker, Entity defender) {
+	public Integer getResult(Entity attacker, Entity defender) {
 		return getDamage(attacker, defender);
+	}
+
+	@Override
+	public void handleAudioVisual(Entity attacker, Entity defender) {
+		Media.weaponSwing.play();
 	}
 	
 }

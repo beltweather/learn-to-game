@@ -29,9 +29,11 @@ public class PlayerHelper extends EntityHandler {
 				  									  new TextureRegion(texture));
 		b.PlayerComp();
 		b.FriendComp();
-		b.VitalsComp().maxHealth = 100;
-		b.VitalsComp().weakHealth = 25;
-		b.VitalsComp().health = 10;
+		b.AssociatedTurnActionsComp();
+		b.VitalsComp().vitals.maxHealth = 100;
+		b.VitalsComp().vitals.weakHealth = 25;
+		b.VitalsComp().vitals.health = 10;
+		b.VitalsComp().pendingVitals.setFrom(b.VitalsComp().vitals);
 		b.StatsComp().level = 1;
 		b.StatsComp().power = 10;
 		b.StatsComp().defense = 10;

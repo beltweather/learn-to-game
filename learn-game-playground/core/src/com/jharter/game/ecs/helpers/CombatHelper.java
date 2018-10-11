@@ -14,7 +14,7 @@ public class CombatHelper extends EntityHandler {
 	public int getDamage(Entity attacker, Entity defender, int baseDamage) {
 		StatsComp sAttacker = Comp.StatsComp.get(attacker);
 		StatsComp sDefender = Comp.StatsComp.get(defender);
-		return baseDamage * sAttacker.power - sDefender.defense;
+		return (int) (baseDamage * sAttacker.power / (float)sDefender.defense);
 	}
 	
 	public int getHealing(Entity healer, Entity patient, int baseHealing) {

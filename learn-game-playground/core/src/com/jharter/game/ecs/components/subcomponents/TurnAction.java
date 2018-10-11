@@ -8,6 +8,7 @@ import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.effect.Effect;
+import com.jharter.game.effect.EffectProp;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -26,8 +27,6 @@ public class TurnAction extends EntityHandler {
 	public int priority = 0;
 	public ID entityID = null;
 	public ID ownerID = null;
-	public int incomingDamage = 0;
-	public int incomingHealing = 0;
 	
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
@@ -167,8 +166,27 @@ public class TurnAction extends EntityHandler {
 	}
 	
 	public void perform() {
-		for(Effect<?> effect : effects) {
-			effect.perform();
+		for(int i = 0; i < multiplicity; i++) {
+			for(Effect<?> effect : effects) {
+				if(all && effect.getTargetIndex() == targetIDs.size - 1) {
+					for(ID targetID : getAllTargetIDs(true)) {
+						effect.perform(Comp.Entity.get(targetID));
+					}
+				} else {
+					effect.perform();
+				}
+			}
+		}
+	}
+	
+	public void applyResult(Entity target, int targetIndex) {
+		for(int i = 0; i < multiplicity; i++) {
+			for(Effect<?> effect : effects) {
+				if(effect.getTargetIndex() != targetIndex) {
+					continue;
+				}
+				effect.applyResult(target);
+			}
 		}
 	}
 	

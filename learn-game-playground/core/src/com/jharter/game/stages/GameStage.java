@@ -13,6 +13,7 @@ import com.jharter.game.ecs.components.CompManager;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.entities.GameToolBox;
 import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.ecs.helpers.CombatHelper;
 import com.jharter.game.ecs.systems.boilerplate.GameEntitySystem;
 import com.jharter.game.network.endpoints.EndPointHelper;
 import com.jharter.game.tween.GameTweenManager;
@@ -75,6 +76,11 @@ public abstract class GameStage implements IEntityHandler {
 	@Override
 	public GameTweenManager getTweenManager() {
 		return toolBox.getTweenManager();
+	}
+	
+	@Override
+	public CombatHelper getCombatHelper() {
+		return toolBox.getCombatHelper();
 	}
 	
 	public EndPointHelper getEndPointHelper() {

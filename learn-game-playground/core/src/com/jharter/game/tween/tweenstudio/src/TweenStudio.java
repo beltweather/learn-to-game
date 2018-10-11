@@ -204,6 +204,7 @@ public class TweenStudio {
 	 * may be useful if the editor needs some custom parameters depending on
 	 * the current context. Returns always null is edition is disabled.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T extends Editor> T getEditor(Class<T> editorClass) {
 		if (isEditionEnabled()) {
 			T edt = (T) editorsMap.get(editorClass);

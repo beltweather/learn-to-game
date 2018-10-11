@@ -11,8 +11,6 @@ import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.ID;
 
-import uk.co.carelesslabs.Enums.ZoneType;
-
 public class CursorTargetEventSystem extends CursorSystem {
 
 	@SuppressWarnings("unchecked")

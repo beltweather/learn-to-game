@@ -21,6 +21,11 @@ import com.jharter.game.tween.tweenstudio.src.ui.timeline.TimelineModel.Node;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class TimelinePanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static enum PushBehavior {SET, ADD, ADD_OR_REMOVE}
 
 	private final MenuBarPanel menuBarPanel;

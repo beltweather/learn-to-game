@@ -12,7 +12,6 @@ public class ClientSendInputSystem extends GameIteratingSystem {
 
 	private GameClient client;
 	
-	@SuppressWarnings("unchecked")
 	public ClientSendInputSystem(GameClient client) {
 		super(Family.all(FocusTag.class, InputComp.class, IDComp.class).get());
 		this.client = client;

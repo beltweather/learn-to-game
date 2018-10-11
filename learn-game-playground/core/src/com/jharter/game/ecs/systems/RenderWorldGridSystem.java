@@ -13,7 +13,6 @@ public class RenderWorldGridSystem extends EntitySystem {
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 
-	@SuppressWarnings("unchecked")
 	public RenderWorldGridSystem (OrthographicCamera camera) {
 		super();
 		this.camera = camera;

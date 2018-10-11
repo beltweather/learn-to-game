@@ -13,7 +13,6 @@ public class CleanupTurnActionsSystem extends GameIteratingSystem {
 	
 	public static final float DEFAULT_INTERVAL = 10f;
 	
-	@SuppressWarnings("unchecked")
 	public CleanupTurnActionsSystem() {
 		super(Family.all(TurnActionComp.class, CleanupTurnActionTag.class).get());
 	}

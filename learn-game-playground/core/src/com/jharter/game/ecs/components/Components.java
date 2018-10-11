@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
@@ -385,8 +386,8 @@ public final class Components {
 		public int maxHealth = 0;
 		public int weakHealth = 0;
 		public int health = 0;
-		public int incomingDamage = 0;
-		public int incomingHealing = 0;
+		public ObjectMap<ID, Integer> incomingDamage = new ObjectMap<>();
+		public ObjectMap<ID, Integer> incomingHealing = new ObjectMap<>(); 
 
 		private VitalsComp() {}
 		
@@ -395,8 +396,8 @@ public final class Components {
 			maxHealth = 0;
 			weakHealth = 0;
 			health = 0;
-			incomingDamage = 0;
-			incomingHealing = 0;
+			incomingDamage.clear();
+			incomingHealing.clear();
 		}
 	}
 	
@@ -753,7 +754,7 @@ public final class Components {
 	}
 	
 	public static final class AnimationComp implements C {
-		public Animation animation; // Can't serialize
+		public Animation<?> animation; // Can't serialize
 		public boolean looping = true;
 		public float time = 0;
 

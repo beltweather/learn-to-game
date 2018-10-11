@@ -15,7 +15,6 @@ public class RenderTilesSystem extends GameIteratingSystem {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
-	@SuppressWarnings("unchecked")
 	public RenderTilesSystem (OrthographicCamera camera) {
 		super(Family.all(TileComp.class, SpriteComp.class, TextureComp.class).exclude(InvisibleTag.class).get());
 		this.camera = camera;

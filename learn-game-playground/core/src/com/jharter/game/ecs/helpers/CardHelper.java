@@ -26,13 +26,13 @@ public class CardHelper extends EntityHandler {
 	
 	//TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
 
-	private CombatHelper CombatUtil;
+	private CombatHelper CombatHelper;
 	private ID ownerID;
 	private CardOwnerComp co;
 	
 	public CardHelper(IEntityHandler handler) {
 		super(handler);
-		this.CombatUtil = new CombatHelper(handler);
+		this.CombatHelper = new CombatHelper(handler);
 	}
 	
 	public void setOwnerID(ID ownerID) {
@@ -66,7 +66,7 @@ public class CardHelper extends EntityHandler {
 			public void call(Entity owner, Entity card, Entity friend, Entity enemy) {
 				Media.weaponSwing.play();
 				
-				int damage = CombatUtil.getDamage(owner, enemy, 13);
+				int damage = CombatHelper.getDamage(owner, enemy, 13);
 				
 				VitalsComp vEnemy = Comp.VitalsComp.get(enemy);
 				VitalsComp vFriend = Comp.VitalsComp.get(friend);
@@ -111,7 +111,7 @@ public class CardHelper extends EntityHandler {
 			public void call(Entity owner, Entity card, Entity enemy) {
 				Media.weaponSwing.play();
 				
-				int damage = CombatUtil.getDamage(owner, enemy, 20);
+				int damage = CombatHelper.getDamage(owner, enemy, 20);
 				Comp.util(enemy, VitalsComp.class).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
@@ -130,7 +130,7 @@ public class CardHelper extends EntityHandler {
 			public void call(Entity owner, Entity card, Entity friend) {
 				Media.weaponSwing.play();
 				
-				int damage = CombatUtil.getDamage(owner, friend, 20);
+				int damage = CombatHelper.getDamage(owner, friend, 20);
 				Comp.util(friend, VitalsComp.class).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}
@@ -151,7 +151,7 @@ public class CardHelper extends EntityHandler {
 			public void call(Entity owner, Entity card, Entity enemy) {
 				Media.weaponSwing.play();
 				
-				int damage = CombatUtil.getDamage(owner, enemy, 20);
+				int damage = CombatHelper.getDamage(owner, enemy, 20);
 				Comp.util(enemy, VitalsComp.class).damage(damage);
 				Sys.out.println("Dealt " + damage + " damage.");
 			}

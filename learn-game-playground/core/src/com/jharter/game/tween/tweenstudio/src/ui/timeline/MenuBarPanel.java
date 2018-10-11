@@ -18,6 +18,10 @@ import com.jharter.game.tween.tweenstudio.src.ui.timeline.TimelineModel.Node;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 class MenuBarPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final ImageButton magBtn;
 	private final ImageButton minBtn;
 	private final ImageButton addNodeBtn;

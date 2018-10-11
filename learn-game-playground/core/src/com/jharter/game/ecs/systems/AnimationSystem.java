@@ -10,7 +10,6 @@ import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
 public class AnimationSystem extends GameIteratingSystem {
 	
-	@SuppressWarnings("unchecked")
 	public AnimationSystem () {
 		super(Family.all(TextureComp.class, AnimationComp.class).exclude(InvisibleTag.class).get());
 	}

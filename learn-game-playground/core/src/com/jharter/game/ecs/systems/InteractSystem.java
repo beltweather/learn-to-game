@@ -10,7 +10,6 @@ import com.jharter.game.util.id.ID;
 
 public class InteractSystem extends GameIteratingSystem {
 
-	@SuppressWarnings("unchecked")
 	public InteractSystem() {
 		super(Family.all(InputComp.class, 
  			  InteractComp.class).get()); 

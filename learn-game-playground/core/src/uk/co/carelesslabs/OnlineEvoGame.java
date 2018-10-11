@@ -93,7 +93,8 @@ public class OnlineEvoGame extends ApplicationAdapter {
     	return serverSide;
     }
     
-    private void addHero(Hero hero) {
+    @SuppressWarnings("unused")
+	private void addHero(Hero hero) {
     	island.entities.add(hero);
     	heroes.put(hero.id, hero);
     	if(hero.id.equals(mainHeroId) || (isServerSide() && heroes.size == 1)) {
@@ -253,11 +254,15 @@ public class OnlineEvoGame extends ApplicationAdapter {
     
     private int frameCount = -1;
     
-    private long lastServerMoveUserTime = 0;
-    private long serverMoveUserTime = 0;
+    @SuppressWarnings("unused")
+	private long lastServerMoveUserTime = 0;
+    @SuppressWarnings("unused")
+	private long serverMoveUserTime = 0;
  
-    private float fpsTime = 0;
-    private long fpsFrames = 0;
+    @SuppressWarnings("unused")
+	private float fpsTime = 0;
+    @SuppressWarnings("unused")
+	private long fpsFrames = 0;
     
     private boolean didInitialReset = false;
     

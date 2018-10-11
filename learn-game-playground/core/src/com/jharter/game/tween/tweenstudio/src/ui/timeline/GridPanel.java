@@ -26,6 +26,7 @@ import com.jharter.game.tween.tweenstudio.src.ui.timeline.TimelinePanel.PushBeha
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 class GridPanel extends JPanel implements Scrollable {
+	private static final long serialVersionUID = 1L;
 	private final int oneSecondWidth = 60;
 	private final int paddingTop = 30;
 	private final int paddingLeft = 15;
@@ -412,6 +413,8 @@ class GridPanel extends JPanel implements Scrollable {
 						parent.setCurrentTime(getRoundedTime(getTimeFromX(e.getX()), 100000));
 					}
 					break;
+			default:
+				break;
 			}
 
 			isPressed = false;

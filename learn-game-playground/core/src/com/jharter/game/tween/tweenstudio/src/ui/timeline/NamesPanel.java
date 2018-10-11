@@ -19,7 +19,12 @@ import com.jharter.game.tween.tweenstudio.src.ui.timeline.TimelinePanel.PushBeha
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 class NamesPanel extends JPanel implements Scrollable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final BufferedImage imgIdxClosed = ResourcesHelper.getGfx("img_idxClosed.png");
+	@SuppressWarnings("unused")
 	private final BufferedImage imgIdxOpened = ResourcesHelper.getGfx("img_idxOpened.png");
 	private final BufferedImage imgIdxNone = ResourcesHelper.getGfx("img_idxNone.png");
 	private final int paddingTop = 30;

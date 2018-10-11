@@ -13,7 +13,6 @@ import com.jharter.game.util.id.ID;
 
 public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Comparator<Entity> {
 
-	@SuppressWarnings("unchecked")
 	public ZoneLayoutSystem() {
 		super(Family.all(ZoneComp.class).get());
 		setComparator(this);

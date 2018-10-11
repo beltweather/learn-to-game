@@ -48,7 +48,7 @@ public class GameServer extends GameEndPoint {
 		maybeFree(object);
 	}
 	
-	public void sendTo(int connectionID, Packet packet) {
+	public void sendTo(int connectionID, Packet<?> packet) {
 		if(packet.useTCP) {
 			sendToTCP(connectionID, packet);
 		} else {
@@ -56,7 +56,7 @@ public class GameServer extends GameEndPoint {
 		}
 	}
 	
-	public void sendToAll(Packet packet) {
+	public void sendToAll(Packet<?> packet) {
 		if(packet.useTCP) {
 			sendToAllTCP(packet);
 		} else {
@@ -108,6 +108,7 @@ public class GameServer extends GameEndPoint {
 				//GameServer.this.received(c, object, server);
 			}
 			
+			@SuppressWarnings("unused")
 			private boolean isValid (ID value) {
 				if (value == null) return false;
 				return true;

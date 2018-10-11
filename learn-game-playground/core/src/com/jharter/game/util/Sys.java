@@ -23,6 +23,7 @@ public class Sys {
 	
 	public static final Out out = new Out();
 	public static final Err err = new Err();
+	@SuppressWarnings("unused")
 	private static final Deb deb = new Deb();
 	
 	private Sys() {}

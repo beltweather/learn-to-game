@@ -77,6 +77,7 @@ import com.jharter.game.util.id.ID;
  */
 public class CompManager {
 	
+	@SuppressWarnings("rawtypes")
 	private final ObjectMap<Class, CompMapper> componentMappersByClass = new ObjectMap<Class, CompMapper>();
 	
 	private IEntityHandler handler;
@@ -127,6 +128,7 @@ public class CompManager {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends Component> CompMapper<T> getFor(Class<T> klass) {
 		if(!componentMappersByClass.containsKey(klass)) {
 			componentMappersByClass.put(klass, new CompMapper<T>(klass));

@@ -10,7 +10,7 @@ import com.jharter.game.util.id.IDUtil;
 public abstract class GameEndPoint {
 
 	protected ID id;
-	protected ObjectMap<Class<? extends Packet>, PacketManager<?>> packetManagers = new ObjectMap();
+	protected ObjectMap<Class<? extends Packet<?>>, PacketManager<?>> packetManagers = new ObjectMap<>();
 	
 	public GameEndPoint() {
 		id = IDUtil.newID();
@@ -39,6 +39,7 @@ public abstract class GameEndPoint {
 		return packetManagers.containsKey(packetClass);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends Packet<T>> PacketManager<T> getPacketManager(Class<T> packetClass) {
 		if(packetManagers.containsKey(packetClass)) {
 			return (PacketManager<T>) packetManagers.get(packetClass);
@@ -48,7 +49,7 @@ public abstract class GameEndPoint {
 	
 	public void maybeFree(Object object) {
 		if(object instanceof Packet) {
-			((Packet) object).free();
+			((Packet<?>) object).free();
 		}
 	}
 	

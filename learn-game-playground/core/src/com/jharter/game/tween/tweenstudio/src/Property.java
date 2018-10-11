@@ -6,11 +6,13 @@ import aurelienribon.tweenengine.TweenAccessor;
  * @author Aurelien Ribon | http://www.aurelienribon.com
  */
 public class Property {
+	@SuppressWarnings("rawtypes")
 	public final TweenAccessor accessor;
 	public final int tweenType;
 	public final String name;
 	public final Field[] fields;
 
+	@SuppressWarnings("rawtypes")
 	public Property(TweenAccessor accessor, int tweenType, String name, Field... fields) {
 		this.accessor = accessor;
 		this.tweenType = tweenType;

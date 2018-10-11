@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.CompManager;
+import com.jharter.game.ecs.helpers.CombatHelper;
 import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.Sys;
 import com.jharter.game.util.id.IDManager;
@@ -14,6 +15,7 @@ public class GameToolBox implements IEntityHandler {
 	private CompManager compManager;
 	private IDManager idManager;
 	private GameTweenManager tweenManager;
+	private CombatHelper combatHelper;
 	private Array<Class<? extends Component>> registeredEvents = new Array<Class<? extends Component>>();
 	
 	public GameToolBox(PooledEngine engine) {
@@ -21,6 +23,7 @@ public class GameToolBox implements IEntityHandler {
 		this.compManager = new CompManager(this);
 		this.idManager = new IDManager();
 		this.tweenManager = new GameTweenManager(this);
+		this.combatHelper = new CombatHelper(this);
 	}
 	
 	@Override
@@ -46,6 +49,11 @@ public class GameToolBox implements IEntityHandler {
 	@Override
 	public GameTweenManager getTweenManager() {
 		return tweenManager;
+	}
+	
+	@Override
+	public CombatHelper getCombatHelper() {
+		return combatHelper;
 	}
 	
 	public void registerEvent(Class<? extends Component> compClass) {

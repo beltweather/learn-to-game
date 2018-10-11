@@ -92,6 +92,7 @@ public class EntityBuildUtil {
 		return b;
 	}
 	
+	@SuppressWarnings("unused")
 	private static final Family renderFamily = Family.all(SpriteComp.class, TextureComp.class).exclude(InvisibleTag.class).get();
 	
 }

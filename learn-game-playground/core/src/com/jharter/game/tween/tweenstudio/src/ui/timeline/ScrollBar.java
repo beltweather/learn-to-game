@@ -11,6 +11,11 @@ import javax.swing.JPanel;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 class ScrollBar extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public enum Orientation {VERTICAL, HORIZONTAL}
 
 	private final TimelinePanel parent;

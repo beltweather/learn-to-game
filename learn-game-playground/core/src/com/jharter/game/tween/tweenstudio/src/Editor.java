@@ -21,6 +21,7 @@ public abstract class Editor {
 	
 	public static final int MAX_COMBINED_TWEENS = 3;
 	
+	@SuppressWarnings("rawtypes")
 	private final Map<Class, List<Property>> propertiesMap = new LinkedHashMap<Class, List<Property>>();
 	private final List<State> changedStates = new ArrayList<State>();
 	private AnimationDef animationDef;
@@ -56,13 +57,13 @@ public abstract class Editor {
 
 	final List<Property> getProperties(Object target) {
 		List<Property> properties = new ArrayList<Property>();
-		for (Class c : propertiesMap.keySet())
+		for (Class<?> c : propertiesMap.keySet())
 			if (c.isInstance(target))
 				properties.addAll(propertiesMap.get(c));
 		return properties;
 	}
 
-	final Property getProperty(Object target, TweenAccessor accessor, int tweenType) {
+	final Property getProperty(Object target, TweenAccessor<?> accessor, int tweenType) {
 		List<Property> properties = getProperties(target);
 		for (Property p : properties)
 			if (p.accessor == accessor && p.tweenType == tweenType)
@@ -83,7 +84,7 @@ public abstract class Editor {
 		return animationDef;
 	}
 
-	protected final void registerProperty(Class clazz, int tweenType, String propertyName, Field... fields) {
+	protected final void registerProperty(Class<?> clazz, int tweenType, String propertyName, Field... fields) {
 		if (Tween.getRegisteredAccessor(clazz) == null) throw new RuntimeException("No accessor was found for the given class");
 		if (!propertiesMap.containsKey(clazz)) propertiesMap.put(clazz, new ArrayList<Property>());
 		propertiesMap.get(clazz).add(new Property(Tween.getRegisteredAccessor(clazz), tweenType, propertyName, fields));
@@ -103,7 +104,8 @@ public abstract class Editor {
 		}
 	}
 
-	protected final void reportStateChanged(Object target, Class targetClass, int tweenType) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected final void reportStateChanged(Object target, Class<?> targetClass, int tweenType) {
 		float[] buffer = new float[MAX_COMBINED_TWEENS]; //Tween.MAX_COMBINED_TWEENS];
 		TweenAccessor accessor = Tween.getRegisteredAccessor(targetClass);
 		accessor.getValues(target, tweenType, buffer);
@@ -111,7 +113,7 @@ public abstract class Editor {
 		changedStates.add(new State(target, targetClass, tweenType, buffer));
 	}
 
-	protected final void fireSelectedObjectsChanged(final List objs) {
+	protected final void fireSelectedObjectsChanged(final List<?> objs) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {@Override public void run() {
 				editionWindow.selectedObjectsChanged(objs);

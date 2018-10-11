@@ -9,7 +9,6 @@ import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
 public class CollisionSystem extends GameIteratingSystem {
 
-	@SuppressWarnings("unchecked")
 	public CollisionSystem() {
 		super(Family.all(CollisionComp.class, TypeComp.class).get()); 
 	}

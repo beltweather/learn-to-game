@@ -29,7 +29,6 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 
-	@SuppressWarnings("unchecked")
 	public RenderEntitiesSystem (OrthographicCamera camera) {
 		super(Family.all(SpriteComp.class).one(TextureComp.class, ShapeRenderComp.class).exclude(InvisibleTag.class, TileComp.class, DisabledTag.class).get());
 		setComparator(new PositionSort());

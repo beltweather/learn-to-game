@@ -19,6 +19,7 @@ public abstract class CursorSystem extends FirstSystem {
 	
 	private CursorManager cursorManager;
 
+	@SuppressWarnings("unchecked")
 	public CursorSystem(Class<? extends Component>... cursorComps) {
 		this(Family.all(GameEntitySystem.combine(cursorComps, CursorComp.class)).exclude(DisabledTag.class, AnimatingComp.class).get());
 	}

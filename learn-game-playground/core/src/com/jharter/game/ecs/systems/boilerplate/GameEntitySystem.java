@@ -15,6 +15,7 @@ import com.jharter.game.ecs.components.CompManager;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.entities.GameToolBox;
 import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.ecs.helpers.CombatHelper;
 import com.jharter.game.tween.GameTweenManager;
 import com.jharter.game.util.id.ID;
 import com.jharter.game.util.id.IDManager;
@@ -23,6 +24,7 @@ import uk.co.carelesslabs.Enums.ZoneType;
 
 public abstract class GameEntitySystem extends EntitySystem implements IEntityHandler {
 	
+	@SuppressWarnings("unchecked")
 	public static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...defaultComps) {
 		Class<?>[] combined = new Class<?>[additionalComps.length + defaultComps.length];
 		for(int i = 0; i < additionalComps.length; i++) {
@@ -44,6 +46,8 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	private ObjectMap<Object, Comparator<Entity>> comparatorsByKey = new ObjectMap<Object, Comparator<Entity>>();
 	private ObjectMap<Object, Array<Entity>> sortedEntityArraysByKey = new ObjectMap<Object, Array<Entity>>();
 	private Array<Class<? extends Component>> events = new Array<Class<? extends Component>>();
+	private Array<Class<? extends Component>> required = new Array<Class<? extends Component>>();
+	
 	private GameToolBox toolBox;
 	protected CompManager Comp;
 	
@@ -59,6 +63,9 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	public void update(float deltaTime) {
 		shouldSort = true;
 		clearEvents();
+		if(!hasRequired()) {
+			return;
+		}
 		performUpdate(deltaTime);
 	}
 	
@@ -95,6 +102,11 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	@Override
 	public GameTweenManager getTweenManager() {
 		return toolBox.getTweenManager();
+	}
+	
+	@Override
+	public CombatHelper getCombatHelper() {
+		return toolBox.getCombatHelper();
 	}
 	
 	protected void add(Class<? extends Component> componentClass) {
@@ -164,6 +176,23 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		for(Class<? extends Component> eventClass : events) {
 			clearComps(eventClass);
 		}
+	}
+	
+	protected void require(Class<? extends Component> requiredClass) {
+		required.add(requiredClass);
+		add(requiredClass);
+	}
+	
+	protected boolean hasRequired() {
+		if(required.size == 0) {
+			return true;
+		}
+		for(Class<? extends Component> r : required) {
+			if(count(r) == 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	protected ID getZoneID(ID ownerID, ZoneType type) {

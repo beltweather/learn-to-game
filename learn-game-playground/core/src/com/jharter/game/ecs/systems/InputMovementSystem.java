@@ -11,7 +11,6 @@ import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
 public class InputMovementSystem extends GameIteratingSystem {
 
-	@SuppressWarnings("unchecked")
 	public InputMovementSystem() {
 		super(Family.all(SpriteComp.class, 
 						 VelocityComp.class, 

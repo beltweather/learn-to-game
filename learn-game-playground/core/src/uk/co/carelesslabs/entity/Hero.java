@@ -15,6 +15,7 @@ import uk.co.carelesslabs.box2d.Box2DWorld;
 
 public class Hero extends GameEntity{
 	
+	@SuppressWarnings("unused")
 	private static final float ALPHA = 0.01f;
 	
     Array<GameEntity> interactEntities;

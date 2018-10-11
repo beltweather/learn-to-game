@@ -50,8 +50,13 @@ class MainWindow extends javax.swing.JFrame {
 	// Attributes
 	// -------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Theme theme = new Theme();
 	private final Map<Object, InitialState> initialStatesMap = new HashMap<Object, InitialState>();
+	@SuppressWarnings("unused")
 	private final float[] buffer = new float[Editor.MAX_COMBINED_TWEENS]; //new float[Tween.MAX_COMBINED_TWEENS];
 	private final Callback callback;
 
@@ -245,6 +250,7 @@ class MainWindow extends javax.swing.JFrame {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void selectedObjectsChanged(List objs) {
 		List<Element> elems = new ArrayList<Element>();
 
@@ -272,6 +278,7 @@ class MainWindow extends javax.swing.JFrame {
 
 	public void statesChanged(List<State> changedStates) {
 		for (State state : changedStates) {
+			@SuppressWarnings("rawtypes")
 			TweenAccessor accessor = Tween.getRegisteredAccessor(state.targetClass);
 			String targetName = animationDef.targetsNamesMap.get(state.target);
 			String propertyName = animationDef.editor.getProperty(state.target, accessor, state.tweenType).name;
@@ -416,6 +423,7 @@ class MainWindow extends javax.swing.JFrame {
 		return propertiesMap;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Float[] getCommonValues(Property property, List<Element> propertyElems) {
 		float[] buf = new float[property.fields.length];
 		Float[] values = null;
@@ -624,7 +632,7 @@ class MainWindow extends javax.swing.JFrame {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -910,7 +918,8 @@ class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField animationNameField;
-    private javax.swing.JComboBox easingCbox;
+    @SuppressWarnings("rawtypes")
+	private javax.swing.JComboBox easingCbox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

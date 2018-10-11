@@ -12,7 +12,7 @@ public class Packets {
 	
 	private Packets() {}
 	
-	private static <T extends Packet> T get(Class<T> klass) {
+	private static <T extends Packet<?>> T get(Class<T> klass) {
 		return Pools.get(klass).obtain();
 	}
 	

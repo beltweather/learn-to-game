@@ -21,7 +21,6 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	private boolean phaseStarted = false;
 	private boolean phaseShouldEnd = false;
 	
-	@SuppressWarnings("unchecked")
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass) {
 		super(Family.all(TurnPhaseTag.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
 		add(CursorComp.class);

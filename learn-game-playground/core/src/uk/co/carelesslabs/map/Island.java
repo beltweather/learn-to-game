@@ -241,7 +241,8 @@ public class Island {
     
     // DONT NEED THESE ANYMORE
     
-    private void generateHitboxes(Box2DWorld box2D) {
+    @SuppressWarnings("unused")
+	private void generateHitboxes(Box2DWorld box2D) {
         for(Array<Tile> row : chunk.tiles){
             for(Tile tile : row){ 
                 if(tile.isNotPassable() && tile.notIsAllWater()){
@@ -251,7 +252,8 @@ public class Island {
         }	
     } 
       
-     private void addEntities(Box2DWorld box2D) {
+     @SuppressWarnings("unused")
+	private void addEntities(Box2DWorld box2D) {
         // Loop all tiles and add random trees
         for(Array<Tile> row : chunk.tiles){
             for(Tile tile : row){ 

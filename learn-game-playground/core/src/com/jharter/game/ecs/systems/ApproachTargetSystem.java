@@ -15,7 +15,6 @@ public class ApproachTargetSystem extends GameIteratingSystem {
 	private static final float ALPHA = 0.01f;
 	private static final float MIN_DIFF = 1.0f;
 
-	@SuppressWarnings("unchecked")
 	public ApproachTargetSystem() {
 		super(Family.all(SpriteComp.class, TargetPositionComp.class).get());
 	}

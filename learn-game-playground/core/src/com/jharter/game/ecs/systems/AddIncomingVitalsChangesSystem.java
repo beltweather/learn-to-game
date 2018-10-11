@@ -7,12 +7,17 @@ import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.CursorTargetEvent;
 import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.ecs.entities.GameToolBox;
+import com.jharter.game.ecs.helpers.CombatHelper;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
 public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 
+	private CombatHelper CombatHelper;
+	
 	public AddIncomingVitalsChangesSystem() {
 		super(Family.all(CursorTargetEvent.class, VitalsComp.class, CursorTargetComp.class).get());
+		CombatHelper = new CombatHelper(this);
 	}
 
 	@Override
@@ -22,13 +27,24 @@ public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 		if(c.turnActionID == null) {
 			return;
 		}
+		
 		TurnAction t = Comp.TurnActionComp.get(c.turnActionID).turnAction;
-		if(v.incomingDamage != t.incomingDamage) {
-			v.incomingDamage = t.incomingDamage;
+		Entity owner = Comp.Entity.get(t.ownerID);
+		int incomingDamage = CombatHelper.getDamage(owner, entity, t.incomingDamage);
+		int incomingHealing = CombatHelper.getDamage(owner, entity, t.incomingHealing);
+		
+		if(incomingDamage > 0) {
+			v.incomingDamage.put(c.turnActionID, incomingDamage);
 		}
-		if(v.incomingHealing != t.incomingHealing) {
-			v.incomingHealing = t.incomingHealing;
+		if(incomingHealing > 0) {
+			v.incomingHealing.put(c.turnActionID, incomingHealing);
 		}
+	}
+	
+	@Override
+	public void setToolBox(GameToolBox toolBox) {
+		super.setToolBox(toolBox);
+		CombatHelper.setHandler(this);
 	}
 
 }

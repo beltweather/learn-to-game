@@ -27,7 +27,7 @@ class ImportExportHelper {
 				if (parts.length < 7) continue;
 
 				String targetName = parts[0];
-				Class targetClass = Class.forName(parts[1]);
+				Class<?> targetClass = Class.forName(parts[1]);
 				int tweenType = Integer.parseInt(parts[2]);
 				int delay = Integer.parseInt(parts[3]);
 				int duration = Integer.parseInt(parts[4]);
@@ -57,7 +57,7 @@ class ImportExportHelper {
 	}
 
 	public static void timelineToModel(Timeline timeline, TimelineModel model, Map<Object, String> targetsNamesMap, Editor editor) {
-		for (BaseTween child : timeline.getChildren()) {
+		for (BaseTween<?> child : timeline.getChildren()) {
 			Tween tween = (Tween) child;
 
 			String targetName = targetsNamesMap.get(tween.getTarget());
@@ -81,7 +81,7 @@ class ImportExportHelper {
 	public static String timelineToString(Timeline timeline, Map<Object, String> targetsNamesMap) {
 		String str = "";
 
-		for (BaseTween child : timeline.getChildren()) {
+		for (BaseTween<?> child : timeline.getChildren()) {
 			Tween tween = (Tween) child;
 
 			str += String.format(Locale.US, "%s;%s;%d;%f;%f;%s",

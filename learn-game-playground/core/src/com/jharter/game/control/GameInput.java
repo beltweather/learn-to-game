@@ -67,7 +67,8 @@ public class GameInput extends InputAdapter implements InputProcessor, Controlle
     private OrthographicCamera camera;
     
     // SCREEN
-    private int screenWidth;
+    @SuppressWarnings("unused")
+	private int screenWidth;
     private int screenHeight;
     
     // Joystick flags

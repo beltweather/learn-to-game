@@ -31,7 +31,6 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 
 	private boolean busy = false;
 	
-	@SuppressWarnings("unchecked")
 	public TurnPhasePerformActionsSystem() {
 		super(TurnPhasePerformActionsTag.class, TurnPhaseEndTurnTag.class);
 		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());

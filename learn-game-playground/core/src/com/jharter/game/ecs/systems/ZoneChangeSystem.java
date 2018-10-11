@@ -12,7 +12,6 @@ import com.jharter.game.util.id.ID;
 
 public class ZoneChangeSystem extends GameIteratingSystem {
 
-	@SuppressWarnings("unchecked")
 	public ZoneChangeSystem() {
 		super(Family.all(IDComp.class, ZonePositionComp.class, ChangeZoneComp.class).get());
 	}

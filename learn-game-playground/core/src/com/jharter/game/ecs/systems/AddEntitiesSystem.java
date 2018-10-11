@@ -19,6 +19,7 @@ public class AddEntitiesSystem extends GameEntitySystem {
 		this.client = client;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void performUpdate(float deltaTime) {
 		AddPlayersPacket addPlayers = null; // client.getAddPlayers();

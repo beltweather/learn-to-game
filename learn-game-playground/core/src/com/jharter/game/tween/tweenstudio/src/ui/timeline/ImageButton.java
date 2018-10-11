@@ -15,6 +15,7 @@ import javax.swing.JButton;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 class ImageButton extends JButton {
+	private static final long serialVersionUID = 1L;
 	private final Color bgColor;
 	private final BufferedImage mouseOverImage;
 	private final BufferedImage mousePressedImage;

@@ -6,6 +6,10 @@ import javax.swing.AbstractSpinnerModel;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class SpinnerNullableFloatModel extends AbstractSpinnerModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private float min, max, step;
 	private Float value;
 

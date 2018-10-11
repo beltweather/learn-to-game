@@ -37,6 +37,7 @@ import com.jharter.game.ecs.systems.cursor.CursorMultiTargetSystem;
 import com.jharter.game.ecs.systems.cursor.CursorPrevNextSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTargetEventSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTurnActionValidationSystem;
+import com.jharter.game.ecs.systems.debug.DebugHealEnemiesSystem;
 import com.jharter.game.ecs.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ecs.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ecs.systems.network.client.ClientRemoveEntityPacketSystem;
@@ -104,19 +105,19 @@ public class BattleStage extends GameStage {
 		//BattleHelper.addBattle(engine, warriorPlayerID);
 		
 		// Player Zones
-		ZoneComp handZone = ZoneHelper.addZone(roguePlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(roguePlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(roguePlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(roguePlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 		
-		ZoneComp warriorHandZone = ZoneHelper.addZone(warriorPlayerID, ZoneType.HAND, new HandLayout(this));
-		ZoneComp warriorDeckZone = ZoneHelper.addZone(warriorPlayerID, ZoneType.DECK, new HiddenLayout(this));
+		ZoneHelper.addZone(warriorPlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(warriorPlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(warriorPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 		
-		ZoneComp sorcererHandZone = ZoneHelper.addZone(sorcererPlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(sorcererPlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 		
-		ZoneComp rangerHandZone = ZoneHelper.addZone(rangerPlayerID, ZoneType.HAND, new HandLayout(this));
+		ZoneHelper.addZone(rangerPlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(rangerPlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(rangerPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
 
@@ -258,6 +259,7 @@ public class BattleStage extends GameStage {
 	
 	private void addTurnPhaseSystems(PooledEngine engine) {
 		engine.addSystem(new ChangeTurnPhaseSystem());
+		engine.addSystem(new DebugHealEnemiesSystem());
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 			engine.addSystem(new TurnPhaseStartTurnSystem());
 				engine.addSystem(new TurnPhaseSelectActionsSystem());

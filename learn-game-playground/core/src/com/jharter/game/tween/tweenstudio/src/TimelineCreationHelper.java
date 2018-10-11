@@ -21,7 +21,7 @@ class TimelineCreationHelper {
 		for (int i=tl2.getChildren().size()-1; i>=0; i--)
 			tl2.getChildren().remove(i);
 
-		for (BaseTween child : tl1.getChildren()) {
+		for (BaseTween<?> child : tl1.getChildren()) {
 			Tween t = (Tween) child;
 			Tween tween = Tween.to(t.getTarget(), t.getType(), t.getDuration())
 				.target(t.getTargetValues())
@@ -83,6 +83,7 @@ class TimelineCreationHelper {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void createNodeData(Node node) {
 		ElementData elemData = (ElementData) node.getParent().getUserData();
 		Property property = elemData.getProperty();
@@ -93,6 +94,7 @@ class TimelineCreationHelper {
 		node.setUserData(nodeData);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void setToInitialState(Map<Object, InitialState> initialStatesMap, Object target, int tweenType) {
 		InitialState initState = initialStatesMap.get(target);
 		float[] initValues = initState.getValues(tweenType);
@@ -106,7 +108,7 @@ class TimelineCreationHelper {
 	public static Timeline buildTimelineFromDummy(Timeline dummyTimeline, List<Object> targets, Map<Object, String> targetsNamesMap) {
 		Timeline tl = Timeline.createParallel();
 
-		for (BaseTween child : dummyTimeline.getChildren()) {
+		for (BaseTween<?> child : dummyTimeline.getChildren()) {
 			Tween t = (Tween) child;
 			Object target = getTargetFromName((String) t.getUserData(), targets, targetsNamesMap);
 

@@ -9,7 +9,6 @@ import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
 public class VelocityMovementSystem extends GameIteratingSystem {
 
-	@SuppressWarnings("unchecked")
 	public VelocityMovementSystem() {
 		super(Family.all(SpriteComp.class, VelocityComp.class).exclude(InputComp.class).get());
 	}

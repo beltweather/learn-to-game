@@ -26,7 +26,6 @@ public class ServerSendSnapshotSystem extends GameIntervalSystem {
 		this.server = server;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(SpriteComp.class, IDComp.class, VelocityComp.class).get());

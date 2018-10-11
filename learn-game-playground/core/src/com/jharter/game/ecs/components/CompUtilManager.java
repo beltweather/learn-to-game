@@ -19,10 +19,11 @@ public class CompUtilManager {
 		this.Comp = Comp;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <W extends CompUtil<C>, C extends Component> W get(Class<W> wrapperClass, C comp) {
 		if(!utilByClass.containsKey(comp.getClass())) {
 			try {
-				Constructor c = wrapperClass.getDeclaredConstructors()[0];
+				Constructor<?> c = wrapperClass.getDeclaredConstructors()[0];
 				c.setAccessible(true);
 				W util = (W) c.newInstance();
 				util.setHandler(Comp.getEntityHandler());

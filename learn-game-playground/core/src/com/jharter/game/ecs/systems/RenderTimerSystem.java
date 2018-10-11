@@ -19,7 +19,6 @@ public class RenderTimerSystem extends GameIteratingSystem {
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
 
-	@SuppressWarnings("unchecked")
 	public RenderTimerSystem (OrthographicCamera camera) {
 		super(Family.all(SpriteComp.class, TurnTimerComp.class).get());
 		this.camera = camera;

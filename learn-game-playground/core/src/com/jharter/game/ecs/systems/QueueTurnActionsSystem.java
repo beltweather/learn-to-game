@@ -15,7 +15,6 @@ import uk.co.carelesslabs.Enums.ZoneType;
 
 public class QueueTurnActionsSystem  extends GameIteratingSystem {
 	
-	@SuppressWarnings("unchecked")
 	public QueueTurnActionsSystem() {
 		super(Family.all(IDComp.class, ZonePositionComp.class, TurnActionComp.class, ActionQueueableComp.class).get());
 	}

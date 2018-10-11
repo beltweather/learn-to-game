@@ -81,6 +81,7 @@ public class GameClient extends GameEndPoint {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void logPing(Ping ping) {
 		if(ping.isReply) {
 			Sys.out.println("Client has been pinged! (" + client.getReturnTripTime() + " ms)");
@@ -97,7 +98,7 @@ public class GameClient extends GameEndPoint {
 		maybeFree(object);
 	}
 	
-	public void send(Packet packet) {
+	public void send(Packet<?> packet) {
 		if(packet.useTCP) {
 			sendTCP(packet);
 		} else {

@@ -12,7 +12,6 @@ public class RemoveEntitiesSystem extends GameIteratingSystem {
 
 	private GameClient client;
 	
-	@SuppressWarnings("unchecked")
 	public RemoveEntitiesSystem(GameClient client) {
 		super(Family.all(RemoveComp.class).get());
 		this.client = client;

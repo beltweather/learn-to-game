@@ -9,6 +9,7 @@ import java.util.Map;
 class InitialState {
 	private final Map<Integer, float[]> map = new HashMap<Integer, float[]>();
 
+	@SuppressWarnings("unchecked")
 	public InitialState(Editor editor, Object target) {
 		for (Property property : editor.getProperties(target)) {
 			int tweenType = property.tweenType;

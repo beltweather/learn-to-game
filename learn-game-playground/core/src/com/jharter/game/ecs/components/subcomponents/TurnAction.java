@@ -2,14 +2,12 @@ package com.jharter.game.ecs.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.CardComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
-import com.jharter.game.ecs.components.Components.DiscardCardTag;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.effect.Effect;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardType;
@@ -33,6 +31,8 @@ public class TurnAction extends EntityHandler {
 	
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
+	
+	public Array<Effect<?>> effects = new Array<Effect<?>>();
 	
 	public TurnAction(IEntityHandler handler) {
 		super(handler);
@@ -154,6 +154,22 @@ public class TurnAction extends EntityHandler {
 			}
 		}
 		return temp;
+	}
+	
+	public void addEffect(Effect<?> effect) {
+		addEffect(effect, targetZoneTypes.size - 1);
+	}
+	
+	public void addEffect(Effect<?> effect, int targetIndex) {
+		effects.add(effect);
+		effect.setTurnAction(this);
+		effect.setTargetIndex(targetIndex);
+	}
+	
+	public void perform() {
+		for(Effect<?> effect : effects) {
+			effect.perform();
+		}
 	}
 	
 	public void reset() {

@@ -78,6 +78,7 @@ public class TestStageA extends GameStage {
 		//addBird(engine, center.cpy());
 	}
 	
+	@SuppressWarnings("unused")
 	private void addBird(PooledEngine engine, Vector3 position) {
 		float width = 8;
 		float height = 8;

@@ -14,7 +14,6 @@ public class FocusCameraSystem extends GameIteratingSystem {
 
 	private OrthographicCamera camera;
 	
-	@SuppressWarnings("unchecked")
 	public FocusCameraSystem(OrthographicCamera camera) {
 		super(Family.all(FocusTag.class, SpriteComp.class).get());
 		this.camera = camera;

@@ -13,6 +13,10 @@ import javax.swing.event.ChangeListener;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class SpinnerNullableFloatEditor extends JTextField {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final SpinnerNullableFloatModel model;
 
 	public SpinnerNullableFloatEditor(final SpinnerNullableFloatModel model) {

@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.CardComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.DiscardCardTag;
-import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.util.id.ID;

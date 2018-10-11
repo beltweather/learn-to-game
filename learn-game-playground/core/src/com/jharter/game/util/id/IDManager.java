@@ -18,7 +18,7 @@ public class IDManager {
 	private ID globalPlayerID;
 	
 	private final Array<ID> playerIDs = new Array<ID>();
-	private final ImmutableArray<ID> immPlayerIDs = new ImmutableArray(playerIDs);
+	private final ImmutableArray<ID> immPlayerIDs = new ImmutableArray<ID>(playerIDs);
 	
 	/**
 	 * I think this is ok to leave since its just a cache for ids

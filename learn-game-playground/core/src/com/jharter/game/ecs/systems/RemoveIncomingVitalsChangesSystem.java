@@ -6,7 +6,7 @@ import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorUntargetEvent;
 import com.jharter.game.ecs.components.Components.IDComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
+import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
@@ -51,10 +51,11 @@ public class RemoveIncomingVitalsChangesSystem extends GameIteratingSystem {
 	
 	public void setPendingVitals(Entity entity, AssociatedTurnActionsComp a) {
 		VitalsComp v = Comp.VitalsComp.get(entity);
-		v.pendingVitals.setFrom(v.vitals);
+		PendingVitalsComp p = Comp.PendingVitalsComp.getOrAdd(entity);
+		p.vitals.setFrom(v.vitals);
 		
 		Vitals temp = v.vitals;
-		v.vitals = v.pendingVitals;
+		v.vitals = p.vitals;
 		
 		for(int i = 0; i < a.turnActionIDs.size; i++) {
 			ID turnActionID = a.turnActionIDs.get(i);

@@ -33,7 +33,6 @@ public class PlayerHelper extends EntityHandler {
 		b.VitalsComp().vitals.maxHealth = 100;
 		b.VitalsComp().vitals.weakHealth = 25;
 		b.VitalsComp().vitals.health = 10;
-		b.VitalsComp().pendingVitals.setFrom(b.VitalsComp().vitals);
 		b.StatsComp().level = 1;
 		b.StatsComp().power = 10;
 		b.StatsComp().defense = 10;

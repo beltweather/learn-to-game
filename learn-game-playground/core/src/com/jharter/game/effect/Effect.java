@@ -86,6 +86,7 @@ public abstract class Effect<T> extends EntityHandler {
 	
 	public void applyResult(Entity target) {
 		VitalsComp v = Comp.VitalsComp.get(target);
+		
 		switch(prop) {
 			case DAMAGE:
 				v.vitals.health -= (int) getResult(target);

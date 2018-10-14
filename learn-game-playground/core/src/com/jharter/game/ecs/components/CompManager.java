@@ -38,6 +38,7 @@ import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
+import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
@@ -99,10 +100,16 @@ public class CompManager {
 	
 	public class CompMapper<T extends Component> {
 		
+		private Class<T> compClass;
 		private ComponentMapper<T> mapper;
 		
-		private CompMapper(Class<T> klass) {
-			mapper = ComponentMapper.getFor(klass);
+		private CompMapper(Class<T> compClass) {
+			this.mapper = ComponentMapper.getFor(compClass);
+			this.compClass = compClass;
+		}
+		
+		public T create() {
+			return getEngine().createComponent(compClass);
 		}
 		
 		public boolean has(ID entityID) {
@@ -127,94 +134,157 @@ public class CompManager {
 			return mapper.get(entity);
 		}
 		
+		public T add(ID entityID) {
+			return add(Entity.get(entityID));
+		}
+		
+		public T add(Entity entity) {
+			if(entity == null) {
+				return null;
+			}
+			if(has(entity)) {
+				return get(entity);
+			}
+			T comp = create();
+			entity.add(comp);
+			return comp;
+		}
+		
+		public T getOrAdd(ID entityID) {
+			return getOrAdd(Entity.get(entityID));
+		}
+		
+		public T getOrAdd(Entity entity) {
+			if(entity == null) {
+				return null;
+			}
+			if(has(entity)) {
+				return get(entity);
+			}
+			return add(entity);
+		}
+		
+		public boolean remove(ID entityID) {
+			return remove(Entity.get(entityID));
+		}
+		
+		public boolean remove(Entity entity) {
+			if(entity == null || !has(entity)) {
+				return false;
+			}
+			entity.remove(compClass);
+			return true;
+		}
+		
+		public boolean toggle(ID entityID) {
+			return toggle(Entity.get(entityID));
+		}
+		
+		public boolean toggle(Entity entity) {
+			return toggle(entity, !has(entity));
+		}
+		
+		public boolean toggle(ID entityID, boolean add) {
+			return toggle(Entity.get(entityID), add);
+		}
+		
+		public boolean toggle(Entity entity, boolean add) {
+			if(entity == null) {
+				return false;
+			}
+			if(add) {
+				return add(entity) != null;
+			}
+			return remove(entity);
+		}
+		
+		public <TB extends Component> TB swap(Class<TB> compClassNew, ID entityID) {
+			return swap(compClassNew, Entity.get(entityID));
+		}
+		
+		public <TB extends Component> TB swap(Class<TB> compClassNew, Entity entity) {
+			remove(entity);
+			return CompManager.this.getOrAdd(compClassNew, entity);
+		}
+		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Component> CompMapper<T> getFor(Class<T> klass) {
-		if(!componentMappersByClass.containsKey(klass)) {
-			componentMappersByClass.put(klass, new CompMapper<T>(klass));
+	public <T extends Component> CompMapper<T> getFor(Class<T> compClass) {
+		if(!componentMappersByClass.containsKey(compClass)) {
+			componentMappersByClass.put(compClass, new CompMapper<T>(compClass));
 		}
-		return componentMappersByClass.get(klass);
+		return componentMappersByClass.get(compClass);
 	}
 	
-	public <T extends Component> T create(Class<T> klass) {
-		return getEngine().createComponent(klass);
+	public <T extends Component> T create(Class<T> compClass) {
+		return getFor(compClass).create();
 	}
 	
-	public <T extends Component> T get(Class<T> klass, Entity entity) {
-		if(getFor(klass).has(entity)) {
-			return getFor(klass).get(entity);
-		}
-		return null;
-	}
-	
-	public <T extends Component> boolean toggle(Class<T> klass, Entity entity, boolean add) {
-		return add ? add(klass, entity) != null : remove(klass, entity);
-	}
-	
-	public <T extends Component> T add(Class<T> klass, Entity entity) {
-		if(getFor(klass).has(entity)) {
-			return getFor(klass).get(entity);
-		}
-		T comp = create(klass);
-		entity.add(comp);
-		return comp;
-	}
-	
-	public <T extends Component> T getOrAdd(Class<T> klass, Entity entity) {
-		if(getFor(klass).has(entity)) {
-			return getFor(klass).get(entity);
-		}
-		T comp = create(klass);
-		entity.add(comp);
-		return comp;
-	}
-	
-	public <T extends Component> boolean remove(Class<T> klass, Entity entity) {
-		if(entity == null || !getFor(klass).has(entity)) {
-			return false;
-		}
-		entity.remove(klass);
-		return true;
-	}
-	
-	public <TA extends Component, TB extends Component> TB swap(Class<TA> klassOld, Class<TB> klassNew, Entity entity) {
-		remove(klassOld, entity);
-		return getOrAdd(klassNew, entity);
-	}
-	
-	public boolean has(Class<? extends Component> klass, Entity entity) {
-		return getFor(klass).has(entity);
+	public boolean has(Class<? extends Component> compClass, ID entityID) {
+		return getFor(compClass).has(entityID);
 	}
 
-	public <T extends Component> boolean toggle(Class<T> klass, ID entityID, boolean add) {
-		return toggle(klass, Entity.get(entityID), add);
+	public boolean has(Class<? extends Component> compClass, Entity entity) {
+		return getFor(compClass).has(entity);
+	}
+
+	public <T extends Component> T add(Class<T> compClass, ID entityID) {
+		return getFor(compClass).add(entityID);
 	}
 	
-	public <T extends Component> T add(Class<T> klass, ID entityID) {
-		return add(klass, Entity.get(entityID));
+	public <T extends Component> T add(Class<T> compClass, Entity entity) {
+		return getFor(compClass).add(entity);
 	}
 	
-	public <T extends Component> T get(Class<T> klass, ID entityID) {
-		return get(klass, Entity.get(entityID));
+	public <T extends Component> T get(Class<T> compClass, ID entityID) {
+		return getFor(compClass).get(entityID);
 	}
 	
-	public <T extends Component> T getOrAdd(Class<T> klass, ID entityID) {
-		return getOrAdd(klass, Entity.get(entityID));
+	public <T extends Component> T get(Class<T> compClass, Entity entity) {
+		return getFor(compClass).get(entity);
 	}
 	
-	public <T extends Component> boolean remove(Class<T> klass, ID entityID) {
-		return remove(klass, Entity.get(entityID));
+	public <T extends Component> T getOrAdd(Class<T> compClass, ID entityID) {
+		return getFor(compClass).getOrAdd(entityID);
 	}
 	
-	public <TA extends Component, TB extends Component> TB swap(Class<TA> klassOld, Class<TB> klassNew, ID entityID) {
-		return swap(klassOld, klassNew, Entity.get(entityID));
+	public <T extends Component> T getOrAdd(Class<T> compClass, Entity entity) {
+		return getFor(compClass).getOrAdd(entity);
+	}
+
+	public <T extends Component> boolean remove(Class<T> compClass, ID entityID) {
+		return getFor(compClass).remove(entityID);
 	}
 	
-	public boolean has(Class<? extends Component> klass, ID entityID) {
-		return has(klass, Entity.get(entityID));
+	public <T extends Component> boolean remove(Class<T> compClass, Entity entity) {
+		return getFor(compClass).remove(entity);
 	}
 	
+	public <T extends Component> boolean toggle(Class<T> compClass, ID entityID) {
+		return getFor(compClass).toggle(entityID);
+	}
+	
+	public <T extends Component> boolean toggle(Class<T> compClass, Entity entity) {
+		return getFor(compClass).toggle(entity);
+	}
+	
+	public <T extends Component> boolean toggle(Class<T> compClass, ID entityID, boolean add) {
+		return getFor(compClass).toggle(entityID, add);
+	}
+	
+	public <T extends Component> boolean toggle(Class<T> compClass, Entity entity, boolean add) {
+		return getFor(compClass).toggle(entity, add);
+	}
+	
+	public <TA extends Component, TB extends Component> TB swap(Class<TA> compClassOld, Class<TB> compClassNew, ID entityID) {
+		return swap(compClassOld, compClassNew, Entity.get(entityID));
+	}
+	
+	public <TA extends Component, TB extends Component> TB swap(Class<TA> compClassOld, Class<TB> compClassNew, Entity entity) {
+		return getFor(compClassOld).swap(compClassNew, entity);
+	}
+
 	// Standard Component Mappers
 	public final CompMapper<SpriteComp> SpriteComp = getFor(SpriteComp.class);
 	public final CompMapper<FocusTag> FocusComp = getFor(FocusTag.class);
@@ -244,6 +314,7 @@ public class CompManager {
 	public final CompMapper<AutoSelectTurnActionComp> AutoSelectTurnActionComp = getFor(AutoSelectTurnActionComp.class);
 	public final CompMapper<DescriptionComp> DescriptionComp = getFor(DescriptionComp.class);
 	public final CompMapper<VitalsComp> VitalsComp = getFor(VitalsComp.class);
+	public final CompMapper<PendingVitalsComp> PendingVitalsComp = getFor(PendingVitalsComp.class);
 	public final CompMapper<StatsComp> StatsComp = getFor(StatsComp.class);
 	public final CompMapper<MultiSpriteComp> MultiSpriteComp = getFor(MultiSpriteComp.class);
 	public final CompMapper<ActionReadyTag> ActionReadyComp = getFor(ActionReadyTag.class);

@@ -16,10 +16,8 @@ public class DebugHealEnemiesSystem extends GameIteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		/*VitalsComp v = Comp.VitalsComp.get(entity);
-		v.health = v.maxHealth;
-		v.incomingDamage.clear();
-		v.incomingHealing.clear();*/
+		VitalsComp v = Comp.VitalsComp.get(entity);
+		v.vitals.health = v.vitals.maxHealth;
 	}
 
 }

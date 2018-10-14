@@ -36,7 +36,7 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	    shapeRenderer.setColor(0.8f, 0, 0, 1f);
 	    float healthW = w*(v.vitals.health/(float)v.vitals.maxHealth);
 		shapeRenderer.rect(x, y, healthW, h);
-		int incoming = getIncomingHealthChange(v);
+		int incoming = getIncomingHealthChange(owner, v);
 		if(incoming != 0) {
 			if(incoming > 0) {
 				float incomingW = w*(Math.min(v.vitals.maxHealth - v.vitals.health, incoming)/(float)v.vitals.maxHealth);
@@ -56,8 +56,11 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 		shapeRenderer.setColor(color);
 	}
 	
-	private int getIncomingHealthChange(VitalsComp v) {
-		return v.pendingVitals.health - v.vitals.health;
+	private int getIncomingHealthChange(Entity entity, VitalsComp v) {
+		if(!Comp.PendingVitalsComp.has(entity)) {
+			return 0;
+		}
+		return Comp.PendingVitalsComp.get(entity).vitals.health - v.vitals.health;
 	}
 	
 }

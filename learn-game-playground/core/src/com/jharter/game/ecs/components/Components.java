@@ -384,7 +384,7 @@ public final class Components {
 	
 	public static final class VitalsComp implements C {
 		public Vitals vitals = new Vitals();
-		public Vitals pendingVitals = new Vitals();
+		//public Vitals pendingVitals = new Vitals();
 		//public ObjectMap<ID, Integer> incomingDamage = new ObjectMap<>();
 		//public ObjectMap<ID, Integer> incomingHealing = new ObjectMap<>(); 
 
@@ -393,9 +393,20 @@ public final class Components {
 		@Override
 		public void reset() {
 			vitals.clear();
-			pendingVitals.clear();
+			//pendingVitals.clear();
 			//incomingDamage.clear();
 			//incomingHealing.clear();
+		}
+	}
+	
+	public static final class PendingVitalsComp implements C {
+		public Vitals vitals = new Vitals();
+
+		private PendingVitalsComp() {}
+		
+		@Override
+		public void reset() {
+			vitals.clear();
 		}
 	}
 	

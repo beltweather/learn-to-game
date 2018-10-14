@@ -173,8 +173,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			a.cursorIDs.clear();
 			a.targetIndices.clear();
 			a.turnActionIDs.clear();
-			VitalsComp v = Comp.VitalsComp.get(entity);
-			v.pendingVitals.setFrom(v.vitals);
+			Comp.PendingVitalsComp.remove(entity);
 		}
 	}
 	

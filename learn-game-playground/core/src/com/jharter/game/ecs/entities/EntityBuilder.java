@@ -36,6 +36,7 @@ import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
+import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
@@ -139,6 +140,7 @@ public class EntityBuilder implements Poolable {
 	public AutoSelectTurnActionComp AutoSelectTurnActionComp() { return get(AutoSelectTurnActionComp.class); }
 	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
+	public PendingVitalsComp PendingVitalsComp() { return get(PendingVitalsComp.class); }
 	public StatsComp StatsComp() { return get(StatsComp.class); }
 	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
 	public ActionReadyTag ActionReadyComp() { return get(ActionReadyTag.class); }

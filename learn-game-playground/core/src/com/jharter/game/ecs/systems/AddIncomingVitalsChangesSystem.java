@@ -6,6 +6,7 @@ import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.CursorTargetEvent;
+import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.entities.GameToolBox;
@@ -49,11 +50,13 @@ public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 	}
 	
 	public void setPendingVitals(Entity entity, AssociatedTurnActionsComp a) {
+		
+		PendingVitalsComp p = Comp.PendingVitalsComp.getOrAdd(entity);
 		VitalsComp v = Comp.VitalsComp.get(entity);
-		v.pendingVitals.setFrom(v.vitals);
+		p.vitals.setFrom(v.vitals);
 		
 		Vitals temp = v.vitals;
-		v.vitals = v.pendingVitals;
+		v.vitals = p.vitals;
 		
 		for(int i = 0; i < a.turnActionIDs.size; i++) {
 			ID turnActionID = a.turnActionIDs.get(i);

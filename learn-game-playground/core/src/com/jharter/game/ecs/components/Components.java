@@ -384,18 +384,12 @@ public final class Components {
 	
 	public static final class VitalsComp implements C {
 		public Vitals vitals = new Vitals();
-		//public Vitals pendingVitals = new Vitals();
-		//public ObjectMap<ID, Integer> incomingDamage = new ObjectMap<>();
-		//public ObjectMap<ID, Integer> incomingHealing = new ObjectMap<>(); 
 
 		private VitalsComp() {}
 		
 		@Override
 		public void reset() {
 			vitals.clear();
-			//pendingVitals.clear();
-			//incomingDamage.clear();
-			//incomingHealing.clear();
 		}
 	}
 	

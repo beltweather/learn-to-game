@@ -58,28 +58,28 @@ import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 
 public class EntityBuilder implements Poolable {
-	
+
 	public static EntityBuilder create(PooledEngine engine) {
 		EntityBuilder builder = Pools.get(EntityBuilder.class).obtain();
 		builder.init(engine);
 		return builder;
 	}
-	 
+
 	private ObjectMap<Class<? extends Component>, Component> comps = new ObjectMap<Class<? extends Component>, Component>();
 	private PooledEngine engine;
 	private Entity entity;
-	
+
 	private EntityBuilder() {}
-	
+
 	private void init(PooledEngine engine) {
 		this.engine = engine;
 		this.entity = engine.createEntity();
 	}
-	
+
 	public Entity Entity() {
 		return entity;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T extends Component> T get(Class<T> componentClass) {
 		if(!comps.containsKey(componentClass)) {
@@ -90,7 +90,7 @@ public class EntityBuilder implements Poolable {
 		}
 		return (T) comps.get(componentClass);
 	}
-	
+
 	public Family getFamily() {
 		Array<Class<? extends Component>> classes = new Array<Class<? extends Component>>();
 		for(Class<? extends Component> klass : comps.keys()) {
@@ -100,11 +100,11 @@ public class EntityBuilder implements Poolable {
 		}
 		return Family.all((Class<? extends Component>[])classes.toArray()).get();
 	}
-	
+
 	public void free() {
 		Pools.get(EntityBuilder.class).free(this);
 	}
-	
+
 	@Override
 	public void reset() {
 		entity = null;
@@ -112,53 +112,56 @@ public class EntityBuilder implements Poolable {
 		comps.clear();
 	}
 
-	public SpriteComp SpriteComp() { return get(SpriteComp.class); }
-	public FocusTag FocusComp() { return get(FocusTag.class); }
-	public IDComp IDComp() { return get(IDComp.class); }
-	public TypeComp TypeComp() { return get(TypeComp.class); }
-	public TileComp TileComp() { return get(TileComp.class); }
-	public TextureComp TextureComp() { return get(TextureComp.class); }
+	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
+	public ActionReadyTag ActionReadyComp() { return get(ActionReadyTag.class); }
+	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
+	public ActiveTurnActionComp ActiveTurnActionComp() { return get(ActiveTurnActionComp.class); }
+	public AnimatingComp AnimatingComp() { return get(AnimatingComp.class); }
 	public AnimationComp AnimationComp() { return get(AnimationComp.class); }
+	public AssociatedTurnActionsComp AssociatedTurnActionsComp() { return get(AssociatedTurnActionsComp.class); }
+	public AutoSelectTurnActionComp AutoSelectTurnActionComp() { return get(AutoSelectTurnActionComp.class); }
 	public BodyComp BodyComp() { return get(BodyComp.class); }
-	public SensorComp SensorComp() { return get(SensorComp.class); }
-	public TargetPositionComp TargetPositionComp() { return get(TargetPositionComp.class); }
-	public VelocityComp VelocityComp() { return get(VelocityComp.class); }
+	public CardComp CardComp() { return get(CardComp.class); }
+	public CardOwnerComp CardOwnerComp() { return get(CardOwnerComp.class); }
+	public ChangeZoneComp ChangeZoneComp() { return get(ChangeZoneComp.class); }
+	public CleanupTurnActionTag CleanupTurnActionComp() { return get(CleanupTurnActionTag.class); }
 	public CollisionComp CollisionComp() { return get(CollisionComp.class); }
-	public RemoveComp RemoveComp() { return get(RemoveComp.class); }
-	public InputComp InputComp() { return get(InputComp.class); }
-	public InteractComp InteractComp() { return get(InteractComp.class); }
-	public InvisibleTag InvisibleComp() { return get(InvisibleTag.class); }
 	public CursorComp CursorComp() { return get(CursorComp.class); }
 	public CursorInputComp CursorInputComp() { return get(CursorInputComp.class); }
 	public CursorInputRegulatorComp CursorInputRegulatorComp() { return get(CursorInputRegulatorComp.class); }
+	public CursorTargetComp CursorTargetComp() { return get(CursorTargetComp.class); }
+	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
+	public DisabledTag DisabledComp() { return get(DisabledTag.class); }
+	public EnemyTag EnemyComp() { return get(EnemyTag.class); }
+	public FocusTag FocusComp() { return get(FocusTag.class); }
+	public FriendTag FriendComp() { return get(FriendTag.class); }
+	public IDComp IDComp() { return get(IDComp.class); }
+	public InputComp InputComp() { return get(InputComp.class); }
+	public InteractComp InteractComp() { return get(InteractComp.class); }
+	public InvisibleTag InvisibleComp() { return get(InvisibleTag.class); }
+	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
+	public PendingVitalsComp PendingVitalsComp() { return get(PendingVitalsComp.class); }
+	public PlayerTag PlayerComp() { return get(PlayerTag.class); }
+	public RemoveComp RemoveComp() { return get(RemoveComp.class); }
+	public SensorComp SensorComp() { return get(SensorComp.class); }
+	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
+	public SpriteComp SpriteComp() { return get(SpriteComp.class); }
+	public StatsComp StatsComp() { return get(StatsComp.class); }
+	public TargetPositionComp TargetPositionComp() { return get(TargetPositionComp.class); }
+	public TextureComp TextureComp() { return get(TextureComp.class); }
+	public TileComp TileComp() { return get(TileComp.class); }
+	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
+	public TurnPhaseStartBattleTag TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleTag.class); }
+	public TurnPhaseTag TurnPhaseComp() { return get(TurnPhaseTag.class); }
+	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
+	public TypeComp TypeComp() { return get(TypeComp.class); }
+	public UntargetableTag UntargetableComp() { return get(UntargetableTag.class); }
+	public VelocityComp VelocityComp() { return get(VelocityComp.class); }
+	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
-	public CardOwnerComp CardOwnerComp() { return get(CardOwnerComp.class); }
-	public CardComp CardComp() { return get(CardComp.class); }
-	public ActiveTurnActionComp ActiveTurnActionComp() { return get(ActiveTurnActionComp.class); }
-	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
-	public AutoSelectTurnActionComp AutoSelectTurnActionComp() { return get(AutoSelectTurnActionComp.class); }
-	public DescriptionComp DescriptionComp() { return get(DescriptionComp.class); }
-	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
-	public PendingVitalsComp PendingVitalsComp() { return get(PendingVitalsComp.class); }
-	public StatsComp StatsComp() { return get(StatsComp.class); }
-	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
-	public ActionReadyTag ActionReadyComp() { return get(ActionReadyTag.class); }
-	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
-	public CleanupTurnActionTag CleanupTurnActionComp() { return get(CleanupTurnActionTag.class); }
-	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }
-	public UntargetableTag UntargetableComp() { return get(UntargetableTag.class); }
-	public TurnPhaseTag TurnPhaseComp() { return get(TurnPhaseTag.class); }
-	public TurnPhaseStartBattleTag TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleTag.class); }
-	public DisabledTag DisabledComp() { return get(DisabledTag.class); }
-	public AnimatingComp AnimatingComp() { return get(AnimatingComp.class); }
-	public ChangeZoneComp ChangeZoneComp() { return get(ChangeZoneComp.class); }
-	public PlayerTag PlayerComp() { return get(PlayerTag.class); }
-	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
-	public ShapeRenderComp ShapeRenderComp() { return get(ShapeRenderComp.class); }
-	public FriendTag FriendComp() { return get(FriendTag.class); }
-	public EnemyTag EnemyComp() { return get(EnemyTag.class); }
-	public CursorTargetComp CursorTargetComp() { return get(CursorTargetComp.class); }
-	public AssociatedTurnActionsComp AssociatedTurnActionsComp() { return get(AssociatedTurnActionsComp.class); }
-	
+
+
+	// To insert template type: cb -> ctrl+space -> enter
+
 }

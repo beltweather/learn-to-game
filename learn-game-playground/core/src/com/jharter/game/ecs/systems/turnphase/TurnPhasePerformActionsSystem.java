@@ -9,6 +9,7 @@ import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
+import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
@@ -36,11 +37,13 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 		super(TurnPhasePerformActionsTag.class, TurnPhaseEndTurnTag.class);
 		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
 		add(AssociatedTurnActionsComp.class, Family.all(AssociatedTurnActionsComp.class, VitalsComp.class).get());
+		add(PendingVitalsComp.class);
 	}
 
 	@Override
 	protected boolean processEntityPhaseStart(Entity turnPhase, float deltaTime) {
 		busy = false;
+		clearComps(PendingVitalsComp.class);
 		return getTurnTimer().isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 

@@ -43,32 +43,32 @@ public class CursorTargetEventSystem extends CursorSystem {
 			return;
 		}
 		Sys.out.println("Remove target");
-		Comp.remove(CursorTargetComp.class, target);
-		Comp.add(CursorUntargetEvent.class, target).cursorID = Comp.IDComp.get(cursor).id;
+		Comp.CursorTargetComp.remove(target);
+		Comp.CursorUntargetEvent.add(target).cursorID = Comp.IDComp.get(cursor).id;
 	}
 	
 	private void addTargets(Entity cursor, CursorComp c) {
 		ID cursorID = Comp.IDComp.get(cursor).id;
-		CursorTargetComp t = Comp.get(CursorTargetComp.class, c.targetID);
+		CursorTargetComp t = Comp.CursorTargetComp.get(c.targetID);
 		if(c.targetID == null || (t != null && t.cursorID != null && t.cursorID.equals(cursorID))) {
 			return;
 		}
 		
 		Entity target = Comp.Entity.get(c.targetID);
-		t = Comp.getOrAdd(CursorTargetComp.class, target);
+		t = Comp.CursorTargetComp.getOrAdd(target);
 		t.cursorID = cursorID;
-		Comp.add(CursorTargetEvent.class, target);
+		Comp.CursorTargetEvent.add(target);
 		
 		if(getCursorManager().isAll(c)) {
 			for(ID id : getCursorManager().getCursorAllIDs(c)) {
 				if(id.equals(c.targetID)) {
 					continue;
 				}
-				t = Comp.getOrAdd(CursorTargetComp.class, id);
+				t = Comp.CursorTargetComp.getOrAdd(id);
 				t.cursorID = cursorID;
 				t.mainTargetID = c.targetID;
 				t.isAll = true;
-				Comp.add(CursorTargetEvent.class, id);
+				Comp.CursorTargetEvent.add(id);
 			}
 		}
 		
@@ -77,12 +77,12 @@ public class CursorTargetEventSystem extends CursorSystem {
 			TurnAction turnAction = Comp.TurnActionComp.get(c.targetID).turnAction;
 			int multiplicity = turnAction.multiplicity * cursorTurnAction.makesTargetMultiplicity;
 			for(ID id : getCursorManager().getCursorSecondaryIDs(c)) {
-				t = Comp.getOrAdd(CursorTargetComp.class, id);
+				t = Comp.CursorTargetComp.getOrAdd(id);
 				t.cursorID = cursorID;
 				t.mainTargetID = c.targetID;
 				t.isSub = true;
 				t.multiplicity = multiplicity;
-				Comp.add(CursorTargetEvent.class, id);
+				Comp.CursorTargetEvent.add(id);
 			}
 		}
 	}

@@ -18,7 +18,7 @@ public class CursorTurnActionValidationSystem extends CursorSystem {
 		Entity turnActionEntity = Comp.Entity.get(c.turnActionID);
 		if(turnActionEntity == null) {
 			for(Entity ptaEntity : entities(PendingTurnActionTag.class)) {
-				Comp.swap(PendingTurnActionTag.class, CleanupTurnActionTag.class, ptaEntity);
+				Comp.PendingTurnActionTag.swap(CleanupTurnActionTag.class, ptaEntity);
 			}
 			c.turnActionID = null;
 		}

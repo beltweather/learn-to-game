@@ -9,7 +9,6 @@ import com.jharter.game.ecs.components.Components.CursorChangedZoneEvent;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.IDComp;
-import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TargetableTag;
 import com.jharter.game.util.ArrayUtil;
@@ -41,10 +40,10 @@ public class CursorMoveSystem extends CursorSystem implements Comparator<Entity>
 		}
 		
 		if(hasChangedZones(c, lastTargetID)) {
-			Comp.add(CursorChangedZoneEvent.class, cursor);
+			Comp.CursorChangedZoneEvent.add(cursor);
 		}
 		
-		Comp.toggle(InvisibleTag.class, cursor, c.targetID == null);
+		Comp.InvisibleTag.toggle(cursor, c.targetID == null);
 		
 		if(!GenericUtils.safeEquals(origID, c.targetID)) {
 			Media.moveBeep.play();

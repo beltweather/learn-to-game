@@ -21,6 +21,7 @@ import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.ChangeZoneCompUtil;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
 import com.jharter.game.ecs.components.Components.CollisionComp;
+import com.jharter.game.ecs.components.Components.CursorChangedZoneEvent;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
 import com.jharter.game.ecs.components.Components.CursorInputRegulatorComp;
@@ -29,6 +30,7 @@ import com.jharter.game.ecs.components.Components.CursorTargetEvent;
 import com.jharter.game.ecs.components.Components.CursorUntargetEvent;
 import com.jharter.game.ecs.components.Components.DescriptionComp;
 import com.jharter.game.ecs.components.Components.DisabledTag;
+import com.jharter.game.ecs.components.Components.DiscardCardTag;
 import com.jharter.game.ecs.components.Components.EnemyTag;
 import com.jharter.game.ecs.components.Components.FocusTag;
 import com.jharter.game.ecs.components.Components.FriendTag;
@@ -38,6 +40,7 @@ import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
+import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
@@ -80,7 +83,7 @@ import com.jharter.game.util.id.ID;
 public class CompManager {
 	
 	@SuppressWarnings("rawtypes")
-	private final ObjectMap<Class, CompMapper> componentMappersByClass = new ObjectMap<Class, CompMapper>();
+	private final ObjectMap<Class, CompMapper> compMappersByClass = new ObjectMap<Class, CompMapper>();
 	
 	private IEntityHandler handler;
 	private final CompUtilManager utilManager = new CompUtilManager(this);
@@ -204,87 +207,19 @@ public class CompManager {
 		
 		public <TB extends Component> TB swap(Class<TB> compClassNew, Entity entity) {
 			remove(entity);
-			return CompManager.this.getOrAdd(compClassNew, entity);
+			return getFor(compClassNew).getOrAdd(entity);
 		}
 		
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <T extends Component> CompMapper<T> getFor(Class<T> compClass) {
-		if(!componentMappersByClass.containsKey(compClass)) {
-			componentMappersByClass.put(compClass, new CompMapper<T>(compClass));
+		if(!compMappersByClass.containsKey(compClass)) {
+			compMappersByClass.put(compClass, new CompMapper<T>(compClass));
 		}
-		return componentMappersByClass.get(compClass);
+		return compMappersByClass.get(compClass);
 	}
 	
-	public <T extends Component> T create(Class<T> compClass) {
-		return getFor(compClass).create();
-	}
-	
-	public boolean has(Class<? extends Component> compClass, ID entityID) {
-		return getFor(compClass).has(entityID);
-	}
-
-	public boolean has(Class<? extends Component> compClass, Entity entity) {
-		return getFor(compClass).has(entity);
-	}
-
-	public <T extends Component> T add(Class<T> compClass, ID entityID) {
-		return getFor(compClass).add(entityID);
-	}
-	
-	public <T extends Component> T add(Class<T> compClass, Entity entity) {
-		return getFor(compClass).add(entity);
-	}
-	
-	public <T extends Component> T get(Class<T> compClass, ID entityID) {
-		return getFor(compClass).get(entityID);
-	}
-	
-	public <T extends Component> T get(Class<T> compClass, Entity entity) {
-		return getFor(compClass).get(entity);
-	}
-	
-	public <T extends Component> T getOrAdd(Class<T> compClass, ID entityID) {
-		return getFor(compClass).getOrAdd(entityID);
-	}
-	
-	public <T extends Component> T getOrAdd(Class<T> compClass, Entity entity) {
-		return getFor(compClass).getOrAdd(entity);
-	}
-
-	public <T extends Component> boolean remove(Class<T> compClass, ID entityID) {
-		return getFor(compClass).remove(entityID);
-	}
-	
-	public <T extends Component> boolean remove(Class<T> compClass, Entity entity) {
-		return getFor(compClass).remove(entity);
-	}
-	
-	public <T extends Component> boolean toggle(Class<T> compClass, ID entityID) {
-		return getFor(compClass).toggle(entityID);
-	}
-	
-	public <T extends Component> boolean toggle(Class<T> compClass, Entity entity) {
-		return getFor(compClass).toggle(entity);
-	}
-	
-	public <T extends Component> boolean toggle(Class<T> compClass, ID entityID, boolean add) {
-		return getFor(compClass).toggle(entityID, add);
-	}
-	
-	public <T extends Component> boolean toggle(Class<T> compClass, Entity entity, boolean add) {
-		return getFor(compClass).toggle(entity, add);
-	}
-	
-	public <TA extends Component, TB extends Component> TB swap(Class<TA> compClassOld, Class<TB> compClassNew, ID entityID) {
-		return swap(compClassOld, compClassNew, Entity.get(entityID));
-	}
-	
-	public <TA extends Component, TB extends Component> TB swap(Class<TA> compClassOld, Class<TB> compClassNew, Entity entity) {
-		return getFor(compClassOld).swap(compClassNew, entity);
-	}
-
 	// Standard Component Mappers
 	public final CompMapper<SpriteComp> SpriteComp = getFor(SpriteComp.class);
 	public final CompMapper<FocusTag> FocusComp = getFor(FocusTag.class);
@@ -300,7 +235,7 @@ public class CompManager {
 	public final CompMapper<CollisionComp> CollisionComp = getFor(CollisionComp.class);
 	public final CompMapper<RemoveComp> RemoveComp = getFor(RemoveComp.class);
 	public final CompMapper<InputComp> InputComp = getFor(InputComp.class);
-	public final CompMapper<InvisibleTag> InvisibleComp = getFor(InvisibleTag.class);
+	public final CompMapper<InvisibleTag> InvisibleTag = getFor(InvisibleTag.class);
 	public final CompMapper<InteractComp> InteractComp = getFor(InteractComp.class);
 	public final CompMapper<CursorComp> CursorComp = getFor(CursorComp.class);
 	public final CompMapper<CursorInputComp> CursorInputComp = getFor(CursorInputComp.class);
@@ -344,8 +279,15 @@ public class CompManager {
 	public final CompMapper<CursorTargetComp> CursorTargetComp = getFor(CursorTargetComp.class);
 	public final CompMapper<CursorTargetEvent> CursorTargetEvent = getFor(CursorTargetEvent.class);
 	public final CompMapper<CursorUntargetEvent> CursorUntargetEvent = getFor(CursorUntargetEvent.class);
+	public final CompMapper<CursorChangedZoneEvent> CursorChangedZoneEvent = getFor(CursorChangedZoneEvent.class);
 	public final CompMapper<AssociatedTurnActionsComp> AssociatedTurnActionsComp = getFor(AssociatedTurnActionsComp.class);
-
+	public final CompMapper<CleanupTurnActionTag> CleanupTurnActionTag = getFor(CleanupTurnActionTag.class);
+	public final CompMapper<PendingTurnActionTag> PendingTurnActionTag = getFor(PendingTurnActionTag.class);
+	public final CompMapper<DiscardCardTag> DiscardCardTag = getFor(DiscardCardTag.class);
+	public final CompMapper<DisabledTag> DisabledTag = getFor(DisabledTag.class);
+	public final CompMapper<TargetableTag> TargetableTag = getFor(TargetableTag.class);
+	public final CompMapper<UntargetableTag> UntargetableTag = getFor(UntargetableTag.class);
+	
 	// Component Util Methods
 	public SpriteCompUtil util(SpriteComp comp) { return utilManager.get(SpriteCompUtil.class, comp); }
 	public ZoneCompUtil util(ZoneComp comp) { return utilManager.get(ZoneCompUtil.class, comp); }

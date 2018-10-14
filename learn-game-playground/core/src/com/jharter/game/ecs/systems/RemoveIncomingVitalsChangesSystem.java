@@ -44,7 +44,7 @@ public class RemoveIncomingVitalsChangesSystem extends GameIteratingSystem {
 			a.cursorIDs.removeIndex(idx);
 		}
 		
-		if(Comp.has(VitalsComp.class, entity)) {
+		if(Comp.VitalsComp.has(entity)) {
 			setPendingVitals(entity, a);
 		}
 	}

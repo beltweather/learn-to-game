@@ -152,7 +152,7 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	
 	protected void clearComps(Class<? extends Component> compClass) {
 		for(Entity entity : entities(compClass)) {
-			Comp.remove(compClass, entity);
+			Comp.getFor(compClass).remove(entity);
 		}
 	}
 	

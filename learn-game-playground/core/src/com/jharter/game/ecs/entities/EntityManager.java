@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.jharter.game.ecs.components.CompManager;
 import com.jharter.game.ecs.components.Components.BodyComp;
 import com.jharter.game.ecs.components.Components.IDComp;
-import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
 import com.jharter.game.util.id.ID;
 
@@ -75,7 +74,7 @@ public class EntityManager {
 		if(entity == null) {
 			return;
 		}
-		Comp.getOrAdd(RemoveComp.class, entity);
+		Comp.RemoveComp.getOrAdd(entity);
 	}
 		
 }

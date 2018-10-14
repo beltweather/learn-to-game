@@ -3,7 +3,6 @@ package com.jharter.game.util;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ecs.components.Components.CursorChangedZoneEvent;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
@@ -29,7 +28,7 @@ public class CursorManager extends EntityHandler {
 	}
 	
 	public boolean changedZones(Entity cursor) {
-		return Comp.has(CursorChangedZoneEvent.class, cursor);
+		return Comp.CursorChangedZoneEvent.has(cursor);
 	}
 	
 	public TurnAction getTurnAction(CursorComp c) {

@@ -68,16 +68,16 @@ public class CursorAvailableTargetsSystem extends CursorSystem {
 	}
 	
 	private void makeTargetable(ID id) {
-		Comp.swap(UntargetableTag.class, TargetableTag.class, id);
+		Comp.UntargetableTag.swap(TargetableTag.class, id);
 	}
 	
 	private void clearTargeting(ID id) {
-		Comp.remove(TargetableTag.class, id);
-		Comp.remove(UntargetableTag.class, id);
+		Comp.TargetableTag.remove(id);
+		Comp.UntargetableTag.remove(id);
 	}
 	
 	private void makeUntargetable(ID id) {
-		Comp.swap(TargetableTag.class, UntargetableTag.class, id);
+		Comp.TargetableTag.swap(UntargetableTag.class, id);
 	}
 	
 	private ZoneComp getZone(ZoneType zoneType) {
@@ -86,7 +86,7 @@ public class CursorAvailableTargetsSystem extends CursorSystem {
 	
 	private boolean isValid(ID targetID, TurnAction t) {
 		Entity target = Comp.Entity.get(targetID);
-		if(Comp.InvisibleComp.has(target)) {
+		if(Comp.InvisibleTag.has(target)) {
 			return false;
 		}
 		

@@ -9,7 +9,6 @@ import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
-import com.jharter.game.ecs.components.Components.DiscardCardTag;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
@@ -274,7 +273,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			}
 			enemyTT.position.y += U.u12(1);
 			
-			AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, enemy);
+			AnimatingComp a = Comp.AnimatingComp.getOrAdd(enemy);
 			a.activeCount++;
 			FinishedAnimatingCallback enemyFAC = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
 			enemyFAC.setID(enemyID);
@@ -295,9 +294,9 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	}
 	
 	protected void resolve(Entity turnActionEntity) {
-		Comp.add(CleanupTurnActionTag.class, turnActionEntity);
+		Comp.CleanupTurnActionTag.add(turnActionEntity);
 		if(Comp.CardComp.has(turnActionEntity)) {
-			Comp.add(DiscardCardTag.class, turnActionEntity);	
+			Comp.DiscardCardTag.add(turnActionEntity);	
 		}
 	}
 	

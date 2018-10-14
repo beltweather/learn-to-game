@@ -15,7 +15,7 @@ public class ChangeTurnPhaseSystem extends FirstSystem {
 	@Override
 	protected void processEntity(Entity turnPhase, float deltaTime) {
 		NextTurnPhaseComp n = Comp.NextTurnPhaseComp.get(turnPhase);
-		Comp.swap(NextTurnPhaseComp.class, n.next, turnPhase);
+		Comp.NextTurnPhaseComp.swap(n.next, turnPhase);
 	}
 
 }

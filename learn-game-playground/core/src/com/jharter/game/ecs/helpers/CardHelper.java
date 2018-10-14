@@ -40,7 +40,7 @@ public class CardHelper extends EntityHandler {
 	
 	public void setOwnerID(ID ownerID) {
 		this.ownerID = ownerID;
-		this.co = Comp.getOrAdd(CardOwnerComp.class, ownerID);
+		this.co = Comp.CardOwnerComp.getOrAdd(ownerID);
 	}
 
 	public EntityBuilder buildCard(Texture texture, String name) {

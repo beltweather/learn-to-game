@@ -1,7 +1,6 @@
 package com.jharter.game.layout;
 
 import com.badlogic.ashley.core.Entity;
-import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.entities.IEntityHandler;
@@ -51,7 +50,7 @@ public class HandLayout extends ZoneLayout {
 			show(entity);
 		}
 		if(t.turnAction.multiplicity <= 1) {
-			Comp.remove(MultiSpriteComp.class, entity);
+			Comp.MultiSpriteComp.remove(entity);
 		}
 	}
 

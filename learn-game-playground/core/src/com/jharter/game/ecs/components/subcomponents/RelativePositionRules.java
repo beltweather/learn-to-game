@@ -61,7 +61,7 @@ public class RelativePositionRules {
 			return false;
 		}
 		
-		if(Comp.InvisibleComp.has(baselineEntity)) {
+		if(Comp.InvisibleTag.has(baselineEntity)) {
 			return false;
 		}
 		

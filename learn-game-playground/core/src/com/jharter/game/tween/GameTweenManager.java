@@ -43,7 +43,7 @@ public class GameTweenManager extends EntityHandler {
 	}
 	
 	public FinishedAnimatingCallback buildFinishedAnimationCallback(ID id) {
-		AnimatingComp a = Comp.getOrAdd(AnimatingComp.class, id);
+		AnimatingComp a = Comp.AnimatingComp.getOrAdd(id);
 		a.activeCount++;
 		FinishedAnimatingCallback finishedCallback = TweenCallbacks.newInstance(this, FinishedAnimatingCallback.class);
 		finishedCallback.setID(id);

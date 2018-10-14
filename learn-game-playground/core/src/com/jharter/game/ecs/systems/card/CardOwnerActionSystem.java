@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
-import com.jharter.game.ecs.components.Components.ChangeZoneComp;
 import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
@@ -120,7 +119,7 @@ public class CardOwnerActionSystem extends GameIteratingSystem {
 	}
 	
 	protected void changeZone(ID id, ZoneComp zFrom, ZoneComp zTo) {
-		Comp.util(Comp.add(ChangeZoneComp.class, id)).change(zFrom.zoneID, zTo.zoneID);
+		Comp.util(Comp.ChangeZoneComp.add(id)).change(zFrom.zoneID, zTo.zoneID);
 	}
 	
 	protected void move(ID id, ZoneComp zFrom, ZoneComp zTo) {

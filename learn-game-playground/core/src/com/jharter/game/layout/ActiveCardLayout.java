@@ -50,7 +50,7 @@ public class ActiveCardLayout extends ZoneLayout {
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
 		TurnActionComp t = Comp.TurnActionComp.get(entity);
 		if(t != null && t.turnAction != null && t.turnAction.multiplicity > 1) {
-			MultiSpriteComp m = Comp.getOrAdd(MultiSpriteComp.class, entity);
+			MultiSpriteComp m = Comp.MultiSpriteComp.getOrAdd(entity);
 			if(m.size == t.turnAction.multiplicity) {
 				return;
 			}
@@ -70,7 +70,7 @@ public class ActiveCardLayout extends ZoneLayout {
 			getTweenManager().start(null, timeline);
 			
 		} else {
-			Comp.remove(MultiSpriteComp.class, entity);
+			Comp.MultiSpriteComp.remove(entity);
 		}
 	}
 	

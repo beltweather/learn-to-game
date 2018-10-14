@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.jharter.game.ecs.components.Components.ActionQueueableComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 
 public class CursorFinishSelectionSystem extends CursorSystem {
@@ -26,7 +25,7 @@ public class CursorFinishSelectionSystem extends CursorSystem {
 		a.spentPlayers.add(a.activePlayerID);
 		nextPlayer();
 		
-		Comp.swap(PendingTurnActionTag.class, ActionQueueableComp.class, c.turnActionID);
+		Comp.PendingTurnActionTag.swap(ActionQueueableComp.class, c.turnActionID);
 		Comp.ActionQueueableComp.get(c.turnActionID).timestamp = TimeUtils.millis();
 		c.reset();
 	}

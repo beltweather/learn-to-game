@@ -3,7 +3,6 @@ package com.jharter.game.ecs.systems.cursor;
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorInputComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.util.id.ID;
 
@@ -37,7 +36,7 @@ public class CursorAcceptSystem extends CursorSystem {
 			// If this is our first target, make them the turn action entity
 			if(t == null) {
 				c.turnActionID = targetEntityID;
-				Comp.add(PendingTurnActionTag.class, target);
+				Comp.PendingTurnActionTag.add(target);
 			
 			// Otherwise, add them to the turn entity target list
 			} else {

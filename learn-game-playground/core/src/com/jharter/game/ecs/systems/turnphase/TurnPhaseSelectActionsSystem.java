@@ -4,17 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.ecs.components.Components.ActionQueueableComp;
 import com.jharter.game.ecs.components.Components.ActionQueuedComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
-import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
-import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsTag;
-import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
@@ -75,7 +71,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 		CursorComp c = getCursorComp();
 		if(c.turnActionID != null) {
 			if(!Comp.ActionSpentComp.has(c.turnActionID)) {
-				Comp.add(CleanupTurnActionTag.class, c.turnActionID);
+				Comp.CleanupTurnActionTag.add(c.turnActionID);
 			}
 		}
 	}
@@ -132,12 +128,12 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 					}
 				}
 				if(!success) {
-					Comp.add(CleanupTurnActionTag.class, card);
+					Comp.CleanupTurnActionTag.add(card);
 					break;
 				}
 			}
 			if(t.hasAllTargets()) {
-				Comp.add(ActionQueueableComp.class, card).timestamp = TimeUtils.millis();
+				Comp.ActionQueueableComp.add(card).timestamp = TimeUtils.millis();
 			}
 		}
 	}

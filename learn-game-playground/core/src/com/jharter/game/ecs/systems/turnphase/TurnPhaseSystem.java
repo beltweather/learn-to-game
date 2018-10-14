@@ -5,8 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
-import com.jharter.game.ecs.components.Components.DisabledTag;
-import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
@@ -68,9 +66,9 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	
 	protected void endPhase(Entity turnPhase, float deltaTime) {
 		processEntityPhaseEnd(turnPhase, deltaTime);
-		Comp.remove(phaseClass, turnPhase);
+		Comp.getFor(phaseClass).remove(turnPhase);
 		
-		NextTurnPhaseComp n = Comp.add(NextTurnPhaseComp.class, turnPhase);
+		NextTurnPhaseComp n = Comp.NextTurnPhaseComp.add(turnPhase);
 		if(alternativeNextPhaseClass != null) {
 			n.next = alternativeNextPhaseClass;
 			alternativeNextPhaseClass = null;
@@ -105,7 +103,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		if(cursor == null) {
 			return;
 		}
-		Comp.remove(MultiSpriteComp.class, cursor);
+		Comp.MultiSpriteComp.remove(cursor);
 		Comp.CursorComp.get(cursor).reset();
 	}
 	
@@ -114,7 +112,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		if(cursor == null) {
 			return;
 		}
-		Comp.remove(DisabledTag.class, cursor);
+		Comp.DisabledTag.remove(cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
 	
@@ -123,7 +121,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		if(cursor == null) {
 			return;
 		}
-		Comp.add(DisabledTag.class, cursor);
+		Comp.DisabledTag.add(cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
 	

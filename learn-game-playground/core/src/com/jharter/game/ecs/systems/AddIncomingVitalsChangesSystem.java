@@ -38,7 +38,7 @@ public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 		a.targetIndices.add(t.targetIDs.size);
 		a.cursorIDs.add(ct.cursorID);
 		
-		if(Comp.has(VitalsComp.class, entity)) {
+		if(Comp.VitalsComp.has(entity)) {
 			setPendingVitals(entity, a);
 		}
 	}

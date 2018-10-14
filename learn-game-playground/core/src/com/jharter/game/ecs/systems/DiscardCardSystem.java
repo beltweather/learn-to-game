@@ -22,10 +22,10 @@ public class DiscardCardSystem extends GameIteratingSystem {
 		ID ownerID = Comp.CardComp.get(entity).ownerID;
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 		
-		ChangeZoneComp cz = Comp.add(ChangeZoneComp.class, entity);
+		ChangeZoneComp cz = Comp.ChangeZoneComp.add(entity);
 		Comp.util(cz).change(zp.zoneID, getZoneID(ownerID, ZoneType.DISCARD));
 		
-		Comp.remove(DiscardCardTag.class, entity);
+		Comp.DiscardCardTag.remove(entity);
 	}
 
 }

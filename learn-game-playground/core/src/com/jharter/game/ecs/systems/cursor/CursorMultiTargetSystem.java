@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.jharter.game.ecs.components.Components.AnimatingComp;
-import com.jharter.game.ecs.components.Components.CursorChangedZoneEvent;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.CursorTargetComp;
 import com.jharter.game.ecs.components.Components.CursorTargetEvent;
@@ -40,7 +38,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 	@Override
 	protected void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		if(count(CursorTargetEvent.class) > 0) {
-			Comp.remove(MultiSpriteComp.class, c.targetID);
+			Comp.MultiSpriteComp.remove(c.targetID);
 		}
 		for(Entity target : entities(CursorUntargetEvent.class)) {
 			removeCursorPosition(target);
@@ -54,7 +52,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 	private void addAllCursorPosition(Entity target) {
 		CursorTargetComp t = Comp.CursorTargetComp.get(target);
 		Entity cursor = Comp.Entity.get(t.cursorID);
-		if(!Comp.has(CursorChangedZoneEvent.class, cursor) || !getCursorManager().isAll(cursor)) {
+		if(!Comp.CursorChangedZoneEvent.has(cursor) || !getCursorManager().isAll(cursor)) {
 			return;
 		}
 		
@@ -68,7 +66,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 	private void addAllCursorPosition(Entity target, float offsetX, float offsetY) {
 		CursorTargetComp t = Comp.CursorTargetComp.get(target);
 		Entity cursor = Comp.Entity.get(t.cursorID);
-		if(!Comp.has(CursorChangedZoneEvent.class, cursor) || !getCursorManager().isAll(cursor)) {
+		if(!Comp.CursorChangedZoneEvent.has(cursor) || !getCursorManager().isAll(cursor)) {
 			return;
 		}
 		ZoneComp zTarget = Comp.ZoneComp.get(Comp.ZonePositionComp.get(target).zoneID);
@@ -99,7 +97,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 		});
 		getTweenManager().start(t.cursorID, tween);
 
-		MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, cursor);
+		MultiSpriteComp mp = Comp.MultiSpriteComp.getOrAdd(cursor);
 		mp.drawSingle = false;
 		mp.positions.add(positionMulti);
 		mp.ids.add(Comp.IDComp.get(target).id);
@@ -138,7 +136,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 		tt.angleDegrees = angle;
 		tt.duration = 0;
 		
-		MultiSpriteComp mp = Comp.getOrAdd(MultiSpriteComp.class, Comp.Entity.get(t.cursorID));
+		MultiSpriteComp mp = Comp.MultiSpriteComp.getOrAdd(t.cursorID);
 		mp.drawSingle = true;
 		mp.positions.add(position);
 		mp.anglesDegrees.add(angle);
@@ -152,7 +150,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 	
 	private void removeCursorPosition(Entity target) {
 		ID cursorID = Comp.CursorUntargetEvent.get(target).cursorID;
-		if(cursorID == null || Comp.has(AnimatingComp.class, cursorID)) {
+		if(cursorID == null || Comp.AnimatingComp.has(cursorID)) {
 			return;
 		}
 		MultiSpriteComp mp = Comp.MultiSpriteComp.get(cursorID);
@@ -181,7 +179,7 @@ public class CursorMultiTargetSystem extends CursorSystem {
 			}
 		}
 		if(mp.positions.size == 0) {
-			Comp.remove(MultiSpriteComp.class, cursorID);
+			Comp.MultiSpriteComp.remove(cursorID);
 		}
 	}
 	

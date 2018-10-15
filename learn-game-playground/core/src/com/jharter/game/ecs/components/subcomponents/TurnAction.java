@@ -14,9 +14,10 @@ import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public class TurnAction extends EntityHandler {
-	
+
 	public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 	public Array<ID> targetIDs = new Array<ID>();
+	public int selectedCount = 0;
 	public VoidCallback<TurnAction> acceptCallback = null;
 	public Callback<Entity, Boolean> validTargetCallback = null;
 	public int defaultMultiplicity = 1;
@@ -26,48 +27,48 @@ public class TurnAction extends EntityHandler {
 	public int priority = 0;
 	public ID entityID = null;
 	public ID ownerID = null;
-	
+
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
-	
+
 	public Array<Effect<?>> effects = new Array<Effect<?>>();
-	
+
 	public TurnAction(IEntityHandler handler) {
 		super(handler);
 	}
-	
+
 	public Entity getEntity() {
 		if(entityID == null) {
 			return null;
 		}
 		return Comp.Entity.get(entityID);
 	}
-	
+
 	public Entity getOwnerEntity() {
 		if(ownerID == null) {
 			return null;
 		}
 		return Comp.Entity.get(ownerID);
 	}
-	
+
 	public Entity getTargetEntity(int index) {
 		if(index < 0 || index >= targetIDs.size) {
 			return null;
 		}
 		return Comp.Entity.get(targetIDs.get(index));
 	}
-	
+
 	public ZoneType getTargetZoneType() {
-		if(hasAllTargets()) {
+		if(selectedCount < 0 || selectedCount >= targetZoneTypes.size) {
 			return ZoneType.NONE;
 		}
-		return targetZoneTypes.get(targetIDs.size);
+		return targetZoneTypes.get(selectedCount);
 	}
-	
+
 	public ZoneType getNextTargetZoneType() {
 		return getNextTargetZoneType(0);
 	}
-	
+
 	public ZoneType getNextTargetZoneType(int depth) {
 		if(hasAllTargets()) {
 			return ZoneType.NONE;
@@ -78,43 +79,43 @@ public class TurnAction extends EntityHandler {
 		}
 		return targetZoneTypes.get(index);
 	}
-	
+
 	public boolean hasAllTargets() {
-		return targetZoneTypes.size == targetIDs.size;
+		return targetZoneTypes.size == targetIDs.size && selectedCount == targetZoneTypes.size;
 	}
-	
+
 	public void addTarget(Entity entity) {
 		if(!hasAllTargets()) {
 			targetIDs.add(Comp.IDComp.get(entity).id);
 		}
 	}
-	
+
 	public boolean isValidTarget(Entity entity) {
 		if(entity == null) {
 			return false;
 		}
-		
+
 		// Special check for cards that modify other cards, we don't want them to be able to target each other
 		if(isUntargetableCard(entity)) {
 			return false;
 		}
-		
+
 		if(validTargetCallback != null) {
 			return validTargetCallback.call(entity);
 		}
-		
+
 		return true;
 	}
-	
+
 	public boolean isUntargetableCard(Entity entity) {
 		CardComp c = Comp.CardComp.get(entity);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		return c != null && 
-			   zp != null && 
-			   c.cardType == CardType.TARGET_CARD && 
+		return c != null &&
+			   zp != null &&
+			   c.cardType == CardType.TARGET_CARD &&
 			   Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.FRIEND_ACTIVE_CARD;
 	}
-	
+
 	public void performAcceptCallback() {
 		if(acceptCallback != null) {
 			if(multiplicity == 1) {
@@ -127,18 +128,18 @@ public class TurnAction extends EntityHandler {
 			}
 		}
 	}
-	
+
 	private Array<ID> temp = new Array<ID>();
 
 	public Array<ID> getAllTargetIDs() {
 		return getAllTargetIDs(true);
 	}
-	
+
 	public Array<ID> getAllTargetIDs(boolean inFinalZoneOnly) {
 		if(!all || targetIDs.size == 0) {
 			return targetIDs;
 		}
-		
+
 		temp.clear();
 		temp.addAll(targetIDs);
 		ZonePositionComp zp = Comp.ZonePositionComp.get(targetIDs.peek());
@@ -153,42 +154,42 @@ public class TurnAction extends EntityHandler {
 		}
 		return temp;
 	}
-	
+
 	public void addEffect(Effect<?> effect) {
 		addEffect(effect, targetZoneTypes.size - 1);
 	}
-	
+
 	public void addEffect(Effect<?> effect, int targetIndex) {
 		effects.add(effect);
 		effect.setTurnAction(this);
 		effect.setTargetIndex(targetIndex);
 	}
-	
-	public void perform() {
+
+	public void perform(boolean pending) {
 		for(int i = 0; i < multiplicity; i++) {
 			for(Effect<?> effect : effects) {
 				if(all && effect.getTargetIndex() == targetIDs.size - 1) {
 					for(ID targetID : getAllTargetIDs(true)) {
-						effect.perform(Comp.Entity.get(targetID));
+						effect.perform(Comp.Entity.get(targetID), pending);
 					}
 				} else {
-					effect.perform();
+					effect.perform(pending);
 				}
 			}
 		}
 	}
-	
-	public void applyResult(Entity target, int targetIndex) {
+
+	public void applyResult(Entity target, int targetIndex, boolean pending) {
 		for(int i = 0; i < multiplicity; i++) {
 			for(Effect<?> effect : effects) {
 				if(effect.getTargetIndex() != targetIndex) {
 					continue;
 				}
-				effect.applyResult(target);
+				effect.applyResult(target, pending);
 			}
 		}
 	}
-	
+
 	public void reset() {
 		targetZoneTypes.clear();
 		targetIDs.clear();
@@ -203,5 +204,5 @@ public class TurnAction extends EntityHandler {
 		makesTargetMultiplicity = 1;
 		entityID = null;
 	}
-	
+
 }

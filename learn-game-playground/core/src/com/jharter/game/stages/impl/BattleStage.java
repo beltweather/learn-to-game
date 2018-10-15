@@ -14,13 +14,12 @@ import com.jharter.game.ecs.helpers.EnemyHelper;
 import com.jharter.game.ecs.helpers.PlayerHelper;
 import com.jharter.game.ecs.helpers.TurnHelper;
 import com.jharter.game.ecs.helpers.ZoneHelper;
-import com.jharter.game.ecs.systems.AddIncomingVitalsChangesSystem;
 import com.jharter.game.ecs.systems.AnimationSystem;
+import com.jharter.game.ecs.systems.ApplyPendingTurnActionsSystem;
 import com.jharter.game.ecs.systems.CleanupTurnActionsSystem;
 import com.jharter.game.ecs.systems.DiscardCardSystem;
 import com.jharter.game.ecs.systems.QueueTurnActionsSystem;
 import com.jharter.game.ecs.systems.RemoveEntitiesSystem;
-import com.jharter.game.ecs.systems.RemoveIncomingVitalsChangesSystem;
 import com.jharter.game.ecs.systems.RenderEntitiesSystem;
 import com.jharter.game.ecs.systems.RenderWorldGridSystem;
 import com.jharter.game.ecs.systems.TweenSystem;
@@ -30,7 +29,6 @@ import com.jharter.game.ecs.systems.card.CardOwnerActionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorAcceptSystem;
 import com.jharter.game.ecs.systems.cursor.CursorAvailableTargetsSystem;
 import com.jharter.game.ecs.systems.cursor.CursorCancelSystem;
-import com.jharter.game.ecs.systems.cursor.CursorFinishSelectionSystem;
 import com.jharter.game.ecs.systems.cursor.CursorInputSystem;
 import com.jharter.game.ecs.systems.cursor.CursorMoveSystem;
 import com.jharter.game.ecs.systems.cursor.CursorMultiTargetSystem;
@@ -72,7 +70,7 @@ import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
 public class BattleStage extends GameStage {
-	
+
 	public BattleStage(EndPointHelper endPointHelper) {
 		super(endPointHelper);
 	}
@@ -87,7 +85,7 @@ public class BattleStage extends GameStage {
 		PlayerHelper PlayerHelper = new PlayerHelper(this);
 		EnemyHelper EnemyHelper = new EnemyHelper(this);
 		CursorHelper CursorHelper = new CursorHelper(this);
-		
+
 		BackgroundHelper.addBackground(Media.background);
 		//BackgroundHelper.addBackground(Media.bgField2);
 		//BackgroundHelper.addBackground(Media.bgLightYellow, 5f);
@@ -100,23 +98,23 @@ public class BattleStage extends GameStage {
 		ID roguePlayerID = getIDManager().buildPlayerEntityID();
 		ID rangerPlayerID = getIDManager().buildPlayerEntityID();
 		ID globalPlayerID = getIDManager().getGlobalPlayerEntityID();
-		
+
 		// Battle entity
 		//BattleHelper.addBattle(engine, warriorPlayerID);
-		
+
 		// Player Zones
 		ZoneHelper.addZone(roguePlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(roguePlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(roguePlayerID, ZoneType.DISCARD, new HiddenLayout(this));
-		
+
 		ZoneHelper.addZone(warriorPlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(warriorPlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(warriorPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
-		
+
 		ZoneHelper.addZone(sorcererPlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(sorcererPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
-		
+
 		ZoneHelper.addZone(rangerPlayerID, ZoneType.HAND, new HandLayout(this));
 		ZoneHelper.addZone(rangerPlayerID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(rangerPlayerID, ZoneType.DISCARD, new HiddenLayout(this));
@@ -127,19 +125,19 @@ public class BattleStage extends GameStage {
 		ZoneHelper.addZone(globalPlayerID, ZoneType.FRIEND_ACTIVE_CARD, new ActiveCardLayout(this, true).setPriority(-1));
 		ZoneHelper.addZone(globalPlayerID, ZoneType.ENEMY_ACTIVE_CARD, new ActiveCardLayout(this, false).setPriority(-1));
 		ZoneComp cursorZone = ZoneHelper.addZone(globalPlayerID, ZoneType.CURSOR, new CursorLayout(this).setPriority(-2));
-		
+
 		// Turn timer
-		TurnHelper.addTurnEntity(infoZone, 30f);
-		
+		TurnHelper.addTurnEntity(infoZone, 3000f); //30f);
+
 		// Arrow
 		ArrowHelper.addArrow(infoZone);
-		
+
 		// Other players
 		/*PlayerComp roguePlayer = PlayerHelper.addPlayer(engine, roguePlayerID);
 		PlayerComp warriorPlayer = PlayerHelper.addPlayer(engine, warriorPlayerID);
 		PlayerComp sorcererPlayer = PlayerHelper.addPlayer(engine, sorcererPlayerID);
 		PlayerComp rangerPlayer = PlayerHelper.addPlayer(engine, rangerPlayerID);*/
-		
+
 		// CHARACTERS
 		PlayerHelper.addPlayer(friendZone, infoZone, warriorPlayerID, Media.warrior, "Warrior");
 		PlayerHelper.addPlayer(friendZone, infoZone, sorcererPlayerID, Media.sorcerer, "Sorcerer");
@@ -149,22 +147,22 @@ public class BattleStage extends GameStage {
 		// ENEMIES
 		ID atmaID = EnemyHelper.addAtma(enemyZone, infoZone);
 		ID cactarID = EnemyHelper.addCactar(enemyZone, infoZone);
-		
+
 		ZoneHelper.addZone(atmaID, ZoneType.HAND, new HiddenLayout(this));
 		ZoneHelper.addZone(atmaID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(atmaID, ZoneType.DISCARD, new HiddenLayout(this));
-		
+
 		ZoneHelper.addZone(cactarID, ZoneType.HAND, new HiddenLayout(this));
 		ZoneHelper.addZone(cactarID, ZoneType.DECK, new HiddenLayout(this));
 		ZoneHelper.addZone(cactarID, ZoneType.DISCARD, new HiddenLayout(this));
-		
+
 		// Cards
 		CardHelper.setOwnerID(atmaID);
 		for(int i = 0; i < 1; i++) { CardHelper.addEnemyAttackCard(); }
-		
+
 		CardHelper.setOwnerID(cactarID);
 		for(int i = 0; i < 1; i++) { CardHelper.addEnemyAttackCard(); }
-		
+
 		CardHelper.setOwnerID(roguePlayerID);
 		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
@@ -172,7 +170,7 @@ public class BattleStage extends GameStage {
 		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
 		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
-		
+
 		CardHelper.setOwnerID(warriorPlayerID);
 		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
@@ -180,7 +178,7 @@ public class BattleStage extends GameStage {
 		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
 		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
-		
+
 		CardHelper.setOwnerID(sorcererPlayerID);
 		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
@@ -188,7 +186,7 @@ public class BattleStage extends GameStage {
 		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
 		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
-		
+
 		CardHelper.setOwnerID(rangerPlayerID);
 		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
@@ -196,21 +194,21 @@ public class BattleStage extends GameStage {
 		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
 		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
 		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
-		
+
 		EntityBuilder b = CursorHelper.buildCursor(cursorZone);
 		b.FocusComp();
 		b.InputComp().input = buildInput(true);
 		getEngine().addEntity(b.Entity());
 		b.free();
 	}
-		
+
 	@Override
 	protected OrthographicCamera buildCamera() {
 		OrthographicCamera camera = super.buildCamera();
 		camera.zoom = 1f;
 		return camera;
 	}
-	
+
 	@Override
 	public EntityBuilder addPlayerEntity(ID id, Vector3 position, boolean focus) {
 		// XXX Shouldn't have to seed this with zone info, should be taken care of at turn start
@@ -227,20 +225,20 @@ public class BattleStage extends GameStage {
 	public Vector3 getEntryPoint() {
 		return new Vector3(0,0,0);
 	}
-	
+
 	private void addNetworkSystems(PooledEngine engine) {
 		if(endPointHelper.isOffline()) {
 			engine.addSystem(new OfflineSelectInputSystem());
 		}
-		
+
 		if(endPointHelper.isServer()) {
-			
+
 			GameServer server = endPointHelper.getServer();
 			engine.addSystem(new ServerSendSnapshotSystem(server));
 			engine.addSystem(new ServerInputPacketSystem(this, server));
 			engine.addSystem(new ServerRegisterPlayerPacketSystem(this, server));
 			engine.addSystem(new ServerRequestEntityPacketSystem(this, server));
-			
+
 		} else if(endPointHelper.isClient()){
 
 			GameClient client = endPointHelper.getClient();
@@ -249,14 +247,14 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new ClientSnapshotPacketSystem(this, client));
 			engine.addSystem(new ClientAddPlayersPacketSystem(this, client));
 			engine.addSystem(new ClientRemoveEntityPacketSystem(this, client));
-		
+
 		}
 	}
-	
+
 	private void addDependencySystems(PooledEngine engine) {
 		engine.addSystem(new TweenSystem());
 	}
-	
+
 	private void addTurnPhaseSystems(PooledEngine engine) {
 		engine.addSystem(new ChangeTurnPhaseSystem());
 		engine.addSystem(new DebugHealEnemiesSystem());
@@ -267,7 +265,7 @@ public class BattleStage extends GameStage {
 			engine.addSystem(new TurnPhaseEndTurnSystem());
 		engine.addSystem(new TurnPhaseEndBattleSystem());
 	}
-	
+
 	private void addCursorSystems(PooledEngine engine) {
 		engine.addSystem(new CursorInputSystem());
 		engine.addSystem(new CursorAvailableTargetsSystem());
@@ -276,52 +274,53 @@ public class BattleStage extends GameStage {
 		engine.addSystem(new CursorAcceptSystem());
 		engine.addSystem(new CursorCancelSystem());
 		engine.addSystem(new CursorTurnActionValidationSystem());
-		engine.addSystem(new CursorFinishSelectionSystem());
+		//engine.addSystem(new CursorFinishSelectionSystem());
 		engine.addSystem(new CursorTargetEventSystem());
 		engine.addSystem(new CursorMultiTargetSystem());
 	}
-	
+
 	private void addCardSystems(PooledEngine engine) {
 		engine.addSystem(new CardOwnerActionSystem());
 	}
-	
+
 	private void addOtherSystems(PooledEngine engine) {
-		engine.addSystem(new AddIncomingVitalsChangesSystem());
-		engine.addSystem(new RemoveIncomingVitalsChangesSystem());
+		//engine.addSystem(new AddIncomingVitalsChangesSystem());
+		//engine.addSystem(new RemoveIncomingVitalsChangesSystem());
+		engine.addSystem(new ApplyPendingTurnActionsSystem());
 		engine.addSystem(new QueueTurnActionsSystem());
 		engine.addSystem(new CleanupTurnActionsSystem());
 		engine.addSystem(new DiscardCardSystem());
 		engine.addSystem(new ZoneChangeSystem());
 		engine.addSystem(new RemoveEntitiesSystem(endPointHelper.getClient()));
 	}
-	
+
 	private void addVisualSystems(PooledEngine engine) {
 		engine.addSystem(new ZoneLayoutSystem());
 		engine.addSystem(new AnimationSystem());
 		engine.addSystem(new RenderEntitiesSystem(getCamera()));
 		engine.addSystem(new RenderWorldGridSystem(getCamera()));
 	}
-	
+
 	@Override
 	protected PooledEngine buildEngine() {
     	PooledEngine engine = new PooledEngine();
-    	
+
 		addNetworkSystems(engine);
 		addDependencySystems(engine);
 		addTurnPhaseSystems(engine);
 		addOtherSystems(engine);
 		addCursorSystems(engine);
 		addCardSystems(engine);
-		
+
 		/*if(endPointHelper.isClient()) {
 			engine.addSystem(new AddEntitiesSystem(this, endPointHelper.getClient()));
 		}*/
-		
+
 		// Add visual systems
 		if(!endPointHelper.isHeadless()) {
 			addVisualSystems(engine);
 		}
-		
+
 		return engine;
     }
 

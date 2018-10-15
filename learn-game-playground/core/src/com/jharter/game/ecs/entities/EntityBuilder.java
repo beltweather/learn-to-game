@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
-import com.jharter.game.ecs.components.Components.ActionQueuedComp;
-import com.jharter.game.ecs.components.Components.ActionReadyTag;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
@@ -47,6 +45,7 @@ import com.jharter.game.ecs.components.Components.TargetPositionComp;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
+import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseStartBattleTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
@@ -112,8 +111,6 @@ public class EntityBuilder implements Poolable {
 		comps.clear();
 	}
 
-	public ActionQueuedComp ActionQueuedComp() { return get(ActionQueuedComp.class); }
-	public ActionReadyTag ActionReadyComp() { return get(ActionReadyTag.class); }
 	public ActivePlayerComp ActivePlayerComp() { return get(ActivePlayerComp.class); }
 	public ActiveTurnActionComp ActiveTurnActionComp() { return get(ActiveTurnActionComp.class); }
 	public AnimatingComp AnimatingComp() { return get(AnimatingComp.class); }
@@ -151,6 +148,7 @@ public class EntityBuilder implements Poolable {
 	public TextureComp TextureComp() { return get(TextureComp.class); }
 	public TileComp TileComp() { return get(TileComp.class); }
 	public TurnActionComp TurnActionComp() { return get(TurnActionComp.class); }
+	public TurnActionQueueItemComp TurnActionQueueItemComp() { return get(TurnActionQueueItemComp.class); }
 	public TurnPhaseStartBattleTag TurnPhaseStartBattleComp() { return get(TurnPhaseStartBattleTag.class); }
 	public TurnPhaseTag TurnPhaseComp() { return get(TurnPhaseTag.class); }
 	public TurnTimerComp TurnTimerComp() { return get(TurnTimerComp.class); }

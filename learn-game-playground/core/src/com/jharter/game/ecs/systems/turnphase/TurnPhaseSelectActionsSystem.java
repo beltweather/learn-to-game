@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.ecs.components.Components.ActionQueuedComp;
+import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
@@ -21,11 +21,11 @@ import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
 public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
-	
+
 	public TurnPhaseSelectActionsSystem() {
 		super(TurnPhaseSelectActionsTag.class, TurnPhasePerformActionsTag.class);
 		add(CardOwnerComp.class);
-		add(ActionQueuedComp.class);
+		add(TurnActionQueueItemComp.class);
 		add(AutoSelectTurnActionComp.class);
 		add(ActivePlayerComp.class);
 	}
@@ -51,14 +51,14 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 			updateWaiting(deltaTime, true);
 			return true;
 		}
-		
+
 		boolean playersDone = comp(ActivePlayerComp.class).spentPlayers.size == getPlayerIDs().size();
 		updateWaiting(deltaTime, playersDone);
-		
+
 		// XXX This assumption will change, but the intent is to check if all characters
-		// have made a card selection. Currently, one cursor controls all actions so 
+		// have made a card selection. Currently, one cursor controls all actions so
 		// we'll leave this hack in for testing.
-		return count(ActionQueuedComp.class) == count(CardOwnerComp.class);
+		return count(TurnActionQueueItemComp.class) == count(CardOwnerComp.class);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 		disableCursor();
 		getTurnTimer().stop();
 		discardCards();
-		
+
 		// Cancel the current turn action if there is one
 		CursorComp c = getCursorComp();
 		if(c.turnActionID != null) {
@@ -75,7 +75,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 			}
 		}
 	}
-	
+
 	private void computeWaitTimes() {
 		for(AutoSelectTurnActionComp a : comps(AutoSelectTurnActionComp.class)) {
 			a.waitTime = MathUtils.random(a.minWaitTime, a.maxWaitTime);
@@ -83,14 +83,14 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 			a.waiting = true;
 		}
 	}
-	
+
 	private void updateWaiting(float deltaTime, boolean force) {
 		for(Entity entity : entities(AutoSelectTurnActionComp.class)) {
 			AutoSelectTurnActionComp a = Comp.AutoSelectTurnActionComp.get(entity);
 			if(!a.waiting) {
 				continue;
 			}
-			
+
 			a.waited += deltaTime;
 			if(a.waited >= a.waitTime || force) {
 				autoSelectTurnAction(Comp.IDComp.get(entity).id);
@@ -98,13 +98,13 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 			}
 		}
 	}
-	
+
 	private void discardCards() {
 		for(CardOwnerComp c : comps(CardOwnerComp.class)) {
 			c.actions.add(CardOwnerAction.DISCARD_HAND);
 		}
 	}
-	
+
 	private void autoSelectTurnAction(ID ownerID) {
 		ZoneComp handZone = getZone(ownerID, ZoneType.HAND);
 		if(handZone.objectIDs.size == 0) {
@@ -123,6 +123,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 					Entity target = Comp.Entity.get(targetID);
 					if(t.isValidTarget(target)) {
 						t.addTarget(target);
+						t.selectedCount++;
 						success = true;
 						break;
 					}
@@ -133,9 +134,9 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 				}
 			}
 			if(t.hasAllTargets()) {
-				Comp.ActionQueueableComp.add(card).timestamp = TimeUtils.millis();
+				Comp.TurnActionSelectedEvent.add(card).timestamp = TimeUtils.millis();
 			}
 		}
 	}
-	
-}	
+
+}

@@ -5,9 +5,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.jharter.game.ecs.components.Components.ActionQueueableComp;
-import com.jharter.game.ecs.components.Components.ActionQueuedComp;
-import com.jharter.game.ecs.components.Components.ActionReadyTag;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.ActiveTurnActionComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
@@ -54,6 +51,8 @@ import com.jharter.game.ecs.components.Components.TargetableTag;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
+import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
+import com.jharter.game.ecs.components.Components.TurnActionSelectedEvent;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndBattleTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseNoneTag;
@@ -221,9 +220,6 @@ public class CompManager {
 	}
 
 	// Standard Component Mappers
-	public final CompMapper<ActionQueueableComp> ActionQueueableComp = getFor(ActionQueueableComp.class);
-	public final CompMapper<ActionQueuedComp> ActionQueuedComp = getFor(ActionQueuedComp.class);
-	public final CompMapper<ActionReadyTag> ActionReadyComp = getFor(ActionReadyTag.class);
 	public final CompMapper<ActivePlayerComp> ActivePlayerComp = getFor(ActivePlayerComp.class);
 	public final CompMapper<ActiveTurnActionComp> ActiveTurnActionComp = getFor(ActiveTurnActionComp.class);
 	public final CompMapper<AnimatingComp> AnimatingComp = getFor(AnimatingComp.class);
@@ -271,6 +267,8 @@ public class CompManager {
 	public final CompMapper<TextureComp> TextureComp = getFor(TextureComp.class);
 	public final CompMapper<TileComp> TileComp = getFor(TileComp.class);
 	public final CompMapper<TurnActionComp> TurnActionComp = getFor(TurnActionComp.class);
+	public final CompMapper<TurnActionQueueItemComp> TurnActionQueueItemComp = getFor(TurnActionQueueItemComp.class);
+	public final CompMapper<TurnActionSelectedEvent> TurnActionSelectedEvent = getFor(TurnActionSelectedEvent.class);
 	public final CompMapper<TurnPhaseEndBattleTag> TurnPhaseEndBattleComp = getFor(TurnPhaseEndBattleTag.class);
 	public final CompMapper<TurnPhaseEndTurnTag> TurnPhaseEndTurnComp = getFor(TurnPhaseEndTurnTag.class);
 	public final CompMapper<TurnPhaseNoneTag> TurnPhaseNoneComp = getFor(TurnPhaseNoneTag.class);

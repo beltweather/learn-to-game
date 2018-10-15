@@ -5,7 +5,7 @@ import java.util.Comparator;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ecs.components.Components.ActionQueuedComp;
+import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
@@ -35,7 +35,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	
 	public TurnPhasePerformActionsSystem() {
 		super(TurnPhasePerformActionsTag.class, TurnPhaseEndTurnTag.class);
-		add(TurnActionComp.class, Family.all(TurnActionComp.class, ActionQueuedComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
+		add(TurnActionComp.class, Family.all(TurnActionComp.class, TurnActionQueueItemComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
 		add(AssociatedTurnActionsComp.class, Family.all(AssociatedTurnActionsComp.class, VitalsComp.class).get());
 		add(PendingVitalsComp.class);
 	}
@@ -75,7 +75,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 				t.turnAction.priority == 0 && 
 				Comp.CardComp.has(turnActionEntity);
 		
-		turnActionEntity.remove(ActionQueuedComp.class);
+		turnActionEntity.remove(TurnActionQueueItemComp.class);
 		if(performTurnAction) {
 			performTurnAction(turnActionEntity);
 		} else {
@@ -311,8 +311,8 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
-			long timeA = Comp.ActionQueuedComp.get(entityA).timestamp;
-			long timeB = Comp.ActionQueuedComp.get(entityB).timestamp;
+			long timeA = Comp.TurnActionQueueItemComp.get(entityA).timestamp;
+			long timeB = Comp.TurnActionQueueItemComp.get(entityB).timestamp;
 			if(timeA == timeB) {
 				return 0;
 			}

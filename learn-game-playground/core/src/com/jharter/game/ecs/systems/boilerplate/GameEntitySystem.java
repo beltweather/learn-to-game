@@ -23,7 +23,7 @@ import com.jharter.game.util.id.IDManager;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public abstract class GameEntitySystem extends EntitySystem implements IEntityHandler {
-	
+
 	@SuppressWarnings("unchecked")
 	public static Class<? extends Component>[] combine(Class<? extends Component>[] additionalComps, Class<? extends Component>...defaultComps) {
 		Class<?>[] combined = new Class<?>[additionalComps.length + defaultComps.length];
@@ -35,10 +35,10 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		}
 		return (Class<? extends Component>[]) combined;
 	}
-	
+
 	private static final Array<Entity> empty = new Array<Entity>();
 	private static final ImmutableArray<Entity> emptyImm = new ImmutableArray<Entity>(new Array<Entity>());
-	
+
 	private boolean hasEvents = false;
 	private boolean shouldSort = false;
 	private ObjectMap<Object, Family> familiesByKey = new ObjectMap<Object, Family>();
@@ -47,10 +47,10 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	private ObjectMap<Object, Array<Entity>> sortedEntityArraysByKey = new ObjectMap<Object, Array<Entity>>();
 	private Array<Class<? extends Component>> events = new Array<Class<? extends Component>>();
 	private Array<Class<? extends Component>> required = new Array<Class<? extends Component>>();
-	
+
 	private GameToolBox toolBox;
 	protected CompManager Comp;
-	
+
 	public GameEntitySystem() {
 		this(0);
 	}
@@ -58,7 +58,7 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	public GameEntitySystem(int priority) {
 		super(priority);
 	}
-	
+
 	@Override
 	public void update(float deltaTime) {
 		shouldSort = true;
@@ -66,21 +66,25 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		if(!hasRequired()) {
 			return;
 		}
+		beforeUpdate(deltaTime);
 		performUpdate(deltaTime);
+		afterUpdate(deltaTime);
 	}
-	
+
+	public void beforeUpdate(float deltaTime) {}
 	public abstract void performUpdate(float deltaTime);
-	
+	public void afterUpdate(float deltaTime) {}
+
 	@Override
 	public GameToolBox getToolBox() {
 		return toolBox;
 	}
-	
+
 	@Override
 	public PooledEngine getEngine() {
 		return (PooledEngine) super.getEngine();
 	}
-	
+
 	public void setToolBox(GameToolBox toolBox) {
 		this.toolBox = toolBox;
 		Comp = toolBox.getCompManager();
@@ -88,27 +92,27 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 			toolBox.registerEvent(event);
 		}
 	}
-	
+
 	@Override
 	public CompManager getCompManager() {
 		return toolBox.getCompManager();
 	}
-	
+
 	@Override
 	public IDManager getIDManager() {
 		return toolBox.getIDManager();
 	}
-	
+
 	@Override
 	public GameTweenManager getTweenManager() {
 		return toolBox.getTweenManager();
 	}
-	
+
 	@Override
 	public CombatHelper getCombatHelper() {
 		return toolBox.getCombatHelper();
 	}
-	
+
 	protected void add(Class<? extends Component> componentClass) {
 		add(componentClass, Family.all(componentClass).get());
 	}
@@ -116,21 +120,21 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 	protected void add(Object key, Family family) {
 		add(key, family, null);
 	}
-	
+
 	protected void add(Object key, Family family, Comparator<Entity> comparator) {
 		familiesByKey.put(key, family);
 		if(comparator != null) {
 			comparatorsByKey.put(key, comparator);
 		}
 	}
-	
+
 	protected ImmutableArray<Entity> entities(Object key) {
 		if(entityArraysByKey.containsKey(key)) {
 			return entityArraysByKey.get(key);
 		}
 		return emptyImm;
 	}
-	
+
 	protected Array<Entity> entitiesSorted(Object key) {
 		if(shouldSort) {
 			sortAddedEntities();
@@ -141,21 +145,21 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		}
 		return empty;
 	}
-	
+
 	protected int count(Object key) {
 		return entities(key).size();
 	}
-	
+
 	protected boolean hasEntities(Object key) {
 		return entities(key).size() > 0;
 	}
-	
+
 	protected void clearComps(Class<? extends Component> compClass) {
 		for(Entity entity : entities(compClass)) {
 			Comp.getFor(compClass).remove(entity);
 		}
 	}
-	
+
 	/**
 	 * All component classes in this list will be treated like events with this
 	 * system as the source and sink. The way events work is they are boolean
@@ -168,7 +172,7 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		add(eventClass);
 		hasEvents = true;
 	}
-	
+
 	protected void clearEvents() {
 		if(!hasEvents) {
 			return;
@@ -177,12 +181,12 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 			clearComps(eventClass);
 		}
 	}
-	
+
 	protected void require(Class<? extends Component> requiredClass) {
 		required.add(requiredClass);
 		add(requiredClass);
 	}
-	
+
 	protected boolean hasRequired() {
 		if(required.size == 0) {
 			return true;
@@ -194,11 +198,11 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		}
 		return true;
 	}
-	
+
 	protected ID getZoneID(ID ownerID, ZoneType type) {
 		return getIDManager().getZoneID(ownerID, type);
  	}
-	
+
 	protected ZoneComp getZone(ID ownerID, ZoneType zoneType) {
 		ID zoneID = getZoneID(ownerID, zoneType);
 		if(zoneID == null) {
@@ -210,18 +214,18 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		}
 		return Comp.ZoneComp.get(zone);
 	}
-	
+
 	protected ImmutableArray<ID> getPlayerIDs() {
 		return getIDManager().getPlayerIDs();
 	}
-	
+
 	/**
 	 * Special case where we assume the component class doubles as the key
 	 */
 	protected <T extends Component> ImmutableArray<T> comps(Class<T> componentClass) {
 		return comps(componentClass, componentClass);
 	}
-	
+
 	protected <T extends Component> ImmutableArray<T> comps(Object key, Class<T> componentClass) {
 		ImmutableArray<Entity> entities = entities(key);
 		Array<T> comps = new Array<T>(false, entities.size());
@@ -230,51 +234,51 @@ public abstract class GameEntitySystem extends EntitySystem implements IEntityHa
 		}
 		return new ImmutableArray<T>(comps);
 	}
-	
+
 	protected Entity entity(Object key) {
 		ImmutableArray<Entity> entityArray = entities(key);
 		return entityArray.size() == 0 ? null : entityArray.first();
 	}
-	
+
 	protected Entity entitySorted(Object key) {
 		Array<Entity> entityArray = entitiesSorted(key);
 		return entityArray.size == 0 ? null : entityArray.first();
 	}
-	
+
 	/**
 	 * Special case where we assume the component class doubles as the key
 	 */
 	protected <T extends Component> T comp(Class<T> componentClass) {
 		return comp(componentClass, componentClass);
 	}
-	
+
 	protected <T extends Component> T comp(Object key, Class<T> componentClass) {
 		Entity entity = entity(key);
 		return entity == null ? null : Comp.getFor(componentClass).get(entity);
 	}
-	
+
 	protected <T extends Component> T compSorted(Class<T> componentClass) {
 		return compSorted(componentClass, componentClass);
 	}
-	
+
 	protected <T extends Component> T compSorted(Object key, Class<T> componentClass) {
 		Entity entity = entitySorted(key);
 		return entity == null ? null : Comp.getFor(componentClass).get(entity);
 	}
-	
+
 	@Override
 	public void addedToEngine(Engine engine) {
 		for(Object key : familiesByKey.keys()) {
 			entityArraysByKey.put(key, engine.getEntitiesFor(familiesByKey.get(key)));
 		}
 	}
-	
+
 	@Override
 	public void removedFromEngine(Engine engine) {
 		entityArraysByKey.clear();
 		sortedEntityArraysByKey.clear();
 	}
-	
+
 	private void sortAddedEntities() {
 		for(Object key : comparatorsByKey.keys()) {
 			if(!entityArraysByKey.containsKey(key)) {

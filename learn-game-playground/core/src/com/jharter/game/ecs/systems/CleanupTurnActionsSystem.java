@@ -8,27 +8,28 @@ import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 
 public class CleanupTurnActionsSystem extends GameIteratingSystem {
-	
+
 	public static final float DEFAULT_INTERVAL = 10f;
-	
+
 	public CleanupTurnActionsSystem() {
 		super(Family.all(TurnActionComp.class, CleanupTurnActionTag.class).get());
 	}
-	
+
 	@Override
 	public void processEntity(Entity turnActionEntity, float deltaTime) {
 		cleanUp(turnActionEntity);
 		turnActionEntity.remove(CleanupTurnActionTag.class);
 	}
-	
+
 	private void cleanUp(Entity turnActionEntity) {
 		TurnAction t = Comp.TurnActionComp.get(turnActionEntity).turnAction;
 		t.multiplicity = t.defaultMultiplicity;
 		t.all = t.defaultAll;
+		t.selectedCount = 0;
 		t.targetIDs.clear();
 		Entity owner = t.getOwnerEntity();
 		Comp.ActiveTurnActionComp.remove(owner);
 		Comp.PendingTurnActionTag.remove(t.getEntity());
 	}
-	
+
 }

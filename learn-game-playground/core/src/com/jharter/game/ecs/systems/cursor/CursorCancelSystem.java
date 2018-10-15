@@ -18,31 +18,45 @@ public class CursorCancelSystem extends CursorSystem {
 	@Override
 	public void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		CursorInputComp ci = Comp.CursorInputComp.get(cursor);
-		
+
 		if(ci.cancel) {
-			if(tryRevertToLastTarget(c)) {
-				Media.cancelBeep.play();	
+			if(tryRevertToCancelTurnActionTarget(c)) {
+				Media.cancelBeep.play();
 				cursor.remove(ActiveTurnActionComp.class); // XXX Highly suspect line of code that probably doesn't do anything
-				
-				TurnAction t = getCursorManager().getTurnAction(c);
-				if(t != null) {
-					if(t.targetIDs.size == 0) {
-						c.turnActionID = null;
-					} else if(t.targetIDs.size > 0) {
-						t.targetIDs.pop();
-					}
-				}
 			}
 		}
-		
+
 		ci.cancel = false;
 	}
-	
-	private boolean tryRevertToLastTarget(CursorComp c) {
-		if(c.history.size == 0) {
+
+	private boolean tryRevertToCancelTurnActionTarget(CursorComp c) {
+		// If no turn action, nothing to cancel
+		if(c.turnActionID == null) {
 			return false;
 		}
-		c.targetID = c.history.pop();
-		return true;
+
+		TurnAction t = Comp.TurnActionComp.get(c.turnActionID).turnAction;
+
+		// As part of the cancel, try to pop the most
+		// recent target.
+		if(t.targetIDs.size > 0) {
+			t.targetIDs.pop();
+			t.selectedCount--;
+		}
+
+		// If we still have targets, set our cursor to
+		// our most recent one.
+		if(t.targetIDs.size > 0) {
+			c.targetID = t.targetIDs.peek();
+			return true;
+
+		// If we don't have targets, cancel the entire
+		// turn action, moving the cursor to the turn
+		// action's location.
+		} else {
+			c.targetID = c.turnActionID;
+			c.turnActionID = null;
+			return true;
+		}
 	}
 }

@@ -18,7 +18,7 @@ import com.jharter.game.vitals.Vitals;
 public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 
 	private CombatHelper CombatHelper;
-	
+
 	public AddIncomingVitalsChangesSystem() {
 		super(Family.all(CursorTargetEvent.class, AssociatedTurnActionsComp.class, CursorTargetComp.class).get());
 		CombatHelper = new CombatHelper(this);
@@ -32,39 +32,39 @@ public class AddIncomingVitalsChangesSystem extends GameIteratingSystem {
 		if(c.turnActionID == null || a.turnActionIDs.contains(c.turnActionID, false)) {
 			return;
 		}
-		
+
 		TurnAction t = Comp.TurnActionComp.get(c.turnActionID).turnAction;
 		a.turnActionIDs.add(c.turnActionID);
 		a.targetIndices.add(t.targetIDs.size);
 		a.cursorIDs.add(ct.cursorID);
-		
+
 		if(Comp.VitalsComp.has(entity)) {
 			setPendingVitals(entity, a);
 		}
 	}
-	
+
 	@Override
 	public void setToolBox(GameToolBox toolBox) {
 		super.setToolBox(toolBox);
 		CombatHelper.setHandler(this);
 	}
-	
+
 	public void setPendingVitals(Entity entity, AssociatedTurnActionsComp a) {
-		
+
 		PendingVitalsComp p = Comp.PendingVitalsComp.getOrAdd(entity);
 		VitalsComp v = Comp.VitalsComp.get(entity);
 		p.vitals.setFrom(v.vitals);
-		
+
 		Vitals temp = v.vitals;
 		v.vitals = p.vitals;
-		
+
 		for(int i = 0; i < a.turnActionIDs.size; i++) {
 			ID turnActionID = a.turnActionIDs.get(i);
 			int targetIndex = a.targetIndices.get(i);
 			TurnAction t = Comp.TurnActionComp.get(turnActionID).turnAction;
-			t.applyResult(entity, targetIndex);
+			t.applyResult(entity, targetIndex, true);
 		}
-		
+
 		v.vitals = temp;
 	}
 

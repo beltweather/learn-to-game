@@ -134,6 +134,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 				}
 			}
 			if(t.hasAllTargets()) {
+				Comp.PendingTurnActionTag.add(card);
 				Comp.TurnActionSelectedEvent.add(card).timestamp = TimeUtils.millis();
 			}
 		}

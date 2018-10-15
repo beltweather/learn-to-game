@@ -18,8 +18,7 @@ public class TurnAction extends EntityHandler {
 	public Array<ZoneType> targetZoneTypes = new Array<ZoneType>();
 	public Array<ID> targetIDs = new Array<ID>();
 	public int selectedCount = 0;
-	public VoidCallback<TurnAction> acceptCallback = null;
-	public Callback<Entity, Boolean> validTargetCallback = null;
+	public TargetValidator targetValidator = null;
 	public int defaultMultiplicity = 1;
 	public int multiplicity = 1;
 	public boolean defaultAll = false;
@@ -95,13 +94,8 @@ public class TurnAction extends EntityHandler {
 			return false;
 		}
 
-		// Special check for cards that modify other cards, we don't want them to be able to target each other
-		if(isUntargetableCard(entity)) {
-			return false;
-		}
-
-		if(validTargetCallback != null) {
-			return validTargetCallback.call(entity);
+		if(targetValidator != null) {
+			return targetValidator.call(entity);
 		}
 
 		return true;
@@ -114,19 +108,6 @@ public class TurnAction extends EntityHandler {
 			   zp != null &&
 			   c.cardType == CardType.TARGET_CARD &&
 			   Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.FRIEND_ACTIVE_CARD;
-	}
-
-	public void performAcceptCallback() {
-		if(acceptCallback != null) {
-			if(multiplicity == 1) {
-				acceptCallback.call(this);
-			} else {
-				for(int i = 0; i < multiplicity; i++) {
-					acceptCallback.call(this);
-				}
-				multiplicity = defaultMultiplicity;
-			}
-		}
 	}
 
 	private Array<ID> temp = new Array<ID>();
@@ -162,7 +143,9 @@ public class TurnAction extends EntityHandler {
 	public void addEffect(Effect<?> effect, int targetIndex) {
 		effects.add(effect);
 		effect.setTurnAction(this);
-		effect.setTargetIndex(targetIndex);
+		if(!effect.isTargetIndexSet()) {
+			effect.setTargetIndex(targetIndex);
+		}
 	}
 
 	public void perform(boolean pending) {
@@ -193,8 +176,7 @@ public class TurnAction extends EntityHandler {
 	public void reset() {
 		targetZoneTypes.clear();
 		targetIDs.clear();
-		acceptCallback = null;
-		validTargetCallback = null;
+		targetValidator = null;
 		multiplicity = 1;
 		all = false;
 		defaultMultiplicity = 1;

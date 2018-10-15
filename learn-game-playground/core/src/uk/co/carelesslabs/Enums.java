@@ -1,16 +1,16 @@
 package uk.co.carelesslabs;
 
 public class Enums {
-    
+
     public enum TileType {
         GRASS,
         WATER,
         CLIFF
     }
-    
+
     public enum EntityType {
-        HERO, 
-        TREE, 
+        HERO,
+        TREE,
         BIRD,
         TILE,
         CARD,
@@ -20,24 +20,24 @@ public class Enums {
         ENEMY,
         PLAYER
     }
-    
+
     public enum EnityState {
         NONE,
         IDLE,
         FEEDING,
         WALKING,
         FLYING,
-        HOVERING, 
+        HOVERING,
         LANDING
     }
-    
+
     public enum MenuState {
         ACTIVE,
         DISABLED,
         HOVEROVER,
         CLICKED
     }
-    
+
     public enum ZoneType {
     	HAND,
     	ENEMY,
@@ -50,7 +50,8 @@ public class Enums {
     	CURSOR,
     	NONE
     }
-    
+
+    @Deprecated
     public enum CardType {
     	TARGET_ENEMY,
     	TARGET_FRIEND,
@@ -58,13 +59,13 @@ public class Enums {
     	TARGET_FRIEND_THEN_ENEMY,
     	NONE
     }
-    
+
     public enum CardOwnerAction {
-		RESET_CARDS, 
-		DISCARD_HAND, 
-		FILL_HAND; 
+		RESET_CARDS,
+		DISCARD_HAND,
+		FILL_HAND;
 	}
-    
+
     /*public enum TurnPhase {
     	START_BATTLE,
     	START_TURN,
@@ -76,7 +77,7 @@ public class Enums {
     	END_BATTLE,
     	NONE
     }*/
-    
+
     public enum Direction {
     	NORTH,
     	SOUTH,

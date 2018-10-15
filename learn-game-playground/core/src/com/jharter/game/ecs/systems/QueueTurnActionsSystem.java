@@ -33,7 +33,7 @@ public class QueueTurnActionsSystem  extends GameIteratingSystem {
 		// of a high priority
 		Comp.ActiveTurnActionComp.add(t.turnAction.ownerID).activeTurnActionID = id.id;
 		if(t != null && t.turnAction.priority > 0) {
-			t.turnAction.performAcceptCallback();
+			t.turnAction.perform(false);
 		}
 
 		// Change the action's state from "queueable" to "queued" and mark it with a timestamp

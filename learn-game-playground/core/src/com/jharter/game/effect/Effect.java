@@ -11,6 +11,7 @@ public abstract class Effect<T> extends EntityHandler {
 	protected EffectProp prop;
 	protected int targetIndex;
 	protected boolean pending;
+	protected boolean targetIndexSet = false;
 
 	public Effect(EffectProp prop) {
 		super(null);
@@ -30,12 +31,17 @@ public abstract class Effect<T> extends EntityHandler {
 		setHandler(turnAction);
 	}
 
+	public boolean isTargetIndexSet() {
+		return targetIndexSet;
+	}
+
 	public int getTargetIndex() {
 		return targetIndex;
 	}
 
 	public Effect<T> setTargetIndex(int targetIndex) {
 		this.targetIndex = targetIndex;
+		targetIndexSet = true;
 		return this;
 	}
 
@@ -117,6 +123,17 @@ public abstract class Effect<T> extends EntityHandler {
 				if(v.health > v.maxHealth) {
 					v.health = v.maxHealth;
 				}
+				break;
+			case ALL:
+				if(!pending) {
+					Comp.TurnActionComp.get(target).turnAction.all = (boolean) getResult(target);
+				}
+				break;
+			case MULTIPLICITY:
+				if(!pending) {
+					Comp.TurnActionComp.get(target).turnAction.multiplicity *= (int) getResult(target);
+				}
+				break;
 			default:
 				break;
 		}

@@ -13,7 +13,13 @@ import uk.co.carelesslabs.Enums.ZoneType;
 
 public abstract class TargetValidator extends EntityHandler {
 
-	public static CombinedValidator combine(IEntityHandler handler, TargetValidator...validators) {
+	public static TargetValidator combine(IEntityHandler handler, TargetValidator...validators) {
+		if(validators.length == 0) {
+			return null;
+		}
+		if(validators.length == 1) {
+			return validators[0];
+		}
 		CombinedValidator c = new CombinedValidator(handler);
 		c.validators.addAll(validators);
 		return c;
@@ -85,9 +91,12 @@ public abstract class TargetValidator extends EntityHandler {
 		public boolean call(Entity entity) {
 			CardComp c = Comp.CardComp.get(entity);
 			ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
+			TurnActionComp t = Comp.TurnActionComp.get(entity);
 			return c == null ||
 				   zp == null ||
-				   Comp.ZoneComp.get(zp.zoneID).zoneType != ZoneType.FRIEND_ACTIVE_CARD;
+				   t == null ||
+				   Comp.ZoneComp.get(zp.zoneID).zoneType != ZoneType.FRIEND_ACTIVE_CARD ||
+				   !t.turnAction.targetZoneTypes.contains(ZoneType.FRIEND_ACTIVE_CARD, true);
 		}
 
 	}

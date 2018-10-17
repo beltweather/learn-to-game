@@ -75,6 +75,10 @@ public class EntityBuilder implements Poolable {
 		this.entity = engine.createEntity();
 	}
 
+	public PooledEngine getEngine() {
+		return engine;
+	}
+
 	public Entity Entity() {
 		return entity;
 	}

@@ -9,6 +9,7 @@ import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
@@ -151,7 +152,17 @@ public class CursorManager extends EntityHandler {
 
 	public boolean isAll(CursorComp c) {
 		TurnAction t = getTurnAction(c);
-		return t != null && t.mods.all;
+		return t != null && getMods(c.turnActionID).all;
+	}
+
+	public TurnActionMods getMods(ID turnActionID) {
+		if(Comp.PendingTurnActionModsComp.has(turnActionID)) {
+			return Comp.PendingTurnActionModsComp.get(turnActionID).mods;
+		}
+		if(Comp.TurnActionComp.has(turnActionID)) {
+			return Comp.TurnActionComp.get(turnActionID).turnAction.mods;
+		}
+		return null;
 	}
 
 	public Array<ID> getCursorAllIDs(CursorComp c) {
@@ -180,7 +191,7 @@ public class CursorManager extends EntityHandler {
 			return ids;
 		}
 
-		boolean all = turnAction.mods.all || cursorTurnAction.makesTargetAll;
+		boolean all = getMods(c.targetID).all || cursorTurnAction.makesTargetAll;
 		ID subID = turnAction.targetIDs.peek();
 		Entity subEntity = Comp.Entity.get(subID);
 		ZonePositionComp subZonePosition = Comp.ZonePositionComp.get(subEntity);

@@ -18,48 +18,6 @@ import uk.co.carelesslabs.Media;
 
 public class Cards extends EntityHandler {
 
-	//private static final TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
-
-	private ID ownerID;
-	private CardOwnerComp co;
-
-	public Cards(IEntityHandler handler) {
-		super(handler);
-	}
-
-	public void setOwnerID(ID ownerID) {
-		this.ownerID = ownerID;
-		this.co = Comp.CardOwnerComp.getOrAdd(ownerID);
-	}
-
-	public abstract class Card {
-
-		private String name;
-
-		private Card(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public Cards add() {
-			build().done();
-			return Cards.this;
-		}
-
-		protected abstract CardBuilder build();
-
-		protected CardBuilder texture(Texture texture) {
-			return texture(new TextureRegion(texture));
-		}
-
-		protected CardBuilder texture(TextureRegion texture) {
-			return CardBuilder.create(Cards.this, name, texture).owner(ownerID, co);
-		}
-	}
-
 	public Card Attack = new Card("Attack") {
 
 		@Override
@@ -142,4 +100,49 @@ public class Cards extends EntityHandler {
 
 	};
 
+
+
+	// To insert template type: ca -> ctrl+space -> enter
+
+	//private static final TextureRegion swampTexture = GraphicsUtil.buildCardTexture(Media.swamp, Media.warrior, "Damage Enemy Very Badly");
+
+	private ID ownerID;
+	private CardOwnerComp co;
+
+	public Cards(IEntityHandler handler) {
+		super(handler);
+	}
+
+	public void setOwnerID(ID ownerID) {
+		this.ownerID = ownerID;
+		this.co = Comp.CardOwnerComp.getOrAdd(ownerID);
+	}
+
+	public abstract class Card {
+
+		private String name;
+
+		private Card(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Cards add() {
+			build().done();
+			return Cards.this;
+		}
+
+		protected abstract CardBuilder build();
+
+		protected CardBuilder texture(Texture texture) {
+			return texture(new TextureRegion(texture));
+		}
+
+		protected CardBuilder texture(TextureRegion texture) {
+			return CardBuilder.create(Cards.this, name, texture).owner(ownerID, co);
+		}
+	}
 }

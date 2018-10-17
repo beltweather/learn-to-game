@@ -20,19 +20,19 @@ public class CursorTargetEventSystem extends CursorSystem {
 		event(CursorTargetEvent.class);
 		event(CursorUntargetEvent.class);
 	}
-	
+
 	@Override
 	protected void processEntity(Entity cursor, CursorComp c, float deltaTime) {
 		removeTargets(cursor, c);
 		addTargets(cursor, c);
 	}
-	
+
 	private void removeTargets(Entity cursor, CursorComp c) {
 		for(Entity target : entities(CursorTargetComp.class)) {
 			removeTarget(cursor, c, target);
 		}
 	}
-	
+
 	private void removeTarget(Entity cursor, CursorComp c, Entity target) {
 		ID targetID = Comp.IDComp.get(target).id;
 		if(targetID.equals(c.targetID)) {
@@ -46,19 +46,19 @@ public class CursorTargetEventSystem extends CursorSystem {
 		Comp.CursorTargetComp.remove(target);
 		Comp.CursorUntargetEvent.add(target).cursorID = Comp.IDComp.get(cursor).id;
 	}
-	
+
 	private void addTargets(Entity cursor, CursorComp c) {
 		ID cursorID = Comp.IDComp.get(cursor).id;
 		CursorTargetComp t = Comp.CursorTargetComp.get(c.targetID);
 		if(c.targetID == null || (t != null && t.cursorID != null && t.cursorID.equals(cursorID))) {
 			return;
 		}
-		
+
 		Entity target = Comp.Entity.get(c.targetID);
 		t = Comp.CursorTargetComp.getOrAdd(target);
 		t.cursorID = cursorID;
 		Comp.CursorTargetEvent.add(target);
-		
+
 		if(getCursorManager().isAll(c)) {
 			for(ID id : getCursorManager().getCursorAllIDs(c)) {
 				if(id.equals(c.targetID)) {
@@ -71,11 +71,11 @@ public class CursorTargetEventSystem extends CursorSystem {
 				Comp.CursorTargetEvent.add(id);
 			}
 		}
-		
+
 		if(getCursorManager().isTargetingCard(c)) {
 			TurnAction cursorTurnAction = Comp.TurnActionComp.get(c.turnActionID).turnAction;
 			TurnAction turnAction = Comp.TurnActionComp.get(c.targetID).turnAction;
-			int multiplicity = turnAction.multiplicity * cursorTurnAction.makesTargetMultiplicity;
+			int multiplicity = turnAction.mods.multiplicity * cursorTurnAction.makesTargetMultiplicity;
 			for(ID id : getCursorManager().getCursorSecondaryIDs(c)) {
 				t = Comp.CursorTargetComp.getOrAdd(id);
 				t.cursorID = cursorID;
@@ -86,5 +86,5 @@ public class CursorTargetEventSystem extends CursorSystem {
 			}
 		}
 	}
-	
+
 }

@@ -2,7 +2,7 @@ package com.jharter.game.ecs.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ecs.components.Components.CardComp;
+import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityHandler;
@@ -10,7 +10,6 @@ import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.effect.Effect;
 import com.jharter.game.util.id.ID;
 
-import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public class TurnAction extends EntityHandler {
@@ -19,10 +18,7 @@ public class TurnAction extends EntityHandler {
 	public Array<ID> targetIDs = new Array<ID>();
 	public int selectedCount = 0;
 	public TargetValidator targetValidator = null;
-	public int defaultMultiplicity = 1;
-	public int multiplicity = 1;
-	public boolean defaultAll = false;
-	public boolean all = false;
+	public TurnActionMods mods = new TurnActionMods();
 	public int priority = 0;
 	public ID entityID = null;
 	public ID ownerID = null;
@@ -101,15 +97,6 @@ public class TurnAction extends EntityHandler {
 		return true;
 	}
 
-	public boolean isUntargetableCard(Entity entity) {
-		CardComp c = Comp.CardComp.get(entity);
-		ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
-		return c != null &&
-			   zp != null &&
-			   c.cardType == CardType.TARGET_CARD &&
-			   Comp.ZoneComp.get(zp.zoneID).zoneType == ZoneType.FRIEND_ACTIVE_CARD;
-	}
-
 	private Array<ID> temp = new Array<ID>();
 
 	public Array<ID> getAllTargetIDs() {
@@ -117,7 +104,7 @@ public class TurnAction extends EntityHandler {
 	}
 
 	public Array<ID> getAllTargetIDs(boolean inFinalZoneOnly) {
-		if(!all || targetIDs.size == 0) {
+		if(!mods.all || targetIDs.size == 0) {
 			return targetIDs;
 		}
 
@@ -137,7 +124,7 @@ public class TurnAction extends EntityHandler {
 	}
 
 	public void addEffect(Effect<?> effect) {
-		addEffect(effect, targetZoneTypes.size - 1);
+		addEffect(effect, effects.size);
 	}
 
 	public void addEffect(Effect<?> effect, int targetIndex) {
@@ -149,7 +136,11 @@ public class TurnAction extends EntityHandler {
 	}
 
 	public void perform(boolean pending) {
-		for(int i = 0; i < multiplicity; i++) {
+		if(targetIDs.size == 0) {
+			return;
+		}
+		boolean all = getAll(pending);
+		for(int i = 0; i < getMultiplicity(pending); i++) {
 			for(Effect<?> effect : effects) {
 				if(all && effect.getTargetIndex() == targetIDs.size - 1) {
 					for(ID targetID : getAllTargetIDs(true)) {
@@ -163,7 +154,7 @@ public class TurnAction extends EntityHandler {
 	}
 
 	public void applyResult(Entity target, int targetIndex, boolean pending) {
-		for(int i = 0; i < multiplicity; i++) {
+		for(int i = 0; i < getMultiplicity(pending); i++) {
 			for(Effect<?> effect : effects) {
 				if(effect.getTargetIndex() != targetIndex) {
 					continue;
@@ -173,18 +164,38 @@ public class TurnAction extends EntityHandler {
 		}
 	}
 
+	private int getMultiplicity(boolean pending) {
+		if(!pending) {
+			return mods.multiplicity;
+		}
+		PendingTurnActionModsComp m = Comp.PendingTurnActionModsComp.get(entityID);
+		if(m == null) {
+			return mods.multiplicity;
+		}
+		return m.mods.multiplicity;
+	}
+
+	private boolean getAll(boolean pending) {
+		if(!pending) {
+			return mods.all;
+		}
+		PendingTurnActionModsComp m = Comp.PendingTurnActionModsComp.get(entityID);
+		if(m == null) {
+			return mods.all;
+		}
+		return m.mods.all;
+	}
+
 	public void reset() {
 		targetZoneTypes.clear();
 		targetIDs.clear();
 		targetValidator = null;
-		multiplicity = 1;
-		all = false;
-		defaultMultiplicity = 1;
-		defaultAll = false;
+		mods.clear();
 		priority = 0;
 		makesTargetAll = false;
 		makesTargetMultiplicity = 1;
 		entityID = null;
+		selectedCount = 0;
 	}
 
 }

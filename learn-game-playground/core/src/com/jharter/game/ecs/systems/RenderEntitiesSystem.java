@@ -24,7 +24,7 @@ import com.jharter.game.ecs.systems.boilerplate.GameSortedIteratingSystem;
 import com.jharter.game.render.ShapeRenderMethod;
 
 public class RenderEntitiesSystem extends GameSortedIteratingSystem {
-	
+
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 	private OrthographicCamera camera;
@@ -38,7 +38,9 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 	}
 
 	@Override
-	public void update (float deltaTime) {
+	public void beforeUpdate(float deltaTime) {
+		forceSort();
+
 		Gdx.gl.glClearColor(0, 0, 0, 0);
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT |
@@ -46,33 +48,35 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
-		forceSort();
-		super.update(deltaTime);
+	}
+
+	@Override
+	public void afterUpdate(float deltaTime) {
 		batch.end();
 	}
-	
+
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		TextureComp t = Comp.TextureComp.get(entity);
 		ShapeRenderComp r = Comp.ShapeRenderComp.get(entity);
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		
+
 		if(t != null && t.region == null) {
 			t.region = t.defaultRegion;
 		}
-		
+
 		boolean isTexture = t != null && t.region != null;
 		boolean isShapeRender = r != null && r.renderMethod != null;
 		if(!isTexture && !isShapeRender) {
 			return;
 		}
-		
+
 		Color c = batch.getColor();
 		float offsetX = (Comp.util(s).scaledWidth() - s.width)/2;
 		float offsetY = (Comp.util(s).scaledHeight() - s.height)/2;
 		float originX = s.width/2;
 		float originY = s.height/2;
-		
+
 		boolean drawSingle = true;
 		if(Comp.MultiSpriteComp.has(entity)) {
 			MultiSpriteComp ms = Comp.MultiSpriteComp.get(entity);
@@ -96,18 +100,18 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 				//r.renderMethod.render(shapeRenderer, entity, deltaTime);
 			}
 		}
-		
+
 		if(batch.getColor().a != c.a) {
 			batch.setColor(c);
 		}
 	}
-	
+
 	private void handleShapeRenderMethod(ShapeRenderMethod r, Entity entity, float deltaTime) {
 		batch.end();
 		r.render(shapeRenderer, entity, deltaTime);
 		batch.begin();
 	}
-	
+
 	private void batchDraw(MultiSpriteComp ms, int index, SpriteComp s, TextureComp t, float offsetX, float offsetY, float originX, float originY) {
 		Vector3 position = index >= ms.positions.size ? s.position : ms.positions.get(index);
 		Vector2 scale = index >= ms.scales.size ? s.scale : ms.scales.get(index);
@@ -118,11 +122,11 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 		}
 		batchDraw(position, scale, alpha, angleDegrees, s.width, s.height, t.region, offsetX, offsetY, originX, originY);
 	}
-	
+
 	private void batchDraw(SpriteComp s, TextureComp t, float offsetX, float offsetY, float originX, float originY) {
 		batchDraw(s.position, s.scale, s.alpha, s.angleDegrees, s.width, s.height, t.region, offsetX, offsetY, originX, originY);
 	}
-	
+
 	private void batchDraw(Vector3 position, Vector2 scale, float alpha, float angleDegrees, float width, float height, TextureRegion t, float offsetX, float offsetY, float originX, float originY) {
 		if(alpha != batch.getColor().a) {
 			Color c = batch.getColor();
@@ -130,11 +134,11 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 		}
 		batch.draw(t, round(position.x + offsetX), round(position.y + offsetY), round(originX), round(originY), width, height, scale.x, scale.y, angleDegrees);
 	}
-	
+
 	private float round(float v) {
 		return v; //Math.round(v);
 	}
-	
+
 	private class PositionSort implements Comparator<Entity> {
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
@@ -146,5 +150,5 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 			return (int) (posA.z - posB.z);
 		}
 	}
-		
+
 }

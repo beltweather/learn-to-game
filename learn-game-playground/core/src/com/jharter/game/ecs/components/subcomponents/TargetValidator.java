@@ -9,7 +9,6 @@ import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 
-import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public abstract class TargetValidator extends EntityHandler {
@@ -72,7 +71,7 @@ public abstract class TargetValidator extends EntityHandler {
 			if(t == null || t.turnAction == null) {
 				return true;
 			}
-			return !t.turnAction.all;
+			return !t.turnAction.mods.all;
 		}
 	}
 
@@ -88,7 +87,6 @@ public abstract class TargetValidator extends EntityHandler {
 			ZonePositionComp zp = Comp.ZonePositionComp.get(entity);
 			return c == null ||
 				   zp == null ||
-				   c.cardType != CardType.TARGET_CARD ||
 				   Comp.ZoneComp.get(zp.zoneID).zoneType != ZoneType.FRIEND_ACTIVE_CARD;
 		}
 

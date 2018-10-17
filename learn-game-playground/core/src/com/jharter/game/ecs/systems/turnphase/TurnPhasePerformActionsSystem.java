@@ -5,12 +5,14 @@ import java.util.Comparator;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
+import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
+import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
+import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
 import com.jharter.game.ecs.components.Components.VitalsComp;
@@ -38,12 +40,14 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 		add(TurnActionComp.class, Family.all(TurnActionComp.class, TurnActionQueueItemComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
 		add(AssociatedTurnActionsComp.class, Family.all(AssociatedTurnActionsComp.class, VitalsComp.class).get());
 		add(PendingVitalsComp.class);
+		add(PendingTurnActionModsComp.class);
+		add(PendingTurnActionTag.class);
 	}
 
 	@Override
 	protected boolean processEntityPhaseStart(Entity turnPhase, float deltaTime) {
 		busy = false;
-		clearComps(PendingVitalsComp.class);
+		clearComps(PendingTurnActionTag.class);
 		return getTurnTimer().isStopped() && isDoneAnimating(); // XXX There's probably a better way to wait for animations
 	}
 
@@ -72,7 +76,7 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 	protected void handleTurnAction(Entity turnActionEntity) {
 		TurnActionComp t = Comp.TurnActionComp.get(turnActionEntity);
 		boolean performTurnAction = t != null &&
-				t.turnAction.priority == 0 &&
+				//t.turnAction.priority == 0 &&
 				Comp.CardComp.has(turnActionEntity);
 
 		turnActionEntity.remove(TurnActionQueueItemComp.class);
@@ -311,6 +315,16 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 
 		@Override
 		public int compare(Entity entityA, Entity entityB) {
+			int priorityA = Comp.TurnActionComp.get(entityA).turnAction.priority;
+			int priorityB = Comp.TurnActionComp.get(entityB).turnAction.priority;
+
+			if(priorityA != priorityB) {
+				if(priorityA > priorityB) {
+					return -1;
+				}
+				return 1;
+			}
+
 			long timeA = Comp.TurnActionQueueItemComp.get(entityA).timestamp;
 			long timeB = Comp.TurnActionQueueItemComp.get(entityB).timestamp;
 			if(timeA == timeB) {

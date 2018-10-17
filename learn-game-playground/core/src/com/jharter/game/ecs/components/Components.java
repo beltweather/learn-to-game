@@ -15,6 +15,7 @@ import com.jharter.game.control.GameInput;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.layout.ZoneLayout;
@@ -23,7 +24,6 @@ import com.jharter.game.util.id.ID;
 import com.jharter.game.vitals.Vitals;
 
 import uk.co.carelesslabs.Enums.CardOwnerAction;
-import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Enums.TileType;
 import uk.co.carelesslabs.Enums.ZoneType;
@@ -338,7 +338,6 @@ public final class Components {
 	}
 
 	public static final class CardComp implements C {
-		public CardType cardType = CardType.NONE;
 		public String text = null;
 		public String tooltipText = null;
 		public ID ownerID = null;
@@ -347,7 +346,6 @@ public final class Components {
 
 		@Override
 		public void reset() {
-			cardType = CardType.NONE;
 			text = null;
 			tooltipText = null;
 			ownerID = null;
@@ -400,6 +398,17 @@ public final class Components {
 		@Override
 		public void reset() {
 			vitals.clear();
+		}
+	}
+
+	public static final class PendingTurnActionModsComp implements C {
+		public TurnActionMods mods = new TurnActionMods();
+
+		private PendingTurnActionModsComp() {}
+
+		@Override
+		public void reset() {
+			mods.clear();
 		}
 	}
 

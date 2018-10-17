@@ -11,11 +11,11 @@ import com.jharter.game.layout.TweenTarget;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.util.id.ID;
 
-public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Comparator<Entity> {
+public class ZoneLayoutSystem extends GameSortedIteratingSystem {
 
 	public ZoneLayoutSystem() {
 		super(Family.all(ZoneComp.class).get());
-		setComparator(this);
+		setComparator(new PrioritySort());
 		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
 	}
 
@@ -36,23 +36,27 @@ public class ZoneLayoutSystem extends GameSortedIteratingSystem implements Compa
 			}
 		}
 	}
-	
+
 	private ID getActivePlayerID() {
 		return comp(ActivePlayerComp.class).activePlayerID;
 	}
-	
-	@Override
-	public int compare(Entity entityA, Entity entityB) {
-		ZoneLayout layoutA = Comp.ZoneComp.get(entityA).layout;
-		ZoneLayout layoutB = Comp.ZoneComp.get(entityB).layout;
-		if(layoutA == null && layoutB != null) {
-			return -1;
-		} else if(layoutA != null && layoutB == null) {
-			return 1;
-		} else if(layoutA == null && layoutB == null) {
-			return 0;
+
+	private class PrioritySort implements Comparator<Entity> {
+
+		@Override
+		public int compare(Entity entityA, Entity entityB) {
+			ZoneLayout layoutA = Comp.ZoneComp.get(entityA).layout;
+			ZoneLayout layoutB = Comp.ZoneComp.get(entityB).layout;
+			if(layoutA == null && layoutB != null) {
+				return -1;
+			} else if(layoutA != null && layoutB == null) {
+				return 1;
+			} else if(layoutA == null && layoutB == null) {
+				return 0;
+			}
+			return (int) (layoutB.getPriority() - layoutA.getPriority());
 		}
-		return (int) (layoutB.getPriority() - layoutA.getPriority());
+
 	}
 
 }

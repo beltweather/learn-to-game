@@ -2,6 +2,7 @@ package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.vitals.Vitals;
 
@@ -96,47 +97,64 @@ public abstract class Effect<T> extends EntityHandler {
 	}
 
 	public void applyResult(Entity target, boolean pending) {
-		if(target == null || !Comp.VitalsComp.has(target)) {
+		if(target == null) {
 			return;
 		}
 
 		Vitals v;
-		if(pending) {
-			if(!Comp.PendingVitalsComp.has(target)) {
-				v = Comp.PendingVitalsComp.add(target).vitals.setFrom(Comp.VitalsComp.get(target).vitals);
-			} else {
-				v = Comp.PendingVitalsComp.get(target).vitals;
-			}
-		} else {
-			v = Comp.VitalsComp.get(target).vitals;
-		}
-
+		TurnActionMods mods;
 		switch(prop) {
 			case DAMAGE:
+				v = getVitals(target, pending);
 				v.health -= (int) getResult(target);
 				if(v.health < 0) {
 					v.health = 0;
 				}
 				break;
 			case HEAL:
+				v = getVitals(target, pending);
 				v.health += (int) getResult(target);
 				if(v.health > v.maxHealth) {
 					v.health = v.maxHealth;
 				}
 				break;
 			case ALL:
-				if(!pending) {
-					Comp.TurnActionComp.get(target).turnAction.all = (boolean) getResult(target);
-				}
+				mods = getMods(target, pending);
+				mods.all = mods.all || (boolean) getResult(target);
 				break;
 			case MULTIPLICITY:
-				if(!pending) {
-					Comp.TurnActionComp.get(target).turnAction.multiplicity *= (int) getResult(target);
-				}
+				mods = getMods(target, pending);
+				mods.multiplicity *= (int) getResult(target);
 				break;
 			default:
 				break;
 		}
+	}
+
+	private Vitals getVitals(Entity target, boolean pending) {
+		if(!Comp.VitalsComp.has(target)) {
+			return null;
+		}
+		if(pending) {
+			if(!Comp.PendingVitalsComp.has(target)) {
+				return Comp.PendingVitalsComp.add(target).vitals.setFrom(Comp.VitalsComp.get(target).vitals);
+			}
+			return Comp.PendingVitalsComp.get(target).vitals;
+		}
+		return Comp.VitalsComp.get(target).vitals;
+	}
+
+	private TurnActionMods getMods(Entity target, boolean pending) {
+		if(!Comp.TurnActionComp.has(target)) {
+			return null;
+		}
+		if(pending) {
+			if(!Comp.PendingTurnActionModsComp.has(target)) {
+				return Comp.PendingTurnActionModsComp.add(target).mods.setFrom(Comp.TurnActionComp.get(target).turnAction.mods);
+			}
+			return Comp.PendingTurnActionModsComp.get(target).mods;
+		}
+		return Comp.TurnActionComp.get(target).turnAction.mods;
 	}
 
 }

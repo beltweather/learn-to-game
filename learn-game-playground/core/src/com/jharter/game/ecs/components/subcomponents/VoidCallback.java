@@ -8,7 +8,6 @@ import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.util.id.ID;
 
-import uk.co.carelesslabs.Enums.CardType;
 import uk.co.carelesslabs.Enums.ZoneType;
 
 public abstract class VoidCallback<T> extends EntityHandler {
@@ -23,7 +22,6 @@ public abstract class VoidCallback<T> extends EntityHandler {
 
 		public FriendEnemyCallback(IEntityHandler handler, EntityBuilder b) {
 			super(handler);
-			b.CardComp().cardType = CardType.TARGET_FRIEND_THEN_ENEMY;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND);
 			t.targetZoneTypes.add(ZoneType.ENEMY);
@@ -37,7 +35,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			Entity character = t.getOwnerEntity();
 			call(character, card, friend, enemy);
 
-			if(t.all) {
+			if(t.mods.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
@@ -51,7 +49,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 					// Maybe need to check what's valid or not here
 					call(character, card, entity, enemy);
 				}
-				t.all = t.defaultAll;
+				t.mods.all = t.mods.defaultAll;
 
 			} else {
 				call(character, card, friend, enemy);
@@ -67,7 +65,6 @@ public abstract class VoidCallback<T> extends EntityHandler {
 
 		public FriendCallback(IEntityHandler handler, EntityBuilder b) {
 			super(handler);
-			b.CardComp().cardType = CardType.TARGET_FRIEND;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND);
 		}
@@ -78,7 +75,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			Entity friend = t.getTargetEntity(0);
 			Entity character = t.getOwnerEntity();
 
-			if(t.all) {
+			if(t.mods.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
@@ -92,7 +89,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 					// Maybe need to check what's valid or not here
 					call(character, card, entity);
 				}
-				t.all = t.defaultAll;
+				t.mods.all = t.mods.defaultAll;
 
 			} else {
 				call(character, card, friend);
@@ -107,7 +104,6 @@ public abstract class VoidCallback<T> extends EntityHandler {
 
 		public CardCallback(IEntityHandler handler, EntityBuilder b) {
 			super(handler);
-			b.CardComp().cardType = CardType.TARGET_CARD;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.FRIEND_ACTIVE_CARD);
 			t.priority = 1;
@@ -130,7 +126,6 @@ public abstract class VoidCallback<T> extends EntityHandler {
 
 		public EnemyCallback(IEntityHandler handler, EntityBuilder b) {
 			super(handler);
-			b.CardComp().cardType = CardType.TARGET_ENEMY;
 			TurnAction t = b.TurnActionComp().turnAction;
 			t.targetZoneTypes.add(ZoneType.ENEMY);
 		}
@@ -141,7 +136,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			Entity enemy = t.getTargetEntity(0);
 			Entity character = t.getOwnerEntity();
 
-			if(t.all) {
+			if(t.mods.all) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
@@ -155,7 +150,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 					// Maybe need to check what's valid or not here
 					call(character, card, entity);
 				}
-				t.all = t.defaultAll;
+				t.mods.all = t.mods.defaultAll;
 
 			} else {
 				call(character, card, enemy);

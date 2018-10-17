@@ -8,7 +8,7 @@ import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.helpers.ArrowHelper;
 import com.jharter.game.ecs.helpers.BackgroundHelper;
-import com.jharter.game.ecs.helpers.CardHelper;
+import com.jharter.game.ecs.helpers.Cards;
 import com.jharter.game.ecs.helpers.CursorHelper;
 import com.jharter.game.ecs.helpers.EnemyHelper;
 import com.jharter.game.ecs.helpers.PlayerHelper;
@@ -79,7 +79,7 @@ public class BattleStage extends GameStage {
 	public void addEntities(PooledEngine engine) {
 		BackgroundHelper BackgroundHelper = new BackgroundHelper(this);
 		ZoneHelper ZoneHelper = new ZoneHelper(this);
-		CardHelper CardHelper = new CardHelper(this);
+		Cards Cards = new Cards(this);
 		TurnHelper TurnHelper = new TurnHelper(this);
 		ArrowHelper ArrowHelper = new ArrowHelper(this);
 		PlayerHelper PlayerHelper = new PlayerHelper(this);
@@ -157,43 +157,43 @@ public class BattleStage extends GameStage {
 		ZoneHelper.addZone(cactarID, ZoneType.DISCARD, new HiddenLayout(this));
 
 		// Cards
-		CardHelper.setOwnerID(atmaID);
-		for(int i = 0; i < 1; i++) { CardHelper.addEnemyAttackCard(); }
+		Cards.setOwnerID(atmaID);
+		for(int i = 0; i < 1; i++) { Cards.EnemyAttack(); }
 
-		CardHelper.setOwnerID(cactarID);
-		for(int i = 0; i < 1; i++) { CardHelper.addEnemyAttackCard(); }
+		Cards.setOwnerID(cactarID);
+		for(int i = 0; i < 1; i++) { Cards.EnemyAttack(); }
 
-		CardHelper.setOwnerID(roguePlayerID);
-		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		Cards.setOwnerID(roguePlayerID);
+		for(int i = 0; i < 6; i++) { Cards.Drain(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
+		for(int i = 0; i < 3; i++) { Cards.X2(); }
+		for(int i = 0; i < 2; i++) { Cards.All(); }
 
-		CardHelper.setOwnerID(warriorPlayerID);
-		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		Cards.setOwnerID(warriorPlayerID);
+		for(int i = 0; i < 6; i++) { Cards.Drain(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
+		for(int i = 0; i < 3; i++) { Cards.X2(); }
+		for(int i = 0; i < 2; i++) { Cards.All(); }
 
-		CardHelper.setOwnerID(sorcererPlayerID);
-		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		Cards.setOwnerID(sorcererPlayerID);
+		for(int i = 0; i < 6; i++) { Cards.Drain(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
+		for(int i = 0; i < 3; i++) { Cards.X2(); }
+		for(int i = 0; i < 2; i++) { Cards.All(); }
 
-		CardHelper.setOwnerID(rangerPlayerID);
-		for(int i = 0; i < 6; i++) { CardHelper.addDrainCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addAttackCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAttackAllCard(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addHealAllCard(); }
-		for(int i = 0; i < 3; i++) { CardHelper.addX2Card(); }
-		for(int i = 0; i < 2; i++) { CardHelper.addAllCard(); }
+		Cards.setOwnerID(rangerPlayerID);
+		for(int i = 0; i < 6; i++) { Cards.Drain(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
+		for(int i = 0; i < 3; i++) { Cards.X2(); }
+		for(int i = 0; i < 2; i++) { Cards.All(); }
 
 		EntityBuilder b = CursorHelper.buildCursor(cursorZone);
 		b.FocusComp();

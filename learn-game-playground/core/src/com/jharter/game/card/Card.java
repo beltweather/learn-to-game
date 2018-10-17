@@ -11,7 +11,7 @@ import com.jharter.game.ecs.components.subcomponents.TargetValidator.DoesntTarge
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.entities.EntityBuildUtil;
 import com.jharter.game.ecs.entities.EntityBuilder;
-import com.jharter.game.ecs.entities.IEntityHandler;
+import com.jharter.game.ecs.helpers.Cards;
 import com.jharter.game.effect.Effect;
 import com.jharter.game.util.id.ID;
 
@@ -26,18 +26,22 @@ import uk.co.carelesslabs.Enums.ZoneType;
  */
 public class Card implements Poolable {
 
-	public static Card create(IEntityHandler handler, String name, Texture texture) {
+	public static Card create(Cards handler, String name, Texture texture) {
+		return create(handler, name, new TextureRegion(texture));
+	}
+
+	public static Card create(Cards handler, String name, TextureRegion texture) {
 		Card card = Pools.get(Card.class).obtain();
 		card.init(handler, name, texture);
 		return card;
 	}
 
 	private EntityBuilder b;
-	private IEntityHandler handler;
+	private Cards handler;
 
 	private Card() {}
 
-	private void init(IEntityHandler handler, String name, Texture texture) {
+	private void init(Cards handler, String name, TextureRegion texture) {
 		this.handler = handler;
 		b = EntityBuildUtil.buildBasicEntity(handler.getEngine(), EntityType.CARD, new Vector3(), texture);
 		name(name);
@@ -128,6 +132,11 @@ public class Card implements Poolable {
 		}
 		b.TurnActionComp().turnAction.targetValidator = validator;
 		return this;
+	}
+
+	public Cards done() {
+		free();
+		return handler;
 	}
 
 	public void free() {

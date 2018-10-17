@@ -3,12 +3,12 @@ package com.jharter.game.stages.impl;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.jharter.game.card.Cards;
 import com.jharter.game.debug.Debug;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.helpers.ArrowHelper;
 import com.jharter.game.ecs.helpers.BackgroundHelper;
-import com.jharter.game.ecs.helpers.Cards;
 import com.jharter.game.ecs.helpers.CursorHelper;
 import com.jharter.game.ecs.helpers.EnemyHelper;
 import com.jharter.game.ecs.helpers.PlayerHelper;
@@ -158,42 +158,42 @@ public class BattleStage extends GameStage {
 
 		// Cards
 		Cards.setOwnerID(atmaID);
-		for(int i = 0; i < 1; i++) { Cards.EnemyAttack(); }
+		for(int i = 0; i < 1; i++) { Cards.EnemyAttack.add(); }
 
 		Cards.setOwnerID(cactarID);
-		for(int i = 0; i < 1; i++) { Cards.EnemyAttack(); }
+		for(int i = 0; i < 1; i++) { Cards.EnemyAttack.add(); }
 
 		Cards.setOwnerID(roguePlayerID);
-		for(int i = 0; i < 6; i++) { Cards.Drain(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack(); }
-		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
-		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
-		for(int i = 0; i < 3; i++) { Cards.X2(); }
-		for(int i = 0; i < 2; i++) { Cards.All(); }
+		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
+		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
+		for(int i = 0; i < 2; i++) { Cards.All.add(); }
 
 		Cards.setOwnerID(warriorPlayerID);
-		for(int i = 0; i < 6; i++) { Cards.Drain(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack(); }
-		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
-		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
-		for(int i = 0; i < 3; i++) { Cards.X2(); }
-		for(int i = 0; i < 2; i++) { Cards.All(); }
+		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
+		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
+		for(int i = 0; i < 2; i++) { Cards.All.add(); }
 
 		Cards.setOwnerID(sorcererPlayerID);
-		for(int i = 0; i < 6; i++) { Cards.Drain(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack(); }
-		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
-		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
-		for(int i = 0; i < 3; i++) { Cards.X2(); }
-		for(int i = 0; i < 2; i++) { Cards.All(); }
+		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
+		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
+		for(int i = 0; i < 2; i++) { Cards.All.add(); }
 
 		Cards.setOwnerID(rangerPlayerID);
-		for(int i = 0; i < 6; i++) { Cards.Drain(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack(); }
-		for(int i = 0; i < 2; i++) { Cards.AttackAll(); }
-		for(int i = 0; i < 2; i++) { Cards.HealAll(); }
-		for(int i = 0; i < 3; i++) { Cards.X2(); }
-		for(int i = 0; i < 2; i++) { Cards.All(); }
+		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
+		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
+		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
+		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
+		for(int i = 0; i < 2; i++) { Cards.All.add(); }
 
 		EntityBuilder b = CursorHelper.buildCursor(cursorZone);
 		b.FocusComp();

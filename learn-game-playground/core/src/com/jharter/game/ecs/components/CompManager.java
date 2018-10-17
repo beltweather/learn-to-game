@@ -37,6 +37,7 @@ import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
+import com.jharter.game.ecs.components.Components.PendingStatusEffectsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.Components.PendingVitalsComp;
@@ -47,6 +48,7 @@ import com.jharter.game.ecs.components.Components.ShapeRenderComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.SpriteCompUtil;
 import com.jharter.game.ecs.components.Components.StatsComp;
+import com.jharter.game.ecs.components.Components.StatusEffectsComp;
 import com.jharter.game.ecs.components.Components.TargetPositionComp;
 import com.jharter.game.ecs.components.Components.TargetableTag;
 import com.jharter.game.ecs.components.Components.TextureComp;
@@ -287,6 +289,8 @@ public class CompManager {
 	public final CompMapper<VitalsComp> VitalsComp = getFor(VitalsComp.class);
 	public final CompMapper<ZoneComp> ZoneComp = getFor(ZoneComp.class);
 	public final CompMapper<ZonePositionComp> ZonePositionComp = getFor(ZonePositionComp.class);
+	public final CompMapper<StatusEffectsComp> StatusEffectsComp = getFor(StatusEffectsComp.class);
+	public final CompMapper<PendingStatusEffectsComp> PendingStatusEffectsComp = getFor(PendingStatusEffectsComp.class);
 
 	// To insert template type: cm -> ctrl+space -> enter
 

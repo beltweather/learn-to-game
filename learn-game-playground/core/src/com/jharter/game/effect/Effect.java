@@ -1,10 +1,14 @@
 package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Array;
+import com.jharter.game.ecs.components.subcomponents.StatusEffects;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
+import com.jharter.game.ecs.components.subcomponents.Vitals;
 import com.jharter.game.ecs.entities.EntityHandler;
-import com.jharter.game.vitals.Vitals;
+
+import uk.co.carelesslabs.Enums.StatusEffectType;
 
 public abstract class Effect<T> extends EntityHandler {
 
@@ -96,6 +100,7 @@ public abstract class Effect<T> extends EntityHandler {
 		applyResult(getTarget(), pending);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void applyResult(Entity target, boolean pending) {
 		if(target == null) {
 			return;
@@ -103,6 +108,7 @@ public abstract class Effect<T> extends EntityHandler {
 
 		Vitals v;
 		TurnActionMods mods;
+		StatusEffects effects;
 		switch(prop) {
 			case DAMAGE:
 				v = getVitals(target, pending);
@@ -126,6 +132,10 @@ public abstract class Effect<T> extends EntityHandler {
 				mods = getMods(target, pending);
 				mods.multiplicity *= (int) getResult(target);
 				break;
+			case STATUS:
+				effects = getStatusEffects(target, pending);
+				effects.effects.addAll((Array<StatusEffectType>) getResult(target));
+				break;
 			default:
 				break;
 		}
@@ -142,6 +152,19 @@ public abstract class Effect<T> extends EntityHandler {
 			return Comp.PendingVitalsComp.get(target).vitals;
 		}
 		return Comp.VitalsComp.get(target).vitals;
+	}
+
+	private StatusEffects getStatusEffects(Entity target, boolean pending) {
+		if(!Comp.StatusEffectsComp.has(target)) {
+			return null;
+		}
+		if(pending) {
+			if(!Comp.PendingStatusEffectsComp.has(target)) {
+				return Comp.PendingStatusEffectsComp.add(target).effects.setFrom(Comp.StatusEffectsComp.get(target).effects);
+			}
+			return Comp.PendingStatusEffectsComp.get(target).effects;
+		}
+		return Comp.StatusEffectsComp.get(target).effects;
 	}
 
 	private TurnActionMods getMods(Entity target, boolean pending) {

@@ -1,6 +1,6 @@
 package com.jharter.game.ecs.components.subcomponents;
 
-public class TurnActionMods {
+public class TurnActionMods implements Pendable<TurnActionMods> {
 
 	public boolean defaultAll = false;
 	public boolean all = false;
@@ -15,11 +15,12 @@ public class TurnActionMods {
 		return this;
 	}
 
-	public void clear() {
+	public TurnActionMods clear() {
 		defaultAll = false;
 		all = false;
 		defaultMultiplicity = 1;
 		multiplicity = 1;
+		return this;
 	}
 
 }

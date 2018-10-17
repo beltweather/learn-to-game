@@ -9,9 +9,9 @@ import com.jharter.game.ecs.components.Components.IDComp;
 import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
+import com.jharter.game.ecs.components.subcomponents.Vitals;
 import com.jharter.game.ecs.systems.boilerplate.GameIteratingSystem;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.vitals.Vitals;
 
 public class RemoveIncomingVitalsChangesSystem extends GameIteratingSystem {
 

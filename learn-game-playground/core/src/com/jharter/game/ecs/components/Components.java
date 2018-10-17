@@ -14,14 +14,15 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.jharter.game.control.GameInput;
 import com.jharter.game.ecs.components.subcomponents.Interaction;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
+import com.jharter.game.ecs.components.subcomponents.StatusEffects;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
+import com.jharter.game.ecs.components.subcomponents.Vitals;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.layout.ZoneLayout;
 import com.jharter.game.render.ShapeRenderMethod;
 import com.jharter.game.util.id.ID;
-import com.jharter.game.vitals.Vitals;
 
 import uk.co.carelesslabs.Enums.CardOwnerAction;
 import uk.co.carelesslabs.Enums.EntityType;
@@ -398,6 +399,30 @@ public final class Components {
 		@Override
 		public void reset() {
 			vitals.clear();
+		}
+	}
+
+	public static final class StatusEffectsComp implements C {
+
+		public StatusEffects effects = new StatusEffects();
+
+		private StatusEffectsComp() {}
+
+		@Override
+		public void reset() {
+
+		}
+	}
+
+	public static final class PendingStatusEffectsComp implements C {
+
+		public StatusEffects effects = new StatusEffects();
+
+		private PendingStatusEffectsComp() {}
+
+		@Override
+		public void reset() {
+
 		}
 	}
 

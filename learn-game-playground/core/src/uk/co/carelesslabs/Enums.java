@@ -91,4 +91,11 @@ public class Enums {
     	NONE,
     }
 
+    public enum StatusEffectType {
+    	FIRE,
+    	ICE,
+    	LIGHTNING,
+    	POISON
+    }
+
 }

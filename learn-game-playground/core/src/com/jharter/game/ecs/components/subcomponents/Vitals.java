@@ -1,6 +1,6 @@
-package com.jharter.game.vitals;
+package com.jharter.game.ecs.components.subcomponents;
 
-public class Vitals {
+public class Vitals implements Pendable<Vitals> {
 
 	public int maxHealth = 0;
 	public int weakHealth = 0;

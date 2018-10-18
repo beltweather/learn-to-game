@@ -41,6 +41,7 @@ import com.jharter.game.ecs.components.Components.SensorComp;
 import com.jharter.game.ecs.components.Components.ShapeRenderComp;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.StatsComp;
+import com.jharter.game.ecs.components.Components.StatusEffectsComp;
 import com.jharter.game.ecs.components.Components.TargetPositionComp;
 import com.jharter.game.ecs.components.Components.TextureComp;
 import com.jharter.game.ecs.components.Components.TileComp;
@@ -162,6 +163,7 @@ public class EntityBuilder implements Poolable {
 	public VitalsComp VitalsComp() { return get(VitalsComp.class); }
 	public ZoneComp ZoneComp() { return get(ZoneComp.class); }
 	public ZonePositionComp ZonePositionComp() { return get(ZonePositionComp.class); }
+	public StatusEffectsComp StatusEffectsComp() { return get(StatusEffectsComp.class); }
 
 
 	// To insert template type: cb -> ctrl+space -> enter

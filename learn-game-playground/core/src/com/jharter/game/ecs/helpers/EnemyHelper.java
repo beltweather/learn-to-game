@@ -14,18 +14,20 @@ import uk.co.carelesslabs.Enums.EntityType;
 import uk.co.carelesslabs.Media;
 
 public class EnemyHelper extends EntityHandler {
-	
-	private HealthBarHelper healthBarHelper; 
+
+	private HealthBarHelper healthBarHelper;
+	private StatusEffectBarHelper statusEffectBarHelper;
 
 	public EnemyHelper(IEntityHandler handler) {
 		super(handler);
 		healthBarHelper = new HealthBarHelper(handler);
+		statusEffectBarHelper = new StatusEffectBarHelper(handler);
 	}
 
 	public ID addAtma(ZoneComp enemyZone, ZoneComp infoZone) {
-		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
-				  EntityType.ENEMY, 
-				  new Vector3(U.u12(-65),0,0), 
+		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(),
+				  EntityType.ENEMY,
+				  new Vector3(U.u12(-65),0,0),
 				  Media.atma);
 		ID id = b.IDComp().id;
 		b.EnemyComp();
@@ -33,6 +35,7 @@ public class EnemyHelper extends EntityHandler {
 		b.VitalsComp().vitals.maxHealth = 500; //10000;
 		b.VitalsComp().vitals.weakHealth = 20; //1000;
 		b.VitalsComp().vitals.health = 500; //10000;
+		b.StatusEffectsComp().effects.maxEffects = 3;
 		b.DescriptionComp().name = "Atma";
 		b.SpriteComp();
 		b.StatsComp().level = 3;
@@ -46,15 +49,16 @@ public class EnemyHelper extends EntityHandler {
 		Comp.util(enemyZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
-		
-		healthBarHelper.addHealthBar(infoZone, id);
+
+		healthBarHelper.addHealthBar(infoZone, id, false);
+		statusEffectBarHelper.addStatusEffectBar(infoZone, id, false);
 		return id;
 	}
-	
+
 	public ID addCactar(ZoneComp enemyZone, ZoneComp infoZone) {
-		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(), 
-				  EntityType.ENEMY, 
-				  new Vector3(U.u12(-20), U.u12(-10), 0), 
+		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(),
+				  EntityType.ENEMY,
+				  new Vector3(U.u12(-20), U.u12(-10), 0),
 				  Media.cactar);
 		ID id = b.IDComp().id;
 		b.EnemyComp();
@@ -62,6 +66,7 @@ public class EnemyHelper extends EntityHandler {
 		b.VitalsComp().vitals.maxHealth = 500;
 		b.VitalsComp().vitals.weakHealth = 20;
 		b.VitalsComp().vitals.health = 500;
+		b.StatusEffectsComp().effects.maxEffects = 3;
 		b.DescriptionComp().name = "Cactar";
 		b.SpriteComp();
 		b.StatsComp().level = 2;
@@ -75,9 +80,10 @@ public class EnemyHelper extends EntityHandler {
 		Comp.util(enemyZone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
-		
-		healthBarHelper.addHealthBar(infoZone, id);
+
+		healthBarHelper.addHealthBar(infoZone, id, false);
+		statusEffectBarHelper.addStatusEffectBar(infoZone, id, false);
 		return id;
 	}
-	
+
 }

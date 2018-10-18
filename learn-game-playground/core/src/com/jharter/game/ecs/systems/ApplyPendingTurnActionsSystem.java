@@ -4,9 +4,11 @@ import java.util.Comparator;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.jharter.game.ecs.components.Components.PendingStatusEffectsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
 import com.jharter.game.ecs.components.Components.PendingVitalsComp;
+import com.jharter.game.ecs.components.Components.StatusEffectsComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.VitalsComp;
@@ -20,6 +22,7 @@ public class ApplyPendingTurnActionsSystem extends GameSortedIteratingSystem {
 		setComparator(new PriorityAndTimingSort());
 		add(PendingVitalsComp.class, Family.all(PendingVitalsComp.class, VitalsComp.class).get());
 		add(PendingTurnActionModsComp.class, Family.all(PendingTurnActionModsComp.class, TurnActionComp.class).get());
+		add(PendingStatusEffectsComp.class, Family.all(PendingStatusEffectsComp.class, StatusEffectsComp.class).get());
 	}
 
 	@Override
@@ -27,6 +30,7 @@ public class ApplyPendingTurnActionsSystem extends GameSortedIteratingSystem {
 		forceSort();
 		clearComps(PendingVitalsComp.class);
 		clearComps(PendingTurnActionModsComp.class);
+		clearComps(PendingStatusEffectsComp.class);
 	}
 
 	@Override

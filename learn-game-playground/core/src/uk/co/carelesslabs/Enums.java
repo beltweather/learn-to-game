@@ -1,5 +1,7 @@
 package uk.co.carelesslabs;
 
+import com.badlogic.gdx.graphics.Color;
+
 public class Enums {
 
     public enum TileType {
@@ -92,10 +94,21 @@ public class Enums {
     }
 
     public enum StatusEffectType {
-    	FIRE,
-    	ICE,
-    	LIGHTNING,
-    	POISON
+    	FIRE(Color.RED),
+    	ICE(Color.BLUE),
+    	LIGHTNING(Color.YELLOW),
+    	POISON(Color.PURPLE);
+
+    	private Color color;
+
+    	private StatusEffectType(Color color) {
+    		this.color = color;
+    	}
+
+    	public Color getColor() {
+    		return color;
+    	}
+
     }
 
 }

@@ -14,6 +14,26 @@ public class StatusEffect extends Effect<Array<StatusEffectType>>{
 		this.types = new Array<>(types);
 	}
 
+	public StatusEffect fire() {
+		types.add(StatusEffectType.FIRE);
+		return this;
+	}
+
+	public StatusEffect ice() {
+		types.add(StatusEffectType.ICE);
+		return this;
+	}
+
+	public StatusEffect lightning() {
+		types.add(StatusEffectType.LIGHTNING);
+		return this;
+	}
+
+	public StatusEffect poison() {
+		types.add(StatusEffectType.POISON);
+		return this;
+	}
+
 	@Override
 	public Array<StatusEffectType> getResult(Entity performer, Entity target) {
 		return types;

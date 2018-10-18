@@ -13,19 +13,21 @@ import com.jharter.game.util.id.ID;
 import uk.co.carelesslabs.Enums.EntityType;
 
 public class PlayerHelper extends EntityHandler {
-	
+
 	private HealthBarHelper healthBarHelper;
-	
+	private StatusEffectBarHelper statusEffectBarHelper;
+
 	public PlayerHelper(IEntityHandler handler) {
 		super(handler);
 		healthBarHelper = new HealthBarHelper(handler);
+		statusEffectBarHelper = new StatusEffectBarHelper(handler);
 	}
 
 	public void addPlayer(ZoneComp zone, ZoneComp infoZone, ID playerID, Texture texture, String name) {
 		EntityBuilder b = EntityBuildUtil.buildBasicEntity(getEngine(),
 													  playerID,
-				  									  EntityType.FRIEND, 
-				  									  new Vector3(660,140,0), 
+				  									  EntityType.FRIEND,
+				  									  new Vector3(660,140,0),
 				  									  new TextureRegion(texture));
 		b.PlayerComp();
 		b.FriendComp();
@@ -33,6 +35,7 @@ public class PlayerHelper extends EntityHandler {
 		b.VitalsComp().vitals.maxHealth = 100;
 		b.VitalsComp().vitals.weakHealth = 25;
 		b.VitalsComp().vitals.health = 10;
+		b.StatusEffectsComp().effects.maxEffects = 3;
 		b.StatsComp().level = 1;
 		b.StatsComp().power = 10;
 		b.StatsComp().defense = 10;
@@ -44,7 +47,8 @@ public class PlayerHelper extends EntityHandler {
 		Comp.util(zone).add(b);
 		getEngine().addEntity(b.Entity());
 		b.free();
-		healthBarHelper.addHealthBar(infoZone, playerID);
+		healthBarHelper.addHealthBar(infoZone, playerID, true);
+		statusEffectBarHelper.addStatusEffectBar(infoZone, playerID, true);
 	}
-	
+
 }

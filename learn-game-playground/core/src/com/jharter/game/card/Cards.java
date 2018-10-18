@@ -10,9 +10,11 @@ import com.jharter.game.effect.AllEffect;
 import com.jharter.game.effect.DamageEffect;
 import com.jharter.game.effect.HealEffect;
 import com.jharter.game.effect.HealFromDamageEffect;
+import com.jharter.game.effect.StatusEffect;
 import com.jharter.game.effect.X2Effect;
 import com.jharter.game.util.id.ID;
 
+import uk.co.carelesslabs.Enums.StatusEffectType;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 
@@ -29,13 +31,27 @@ public class Cards extends EntityHandler {
 
 	};
 
+	public Card FireAttack = new Card("Fire Attack") {
+
+		@Override
+		protected CardBuilder build() {
+			return texture(Media.attack)
+				.targetZones(ZoneType.ENEMY)
+				.effects(new DamageEffect(40),
+						 new StatusEffect().fire());
+		}
+
+	};
+
 	public Card Drain = new Card("Drain") {
 
 		@Override
 		protected CardBuilder build() {
 			return texture(Media.drainLife)
 				.targetZones(ZoneType.ENEMY, ZoneType.FRIEND)
-				.effects(new DamageEffect(25), new HealFromDamageEffect(25));
+				.effects(new DamageEffect(25).index(0),
+						 new StatusEffect().poison().index(0),
+						 new HealFromDamageEffect(25).index(1));
 		}
 
 	};
@@ -46,7 +62,7 @@ public class Cards extends EntityHandler {
 		protected CardBuilder build() {
 			return texture(Media.attackAll)
 				.targetZones(ZoneType.ENEMY)
-				.effects(new DamageEffect(20))
+				.effects(new DamageEffect(20), new StatusEffect().lightning())
 				.all();
 		}
 
@@ -70,7 +86,7 @@ public class Cards extends EntityHandler {
 		protected CardBuilder build() {
 			return texture(Media.attack)
 				.targetZones(ZoneType.FRIEND)
-				.effects(new DamageEffect(20));
+				.effects(new DamageEffect(20), new StatusEffect().ice());
 		}
 
 	};

@@ -100,11 +100,11 @@ public class TurnAction extends EntityHandler {
 	private Array<ID> temp = new Array<ID>();
 
 	public Array<ID> getAllTargetIDs() {
-		return getAllTargetIDs(true);
+		return getAllTargetIDs(true, mods.all);
 	}
 
-	public Array<ID> getAllTargetIDs(boolean inFinalZoneOnly) {
-		if(!mods.all || targetIDs.size == 0) {
+	public Array<ID> getAllTargetIDs(boolean inFinalZoneOnly, boolean isAll) {
+		if(!isAll || targetIDs.size == 0) {
 			return targetIDs;
 		}
 
@@ -116,6 +116,11 @@ public class TurnAction extends EntityHandler {
 			if(inFinalZoneOnly && Comp.ZoneComp.get(Comp.ZonePositionComp.get(id).zoneID).zoneType != z.zoneType) {
 				continue;
 			}
+
+			if(!isValidTarget(Comp.Entity.get(id))) {
+				continue;
+			}
+
 			if(!temp.contains(id, false)) {
 				temp.add(id);
 			}
@@ -131,7 +136,7 @@ public class TurnAction extends EntityHandler {
 		effects.add(effect);
 		effect.setTurnAction(this);
 		if(!effect.isTargetIndexSet()) {
-			effect.setTargetIndex(targetIndex);
+			effect.index(Math.min(this.targetZoneTypes.size-1, targetIndex));
 		}
 	}
 
@@ -143,7 +148,7 @@ public class TurnAction extends EntityHandler {
 		for(int i = 0; i < getMultiplicity(pending); i++) {
 			for(Effect<?> effect : effects) {
 				if(all && effect.getTargetIndex() == targetIDs.size - 1) {
-					for(ID targetID : getAllTargetIDs(true)) {
+					for(ID targetID : getAllTargetIDs(true, all)) {
 						effect.perform(Comp.Entity.get(targetID), pending);
 					}
 				} else {

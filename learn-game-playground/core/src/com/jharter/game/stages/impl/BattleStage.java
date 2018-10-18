@@ -165,7 +165,7 @@ public class BattleStage extends GameStage {
 
 		Cards.setOwnerID(roguePlayerID);
 		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 3; i++) { Cards.FireAttack.add(); }
 		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
 		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
 		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
@@ -173,7 +173,7 @@ public class BattleStage extends GameStage {
 
 		Cards.setOwnerID(warriorPlayerID);
 		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 3; i++) { Cards.FireAttack.add(); }
 		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
 		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
 		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
@@ -181,7 +181,7 @@ public class BattleStage extends GameStage {
 
 		Cards.setOwnerID(sorcererPlayerID);
 		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 3; i++) { Cards.FireAttack.add(); }
 		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
 		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
 		for(int i = 0; i < 3; i++) { Cards.X2.add(); }
@@ -189,7 +189,7 @@ public class BattleStage extends GameStage {
 
 		Cards.setOwnerID(rangerPlayerID);
 		for(int i = 0; i < 6; i++) { Cards.Drain.add(); }
-		for(int i = 0; i < 3; i++) { Cards.Attack.add(); }
+		for(int i = 0; i < 3; i++) { Cards.FireAttack.add(); }
 		for(int i = 0; i < 2; i++) { Cards.AttackAll.add(); }
 		for(int i = 0; i < 2; i++) { Cards.HealAll.add(); }
 		for(int i = 0; i < 3; i++) { Cards.X2.add(); }

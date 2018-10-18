@@ -44,7 +44,7 @@ public abstract class Effect<T> extends EntityHandler {
 		return targetIndex;
 	}
 
-	public Effect<T> setTargetIndex(int targetIndex) {
+	public Effect<T> index(int targetIndex) {
 		this.targetIndex = targetIndex;
 		targetIndexSet = true;
 		return this;
@@ -134,7 +134,7 @@ public abstract class Effect<T> extends EntityHandler {
 				break;
 			case STATUS:
 				effects = getStatusEffects(target, pending);
-				effects.effects.addAll((Array<StatusEffectType>) getResult(target));
+				effects.types.addAll((Array<StatusEffectType>) getResult(target));
 				break;
 			default:
 				break;

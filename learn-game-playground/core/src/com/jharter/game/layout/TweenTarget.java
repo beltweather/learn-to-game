@@ -13,27 +13,27 @@ import aurelienribon.tweenengine.TweenEquation;
 import aurelienribon.tweenengine.equations.Circ;
 
 public class TweenTarget implements Poolable {
-	
+
 	public static TweenTarget newInstance() {
 		return Pools.get(TweenTarget.class).obtain();
 	}
-	
+
 	public static TweenTarget newInstance(SpriteComp s) {
 		TweenTarget tt = newInstance();
 		tt.setFromSpriteComp(s);
 		return tt;
 	}
-	
+
 	public static TweenTarget newInstance(IEntityHandler handler, Entity entity) {
 		TweenTarget tt = newInstance();
 		tt.setFromEntity(handler, entity);
 		return tt;
 	}
-	
+
 	private static float round(float x) {
 		return Math.round(x);
 	}
-	
+
 	public Vector3 position = new Vector3(0, 0, 0);
 	public Vector2 scale = new Vector2(0, 0);
 	public float alpha = 1f;
@@ -41,9 +41,9 @@ public class TweenTarget implements Poolable {
 	public float defaultDuration = 0.25f;
 	public float duration = defaultDuration;
 	public TweenEquation ease = Circ.INOUT;
-	
+
 	private TweenTarget() {}
-	
+
 	public TweenTarget copy() {
 		TweenTarget tt = newInstance();
 		tt.position.set(position);
@@ -55,18 +55,18 @@ public class TweenTarget implements Poolable {
 		tt.ease = ease;
 		return tt;
 	}
-	
+
 	public void setFromEntityID(IEntityHandler handler, ID id) {
 		setFromEntity(handler, handler.getToolBox().getCompManager().Entity.get(id));
 	}
-	
+
 	public void setFromEntity(IEntityHandler handler, Entity entity) {
 		if(entity == null) {
 			return;
 		}
 		setFromSpriteComp(handler.getToolBox().getCompManager().SpriteComp.get(entity));
 	}
-	
+
 	public void setFromSpriteComp(SpriteComp s) {
 		if(s == null) {
 			return;
@@ -76,13 +76,25 @@ public class TweenTarget implements Poolable {
 		alpha = s.alpha;
 		angleDegrees = s.angleDegrees;
 	}
-	
+
+	public void copyToSpriteComp(SpriteComp s) {
+		if(s == null) {
+			return;
+		}
+		s.position.set(position);
+		s.scale.set(scale);
+		s.alpha = alpha;
+		s.angleDegrees = angleDegrees;
+	}
+
 	public boolean matchesTarget(SpriteComp s) {
 		if(s == null) {
 			return false;
 		}
-		
-		round();
+
+		if(duration != 0f) {
+			//round();
+		}
 		boolean val = s.position.x == position.x &&
 			   s.position.y == position.y &&
 			   s.position.z == position.z &&
@@ -90,10 +102,10 @@ public class TweenTarget implements Poolable {
 			   s.scale.y == scale.y &&
 			   s.angleDegrees == angleDegrees &&
 			   s.alpha == alpha;
-	
+
 		return val;
 	}
-	
+
 	public void round() {
 		position.x = round(position.x);
 		position.y = round(position.y);
@@ -111,9 +123,9 @@ public class TweenTarget implements Poolable {
 		duration = defaultDuration;
 		ease = Circ.INOUT;
 	}
-	
+
 	public void free() {
 		Pools.free(this);
 	}
-	
+
 }

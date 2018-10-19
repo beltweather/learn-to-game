@@ -19,7 +19,7 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
 public class GameTweenManager extends EntityHandler {
-	
+
 	private TweenManager manager;
 
 	public GameTweenManager(IEntityHandler handler) {
@@ -27,9 +27,9 @@ public class GameTweenManager extends EntityHandler {
 		manager = new TweenManager();
 		registerAccessors();
 	}
-	
+
 	private void registerAccessors() {
-		//Tween.setCombinedAttributesLimit(4);
+		// Tween.setCombinedAttributesLimit(4);
 		Tween.registerAccessor(ID.class, new IDTweenAccessor(this));
 		Tween.registerAccessor(Entity.class, new EntityTweenAccessor(this));
 		Tween.registerAccessor(Vector3.class, new Vector3TweenAccessor());
@@ -37,11 +37,11 @@ public class GameTweenManager extends EntityHandler {
 		Tween.registerAccessor(Float.class, new FloatTweenAccessor());
 		Tween.registerAccessor(Array.class, new FloatArrayTweenAccessor());
 	}
-	
+
 	public void update(float deltaTime) {
 		manager.update(deltaTime);
 	}
-	
+
 	public FinishedAnimatingCallback buildFinishedAnimationCallback(ID id) {
 		AnimatingComp a = Comp.AnimatingComp.getOrAdd(id);
 		a.activeCount++;
@@ -49,15 +49,15 @@ public class GameTweenManager extends EntityHandler {
 		finishedCallback.setID(id);
 		return finishedCallback;
 	}
-	
+
 	public void start(ID id, BaseTween<?> baseTween) {
 		start(id, baseTween, null);
 	}
-	
+
 	public void start(ID id, BaseTween<?> baseTween, TweenCallback callback) {
-		if(id != null) {
+		if (id != null) {
 			FinishedAnimatingCallback finishedCallback = buildFinishedAnimationCallback(id);
-			if(callback == null) {
+			if (callback == null) {
 				baseTween.setCallback(finishedCallback);
 			} else {
 				CompositeCallback cc = TweenCallbacks.newInstance(this, CompositeCallback.class);
@@ -66,41 +66,49 @@ public class GameTweenManager extends EntityHandler {
 				baseTween.setCallback(cc);
 			}
 		}
-		
+
 		baseTween.start(manager);
 	}
-	
+
 	public void start(ID id, TweenTarget target) {
 		start(id, target, target.duration);
 	}
-	
-	public void start(ID id, TweenTarget target, float duration) {
-		start(id, build(id, target, duration));
-	}
-	
+
 	public Timeline build(ID id, TweenTarget target) {
 		return build(id, target, target.duration);
 	}
-	
+
+	public void start(ID id, TweenTarget target, float duration) {
+		if(duration == 0) {
+			target.copyToSpriteComp(Comp.SpriteComp.get(id));
+			return;
+		}
+		start(id, build(id, target, duration));
+	}
+
 	public Timeline build(ID id, TweenTarget target, float duration) {
 		float d = duration;
-		target.round();
+		//target.round();
 		return Timeline.createParallel()
-			.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).ease(target.ease).target(target.position.x, target.position.y))
-			.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).ease(target.ease).target(target.scale.x, target.scale.y))
-			.push(Tween.to(id, TweenType.ALPHA.asInt(), d).ease(target.ease).target(target.alpha))
-			.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(target.ease).target(target.angleDegrees));
+				.push(Tween.to(id, TweenType.POSITION_XY.asInt(), d).ease(target.ease).target(target.position.x,
+						target.position.y))
+				.push(Tween.to(id, TweenType.SCALE_XY.asInt(), d).ease(target.ease).target(target.scale.x,
+						target.scale.y))
+				.push(Tween.to(id, TweenType.ALPHA.asInt(), d).ease(target.ease).target(target.alpha))
+				.push(Tween.to(id, TweenType.ANGLE.asInt(), d).ease(target.ease).target(target.angleDegrees));
 	}
-	
+
 	public Timeline set(ID id, TweenTarget target) {
 		return build(id, target, 0f);
-		
-		/*target.round();
-		return Timeline.createParallel()
-			.push(Tween.set(id, TweenType.POSITION_XY.asInt()).target(target.position.x, target.position.y))
-			.push(Tween.set(id, TweenType.SCALE_XY.asInt()).target(target.scale.x, target.scale.y))
-			.push(Tween.set(id, TweenType.ALPHA.asInt()).target(target.alpha))
-			.push(Tween.set(id, TweenType.ANGLE.asInt()).target(target.angleDegrees));*/
+
+		/*
+		 * target.round(); return Timeline.createParallel() .push(Tween.set(id,
+		 * TweenType.POSITION_XY.asInt()).target(target.position.x, target.position.y))
+		 * .push(Tween.set(id, TweenType.SCALE_XY.asInt()).target(target.scale.x,
+		 * target.scale.y)) .push(Tween.set(id,
+		 * TweenType.ALPHA.asInt()).target(target.alpha)) .push(Tween.set(id,
+		 * TweenType.ANGLE.asInt()).target(target.angleDegrees));
+		 */
 	}
-	
+
 }

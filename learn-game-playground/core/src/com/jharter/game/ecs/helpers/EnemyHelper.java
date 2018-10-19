@@ -35,7 +35,7 @@ public class EnemyHelper extends EntityHandler {
 		b.VitalsComp().vitals.maxHealth = 500; //10000;
 		b.VitalsComp().vitals.weakHealth = 20; //1000;
 		b.VitalsComp().vitals.health = 500; //10000;
-		b.StatusEffectsComp().effects.maxEffects = 3;
+		b.StatusEffectsComp().effects.maxEffects = 5;
 		b.DescriptionComp().name = "Atma";
 		b.SpriteComp();
 		b.StatsComp().level = 3;
@@ -66,7 +66,7 @@ public class EnemyHelper extends EntityHandler {
 		b.VitalsComp().vitals.maxHealth = 500;
 		b.VitalsComp().vitals.weakHealth = 20;
 		b.VitalsComp().vitals.health = 500;
-		b.StatusEffectsComp().effects.maxEffects = 3;
+		b.StatusEffectsComp().effects.maxEffects = 4;
 		b.DescriptionComp().name = "Cactar";
 		b.SpriteComp();
 		b.StatsComp().level = 2;

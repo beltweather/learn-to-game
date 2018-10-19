@@ -11,50 +11,55 @@ import com.jharter.game.util.CursorManager;
 import com.jharter.game.util.id.ID;
 
 public class CursorLayout extends ZoneLayout {
-	
+
 	private CursorManager cursorManager;
-	
+
 	public CursorLayout(IEntityHandler handler) {
 		super(handler);
 		this.cursorManager = new CursorManager(this);
 	}
-	
+
 	@Override
 	protected TweenTarget getTarget(ID id, int index, Entity cursor, TweenTarget tt) {
 		CursorComp c = Comp.CursorComp.get(cursor);
 		SpriteComp s = Comp.SpriteComp.get(cursor);
-		
+
 		if(c.targetID == null) {
 			return null;
 		}
-		
+
 		Entity target = Comp.Entity.get(c.targetID);
-		
+
 		ZonePositionComp zp = Comp.ZonePositionComp.get(target);
 		ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 		float targetAngle = cursorManager.getCursorAngle(z.zoneType);
-		
+
 		Vector3 targetPosition = cursorManager.getCursorPosition(cursor, c.targetID, z);
 		if(targetPosition == null) {
 			return null;
 		}
-		
+
+		SpriteComp targetSprite = Comp.SpriteComp.get(c.targetID);
+		if(targetSprite != null) {
+			s.visualOffset.set(targetSprite.visualOffset);
+		}
+
 		tt.setFromSpriteComp(s);
 		tt.position.x = targetPosition.x;
 		tt.position.y = targetPosition.y;
 		tt.angleDegrees = targetAngle;
-		
+
 		if(tt.matchesTarget(s)) {
 			return null;
 		}
-		
+
 		// If we haven't changed zones since our last target, increase our cursor
 		// speed for better responsiveness.
-		if(!cursorManager.changedZones(cursor)) { 
+		if(!cursorManager.changedZones(cursor)) {
 			tt.duration = 0.10f;
 		}
-		
+
 		return tt;
 	}
-	
+
 }

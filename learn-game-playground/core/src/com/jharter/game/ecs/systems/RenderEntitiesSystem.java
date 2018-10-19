@@ -72,8 +72,8 @@ public class RenderEntitiesSystem extends GameSortedIteratingSystem {
 		}
 
 		Color c = batch.getColor();
-		float offsetX = (Comp.util(s).scaledWidth() - s.width)/2;
-		float offsetY = (Comp.util(s).scaledHeight() - s.height)/2;
+		float offsetX = (Comp.util(s).scaledWidth() - s.width)/2 + s.visualOffset.x;
+		float offsetY = (Comp.util(s).scaledHeight() - s.height)/2 + s.visualOffset.y;
 		float originX = s.width/2;
 		float originY = s.height/2;
 

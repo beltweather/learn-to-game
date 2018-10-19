@@ -152,6 +152,7 @@ public final class Components {
 	public static final class SpriteComp implements C {
 		public Vector3 position = new Vector3(0, 0, 0);
 		public Vector2 direction = new Vector2(0, 0);
+		public Vector3 visualOffset = new Vector3(0, 0, 0);
 		public float angleDegrees = 0.0f;
 		public RelativePositionRules relativePositionRules = new RelativePositionRules();
 		public float width;
@@ -164,6 +165,7 @@ public final class Components {
 		@Override
 		public void reset() {
 			position.set(0, 0, 0);
+			visualOffset.set(0, 0, 0);
 			direction.set(0, 0);
 			angleDegrees = 0.0f;
 			width = 0f;

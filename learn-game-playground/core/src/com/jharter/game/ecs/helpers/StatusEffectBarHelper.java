@@ -29,7 +29,7 @@ public class StatusEffectBarHelper extends EntityHandler {
 		b.SpriteComp().relativePositionRules.setRelativeToID(relativeToID);
 		b.SpriteComp().relativePositionRules.xAlign = right ? Direction.EAST : Direction.WEST;
 		b.SpriteComp().relativePositionRules.yAlign = Direction.CENTER;
-		b.SpriteComp().relativePositionRules.offset.x = U.u12(right ? 3f : 0f);
+		b.SpriteComp().relativePositionRules.offset.x = U.u12(right ? 3f : -1f);
 		b.SpriteComp().relativePositionRules.offset.y = U.u12(4f);
 		b.SpriteComp().relativePositionRules.tween = false;
 		b.ShapeRenderComp().renderMethod = new StatusEffectBarRenderMethod(this);

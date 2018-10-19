@@ -40,9 +40,7 @@ public class HandLayout extends ZoneLayout {
 		target.scale.y = 1f;
 		target.angleDegrees = 0;
 
-		tween = s.position.x != target.position.x;
-		if(!tween) {
-			//target.position.y += tweenPositions.get(index).y;
+		if(s.position.x == target.position.x) {
 			s.visualOffset.y = tweenPositions.get(index).y;
 		}
 
@@ -72,7 +70,7 @@ public class HandLayout extends ZoneLayout {
 		}
 	}
 
-	public void addTweenPosition(float duration, float targetY) {
+	private void addTweenPosition(float duration, float targetY) {
 		Vector3 tweenPosition = new Vector3();
 		getTweenManager().start(null, Tween.to(tweenPosition, TweenType.POSITION_Y.asInt(), duration).target(U.u12(targetY)).repeatYoyo(Tween.INFINITY, 0));
 		tweenPositions.add(tweenPosition);

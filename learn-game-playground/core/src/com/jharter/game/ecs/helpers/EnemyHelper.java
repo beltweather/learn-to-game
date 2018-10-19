@@ -3,6 +3,7 @@ package com.jharter.game.ecs.helpers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.jharter.game.ecs.components.Components.ZoneComp;
+import com.jharter.game.ecs.components.subcomponents.StatusEffects;
 import com.jharter.game.ecs.entities.EntityBuildUtil;
 import com.jharter.game.ecs.entities.EntityBuilder;
 import com.jharter.game.ecs.entities.EntityHandler;
@@ -11,6 +12,7 @@ import com.jharter.game.util.U;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.EntityType;
+import uk.co.carelesslabs.Enums.StatusEffectType;
 import uk.co.carelesslabs.Media;
 
 public class EnemyHelper extends EntityHandler {
@@ -36,6 +38,10 @@ public class EnemyHelper extends EntityHandler {
 		b.VitalsComp().vitals.weakHealth = 20; //1000;
 		b.VitalsComp().vitals.health = 500; //10000;
 		b.StatusEffectsComp().effects.maxEffects = 5;
+		b.StatusEffectsComp().effects.weakToTypes.add(StatusEffectType.FIRE);
+		b.StatusEffectsComp().effects.resistantToTypes.add(StatusEffectType.ICE);
+		b.StatusEffectsComp().effects.immuneToTypes.add(StatusEffectType.LIGHTNING);
+		b.StatusEffectsComp().effects.storeDefaults();
 		b.DescriptionComp().name = "Atma";
 		b.SpriteComp();
 		b.StatsComp().level = 3;
@@ -67,6 +73,9 @@ public class EnemyHelper extends EntityHandler {
 		b.VitalsComp().vitals.weakHealth = 20;
 		b.VitalsComp().vitals.health = 500;
 		b.StatusEffectsComp().effects.maxEffects = 4;
+		b.StatusEffectsComp().effects.weakToTypes.add(StatusEffectType.POISON);
+		b.StatusEffectsComp().effects.resistantToTypes.add(StatusEffectType.LIGHTNING);
+		b.StatusEffectsComp().effects.storeDefaults();
 		b.DescriptionComp().name = "Cactar";
 		b.SpriteComp();
 		b.StatsComp().level = 2;

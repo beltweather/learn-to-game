@@ -8,6 +8,10 @@ import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.layout.TweenTarget;
+import com.jharter.game.primitives.Array_;
+import com.jharter.game.primitives.Vector2_;
+import com.jharter.game.primitives.Vector3_;
+import com.jharter.game.primitives.float_;
 import com.jharter.game.tween.TweenCallbacks.CompositeCallback;
 import com.jharter.game.tween.TweenCallbacks.FinishedAnimatingCallback;
 import com.jharter.game.util.id.ID;
@@ -36,6 +40,10 @@ public class GameTweenManager extends EntityHandler {
 		Tween.registerAccessor(Vector2.class, new Vector2TweenAccessor());
 		Tween.registerAccessor(Float.class, new FloatTweenAccessor());
 		Tween.registerAccessor(Array.class, new FloatArrayTweenAccessor());
+		Tween.registerAccessor(Vector3_.class, new Vector3_TweenAccessor());
+		Tween.registerAccessor(Vector2_.class, new Vector2_TweenAccessor());
+		Tween.registerAccessor(float_.class, new float_TweenAccessor());
+		Tween.registerAccessor(Array_.class, new FloatArray_TweenAccessor());
 	}
 
 	public void update(float deltaTime) {

@@ -34,7 +34,6 @@ import com.jharter.game.ecs.components.Components.InputComp;
 import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
-import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
@@ -142,7 +141,6 @@ public class EntityBuilder implements Poolable {
 	public InteractComp InteractComp() { return get(InteractComp.class); }
 	public InvisibleTag InvisibleComp() { return get(InvisibleTag.class); }
 	public MultiSpriteComp MultiSpriteComp() { return get(MultiSpriteComp.class); }
-	public PendingVitalsComp PendingVitalsComp() { return get(PendingVitalsComp.class); }
 	public PlayerTag PlayerComp() { return get(PlayerTag.class); }
 	public RemoveComp RemoveComp() { return get(RemoveComp.class); }
 	public SensorComp SensorComp() { return get(SensorComp.class); }

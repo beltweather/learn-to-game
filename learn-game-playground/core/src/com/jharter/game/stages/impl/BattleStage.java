@@ -35,7 +35,6 @@ import com.jharter.game.ecs.systems.cursor.CursorMultiTargetSystem;
 import com.jharter.game.ecs.systems.cursor.CursorPrevNextSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTargetEventSystem;
 import com.jharter.game.ecs.systems.cursor.CursorTurnActionValidationSystem;
-import com.jharter.game.ecs.systems.debug.DebugHealEnemiesSystem;
 import com.jharter.game.ecs.systems.network.client.ClientAddPlayersPacketSystem;
 import com.jharter.game.ecs.systems.network.client.ClientRandomMovementSystem;
 import com.jharter.game.ecs.systems.network.client.ClientRemoveEntityPacketSystem;
@@ -257,7 +256,7 @@ public class BattleStage extends GameStage {
 
 	private void addTurnPhaseSystems(PooledEngine engine) {
 		engine.addSystem(new ChangeTurnPhaseSystem());
-		engine.addSystem(new DebugHealEnemiesSystem());
+		//engine.addSystem(new DebugHealEnemiesSystem());
 		engine.addSystem(new TurnPhaseStartBattleSystem());
 			engine.addSystem(new TurnPhaseStartTurnSystem());
 				engine.addSystem(new TurnPhaseSelectActionsSystem());

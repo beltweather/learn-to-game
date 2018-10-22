@@ -7,6 +7,9 @@ import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
 import com.jharter.game.ecs.components.subcomponents.Vitals;
 import com.jharter.game.ecs.entities.EntityHandler;
+import com.jharter.game.primitives.Array_;
+import com.jharter.game.primitives.boolean_;
+import com.jharter.game.primitives.int_;
 
 import uk.co.carelesslabs.Enums.StatusEffectType;
 
@@ -106,77 +109,56 @@ public abstract class Effect<T> extends EntityHandler {
 			return;
 		}
 
-		Vitals v;
-		TurnActionMods mods;
-		StatusEffects effects;
+		int_ health, maxHealth, multiplicity;
+		boolean_ all;
+		Array_<StatusEffectType> types;
 		switch(prop) {
 			case DAMAGE:
-				v = getVitals(target, pending);
-				v.health -= (int) getResult(target);
-				if(v.health < 0) {
-					v.health = 0;
+				health = getVitals(target).health.beginPending(pending);
+				health.decr((int) getResult(target));
+				if(health.v() < 0) {
+					health.v(0);
 				}
+				health.endPending();
 				break;
 			case HEAL:
-				v = getVitals(target, pending);
-				v.health += (int) getResult(target);
-				if(v.health > v.maxHealth) {
-					v.health = v.maxHealth;
+				maxHealth = getVitals(target).maxHealth;
+				health = getVitals(target).health.beginPending(pending);
+				health.incr((int) getResult(target));
+				if(health.v() > maxHealth.v()) {
+					health.v(maxHealth.v());
 				}
+				health.endPending();
 				break;
 			case ALL:
-				mods = getMods(target, pending);
-				mods.all = mods.all || (boolean) getResult(target);
+				all = getMods(target).all.beginPending(pending);
+				all.v(all.v() || (boolean) getResult(target));
+				all.endPending();
 				break;
 			case MULTIPLICITY:
-				mods = getMods(target, pending);
-				mods.multiplicity *= (int) getResult(target);
+				multiplicity = getMods(target).multiplicity.beginPending(pending);
+				multiplicity.mult((int) getResult(target));
+				multiplicity.endPending();
 				break;
 			case STATUS:
-				effects = getStatusEffects(target, pending);
-				effects.types.addAll((Array<StatusEffectType>) getResult(target));
+				types = getStatusEffects(target).types.beginPending(pending);
+				types.v().addAll((Array<StatusEffectType>) getResult(target));
+				types.endPending();
 				break;
 			default:
 				break;
 		}
 	}
 
-	private Vitals getVitals(Entity target, boolean pending) {
-		if(!Comp.VitalsComp.has(target)) {
-			return null;
-		}
-		if(pending) {
-			if(!Comp.PendingVitalsComp.has(target)) {
-				return Comp.PendingVitalsComp.add(target).vitals.setFrom(Comp.VitalsComp.get(target).vitals);
-			}
-			return Comp.PendingVitalsComp.get(target).vitals;
-		}
+	private Vitals getVitals(Entity target) {
 		return Comp.VitalsComp.get(target).vitals;
 	}
 
-	private StatusEffects getStatusEffects(Entity target, boolean pending) {
-		if(!Comp.StatusEffectsComp.has(target)) {
-			return null;
-		}
-		if(pending) {
-			if(!Comp.PendingStatusEffectsComp.has(target)) {
-				return Comp.PendingStatusEffectsComp.add(target).effects.setFrom(Comp.StatusEffectsComp.get(target).effects);
-			}
-			return Comp.PendingStatusEffectsComp.get(target).effects;
-		}
+	private StatusEffects getStatusEffects(Entity target) {
 		return Comp.StatusEffectsComp.get(target).effects;
 	}
 
-	private TurnActionMods getMods(Entity target, boolean pending) {
-		if(!Comp.TurnActionComp.has(target)) {
-			return null;
-		}
-		if(pending) {
-			if(!Comp.PendingTurnActionModsComp.has(target)) {
-				return Comp.PendingTurnActionModsComp.add(target).mods.setFrom(Comp.TurnActionComp.get(target).turnAction.mods);
-			}
-			return Comp.PendingTurnActionModsComp.get(target).mods;
-		}
+	private TurnActionMods getMods(Entity target) {
 		return Comp.TurnActionComp.get(target).turnAction.mods;
 	}
 

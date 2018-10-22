@@ -4,10 +4,7 @@ import java.util.Comparator;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.jharter.game.ecs.components.Components.PendingStatusEffectsComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
-import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.StatusEffectsComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
@@ -20,17 +17,23 @@ public class ApplyPendingTurnActionsSystem extends GameSortedIteratingSystem {
 	public ApplyPendingTurnActionsSystem() {
 		super(Family.all(PendingTurnActionTag.class, TurnActionComp.class).get());
 		setComparator(new PriorityAndTimingSort());
-		add(PendingVitalsComp.class, Family.all(PendingVitalsComp.class, VitalsComp.class).get());
-		add(PendingTurnActionModsComp.class, Family.all(PendingTurnActionModsComp.class, TurnActionComp.class).get());
-		add(PendingStatusEffectsComp.class, Family.all(PendingStatusEffectsComp.class, StatusEffectsComp.class).get());
+		add(VitalsComp.class);
+		add(TurnActionComp.class);
+		add(StatusEffectsComp.class);
 	}
 
 	@Override
 	public void beforeUpdate(float deltaTime) {
 		forceSort();
-		clearComps(PendingVitalsComp.class);
-		clearComps(PendingTurnActionModsComp.class);
-		clearComps(PendingStatusEffectsComp.class);
+		for(TurnActionComp t : comps(TurnActionComp.class)) {
+			t.turnAction.mods.resetPending();
+		}
+		for(StatusEffectsComp s : comps(StatusEffectsComp.class)) {
+			s.effects.resetPending();
+		}
+		for(VitalsComp v : comps(VitalsComp.class)) {
+			v.vitals.resetPending();
+		}
 	}
 
 	@Override

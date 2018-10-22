@@ -32,9 +32,8 @@ public class PlayerHelper extends EntityHandler {
 		b.PlayerComp();
 		b.FriendComp();
 		b.AssociatedTurnActionsComp();
-		b.VitalsComp().vitals.maxHealth = 100;
-		b.VitalsComp().vitals.weakHealth = 25;
-		b.VitalsComp().vitals.health = 10;
+		b.VitalsComp().vitals.maxHealth.d(100);
+		b.VitalsComp().vitals.health.d(10);
 		b.StatusEffectsComp().effects.maxEffects = 3;
 		b.StatsComp().level = 1;
 		b.StatsComp().power = 10;

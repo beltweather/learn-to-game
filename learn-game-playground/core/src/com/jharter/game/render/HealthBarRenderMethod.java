@@ -17,33 +17,33 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	@Override
 	public void render(ShapeRenderer shapeRenderer, Entity entity, float deltaTime) {
 		SpriteComp s = Comp.SpriteComp.get(entity);
-		Entity owner = Comp.Entity.get(s.relativePositionRules.getRelativeToID()); 
+		Entity owner = Comp.Entity.get(s.relativePositionRules.getRelativeToID());
 		VitalsComp v = Comp.VitalsComp.get(owner);
-		
+
 		if(s == null || v == null) {
 			return;
 		}
-		
+
 		float x = s.position.x;
 	    float y = s.position.y;
 		float w = Comp.util(s).scaledWidth();
 		float h = Comp.util(s).scaledHeight();
-	    
+
 		Color color = shapeRenderer.getColor();
 		shapeRenderer.begin(ShapeType.Filled);
 	    shapeRenderer.setColor(1f, 1f, 1f, 1f);
 		shapeRenderer.rect(x, y, w, h);
 	    shapeRenderer.setColor(0.8f, 0, 0, 1f);
-	    float healthW = w*(v.vitals.health/(float)v.vitals.maxHealth);
+	    float healthW = w*(v.vitals.health.v()/(float)v.vitals.maxHealth.v());
 		shapeRenderer.rect(x, y, healthW, h);
 		int incoming = getIncomingHealthChange(owner, v);
 		if(incoming != 0) {
 			if(incoming > 0) {
-				float incomingW = w*(Math.min(v.vitals.maxHealth - v.vitals.health, incoming)/(float)v.vitals.maxHealth);
+				float incomingW = w*(Math.min(v.vitals.maxHealth.v() - v.vitals.health.v(), incoming)/(float)v.vitals.maxHealth.v());
 				shapeRenderer.setColor(0, 0.8f, 0, 1f);
 				shapeRenderer.rect(x + healthW, y, incomingW, h);
 			} else {
-				float incomingW = w*(Math.min(v.vitals.health, -incoming)/(float)v.vitals.maxHealth);
+				float incomingW = w*(Math.min(v.vitals.health.v(), -incoming)/(float)v.vitals.maxHealth.v());
 				shapeRenderer.setColor(0.8f, 0.8f, 0, 1f);
 				shapeRenderer.rect(x + healthW - incomingW, y, incomingW, h);
 			}
@@ -55,12 +55,9 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 		shapeRenderer.end();
 		shapeRenderer.setColor(color);
 	}
-	
+
 	private int getIncomingHealthChange(Entity entity, VitalsComp v) {
-		if(!Comp.PendingVitalsComp.has(entity)) {
-			return 0;
-		}
-		return Comp.PendingVitalsComp.get(entity).vitals.health - v.vitals.health;
+		return v.vitals.health.p() - v.vitals.health.v();
 	}
-	
+
 }

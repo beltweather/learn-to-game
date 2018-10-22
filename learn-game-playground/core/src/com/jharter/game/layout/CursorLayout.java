@@ -77,6 +77,7 @@ public class CursorLayout extends ZoneLayout {
 		return tt;
 	}
 
+	@SuppressWarnings("unused")
 	private void initVisualOffset() {
 		visualOffset = new Vector3();
 		getTweenManager().start(null, Tween.to(visualOffset, TweenType.POSITION_X.asInt(), MathUtils.random(3f, 4f)).target(U.u12(MathUtils.random(U.u12(1), U.u12(2)))).repeatYoyo(Tween.INFINITY, 0));

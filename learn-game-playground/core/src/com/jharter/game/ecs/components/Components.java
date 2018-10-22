@@ -16,7 +16,6 @@ import com.jharter.game.ecs.components.subcomponents.Interaction;
 import com.jharter.game.ecs.components.subcomponents.RelativePositionRules;
 import com.jharter.game.ecs.components.subcomponents.StatusEffects;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
-import com.jharter.game.ecs.components.subcomponents.TurnActionMods;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
 import com.jharter.game.ecs.components.subcomponents.Vitals;
 import com.jharter.game.ecs.entities.EntityBuilder;
@@ -393,17 +392,6 @@ public final class Components {
 		}
 	}
 
-	public static final class PendingVitalsComp implements C {
-		public Vitals vitals = new Vitals();
-
-		private PendingVitalsComp() {}
-
-		@Override
-		public void reset() {
-			vitals.clear();
-		}
-	}
-
 	public static final class StatusEffectsComp implements C {
 
 		public StatusEffects effects = new StatusEffects();
@@ -416,51 +404,28 @@ public final class Components {
 		}
 	}
 
-	public static final class PendingStatusEffectsComp implements C {
-
-		public StatusEffects effects = new StatusEffects();
-
-		private PendingStatusEffectsComp() {}
-
-		@Override
-		public void reset() {
-
-		}
-	}
-
-	public static final class PendingTurnActionModsComp implements C {
-		public TurnActionMods mods = new TurnActionMods();
-
-		private PendingTurnActionModsComp() {}
-
-		@Override
-		public void reset() {
-			mods.clear();
-		}
-	}
-
 	public static class VitalsCompUtil extends CompUtil<VitalsComp> {
 
 		public void heal(int hp) {
-			c.vitals.health += hp;
-			if(c.vitals.health > c.vitals.maxHealth) {
-				c.vitals.health = c.vitals.maxHealth;
+			c.vitals.health.incr(hp);
+			if(c.vitals.health.v() > c.vitals.maxHealth.v()) {
+				c.vitals.health.v(c.vitals.maxHealth.v());
 			}
 		}
 
 		public void damage(int hp) {
-			c.vitals.health -= hp;
-			if(c.vitals.health < 0) {
-				c.vitals.health = 0;
+			c.vitals.health.decr(hp);
+			if(c.vitals.health.v() < 0) {
+				c.vitals.health.v(0);
 			}
 		}
 
 		public boolean isDead() {
-			return c.vitals.health <= 0;
+			return c.vitals.health.v() <= 0;
 		}
 
 		public boolean isNearDeath() {
-			return c.vitals.health <= c.vitals.weakHealth && !isDead();
+			return c.vitals.health.v() <= c.vitals.maxHealth.v() * 0.25f && !isDead();
 		}
 
 	}

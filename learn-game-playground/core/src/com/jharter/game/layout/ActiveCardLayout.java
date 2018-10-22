@@ -50,9 +50,9 @@ public class ActiveCardLayout extends ZoneLayout {
 	private Vector3 tempPosition = new Vector3();
 	protected void modifyEntity(ID id, int index, Entity entity, TweenTarget target) {
 		TurnActionMods mods = getMods(entity);
-		if(mods != null & mods.multiplicity > 1) {
+		if(mods != null & mods.multiplicity.v() > 1) {
 			MultiSpriteComp m = Comp.MultiSpriteComp.getOrAdd(entity);
-			if(m.size == mods.multiplicity) {
+			if(m.size == mods.multiplicity.v()) {
 				return;
 			}
 			m.clear();
@@ -60,7 +60,7 @@ public class ActiveCardLayout extends ZoneLayout {
 			Timeline timeline = Timeline.createParallel();
 
 			tempPosition.set(target.position);
-			for(int i = m.positions.size; i < mods.multiplicity; i++) {
+			for(int i = m.positions.size; i < mods.multiplicity.v(); i++) {
 				Vector3 mPos = new Vector3(tempPosition);
 				Vector3 targetPos = new Vector3(tempPosition.x - U.u12(1)*i, tempPosition.y, tempPosition.z);
 				m.positions.add(mPos);
@@ -76,13 +76,7 @@ public class ActiveCardLayout extends ZoneLayout {
 	}
 
 	private TurnActionMods getMods(Entity entity) {
-		if(Comp.PendingTurnActionModsComp.has(entity)) {
-			return Comp.PendingTurnActionModsComp.get(entity).mods;
-		}
-		if(Comp.TurnActionComp.has(entity)) {
-			return Comp.TurnActionComp.get(entity).turnAction.mods;
-		}
-		return null;
+		return Comp.TurnActionComp.get(entity).turnAction.mods;
 	}
 
 }

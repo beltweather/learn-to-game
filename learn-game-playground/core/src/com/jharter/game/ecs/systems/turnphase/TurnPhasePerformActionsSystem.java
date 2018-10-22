@@ -8,9 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.AssociatedTurnActionsComp;
 import com.jharter.game.ecs.components.Components.CleanupTurnActionTag;
-import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
-import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.TurnActionComp;
 import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.TurnPhaseEndTurnTag;
@@ -39,8 +37,6 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 		super(TurnPhasePerformActionsTag.class, TurnPhaseEndTurnTag.class);
 		add(TurnActionComp.class, Family.all(TurnActionComp.class, TurnActionQueueItemComp.class).exclude(CleanupTurnActionTag.class).get(), new TimestampSort());
 		add(AssociatedTurnActionsComp.class, Family.all(AssociatedTurnActionsComp.class, VitalsComp.class).get());
-		add(PendingVitalsComp.class);
-		add(PendingTurnActionModsComp.class);
 		add(PendingTurnActionTag.class);
 	}
 
@@ -179,7 +175,6 @@ public class TurnPhasePerformActionsSystem extends TurnPhaseSystem {
 			a.cursorIDs.clear();
 			a.targetIndices.clear();
 			a.turnActionIDs.clear();
-			Comp.PendingVitalsComp.remove(entity);
 		}
 	}
 

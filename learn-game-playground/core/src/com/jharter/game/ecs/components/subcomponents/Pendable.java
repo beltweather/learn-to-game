@@ -2,8 +2,10 @@ package com.jharter.game.ecs.components.subcomponents;
 
 public interface Pendable<T> {
 
-	public T setFrom(T other);
+	public void setToDefault();
 
-	public T clear();
+	public void resetPending();
+
+	public void clear();
 
 }

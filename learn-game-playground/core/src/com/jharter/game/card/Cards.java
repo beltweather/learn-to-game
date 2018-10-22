@@ -14,7 +14,6 @@ import com.jharter.game.effect.StatusEffect;
 import com.jharter.game.effect.X2Effect;
 import com.jharter.game.util.id.ID;
 
-import uk.co.carelesslabs.Enums.StatusEffectType;
 import uk.co.carelesslabs.Enums.ZoneType;
 import uk.co.carelesslabs.Media;
 

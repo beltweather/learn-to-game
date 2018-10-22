@@ -1,64 +1,48 @@
 package com.jharter.game.ecs.components.subcomponents;
 
-import com.badlogic.gdx.utils.Array;
+import com.jharter.game.primitives.Array_;
 
 import uk.co.carelesslabs.Enums.StatusEffectType;
 
 public class StatusEffects implements Pendable<StatusEffects> {
 
+	public Array_<StatusEffectType> types = new Array_<>();
+	public Array_<StatusEffectType> weakToTypes = new Array_<>();
+	public Array_<StatusEffectType> resistantToTypes = new Array_<>();
+	public Array_<StatusEffectType> immuneToTypes = new Array_<>();
+
 	public int maxEffects = 1;
-	public Array<StatusEffectType> types = new Array<>();
-	public Array<StatusEffectType> weakToTypes = new Array<>();
-	public Array<StatusEffectType> resistantToTypes = new Array<>();
-	public Array<StatusEffectType> immuneToTypes = new Array<>();
-	public StatusEffects defaultEffects = null;
 
 	public StatusEffects() {
 
 	}
 
-	public boolean isAtCapacity() {
-		return types.size >= maxEffects;
-	}
-
-	public StatusEffects setFromDefaults() {
-		if(defaultEffects == null) {
-			return clear();
-		}
-		return setFrom(defaultEffects);
-	}
-
-	public StatusEffects storeDefaults() {
-		if(defaultEffects == null) {
-			defaultEffects = new StatusEffects();
-		}
-		defaultEffects.setFrom(this);
-		return this;
+	@Override
+	public void setToDefault() {
+		types.setToDefault();
+		weakToTypes.setToDefault();
+		resistantToTypes.setToDefault();
+		immuneToTypes.setToDefault();
 	}
 
 	@Override
-	public StatusEffects setFrom(StatusEffects other) {
-		maxEffects = other.maxEffects;
-		types.clear();
-		types.addAll(other.types);
-		weakToTypes.clear();
-		weakToTypes.addAll(other.weakToTypes);
-		resistantToTypes.clear();
-		resistantToTypes.addAll(other.resistantToTypes);
-		immuneToTypes.clear();
-		immuneToTypes.addAll(other.immuneToTypes);
-		return this;
+	public void resetPending() {
+		types.resetPending();
+		weakToTypes.resetPending();
+		resistantToTypes.resetPending();
+		immuneToTypes.resetPending();
 	}
 
 	@Override
-	public StatusEffects clear() {
+	public void clear() {
 		types.clear();
 		weakToTypes.clear();
 		resistantToTypes.clear();
 		immuneToTypes.clear();
 		maxEffects = 1;
-		defaultEffects = null;
-		return this;
 	}
 
+	public boolean isAtCapacity() {
+		return types.v().size >= maxEffects;
+	}
 }

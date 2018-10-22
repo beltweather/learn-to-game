@@ -1,26 +1,29 @@
 package com.jharter.game.ecs.components.subcomponents;
 
+import com.jharter.game.primitives.boolean_;
+import com.jharter.game.primitives.int_;
+
 public class TurnActionMods implements Pendable<TurnActionMods> {
 
-	public boolean defaultAll = false;
-	public boolean all = false;
-	public int defaultMultiplicity = 1;
-	public int multiplicity = 1;
+	public boolean_ all = new boolean_().d(false);
+	public int_ multiplicity = new int_().d(1);
 
-	public TurnActionMods setFrom(TurnActionMods mods) {
-		defaultAll = mods.defaultAll;
-		all = mods.all;
-		defaultMultiplicity = mods.defaultMultiplicity;
-		multiplicity = mods.multiplicity;
-		return this;
+	@Override
+	public void setToDefault() {
+		all.setToDefault();
+		multiplicity.setToDefault();
 	}
 
-	public TurnActionMods clear() {
-		defaultAll = false;
-		all = false;
-		defaultMultiplicity = 1;
-		multiplicity = 1;
-		return this;
+	@Override
+	public void resetPending() {
+		all.resetPending();
+		multiplicity.resetPending();
+	}
+
+	@Override
+	public void clear() {
+		all.clear();
+		multiplicity.clear();
 	}
 
 }

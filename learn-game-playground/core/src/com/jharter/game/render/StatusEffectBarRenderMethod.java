@@ -1,7 +1,6 @@
 package com.jharter.game.render;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -21,14 +20,13 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 	public void render(ShapeRenderer shapeRenderer, Entity entity, float deltaTime) {
 		SpriteComp s = Comp.SpriteComp.get(entity);
 		Entity owner = Comp.Entity.get(s.relativePositionRules.getRelativeToID());
-		StatusEffects actualEffects = getActualStatusEffects(owner);
 		StatusEffects effects = getStatusEffects(owner);
 
-		if(s == null || effects == null || effects.types.size == 0) {
+		if(s == null || effects == null || effects.types.v().size == 0) {
 			return;
 		}
 
-		int size = Math.min(effects.types.size, effects.maxEffects);
+		int size = Math.min(effects.types.v().size, effects.maxEffects);
 		float x = s.position.x;
 	    float y = s.position.y;
 		float w = Comp.util(s).scaledWidth();
@@ -37,13 +35,13 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 		float degrees = 360f / effects.maxEffects;
 		int segments = (int) (2*degrees + 1);
 		float start = 90;
-		int actualCount = actualEffects.types.size;
+		int actualCount = effects.types.a().size;
 
 		Color color = shapeRenderer.getColor();
 		enableOpacity();
 		shapeRenderer.begin(ShapeType.Filled);
 		for(int i = 0; i < size; i++) {
-			StatusEffectType type = effects.types.get(i);
+			StatusEffectType type = effects.types.v().get(i);
 			Color c = type.getColor();
 			shapeRenderer.setColor(c.r, c.g, c.b, i < actualCount ? 1f : 0.25f);
 			shapeRenderer.arc(x, y, r, start + degrees*i, degrees, segments);
@@ -63,18 +61,8 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 		disableOpacity();
 	}
 
-	private StatusEffects getActualStatusEffects(Entity entity) {
-		if(Comp.StatusEffectsComp.has(entity)) {
-			return Comp.StatusEffectsComp.get(entity).effects;
-		}
-		return null;
-	}
-
 	private StatusEffects getStatusEffects(Entity entity) {
-		if(Comp.PendingStatusEffectsComp.has(entity)) {
-			return Comp.PendingStatusEffectsComp.get(entity).effects;
-		}
-		return getActualStatusEffects(entity);
+		return Comp.StatusEffectsComp.get(entity).effects;
 	}
 
 }

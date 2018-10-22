@@ -65,7 +65,7 @@ public class HandLayout extends ZoneLayout {
 		} else {
 			show(entity);
 		}
-		if(t.turnAction.mods.multiplicity <= 1) {
+		if(t.turnAction.mods.multiplicity.v() <= 1) {
 			Comp.MultiSpriteComp.remove(entity);
 		}
 	}

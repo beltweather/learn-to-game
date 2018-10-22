@@ -2,7 +2,6 @@ package com.jharter.game.ecs.components.subcomponents;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
-import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.ZoneComp;
 import com.jharter.game.ecs.components.Components.ZonePositionComp;
 import com.jharter.game.ecs.entities.EntityHandler;
@@ -100,7 +99,7 @@ public class TurnAction extends EntityHandler {
 	private Array<ID> temp = new Array<ID>();
 
 	public Array<ID> getAllTargetIDs() {
-		return getAllTargetIDs(true, mods.all);
+		return getAllTargetIDs(true, mods.all.v());
 	}
 
 	public Array<ID> getAllTargetIDs(boolean inFinalZoneOnly, boolean isAll) {
@@ -170,25 +169,11 @@ public class TurnAction extends EntityHandler {
 	}
 
 	private int getMultiplicity(boolean pending) {
-		if(!pending) {
-			return mods.multiplicity;
-		}
-		PendingTurnActionModsComp m = Comp.PendingTurnActionModsComp.get(entityID);
-		if(m == null) {
-			return mods.multiplicity;
-		}
-		return m.mods.multiplicity;
+		return pending ? mods.multiplicity.p() : mods.multiplicity.v();
 	}
 
 	private boolean getAll(boolean pending) {
-		if(!pending) {
-			return mods.all;
-		}
-		PendingTurnActionModsComp m = Comp.PendingTurnActionModsComp.get(entityID);
-		if(m == null) {
-			return mods.all;
-		}
-		return m.mods.all;
+		return pending ? mods.all.p() : mods.all.v();
 	}
 
 	public void reset() {

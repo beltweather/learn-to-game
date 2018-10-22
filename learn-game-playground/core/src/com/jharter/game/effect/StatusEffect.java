@@ -39,14 +39,14 @@ public class StatusEffect extends Effect<Array<StatusEffectType>>{
 	@Override
 	public Array<StatusEffectType> getResult(Entity performer, Entity target) {
 		StatusEffects e = getStatusEffects(target);
-		if(e.weakToTypes.size == 0 && e.resistantToTypes.size == 0) {
+		if(e.weakToTypes.v().size == 0 && e.resistantToTypes.v().size == 0) {
 			return types;
 		}
 		temp.clear();
 		for(StatusEffectType type : types) {
-			boolean weak = e.weakToTypes.contains(type, true);
-			boolean resist = e.resistantToTypes.contains(type, true);
-			boolean immune = e.immuneToTypes.contains(type, true);
+			boolean weak = e.weakToTypes.v().contains(type, true);
+			boolean resist = e.resistantToTypes.v().contains(type, true);
+			boolean immune = e.immuneToTypes.v().contains(type, true);
 
 			if(weak && resist && immune) {
 				continue;
@@ -79,13 +79,7 @@ public class StatusEffect extends Effect<Array<StatusEffectType>>{
 	}
 
 	private StatusEffects getStatusEffects(Entity target) {
-		if(Comp.PendingStatusEffectsComp.has(target)) {
-			return Comp.PendingStatusEffectsComp.get(target).effects;
-		}
-		if(Comp.StatusEffectsComp.has(target)) {
-			return Comp.StatusEffectsComp.get(target).effects;
-		}
-		return null;
+		return Comp.StatusEffectsComp.get(target).effects;
 	}
 
 }

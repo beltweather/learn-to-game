@@ -74,7 +74,7 @@ public class CursorTargetEventSystem extends CursorSystem {
 
 		if(getCursorManager().isTargetingCard(c)) {
 			TurnAction cursorTurnAction = Comp.TurnActionComp.get(c.turnActionID).turnAction;
-			int multiplicity = getCursorManager().getMods(c.targetID).multiplicity * cursorTurnAction.makesTargetMultiplicity;
+			int multiplicity = getCursorManager().getMods(c.targetID).multiplicity.v() * cursorTurnAction.makesTargetMultiplicity;
 			for(ID id : getCursorManager().getCursorSecondaryIDs(c)) {
 				t = Comp.CursorTargetComp.getOrAdd(id);
 				t.cursorID = cursorID;

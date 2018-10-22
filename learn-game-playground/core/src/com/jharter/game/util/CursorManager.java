@@ -152,17 +152,11 @@ public class CursorManager extends EntityHandler {
 
 	public boolean isAll(CursorComp c) {
 		TurnAction t = getTurnAction(c);
-		return t != null && getMods(c.turnActionID).all;
+		return t != null && getMods(c.turnActionID).all.v();
 	}
 
 	public TurnActionMods getMods(ID turnActionID) {
-		if(Comp.PendingTurnActionModsComp.has(turnActionID)) {
-			return Comp.PendingTurnActionModsComp.get(turnActionID).mods;
-		}
-		if(Comp.TurnActionComp.has(turnActionID)) {
-			return Comp.TurnActionComp.get(turnActionID).turnAction.mods;
-		}
-		return null;
+		return Comp.TurnActionComp.get(turnActionID).turnAction.mods;
 	}
 
 	public Array<ID> getCursorAllIDs(CursorComp c) {
@@ -191,7 +185,7 @@ public class CursorManager extends EntityHandler {
 			return ids;
 		}
 
-		boolean all = getMods(c.targetID).all || cursorTurnAction.makesTargetAll;
+		boolean all = getMods(c.targetID).all.v() || cursorTurnAction.makesTargetAll;
 		ID subID = turnAction.targetIDs.peek();
 		Entity subEntity = Comp.Entity.get(subID);
 		ZonePositionComp subZonePosition = Comp.ZonePositionComp.get(subEntity);

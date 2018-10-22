@@ -108,14 +108,12 @@ class CardBuilder implements Poolable {
 	}
 
 	public CardBuilder all() {
-		b.TurnActionComp().turnAction.mods.defaultAll = true;
-		b.TurnActionComp().turnAction.mods.all = true;
+		b.TurnActionComp().turnAction.mods.all.d(true);
 		return this;
 	}
 
 	public CardBuilder multiplicity(int m) {
-		b.TurnActionComp().turnAction.mods.defaultMultiplicity = m;
-		b.TurnActionComp().turnAction.mods.multiplicity = m;
+		b.TurnActionComp().turnAction.mods.multiplicity.d(m);
 		return this;
 	}
 

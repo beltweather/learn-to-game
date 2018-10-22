@@ -23,8 +23,7 @@ public class CleanupTurnActionsSystem extends GameIteratingSystem {
 
 	private void cleanUp(Entity turnActionEntity) {
 		TurnAction t = Comp.TurnActionComp.get(turnActionEntity).turnAction;
-		t.mods.multiplicity = t.mods.defaultMultiplicity;
-		t.mods.all = t.mods.defaultAll;
+		t.mods.setToDefault();
 		t.selectedCount = 0;
 		t.targetIDs.clear();
 		Entity owner = t.getOwnerEntity();

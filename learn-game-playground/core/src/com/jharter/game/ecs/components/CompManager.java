@@ -37,10 +37,7 @@ import com.jharter.game.ecs.components.Components.InteractComp;
 import com.jharter.game.ecs.components.Components.InvisibleTag;
 import com.jharter.game.ecs.components.Components.MultiSpriteComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
-import com.jharter.game.ecs.components.Components.PendingStatusEffectsComp;
-import com.jharter.game.ecs.components.Components.PendingTurnActionModsComp;
 import com.jharter.game.ecs.components.Components.PendingTurnActionTag;
-import com.jharter.game.ecs.components.Components.PendingVitalsComp;
 import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
@@ -256,9 +253,7 @@ public class CompManager {
 	public final CompMapper<InvisibleTag> InvisibleTag = getFor(InvisibleTag.class);
 	public final CompMapper<MultiSpriteComp> MultiSpriteComp = getFor(MultiSpriteComp.class);
 	public final CompMapper<NextTurnPhaseComp> NextTurnPhaseComp = getFor(NextTurnPhaseComp.class);
-	public final CompMapper<PendingTurnActionModsComp> PendingTurnActionModsComp = getFor(PendingTurnActionModsComp.class);
 	public final CompMapper<PendingTurnActionTag> PendingTurnActionTag = getFor(PendingTurnActionTag.class);
-	public final CompMapper<PendingVitalsComp> PendingVitalsComp = getFor(PendingVitalsComp.class);
 	public final CompMapper<PlayerTag> PlayerComp = getFor(PlayerTag.class);
 	public final CompMapper<RemoveComp> RemoveComp = getFor(RemoveComp.class);
 	public final CompMapper<SensorComp> SensorComp = getFor(SensorComp.class);
@@ -290,7 +285,6 @@ public class CompManager {
 	public final CompMapper<ZoneComp> ZoneComp = getFor(ZoneComp.class);
 	public final CompMapper<ZonePositionComp> ZonePositionComp = getFor(ZonePositionComp.class);
 	public final CompMapper<StatusEffectsComp> StatusEffectsComp = getFor(StatusEffectsComp.class);
-	public final CompMapper<PendingStatusEffectsComp> PendingStatusEffectsComp = getFor(PendingStatusEffectsComp.class);
 
 	// To insert template type: cm -> ctrl+space -> enter
 

@@ -77,7 +77,7 @@ public abstract class TargetValidator extends EntityHandler {
 			if(t == null || t.turnAction == null) {
 				return true;
 			}
-			return !t.turnAction.mods.all;
+			return !t.turnAction.mods.all.v();
 		}
 	}
 

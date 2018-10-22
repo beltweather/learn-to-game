@@ -35,7 +35,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			Entity character = t.getOwnerEntity();
 			call(character, card, friend, enemy);
 
-			if(t.mods.all) {
+			if(t.mods.all.v()) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
@@ -49,7 +49,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 					// Maybe need to check what's valid or not here
 					call(character, card, entity, enemy);
 				}
-				t.mods.all = t.mods.defaultAll;
+				t.mods.all.setToDefault();
 
 			} else {
 				call(character, card, friend, enemy);
@@ -75,7 +75,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			Entity friend = t.getTargetEntity(0);
 			Entity character = t.getOwnerEntity();
 
-			if(t.mods.all) {
+			if(t.mods.all.v()) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(friend);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
@@ -89,8 +89,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 					// Maybe need to check what's valid or not here
 					call(character, card, entity);
 				}
-				t.mods.all = t.mods.defaultAll;
-
+				t.mods.all.setToDefault();
 			} else {
 				call(character, card, friend);
 			}
@@ -136,7 +135,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 			Entity enemy = t.getTargetEntity(0);
 			Entity character = t.getOwnerEntity();
 
-			if(t.mods.all) {
+			if(t.mods.all.v()) {
 				ZonePositionComp zp = Comp.ZonePositionComp.get(enemy);
 				ZoneComp z = Comp.ZoneComp.get(zp.zoneID);
 				ID id;
@@ -150,8 +149,7 @@ public abstract class VoidCallback<T> extends EntityHandler {
 					// Maybe need to check what's valid or not here
 					call(character, card, entity);
 				}
-				t.mods.all = t.mods.defaultAll;
-
+				t.mods.all.setToDefault();
 			} else {
 				call(character, card, enemy);
 			}

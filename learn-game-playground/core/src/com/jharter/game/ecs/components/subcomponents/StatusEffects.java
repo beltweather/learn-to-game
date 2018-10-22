@@ -6,10 +6,10 @@ import uk.co.carelesslabs.Enums.StatusEffectType;
 
 public class StatusEffects implements Pendable<StatusEffects> {
 
-	public Array_<StatusEffectType> types = new Array_<>();
-	public Array_<StatusEffectType> weakToTypes = new Array_<>();
-	public Array_<StatusEffectType> resistantToTypes = new Array_<>();
-	public Array_<StatusEffectType> immuneToTypes = new Array_<>();
+	public final Array_<StatusEffectType> types = new Array_<>();
+	public final Array_<StatusEffectType> weakToTypes = new Array_<>();
+	public final Array_<StatusEffectType> resistantToTypes = new Array_<>();
+	public final Array_<StatusEffectType> immuneToTypes = new Array_<>();
 
 	public int maxEffects = 1;
 

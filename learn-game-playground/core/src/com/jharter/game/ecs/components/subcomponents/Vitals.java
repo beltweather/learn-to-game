@@ -4,8 +4,8 @@ import com.jharter.game.primitives.int_;
 
 public class Vitals implements Pendable<Vitals> {
 
-	public int_ maxHealth = new int_();
-	public int_ health = new int_();
+	public final int_ maxHealth = new int_();
+	public final int_ health = new int_();
 
 	public Vitals() {
 

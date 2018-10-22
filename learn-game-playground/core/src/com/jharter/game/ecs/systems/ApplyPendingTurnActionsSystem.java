@@ -17,14 +17,23 @@ public class ApplyPendingTurnActionsSystem extends GameSortedIteratingSystem {
 	public ApplyPendingTurnActionsSystem() {
 		super(Family.all(PendingTurnActionTag.class, TurnActionComp.class).get());
 		setComparator(new PriorityAndTimingSort());
-		add(VitalsComp.class);
 		add(TurnActionComp.class);
 		add(StatusEffectsComp.class);
+		add(VitalsComp.class);
 	}
 
 	@Override
 	public void beforeUpdate(float deltaTime) {
 		forceSort();
+		resetPending();
+	}
+
+	@Override
+	protected void processEntity(Entity entity, float deltaTime) {
+		Comp.TurnActionComp.get(entity).turnAction.perform(true);
+	}
+
+	private void resetPending() {
 		for(TurnActionComp t : comps(TurnActionComp.class)) {
 			t.turnAction.mods.resetPending();
 		}
@@ -34,11 +43,6 @@ public class ApplyPendingTurnActionsSystem extends GameSortedIteratingSystem {
 		for(VitalsComp v : comps(VitalsComp.class)) {
 			v.vitals.resetPending();
 		}
-	}
-
-	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-		Comp.TurnActionComp.get(entity).turnAction.perform(true);
 	}
 
 	private class PriorityAndTimingSort implements Comparator<Entity> {

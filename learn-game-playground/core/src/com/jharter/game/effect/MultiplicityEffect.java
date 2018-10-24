@@ -1,23 +1,26 @@
 package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.primitives.int_;
 
-public class MultiplicityEffect extends Effect<Integer> {
+public class MultiplicityEffect extends Effect {
 
-	protected int multiplicity;
+	protected int mult;
 
-	public MultiplicityEffect(int multiplicity) {
-		super(EffectProp.MULTIPLICITY);
-		this.multiplicity = multiplicity;
+	public MultiplicityEffect(int mult) {
+		super();
+		this.mult = mult;
 	}
 
 	@Override
-	public Integer getResult(Entity performer, Entity target) {
-		return multiplicity;
+	protected void apply(Entity performer, Entity target, boolean pending) {
+		int_ multiplicity = getMods(target).multiplicity.beginPending(pending);
+		multiplicity.mult(mult);
+		multiplicity.endPending();
 	}
 
 	@Override
-	public void handleAudioVisual(Entity performer, Entity target) {
+	protected void handleAudioVisual(Entity performer, Entity target) {
 
 	}
 

@@ -26,7 +26,7 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 			return;
 		}
 
-		int size = Math.min(effects.types.v().size, effects.maxEffects);
+		int size = Math.min(effects.types.hasPending() ? effects.types.p().size : effects.types.a().size, effects.maxEffects);
 		float x = s.position.x;
 	    float y = s.position.y;
 		float w = Comp.util(s).scaledWidth();

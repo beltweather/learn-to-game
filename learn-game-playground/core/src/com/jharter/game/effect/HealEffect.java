@@ -1,32 +1,34 @@
 package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.primitives.int_;
 
-public class HealEffect extends Effect<Integer> {
+public class HealEffect extends Effect {
 
 	protected int baseHealing;
-	
+
 	public HealEffect(int baseHealing) {
-		super(EffectProp.HEAL);
+		super();
 		this.baseHealing = baseHealing;
-	}
-	
-	public int getBaseHealing() {
-		return baseHealing;
-	}
-	
-	public int getHealing(Entity healer, Entity patient) {
-		return getCombatHelper().getHealing(healer, patient, baseHealing);
-	}
-	
-	@Override
-	public Integer getResult(Entity healer, Entity patient) {
-		return getHealing(healer, patient);
 	}
 
 	@Override
-	public void handleAudioVisual(Entity attacker, Entity defender) {
-		
+	protected void apply(Entity performer, Entity target, boolean pending) {
+		int_ maxHealth = getVitals(target).maxHealth;
+		int_ health = getVitals(target).health.beginPending(pending);
+		health.incr(getHealing(performer, target));
+		if(health.v() > maxHealth.v()) {
+			health.v(maxHealth.v());
+		}
+		health.endPending();
 	}
-	
+
+	protected int getHealing(Entity healer, Entity patient) {
+		return getCombatHelper().getHealing(healer, patient, baseHealing);
+	}
+
+	@Override
+	protected void handleAudioVisual(Entity attacker, Entity defender) {
+
+	}
 }

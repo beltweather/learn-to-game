@@ -1,21 +1,23 @@
 package com.jharter.game.effect;
 
 import com.badlogic.ashley.core.Entity;
+import com.jharter.game.primitives.boolean_;
 
-public class AllEffect extends Effect<Boolean> {
+public class AllEffect extends Effect {
 
 	public AllEffect() {
-		super(EffectProp.ALL);
+		super();
 	}
 
 	@Override
-	public Boolean getResult(Entity performer, Entity activeCard) {
-		//Comp.TurnActionComp.get(activeCard).turnAction.all = true;
-		return true;
+	protected void apply(Entity performer, Entity target, boolean pending) {
+		boolean_ all = getMods(target).all.beginPending(pending);
+		all.v(all.v() || true);
+		all.endPending();
 	}
 
 	@Override
-	public void handleAudioVisual(Entity performer, Entity target) {
+	protected void handleAudioVisual(Entity performer, Entity target) {
 
 	}
 

@@ -9,7 +9,7 @@ public class HealFromDamageEffect extends HealEffect {
 	}
 
 	@Override
-	public int getHealing(Entity healer, Entity patient) {
+	protected int getHealing(Entity healer, Entity patient) {
 		return getCombatHelper().getDamage(healer, patient, baseHealing);
 	}
 

@@ -4,19 +4,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-abstract class Value<C extends Value<C,T>,T> {
+abstract class PendableValue<C extends PendableValue<C,T>,T> {
 
-	public static enum ValueType {
-		DEFAULT, ACTUAL, PENDING;
+	protected static enum ValueType {
+		DEFAULT, ACTUAL, PENDING, PENDING_IF_AVAILABLE;
 	}
 
 	private T actualValue;
 	private T pendingValue;
 	private T defaultValue;
-	private ValueType type = ValueType.ACTUAL;
+	private ValueType type = ValueType.PENDING_IF_AVAILABLE;
 	private boolean hasPending = false;
 
-	public Value() {
+	public PendableValue() {
 		defaultValue = newValueInstance();
 		actualValue = newValueInstance();
 		pendingValue = newValueInstance();
@@ -35,7 +35,7 @@ abstract class Value<C extends Value<C,T>,T> {
 	}
 
 	public C setToDefault() {
-		setValueType(ValueType.ACTUAL);
+		setValueType(ValueType.PENDING_IF_AVAILABLE);
 		pendingValue = handleClear(pendingValue);
 		hasPending = false;
 		return setActualValue(handleUpdateValue(actualValue, defaultValue));
@@ -50,11 +50,12 @@ abstract class Value<C extends Value<C,T>,T> {
 	}
 
 	public C endPending() {
-		return useActual();
+		setValueType(ValueType.PENDING_IF_AVAILABLE);
+		return me();
 	}
 
 	public void clear() {
-		setValueType(ValueType.ACTUAL);
+		setValueType(ValueType.PENDING_IF_AVAILABLE);
 		setHasPending(false);
 		defaultValue = handleClear(defaultValue);
 		actualValue = handleClear(actualValue);
@@ -85,6 +86,10 @@ abstract class Value<C extends Value<C,T>,T> {
 	}
 
 	protected T getValue(ValueType type) {
+		if(type == ValueType.PENDING_IF_AVAILABLE) {
+			type = hasPending ? ValueType.PENDING : ValueType.ACTUAL;
+		}
+
 		T value = null;
 		switch(type) {
 			case DEFAULT:
@@ -136,16 +141,21 @@ abstract class Value<C extends Value<C,T>,T> {
 		if(value == null) {
 			value = getNull(value);
 		}
+		if(type == ValueType.PENDING_IF_AVAILABLE) {
+			type = hasPending ? ValueType.PENDING : ValueType.ACTUAL;
+		}
 		switch(type) {
-		case DEFAULT:
-			defaultValue = value;
-			break;
-		case PENDING:
-			pendingValue = value;
-			break;
-		case ACTUAL:
-			actualValue = value;
-			break;
+			case DEFAULT:
+				defaultValue = value;
+				break;
+			case PENDING:
+				pendingValue = value;
+				break;
+			case ACTUAL:
+				actualValue = value;
+				break;
+			default:
+				break;
 		}
 		return me();
 	}
@@ -154,7 +164,8 @@ abstract class Value<C extends Value<C,T>,T> {
 		if(pending) {
 			return usePending();
 		}
-		return useActual();
+		setValueType(ValueType.PENDING_IF_AVAILABLE);
+		return me();
 	}
 
 	protected C useActual() {

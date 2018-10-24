@@ -89,9 +89,9 @@ class CardBuilder implements Poolable {
 		return this;
 	}
 
-	public CardBuilder effects(Effect<?>...effects) {
+	public CardBuilder effects(Effect...effects) {
 		TurnAction t = b.TurnActionComp().turnAction;
-		for(Effect<?> effect : effects) {
+		for(Effect effect : effects) {
 			t.addEffect(effect);
 		}
 		return this;

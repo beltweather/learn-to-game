@@ -1,6 +1,6 @@
 package com.jharter.game.primitives;
 
-public class boolean_ extends Value<boolean_, Boolean> {
+public class boolean_ extends PendableValue<boolean_, Boolean> {
 
 	public boolean_() {
 		super();

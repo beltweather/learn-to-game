@@ -25,7 +25,7 @@ public class TurnAction extends EntityHandler {
 	public boolean makesTargetAll = false;
 	public int makesTargetMultiplicity = 1;
 
-	public Array<Effect<?>> effects = new Array<Effect<?>>();
+	public Array<Effect> effects = new Array<Effect>();
 
 	public TurnAction(IEntityHandler handler) {
 		super(handler);
@@ -127,11 +127,11 @@ public class TurnAction extends EntityHandler {
 		return temp;
 	}
 
-	public void addEffect(Effect<?> effect) {
+	public void addEffect(Effect effect) {
 		addEffect(effect, effects.size);
 	}
 
-	public void addEffect(Effect<?> effect, int targetIndex) {
+	public void addEffect(Effect effect, int targetIndex) {
 		effects.add(effect);
 		effect.setTurnAction(this);
 		if(!effect.isTargetIndexSet()) {
@@ -145,7 +145,7 @@ public class TurnAction extends EntityHandler {
 		}
 		boolean all = getAll(pending);
 		for(int i = 0; i < getMultiplicity(pending); i++) {
-			for(Effect<?> effect : effects) {
+			for(Effect effect : effects) {
 				if(all && effect.getTargetIndex() == targetIDs.size - 1) {
 					for(ID targetID : getAllTargetIDs(true, all)) {
 						effect.perform(Comp.Entity.get(targetID), pending);
@@ -159,11 +159,11 @@ public class TurnAction extends EntityHandler {
 
 	public void applyResult(Entity target, int targetIndex, boolean pending) {
 		for(int i = 0; i < getMultiplicity(pending); i++) {
-			for(Effect<?> effect : effects) {
+			for(Effect effect : effects) {
 				if(effect.getTargetIndex() != targetIndex) {
 					continue;
 				}
-				effect.applyResult(target, pending);
+				effect.perform(target, pending);
 			}
 		}
 	}

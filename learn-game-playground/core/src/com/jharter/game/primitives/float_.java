@@ -1,6 +1,6 @@
 package com.jharter.game.primitives;
 
-public class float_ extends Value<float_, Float> {
+public class float_ extends PendableValue<float_, Float> {
 
 	public float_() {
 		super();

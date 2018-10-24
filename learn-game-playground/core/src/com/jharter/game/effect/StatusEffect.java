@@ -3,16 +3,17 @@ package com.jharter.game.effect;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.jharter.game.ecs.components.subcomponents.StatusEffects;
+import com.jharter.game.primitives.Array_;
 
 import uk.co.carelesslabs.Enums.StatusEffectType;
 
-public class StatusEffect extends Effect<Array<StatusEffectType>>{
+public class StatusEffect extends Effect {
 
 	private Array<StatusEffectType> types;
 	private Array<StatusEffectType> temp = new Array<>();
 
 	public StatusEffect(StatusEffectType...types) {
-		super(EffectProp.STATUS);
+		super();
 		this.types = new Array<>(types);
 	}
 
@@ -37,7 +38,13 @@ public class StatusEffect extends Effect<Array<StatusEffectType>>{
 	}
 
 	@Override
-	public Array<StatusEffectType> getResult(Entity performer, Entity target) {
+	protected void apply(Entity performer, Entity target, boolean pending) {
+		Array_<StatusEffectType> types = getStatusEffects(target).types.beginPending(pending);
+		types.v().addAll(getStatusEffectsToApply(performer, target));
+		types.endPending();
+	}
+
+	protected Array<StatusEffectType> getStatusEffectsToApply(Entity performer, Entity target) {
 		StatusEffects e = getStatusEffects(target);
 		if(e.weakToTypes.v().size == 0 && e.resistantToTypes.v().size == 0) {
 			return types;
@@ -74,12 +81,8 @@ public class StatusEffect extends Effect<Array<StatusEffectType>>{
 	}
 
 	@Override
-	public void handleAudioVisual(Entity performer, Entity target) {
+	protected void handleAudioVisual(Entity performer, Entity target) {
 
-	}
-
-	private StatusEffects getStatusEffects(Entity target) {
-		return Comp.StatusEffectsComp.get(target).effects;
 	}
 
 }

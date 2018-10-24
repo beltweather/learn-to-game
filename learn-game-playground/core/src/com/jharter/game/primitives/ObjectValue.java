@@ -1,6 +1,6 @@
 package com.jharter.game.primitives;
 
-abstract class ObjectValue<C extends ObjectValue<C,T>,T> extends Value<C,T> {
+abstract class ObjectValue<C extends ObjectValue<C,T>,T> extends PendableValue<C,T> {
 
 	public ObjectValue() {
 		super();

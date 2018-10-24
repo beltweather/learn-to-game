@@ -1,6 +1,7 @@
 package uk.co.carelesslabs;
 
 import com.badlogic.gdx.graphics.Color;
+import com.jharter.game.effect.Effect;
 
 public class Enums {
 
@@ -94,19 +95,25 @@ public class Enums {
     }
 
     public enum StatusEffectType {
-    	FIRE(Color.RED),
-    	ICE(Color.BLUE),
-    	LIGHTNING(Color.YELLOW),
-    	POISON(Color.PURPLE);
+    	FIRE(Color.RED, null),
+    	ICE(Color.BLUE, null),
+    	LIGHTNING(Color.YELLOW, null),
+    	POISON(Color.PURPLE, null);
 
     	private Color color;
+    	private Effect effect;
 
-    	private StatusEffectType(Color color) {
+    	private StatusEffectType(Color color, Effect effect) {
     		this.color = color;
+    		this.effect = effect;
     	}
 
     	public Color getColor() {
     		return color;
+    	}
+
+    	public Effect getEffect() {
+    		return effect;
     	}
 
     }

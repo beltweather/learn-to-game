@@ -1,19 +1,23 @@
 package com.jharter.game.ecs.systems.turnphase;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.AutoSelectTurnActionComp;
 import com.jharter.game.ecs.components.Components.CardOwnerComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
+import com.jharter.game.ecs.components.Components.SkipTurnActionTag;
+import com.jharter.game.ecs.components.Components.TurnActionQueueItemComp;
 import com.jharter.game.ecs.components.Components.TurnPhasePerformActionsTag;
 import com.jharter.game.ecs.components.Components.TurnPhaseSelectActionsTag;
 import com.jharter.game.ecs.components.Components.ZoneComp;
+import com.jharter.game.ecs.components.subcomponents.StatusEffects;
 import com.jharter.game.ecs.components.subcomponents.TurnAction;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
+import com.jharter.game.primitives.int_;
 import com.jharter.game.util.id.ID;
 
 import uk.co.carelesslabs.Enums.CardOwnerAction;
@@ -26,8 +30,9 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 		super(TurnPhaseSelectActionsTag.class, TurnPhasePerformActionsTag.class);
 		add(CardOwnerComp.class);
 		add(TurnActionQueueItemComp.class);
-		add(AutoSelectTurnActionComp.class);
+		add(AutoSelectTurnActionComp.class, Family.all(AutoSelectTurnActionComp.class).exclude(SkipTurnActionTag.class).get());
 		add(ActivePlayerComp.class);
+		add(SkipTurnActionTag.class);
 	}
 
 	@Override
@@ -36,6 +41,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 			return false;
 		}
 		computeWaitTimes();
+		handleSkip();
 		enableCursor();
 		resetCursor();
 		getTurnTimer().start();
@@ -58,7 +64,7 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 		// XXX This assumption will change, but the intent is to check if all characters
 		// have made a card selection. Currently, one cursor controls all actions so
 		// we'll leave this hack in for testing.
-		return count(TurnActionQueueItemComp.class) == count(CardOwnerComp.class);
+		return count(TurnActionQueueItemComp.class) == count(CardOwnerComp.class) - count(SkipTurnActionTag.class);
 	}
 
 	@Override
@@ -106,6 +112,12 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 	}
 
 	private void autoSelectTurnAction(ID ownerID) {
+		int_ confused = Comp.StatusEffectsComp.get(ownerID).effects.confused;
+		boolean isConfused = confused.v() > 0;
+		if(isConfused) {
+			confused.decr(1);
+		}
+
 		ZoneComp handZone = getZone(ownerID, ZoneType.HAND);
 		if(handZone.objectIDs.size == 0) {
 			return;
@@ -115,6 +127,9 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 		if(cardID != null) {
 			TurnAction t = Comp.TurnActionComp.get(card).turnAction;
 			for(ZoneType type : t.targetZoneTypes) {
+				if(isConfused) {
+					type = confuseZoneType(type);
+				}
 				ZoneComp zTarget = getZone(ownerID, type);
 				Array<ID> ids = new Array<ID>(zTarget.objectIDs);
 				ids.shuffle();
@@ -136,6 +151,34 @@ public class TurnPhaseSelectActionsSystem extends TurnPhaseSystem {
 			if(t.hasAllTargets()) {
 				Comp.PendingTurnActionTag.add(card);
 				Comp.TurnActionSelectedEvent.add(card).timestamp = TimeUtils.millis();
+			}
+		}
+	}
+
+	private ZoneType confuseZoneType(ZoneType type) {
+		switch(type) {
+			case FRIEND:
+				return ZoneType.ENEMY;
+			case ENEMY:
+				return ZoneType.FRIEND;
+			case FRIEND_ACTIVE_CARD:
+				return ZoneType.ENEMY_ACTIVE_CARD;
+			case ENEMY_ACTIVE_CARD:
+				return ZoneType.FRIEND_ACTIVE_CARD;
+			default:
+				return type;
+		}
+	}
+
+	private void handleSkip() {
+		clearComps(SkipTurnActionTag.class);
+		for(Entity entity : entities(CardOwnerComp.class)) {
+			if(Comp.StatusEffectsComp.has(entity)) {
+				StatusEffects effects = Comp.StatusEffectsComp.get(entity).effects;
+				if(effects.skip.v() > 0) {
+					effects.skip.decr(1);
+					Comp.SkipTurnActionTag.add(entity);
+				}
 			}
 		}
 	}

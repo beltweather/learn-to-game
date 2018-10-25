@@ -7,9 +7,11 @@ import com.jharter.game.ecs.components.subcomponents.TargetValidator.DoesntHaveA
 import com.jharter.game.ecs.entities.EntityHandler;
 import com.jharter.game.ecs.entities.IEntityHandler;
 import com.jharter.game.effect.AllEffect;
+import com.jharter.game.effect.ConfuseEffect;
 import com.jharter.game.effect.DamageEffect;
 import com.jharter.game.effect.HealEffect;
 import com.jharter.game.effect.HealFromDamageEffect;
+import com.jharter.game.effect.SkipEffect;
 import com.jharter.game.effect.StatusEffect;
 import com.jharter.game.effect.X2Effect;
 import com.jharter.game.util.id.ID;
@@ -37,7 +39,8 @@ public class Cards extends EntityHandler {
 			return texture(Media.attack)
 				.targetZones(ZoneType.ENEMY)
 				.effects(new DamageEffect(40),
-						 new StatusEffect().fire());
+						 new StatusEffect().fire(),
+						 new SkipEffect());
 		}
 
 	};
@@ -61,7 +64,7 @@ public class Cards extends EntityHandler {
 		protected CardBuilder build() {
 			return texture(Media.attackAll)
 				.targetZones(ZoneType.ENEMY)
-				.effects(new DamageEffect(20), new StatusEffect().lightning())
+				.effects(new DamageEffect(20), new StatusEffect().lightning(), new ConfuseEffect())
 				.all();
 		}
 

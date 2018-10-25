@@ -16,54 +16,54 @@ import com.jharter.game.util.CursorManager;
 import com.jharter.game.util.id.ID;
 
 public abstract class CursorSystem extends FirstSystem {
-	
+
 	private CursorManager cursorManager;
 
 	@SuppressWarnings("unchecked")
 	public CursorSystem(Class<? extends Component>... cursorComps) {
 		this(Family.all(GameEntitySystem.combine(cursorComps, CursorComp.class)).exclude(DisabledTag.class, AnimatingComp.class).get());
 	}
-	
+
 	private CursorSystem(Family family) {
 		super(family);
 		add(ActivePlayerComp.class, Family.all(ActivePlayerComp.class).get());
 		this.cursorManager = new CursorManager(this);
 	}
-	
+
 	@Override
 	protected void processEntity(Entity cursor, float deltaTime) {
 		processEntity(cursor, Comp.CursorComp.get(cursor), deltaTime);
 	}
-	
+
 	@Override
 	public void setToolBox(GameToolBox toolBox) {
 		super.setToolBox(toolBox);
 		cursorManager.setHandler(this);
 	}
-	
+
 	protected abstract void processEntity(Entity cursor, CursorComp c, float deltaTime);
-	
+
 	protected CursorManager getCursorManager() {
 		return cursorManager;
 	}
-	
+
 	protected ActivePlayerComp getActivePlayer() {
 		return comp(ActivePlayerComp.class);
 	}
-	
+
 	protected ID getActivePlayerID() {
 		ActivePlayerComp a = getActivePlayer();
 		return a == null ? null : a.activePlayerID;
 	}
-	
+
 	protected boolean nextPlayer() {
 		return changePlayer(true);
 	}
-	
+
 	protected boolean prevPlayer() {
 		return changePlayer(false);
 	}
-	
+
 	protected boolean changePlayer(boolean next) {
 		ActivePlayerComp a = getActivePlayer();
 		ImmutableArray<ID> playerIDs = getPlayerIDs();
@@ -80,6 +80,5 @@ public abstract class CursorSystem extends FirstSystem {
 		}
 		return false;
 	}
-	
 
 }

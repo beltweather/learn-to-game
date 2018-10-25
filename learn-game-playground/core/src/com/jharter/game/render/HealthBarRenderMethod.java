@@ -57,7 +57,7 @@ public class HealthBarRenderMethod extends ShapeRenderMethod {
 	}
 
 	private int getIncomingHealthChange(Entity entity, VitalsComp v) {
-		return v.vitals.health.p() - v.vitals.health.v();
+		return v.vitals.health.p() - v.vitals.health.a();
 	}
 
 }

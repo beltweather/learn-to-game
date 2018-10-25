@@ -90,6 +90,7 @@ public final class Components {
 	public static final class FriendTag extends B implements Tag {}
 	public static final class EnemyTag extends B implements Tag {}
 	public static final class PendingTurnActionTag extends B implements Tag {}
+	public static final class SkipTurnActionTag extends B implements Tag {}
 	public static final class TargetableTag extends B implements Tag {}
 	public static final class UntargetableTag extends B implements Tag {}
 	public static final class InvisibleTag extends B implements Tag {}

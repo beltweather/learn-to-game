@@ -22,7 +22,7 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 		Entity owner = Comp.Entity.get(s.relativePositionRules.getRelativeToID());
 		StatusEffects effects = getStatusEffects(owner);
 
-		if(s == null || effects == null || effects.types.v().size == 0) {
+		if(s == null || effects == null || effects.types.p().size == 0) {
 			return;
 		}
 
@@ -41,7 +41,7 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 		enableOpacity();
 		shapeRenderer.begin(ShapeType.Filled);
 		for(int i = 0; i < size; i++) {
-			StatusEffectType type = effects.types.v().get(i);
+			StatusEffectType type = effects.types.p().get(i);
 			Color c = type.getColor();
 			shapeRenderer.setColor(c.r, c.g, c.b, i < actualCount ? 1f : 0.25f);
 			shapeRenderer.arc(x, y, r, start + degrees*i, degrees, segments);

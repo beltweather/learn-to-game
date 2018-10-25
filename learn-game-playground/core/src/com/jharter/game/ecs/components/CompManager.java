@@ -42,6 +42,7 @@ import com.jharter.game.ecs.components.Components.PlayerTag;
 import com.jharter.game.ecs.components.Components.RemoveComp;
 import com.jharter.game.ecs.components.Components.SensorComp;
 import com.jharter.game.ecs.components.Components.ShapeRenderComp;
+import com.jharter.game.ecs.components.Components.SkipTurnActionTag;
 import com.jharter.game.ecs.components.Components.SpriteComp;
 import com.jharter.game.ecs.components.Components.SpriteCompUtil;
 import com.jharter.game.ecs.components.Components.StatsComp;
@@ -254,6 +255,7 @@ public class CompManager {
 	public final CompMapper<MultiSpriteComp> MultiSpriteComp = getFor(MultiSpriteComp.class);
 	public final CompMapper<NextTurnPhaseComp> NextTurnPhaseComp = getFor(NextTurnPhaseComp.class);
 	public final CompMapper<PendingTurnActionTag> PendingTurnActionTag = getFor(PendingTurnActionTag.class);
+	public final CompMapper<SkipTurnActionTag> SkipTurnActionTag = getFor(SkipTurnActionTag.class);
 	public final CompMapper<PlayerTag> PlayerComp = getFor(PlayerTag.class);
 	public final CompMapper<RemoveComp> RemoveComp = getFor(RemoveComp.class);
 	public final CompMapper<SensorComp> SensorComp = getFor(SensorComp.class);

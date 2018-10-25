@@ -3,6 +3,8 @@ package com.jharter.game.ecs.systems.turnphase;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.jharter.game.ecs.components.Components.ActivePlayerComp;
 import com.jharter.game.ecs.components.Components.AnimatingComp;
 import com.jharter.game.ecs.components.Components.CursorComp;
 import com.jharter.game.ecs.components.Components.NextTurnPhaseComp;
@@ -10,6 +12,8 @@ import com.jharter.game.ecs.components.Components.TurnPhaseTag;
 import com.jharter.game.ecs.components.Components.TurnTimerComp;
 import com.jharter.game.ecs.components.subcomponents.TurnTimer;
 import com.jharter.game.ecs.systems.boilerplate.FirstSystem;
+import com.jharter.game.util.ArrayUtil;
+import com.jharter.game.util.id.ID;
 
 public abstract class TurnPhaseSystem extends FirstSystem {
 
@@ -18,18 +22,19 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	private Class<? extends Component> alternativeNextPhaseClass;
 	private boolean phaseStarted = false;
 	private boolean phaseShouldEnd = false;
-	
+
 	public TurnPhaseSystem(Class<? extends Component> phaseClass, Class<? extends Component> nextPhaseClass) {
 		super(Family.all(TurnPhaseTag.class, phaseClass).exclude(NextTurnPhaseComp.class).get());
 		add(CursorComp.class);
 		add(TurnTimerComp.class);
 		add(TurnPhaseTag.class);
 		add(AnimatingComp.class);
-		
+		add(ActivePlayerComp.class);
+
 		this.phaseClass = phaseClass;
 		this.nextPhaseClass = nextPhaseClass;
 	}
-	
+
 	@Override
 	protected void processEntity(Entity turnPhase, float deltaTime) {
 		if(!phaseStarted) {
@@ -43,7 +48,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 			endPhase(turnPhase, deltaTime);
 		}
 	}
-	
+
 	/**
 	 * @return True if the phase should start, false if it shouldn't yet.
 	 */
@@ -53,9 +58,9 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 	 * @return True if the phase should end, false if it should not.
 	 */
 	protected abstract boolean processEntityPhaseMiddle(Entity turnPhase, float deltaTime);
-	
+
 	protected abstract void processEntityPhaseEnd(Entity turnPhase, float deltaTime);
-	
+
 	protected void startPhase(Entity turnPhase, float deltaTime) {
 		//Sys.out.println("Waiting to Start Phase: " + phaseClass.getSimpleName());
 		phaseStarted = processEntityPhaseStart(turnPhase, deltaTime);
@@ -63,11 +68,11 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 			//Sys.out.println("Start Phase: " + phaseClass.getSimpleName());
 		}
 	}
-	
+
 	protected void endPhase(Entity turnPhase, float deltaTime) {
 		processEntityPhaseEnd(turnPhase, deltaTime);
 		Comp.getFor(phaseClass).remove(turnPhase);
-		
+
 		NextTurnPhaseComp n = Comp.NextTurnPhaseComp.add(turnPhase);
 		if(alternativeNextPhaseClass != null) {
 			n.next = alternativeNextPhaseClass;
@@ -75,29 +80,29 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		} else {
 			n.next = nextPhaseClass;
 		}
-		
+
 		phaseStarted = false;
 		phaseShouldEnd = false;
 		//Sys.out.println("End Phase: " + phaseClass.getSimpleName() + " (Next Phase: " + nextPhaseClass.getSimpleName() + ")");
 	}
-	
+
 	protected boolean endAndReroute(Class<? extends Component> nextPhaseClass) {
 		alternativeNextPhaseClass = nextPhaseClass;
 		return true;
 	}
-	
+
 	protected Entity getTurnPhaseEntity() {
 		return entity(TurnPhaseTag.class);
 	}
-	
+
 	protected CursorComp getCursorComp() {
 		return comp(CursorComp.class);
 	}
-	
+
 	protected TurnTimer getTurnTimer() {
 		return comp(TurnTimerComp.class).turnTimer;
 	}
-	
+
 	protected void resetCursor() {
 		Entity cursor = entity(CursorComp.class);
 		if(cursor == null) {
@@ -106,7 +111,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		Comp.MultiSpriteComp.remove(cursor);
 		Comp.CursorComp.get(cursor).reset();
 	}
-	
+
 	protected void enableCursor() {
 		Entity cursor = entity(CursorComp.class);
 		if(cursor == null) {
@@ -115,7 +120,7 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		Comp.DisabledTag.remove(cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
-	
+
 	protected void disableCursor() {
 		Entity cursor = entity(CursorComp.class);
 		if(cursor == null) {
@@ -124,9 +129,43 @@ public abstract class TurnPhaseSystem extends FirstSystem {
 		Comp.DisabledTag.add(cursor);
 		Comp.InputComp.get(cursor).input.reset();
 	}
-	
+
 	protected boolean isDoneAnimating() {
 		return !hasEntities(AnimatingComp.class);
 	}
-	
+
+	protected ActivePlayerComp getActivePlayer() {
+		return comp(ActivePlayerComp.class);
+	}
+
+	protected ID getActivePlayerID() {
+		ActivePlayerComp a = getActivePlayer();
+		return a == null ? null : a.activePlayerID;
+	}
+
+	protected boolean nextPlayer() {
+		return changePlayer(true);
+	}
+
+	protected boolean prevPlayer() {
+		return changePlayer(false);
+	}
+
+	protected boolean changePlayer(boolean next) {
+		ActivePlayerComp a = getActivePlayer();
+		ImmutableArray<ID> playerIDs = getPlayerIDs();
+		int i = playerIDs.indexOf(a.activePlayerID, false);
+		int counter = 0;
+		while(counter < playerIDs.size()) {
+			i = ArrayUtil.prevOrNextIndex(playerIDs, i, next);
+			ID playerID = playerIDs.get(i);
+			if(!a.spentPlayers.contains(playerID, false)) {
+				a.activePlayerID = playerID;
+				return true;
+			}
+			counter++;
+		}
+		return false;
+	}
+
 }

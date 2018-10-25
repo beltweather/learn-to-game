@@ -34,6 +34,14 @@ abstract class PendableValue<C extends PendableValue<C,T>,T> {
 		return setValue(value);
 	}
 
+	public C a(T value) {
+		return setActualValue(value);
+	}
+
+	public C p(T value) {
+		return setPendingValue(value);
+	}
+
 	public C setToDefault() {
 		setValueType(ValueType.ACTUAL);
 		pendingValue = handleClear(pendingValue);

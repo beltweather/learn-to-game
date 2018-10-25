@@ -26,7 +26,7 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 			return;
 		}
 
-		int size = Math.min(effects.types.hasPending() ? effects.types.p().size : effects.types.a().size, effects.maxEffects);
+		int size = Math.min(effects.types.hasPending() ? effects.types.p().size : effects.types.v().size, effects.maxEffects);
 		float x = s.position.x;
 	    float y = s.position.y;
 		float w = Comp.util(s).scaledWidth();
@@ -35,7 +35,7 @@ public class StatusEffectBarRenderMethod extends ShapeRenderMethod {
 		float degrees = 360f / effects.maxEffects;
 		int segments = (int) (2*degrees + 1);
 		float start = 90;
-		int actualCount = effects.types.a().size;
+		int actualCount = effects.types.v().size;
 
 		Color color = shapeRenderer.getColor();
 		enableOpacity();
